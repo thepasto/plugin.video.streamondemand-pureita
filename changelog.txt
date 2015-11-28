@@ -1,3 +1,6 @@
+5.2.3
+
+risolto bug che impediva l'esecuzione dell'addon
 5.2.2
 
 aggiornata lista canali
