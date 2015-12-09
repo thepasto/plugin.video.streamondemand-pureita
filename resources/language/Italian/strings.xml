@@ -69,11 +69,11 @@
 
     <string id="30044">Modalità riproduzione:</string>
 
-    <string id="30013">Abilita canali personalizzati</string>
-    <string id="30048">Nome canale</string>
-    <string id="30049">Logo canale</string>
+    <string id="30013">Enable personal channel</string>
+    <string id="30048">Channel name</string>
+    <string id="30049">Channel logo</string>
     <string id="30045">Video list URL / file</string>
-    <string id="30047">Elementi per pagina</string>
+    <string id="30047">Elements per page</string>
 
     <!-- =============================================================== -->
     <!-- 30050 to 30099: Info / Messaggi d' errore                       -->
@@ -93,7 +93,6 @@
     <string id="30062">Prova un' altra qualità</string> <!-- Prueba a reproducir en otra calidad -->
     <string id="30063">Canale aggiornato con successo.</string>
     <string id="30064">Lista canali disponibili aggiornata con successo.</string>
-
     <string id="30065">Server non supportato</string>
 
     <!-- =============================================================== -->
@@ -103,7 +102,7 @@
     <string id="30101">Downloads</string> <!-- Descargas -->
     <string id="30102">Preferiti</string> <!-- Favoritos -->
     <string id="30103">Ricerca globale</string> <!-- Buscador -->
-    <string id="40103">Youtube</string> <!-- Youtube Buscador -->
+    <string id="40103">Youtube Trailer</string> <!-- Youtube Buscador -->
     <string id="30104">Aiuto</string> <!-- Ayuda -->
     
     <string id="30105">Rimosso dai preferiti</string> <!-- Se ha quitado de favoritos -->
@@ -132,7 +131,7 @@
     <string id="30125">Documentari</string>
     <string id="30136">Sub-Ita</string>
     <string id="30126">Adulti</string>
-    <string id="30127">Alta Definizione</string>
+    <string id="30127">Latino</string>
     <string id="30128">Cerca trailer</string>
     <string id="30129">Adulti</string>
     <string id="30131">Libreria</string>
@@ -257,7 +256,27 @@
     <string id="30168">Modifiche applicate</string>
     <string id="30169">Cerca</string>
     <string id="30170">Aggiornamento canali:</string>
-    <string id="50100">Skin:</string>
-    <string id="50101">Default</string>
-    <string id="50102">PureITA</string>
+
+    <!-- =============================================================== -->
+    <!-- Database                                                        -->
+    <!-- =============================================================== -->
+    <string id="30980">Cerca Titolo</string>
+    <string id="30981">Cerca Persona</string>
+    <string id="30982">Cerca Società</string>
+    <string id="30983">Oggi in Sala</string>
+    <string id="30984">I Più Popolari</string>
+    <string id="30985">I Migliori</string>
+    <string id="30986">Cerca Collezione</string>
+    <string id="30987">Generi</string>
+    <string id="30988">Cerca Anno</string>
+    <string id="30989">Cerca Film simili</string>
+    <string id="30990">Cerca Serie TV</string>
+    <string id="30991">Libreria</string>
+    <string id="30992">Successivi</string>
+    <string id="30993">Ricerca di %s...</string>
+    <string id="30994">Sto cercando in %s...</string>
+    <string id="30995">%d trovati sinora: %s</string>
+    <string id="30996">I Più Votati</string>
+    <string id="30997">Premi Oscar</string>
+    <string id="30998">Ultimi 2 mesi</string>
 </strings>
