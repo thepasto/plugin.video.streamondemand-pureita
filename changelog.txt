@@ -1,5 +1,10 @@
 5.2.4
 
+- Update Ricerca Globale (thanks giordiz999)
+- Fixed channels: SerieHD, FilmitaliaTV, GuardaSerie, AnimeSubITA
+- Fixed servers: okru, videomega, thevideome
+
+
 5.2.3
 
 risolto bug che impediva l'esecuzione dell'addon
