@@ -60,7 +60,7 @@
       <font>font10_title</font>
       <textcolor>FFCCCCCC</textcolor>
       <align>right</align>
-      <label>Stream On Demand Pureita 5.2.4</label>
+      <label>Stream On Demand Pureita 5.2.5</label>
     </control>
 
     <control type="label">
@@ -69,7 +69,7 @@
       <font>font10_title</font>
       <textcolor>FFCCCCCC</textcolor>
       <align>right</align>
-      <label>08/Dicembre/2015</label>
+      <label>11/Dicembre/2015</label>
     </control>
 
     <!-- ---------------------------- -->
