@@ -23,7 +23,7 @@ def test_video_exists( page_url ):
     data = scrapertools.cache_page(page_url)
     #logger.info("data="+data)
     if "<span class='tabular'>No existe</span>" in data:
-        return False,"No existe o ha sido borrado de moevideos"
+        return False,"Non esiste o è stato rimosso da moevideos"
     else:
         # Existe: http://www.moevideos.net/online/18998
         patron  = "<span class='tabular'>([^>]+)</span>"

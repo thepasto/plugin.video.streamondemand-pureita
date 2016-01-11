@@ -1,36 +1,18 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #------------------------------------------------------------
-# streamondemand-pureita
-# Copyright 2015 tvalacarta@gmail.com
-#
-# Distributed under the terms of GNU General Public License v3 (GPLv3)
-# http://www.gnu.org/licenses/gpl-3.0.html
+# streamondemand-pureita - XBMC Plugin
+# Zip Tools
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita/
 #------------------------------------------------------------
-# This file is part of streamondemand-pureita.
-#
-# streamondemand-pureita is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# streamondemand-pureita is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with streamondemand-pureita.  If not, see <http://www.gnu.org/licenses/>.
-#------------------------------------------------------------
-
 import base64, re, urllib, string, sys, zipfile, os, os.path
-import xbmc
-import plugintools
+import config
+import logger
 
 class ziptools:
 
     def extract(self, file, dir):
-        plugintools.log("file=%s" % file)
-        plugintools.log("dir=%s" % dir)
+        logger.info("file=%s" % file)
+        logger.info("dir=%s" % dir)
         
         if not dir.endswith(':') and not os.path.exists(dir):
             os.mkdir(dir)
@@ -40,23 +22,23 @@ class ziptools:
         num_files = len(zf.namelist())
 
         for name in zf.namelist():
-            plugintools.log("name=%s" % name)
+            logger.info("name=%s" % name)
             if not name.endswith('/'):
-                plugintools.log("no es un directorio")
+                logger.info("no es un directorio")
                 try:
                     (path,filename) = os.path.split(os.path.join(dir, name))
-                    plugintools.log("path=%s" % path)
-                    plugintools.log("name=%s" % name)
+                    logger.info("path=%s" % path)
+                    logger.info("name=%s" % name)
                     os.makedirs( path )
                 except:
                     pass
                 outfilename = os.path.join(dir, name)
-                plugintools.log("outfilename=%s" % outfilename)
+                logger.info("outfilename=%s" % outfilename)
                 try:
                     outfile = open(outfilename, 'wb')
                     outfile.write(zf.read(name))
                 except:
-                    plugintools.log("Error en fichero "+name)
+                    logger.info("Error en fichero "+name)
 
     def _createstructure(self, file, dir):
         self._makedirs(self._listdirs(file), dir)

@@ -12,6 +12,7 @@ from core import logger
 from core import config
 from core import scrapertools
 
+
 def run():
     logger.info("streamondemand-pureita.platformcode.launcher run")
     
@@ -154,7 +155,7 @@ def run():
                         else:
                             import xbmcgui
                             ventana_error = xbmcgui.Dialog()
-                            ok = ventana_error.ok ("plugin", "No hay nada para reproducir")
+                            ok = ventana_error.ok ("plugin", "Niente da riprodurre")
                     else:
                         logger.info("streamondemand-pureita.platformcode.launcher no channel 'play' method, executing core method")
                         xbmctools.play_video(channel=channel_name, server=item.server, url=item.url, category=item.category, title=item.title, thumbnail=item.thumbnail, plot=item.plot, extra=item.extra, subtitle=item.subtitle, video_password = item.password, fulltitle=item.fulltitle, Serie=item.show)
@@ -496,7 +497,8 @@ def episodio_ya_descargado(show_title,episode_title):
 
     for fichero in ficheros:
         #logger.info("fichero="+fichero)
-        if fichero.lower().startswith(show_title.lower()) and scrapertools.find_single_match(fichero,"(\d+x\d+)")==episode_title:
+        #if fichero.lower().startswith(show_title.lower()) and scrapertools.find_single_match(fichero,"(\d+x\d+)")==episode_title:
+        if fichero.lower().startswith(show_title.lower()) and episode_title in fichero:
             logger.info("encontrado!")
             return True
 
@@ -521,10 +523,6 @@ def download_all_episodes(item,channel,first_episode="",preferred_server="vidspo
 
     from servers import servertools
     from core import downloadtools
-    from core import scrapertools
-
-    best_server = preferred_server
-    worst_server = "moevideos"
 
     # Para cada episodio
     if first_episode=="":

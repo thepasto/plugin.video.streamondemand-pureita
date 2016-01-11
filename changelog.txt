@@ -1,3 +1,9 @@
+5.2.6
+
+fixed Ricerca globale
+fixed scelta skin nel menu configurazione
+allineato alla versione 5.1.9 di Stream OnDemand Classico
+
 5.2.5
 
 5.2.4

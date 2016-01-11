@@ -2,6 +2,7 @@
 import urlparse,urllib2,urllib,re
 import os
 import sys
+import urlparse
 from core import config
 from core import logger
 from core.item import Item

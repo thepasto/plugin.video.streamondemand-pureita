@@ -65,7 +65,6 @@ def peliculas(item):
     patron = '<div class="post-thumb">\s*'
     patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
@@ -88,10 +87,14 @@ def peliculas(item):
     # Extrae el paginador
     patronvideos = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
@@ -101,7 +104,6 @@ def peliculas(item):
                  folder=True))
 
     return itemlist
-
 
 def serietv(item):
     logger.info("streamondemand.eurostreaming peliculas")
@@ -114,7 +116,6 @@ def serietv(item):
     patron = '<div class="post-thumb">\s*'
     patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
@@ -137,10 +138,14 @@ def serietv(item):
     # Extrae el paginador
     patronvideos = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
         itemlist.append(
             Item(channel=__channel__,
                  action="serietv",
@@ -151,6 +156,9 @@ def serietv(item):
 
     return itemlist
 
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 def search(item, texto):
     logger.info("[eurostreaming.py] " + item.url + " search " + texto)
@@ -166,7 +174,6 @@ def search(item, texto):
 
 
 def episodios(item):
-
     def load_episodios():
         for data in match.split('<br/>'):
             ## Extrae las entradas
@@ -212,12 +219,24 @@ def episodios(item):
     patron = '<li><span style="[^"]+"><a onclick="[^"]+" href="[^"]+">([^<]+)</a>(?:</span>\s*<span style="[^"]+"><strong>([^<]+)</strong>)?</span>(.*?)</div>\s*</li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for lang_title1, lang_title2, match in matches:
-        lang_title = 'SUB ITA' if 'SUB' in (lang_title1+lang_title2).upper() else 'ITA'
+        lang_title = 'SUB ITA' if 'SUB' in (lang_title1 + lang_title2).upper() else 'ITA'
         load_episodios()
 
     if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
-        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
+        itemlist.append(
+            Item(channel=__channel__,
+                 title=item.title,
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
+        itemlist.append(
+            Item(channel=item.channel,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 

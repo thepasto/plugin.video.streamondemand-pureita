@@ -4,12 +4,12 @@
 # Canal para filmsubito.tv
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urlparse
 import re
 import sys
+import urlparse
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "FilmSubito.tv"
 __language__ = "IT"
 
-sito = "http://www.cinemasubito.com/"
+host = "http://www.cinemasubito.com/"
 
 DEBUG = config.get_setting("debug")
 
@@ -34,32 +34,32 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Novità[/COLOR]",
                      action="peliculas",
-                     url=sito + "film-2015-streaming.html?&page=2",
+                     url=host + "film-2015-streaming.html?&page=2",
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Genere[/COLOR]",
                      action="genere",
-                     url=sito,
+                     url=host,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Anno[/COLOR]",
                      action="anno",
-                     url=sito,
+                     url=host,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV degli anni '80[/COLOR]",
                      action="serie80",
-                     url=sito,
+                     url=host,
                      thumbnail="http://cdn8.staztic.com/app/i/4296/4296926/hey-guess-the-80s-pop-culture-fun-free-trivia-quiz-game-with-movies-song-icon-character-celebrities-logo-and-tv-show-from-the-80s-1-l-280x280.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Cartoni animati degli anni '80[/COLOR]",
                      action="cartoni80",
-                     url=sito,
+                     url=host,
                      thumbnail="http://i.imgur.com/JxI5ayi.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Documentari[/COLOR]",
                      action="documentari",
-                     url=sito,
+                     url=host,
                      thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Documentary.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -72,7 +72,7 @@ def mainlist(item):
 
 def search(item, texto):
     logger.info("[filmsubitotv.py] " + item.url + " search " + texto)
-    item.url = sito + "search.php?keywords=" + texto
+    item.url = host + "search.php?keywords=" + texto
     try:
         return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -100,19 +100,19 @@ def peliculas(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, scrapedplot in matches:
         if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 plot=scrapedplot,
-                 thumbnail=scrapedthumbnail,
-                 folder=True,
-                 fanart=scrapedthumbnail))
+                Item(channel=__channel__,
+                     action="findvid",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title=scrapedtitle,
+                     url=scrapedurl,
+                     plot=scrapedplot,
+                     thumbnail=scrapedthumbnail,
+                     folder=True,
+                     fanart=scrapedthumbnail))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
@@ -122,15 +122,18 @@ def peliculas(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 extra=item.extra,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
                  folder=True))
 
     return itemlist
-
 
 def serietv80(item):
     logger.info("streamondemand.filmsubitotv serietv80")
@@ -147,19 +150,19 @@ def serietv80(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 folder=True,
-                 fanart=scrapedthumbnail))
+                Item(channel=__channel__,
+                     action="findvideos",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title=title,
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     folder=True,
+                     fanart=scrapedthumbnail))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
@@ -168,18 +171,18 @@ def serietv80(item):
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
-            Item(channel=__channel__,
-                 extra=item.extra,
-                 action="serietv80",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
-                 folder=True))
+                Item(channel=__channel__,
+                     extra=item.extra,
+                     action="serietv80",
+                     title="[COLOR orange]Successivo>>[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                     folder=True))
 
     return itemlist
 
 
-def findvideos(item):
+def findvid(item):
     logger.info("[filmsubitotv.py] findvideos")
 
     # Descarga la página
@@ -190,10 +193,12 @@ def findvideos(item):
         '2': 'http://embed.nowvideo.li/embed.php?v=%s',
         '11': 'https://openload.co/embed/%s/',
         '16': 'http://youwatch.org/embed-%s-640x360.html',
+        '17': 'http://youwatch.org/embed-%s-640x360.html',
         '21': 'http://vidto.me/embed-%s',
         '22': 'http://www.exashare.com/embed-%s-700x400.html',
         '23': 'http://videomega.tv/cdn.php?ref=%s&width=700&height=430',
-        '29': 'http://embed.novamov.com/embed.php?v=%s'
+        '29': 'http://embed.novamov.com/embed.php?v=%s',
+        '30': 'http://streamin.to/embed-%s-700x370.html'
     }
 
     patron = "=.setupNewPlayer.'([^']+)','(\d+)'"
@@ -223,24 +228,22 @@ def genere(item):
     logger.info("[filmsubitotv.py] genere")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data=" + data)
+    data = scrapertools.cache_page(item.url)
 
-    patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Genere <b class="caret"></b></a>(.*?)<li><a href="%sfilm-2015-streaming.html" class="wide-nav-link">Novità</a></li>' % sito
+    patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Genere <b class="caret"></b></a>(.*?)<li><a href="%sfilm-2015-streaming.html" class="wide-nav-link">Novità</a></li>' % host
     data = scrapertools.find_single_match(data, patron)
-    logger.info("data=" + data)
 
-    patron = '<a.*?href="(.*?)" class=".*?>(.*?)</a>'
+    patron = '<a.*?href="([^"]+)" class=".*?>(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title=title,
-                 url=scrapedurl,
-                 folder=True))
+                Item(channel=__channel__,
+                     action="peliculas",
+                     title=title,
+                     url=scrapedurl,
+                     folder=True))
 
     return itemlist
 
@@ -249,24 +252,22 @@ def serie80(item):
     logger.info("[filmsubitotv.py] genere")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data=" + data)
+    data = scrapertools.cache_page(item.url)
 
     patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Serie anni 80<b class="caret"></b></a>(.*?)<li class="dropdown">'
     data = scrapertools.find_single_match(data, patron)
-    logger.info("data=" + data)
 
-    patron = '<a.*?href="(.*?)">(.*?)</a></li>'
+    patron = '<a.*?href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
-            Item(channel=__channel__,
-                 action="serietv80",
-                 title=title,
-                 url=scrapedurl,
-                 folder=True))
+                Item(channel=__channel__,
+                     action="serietv80",
+                     title=title,
+                     url=scrapedurl,
+                     folder=True))
 
     return itemlist
 
@@ -275,24 +276,22 @@ def anno(item):
     logger.info("[filmsubitotv.py] genere")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data=" + data)
+    data = scrapertools.cache_page(item.url)
 
     patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Anno<b class="caret"></b></a>(.*?)<li class="dropdown">'
     data = scrapertools.find_single_match(data, patron)
-    logger.info("data=" + data)
 
-    patron = '<a.*?href="(.*?)">(.*?)</a></li>'
+    patron = '<a.*?href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title=title,
-                 url=scrapedurl,
-                 folder=True))
+                Item(channel=__channel__,
+                     action="peliculas",
+                     title=title,
+                     url=scrapedurl,
+                     folder=True))
 
     return itemlist
 
@@ -301,14 +300,12 @@ def cartoni80(item):
     logger.info("[filmsubitotv.py] genere")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data=" + data)
+    data = scrapertools.cache_page(item.url)
 
     patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Cartoni anni 80<b class="caret"></b></a>(.*?)<li class="dropdown">'
     data = scrapertools.find_single_match(data, patron)
-    logger.info("data=" + data)
 
-    patron = '<a.*?href="(.*?)">(.*?)</a></li>'
+    patron = '<a.*?href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -322,13 +319,12 @@ def documentari(item):
     logger.info("[filmsubitotv.py] genere")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data=" + data)
+    data = scrapertools.cache_page(item.url)
 
     patron = '<a href="#" class="dropdown-toggle wide-nav-link" data-toggle="dropdown">Documentari<b class="caret"></b></a>(.*?)<li class="dropdown">'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<a.*?href="(.*?)">(.*?)</a></li>'
+    patron = '<a.*?href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -346,38 +342,46 @@ def serie(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '</span>.*?<a href="(.*?)" class="pm-thumb-fix pm-thumb-145">.*?"><img.*?src="(.*?)" title="Young and Hungry " alt="(.*?)" width="145">'
+    patron = '</span>.*?<a href="([^"]+)" class="pm-thumb-fix pm-thumb-145">.*?"><img.*?src="([^"]+)" title="Young and Hungry " alt="([^"]+)" width="145">'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 folder=True,
-                 fanart=scrapedthumbnail))
+                Item(channel=__channel__,
+                     action="findvideos",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title=scrapedtitle,
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     folder=True,
+                     fanart=scrapedthumbnail))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 extra=item.extra,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
                  action="serie",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
                  folder=True))
 
     return itemlist
+
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+

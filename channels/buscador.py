@@ -8,13 +8,14 @@ import os
 from core import config
 from core import logger
 from core.item import Item
-from core import scrapertools
 
 __channel__ = "buscador"
 
 logger.info("streamondemand.channels.buscador init")
 
 DEBUG = True
+
+TIMEOUT_TOTAL = 90
 
 
 def isGeneric():
@@ -27,22 +28,27 @@ def mainlist(item, preferred_thumbnail="squares"):
     itemlist = [
         Item(channel=__channel__,
              action="search",
-             title="[COLOR yellow]Effettuare una nuova ricerca...[/COLOR]")]
+             title="[COLOR yellow]Nuova ricerca film...[/COLOR]"),
+        Item(channel=__channel__,
+             action="search",
+             category="serie",
+             title="[COLOR yellow]Nuova ricerca serie tv...[/COLOR]"),
+    ]
 
     saved_searches_list = get_saved_searches(item.channel)
 
     for saved_search_text in saved_searches_list:
         itemlist.append(
-            Item(channel=__channel__,
-                 action="do_search",
-                 title=' "' + saved_search_text + '"',
-                 extra=saved_search_text))
+                Item(channel=__channel__,
+                     action="do_search",
+                     title=' "' + saved_search_text + '"',
+                     extra=saved_search_text))
 
     if len(saved_searches_list) > 0:
         itemlist.append(
-            Item(channel=__channel__,
-                 action="clear_saved_searches",
-                 title="[COLOR red]Elimina cronologia ricerche[/COLOR]"))
+                Item(channel=__channel__,
+                     action="clear_saved_searches",
+                     title="[COLOR red]Elimina cronologia ricerche[/COLOR]"))
 
     return itemlist
 
@@ -74,8 +80,10 @@ def do_search(item):
     from lib.fuzzywuzzy import fuzz
     import threading
     import Queue
+    import time
+    import re
 
-    master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "global_search_exclusion.txt")
+    master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "sodsearch.txt")
     logger.info("streamondemand.channels.buscador master_exclude_data_file=" + master_exclude_data_file)
 
     channels_path = os.path.join(config.get_runtime_path(), "channels", '*.py')
@@ -110,10 +118,10 @@ def do_search(item):
             # http://docs.python.org/library/imp.html?highlight=imp#module-imp
             obj = imp.load_source(basename_without_extension, infile)
             logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
-            channel_result_itemlist.extend(obj.search(Item(), tecleado))
-            for item in channel_result_itemlist:
-                item.title = item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
-                item.viewmode = "list"
+            channel_result_itemlist.extend(obj.search(Item(extra=item.category), tecleado))
+            for local_item in channel_result_itemlist:
+                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
+                local_item.viewmode = "list"
         except:
             import traceback
             logger.error(traceback.format_exc())
@@ -124,23 +132,48 @@ def do_search(item):
     result = Queue.Queue()
     threads = [threading.Thread(target=worker, args=(infile, result)) for infile in channel_files]
 
+    start_time = int(time.time())
+
     for t in threads:
+        t.daemon = True  # NOTE: setting dameon to True allows the main thread to exit even if there are threads still running
         t.start()
 
     number_of_channels = len(channel_files)
+    completed_channels = 0
+    while completed_channels < number_of_channels:
 
-    for index, t in enumerate(threads):
-        percentage = index * 100 / number_of_channels
+        delta_time = int(time.time()) - start_time
+        if len(itemlist) <= 0:
+            timeout = None  # No result so far,lets the thread to continue working until a result is returned
+        elif delta_time >= TIMEOUT_TOTAL:
+            break  # At least a result matching the searched title has been found, lets stop the search
+        else:
+            timeout = TIMEOUT_TOTAL - delta_time  # Still time to gather other results
+
         if show_dialog:
-            progreso.update(percentage, ' Sto cercando "' + mostra + '"')
-        t.join()
-        itemlist.extend(result.get())
+            progreso.update(completed_channels * 100 / number_of_channels)
 
-    itemlist = sorted([item for item in itemlist if fuzz.WRatio(mostra, item.fulltitle) > 85],
-                      key=lambda Item: Item.title)
+        try:
+            result_itemlist = result.get(timeout=timeout)
+            completed_channels += 1
+        except:
+            # Expired timeout raise an exception
+            break
+
+        for item in result_itemlist:
+            title = item.fulltitle
+
+            # Clean up a bit the returned title to improve the fuzzy matching
+            title = re.sub(r'\(.*\)', '', title)  # Anything within ()
+            title = re.sub(r'\[.*\]', '', title)  # Anything within []
+
+            # Check if the found title fuzzy matches the searched one
+            if fuzz.WRatio(mostra, title) > 85: itemlist.append(item)
 
     if show_dialog:
         progreso.close()
+
+    itemlist = sorted(itemlist, key=lambda item: item.fulltitle)
 
     return itemlist
 

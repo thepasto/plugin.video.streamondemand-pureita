@@ -276,5 +276,12 @@
     <string id="30996">Lo Más Votado</string>
     <string id="30997">Premio de la Academia</string>
     <string id="30998">Últimos 2 meses</string>
+	
+    <!-- =============================================================== -->
+    <!-- scelta skin                                                  -->
+    <!-- =============================================================== -->
+    <string id="50100">scelta skin</string>
+    <string id="50101">Pelisalacarta</string>
+    <string id="50102">PureITA</string>	
 </strings>
 

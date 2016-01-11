@@ -106,7 +106,7 @@ def get_cookie_data():
 def verify_directories_created():
     import logger
     import os
-    logger.info("streamondemand-pureitacore.config.verify_directories_created")
+    logger.info("streamondemand-pureita.core.config.verify_directories_created")
 
     # Force download path if empty
     download_path = get_setting("downloadpath")
@@ -176,6 +176,6 @@ def verify_directories_created():
         except:
             pass
 
-print "streamondemand-pureitacore.config runtime path = "+get_runtime_path()
-print "streamondemand-pureitacore.config data path = "+get_data_path()
-print "streamondemand-pureitacore.config temp path = "+get_temp_file("test")
+print "streamondemand-pureita.core.config runtime path = "+get_runtime_path()
+print "streamondemand-pureita.core.config data path = "+get_data_path()
+print "streamondemand-pureita.core.config temp path = "+get_temp_file("test")

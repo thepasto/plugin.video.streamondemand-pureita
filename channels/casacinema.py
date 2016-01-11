@@ -18,7 +18,7 @@ __type__ = "generic"
 __title__ = "casacinema"
 __language__ = "IT"
 
-sito = "http://casa-cinema.net/"
+host = "http://www.casa-cinema.org"
 
 
 def isGeneric():
@@ -31,26 +31,37 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Novita'[/COLOR]",
                      action="peliculas",
-                     url="http://www.casa-cinema.org/genere/film",
+                     url="%s/genere/film" % host,
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - HD[/COLOR]",
                      action="peliculas",
-                     url="http://www.casa-cinema.org/?s=[HD]",
+                     url="%s/?s=[HD]" % host,
                      thumbnail="http://jcrent.com/apple%20tv%20final/HD.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
-                     url="http://www.casa-cinema.org/genere/film",
+                     url=host,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Sub - Ita[/COLOR]",
                      action="peliculas",
-                     url="http://casa-cinema.net/genere/sub-ita",
+                     url="%s/genere/sub-ita" % host,
                      thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV[/COLOR]",
+                     extra="serie",
+                     action="peliculas",
+                     url="%s/genere/serie-tv" % host,
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
+                     action="search",
+                     extra="serie",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
@@ -59,11 +70,13 @@ def mainlist(item):
 def search(item, texto):
     logger.info("[casacinema.py] " + item.url + " search " + texto)
 
-    item.url = sito + "?s=" + texto
+    item.url = host + "?s=" + texto
 
     try:
-        return peliculas(item)
-
+        if item.extra == "serie":
+            return peliculas(item)
+        else:
+            return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
@@ -77,10 +90,10 @@ def peliculas(item):
 
     itemlist = []
 
-    ## Descarga la pagina
+    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
 
-    ## Extrae las entradas (carpetas)
+    # Extrae las entradas (carpetas)
     patron = '<div class="box-single-movies">\s*'
     patron += '<a href="([^>"]+)".*?title="([^>"]+)" >.*?<img class.*?<img.*?src="([^>"]+)"'
 
@@ -95,28 +108,38 @@ def peliculas(item):
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot).strip()
         itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title="[COLOR azure]" + title + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 fulltitle=title,
-                 show=title,
-                 plot=scrapedplot,
-                 viewmode="movie_with_plot"))
+                Item(channel=__channel__,
+                     action="findvideos",
+                     title="[COLOR azure]" + title + "[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     fulltitle=title,
+                     show=title,
+                     plot=scrapedplot,
+                     viewmode="movie_with_plot"))
 
     ## Paginación
     next_page = scrapertools.find_single_match(data, 'rel="next" href="([^"]+)"')
 
     if next_page != "":
         itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                Item(channel=__channel__,
+                     action="HomePage",
+                     title="[COLOR yellow]Torna Home[/COLOR]",
+                     folder=True)),
+        itemlist.append(
+                Item(channel=__channel__,
+                     action="peliculas",
+                     title="[COLOR orange]Successivo >>[/COLOR]",
+                     url=next_page,
+                     thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
 
     return itemlist
+
+
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
 def categorias(item):
@@ -133,9 +156,9 @@ def categorias(item):
 
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=urlparse.urljoin(sito, scrapedurl)))
+                Item(channel=__channel__,
+                     action="peliculas",
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=urlparse.urljoin(host, scrapedurl)))
 
     return itemlist

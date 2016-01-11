@@ -89,7 +89,7 @@ def checkforupdates(plugin_mode=True):
     # Descarga el fichero con la versión en la web
     logger.info("streamondemand-pureita.core.updater Verificando actualizaciones...")
     logger.info("streamondemand-pureita.core.updater Version remota: "+REMOTE_VERSION_FILE)
-    data = scrapertools.cachePage( REMOTE_VERSION_FILE )
+    data = scrapertools.cache_page( REMOTE_VERSION_FILE )
 
     '''   
     <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -277,7 +277,7 @@ def updatechannel(channel_name):
 
     # Version remota
     try:
-        data = scrapertools.cachePage( remote_version_url )
+        data = scrapertools.cache_page( remote_version_url )
         logger.info("streamondemand-pureita.core.updater remote_data="+data)
         if "<tag>" in data: patronvideos  = '<tag>([^<]+)</tag>'
         elif "<version>" in data: patronvideos  = '<version>([^<]+)</version>'
@@ -321,7 +321,7 @@ def download_channel(channel_name):
     local_channel_path , local_version_path , local_compiled_path = get_channel_local_path(channel_name)
 
     # Descarga el canal
-    updated_channel_data = scrapertools.cachePage( remote_channel_url )
+    updated_channel_data = scrapertools.cache_page( remote_channel_url )
     try:
         outfile = open(local_channel_path,"w")
         outfile.write(updated_channel_data)
@@ -336,7 +336,7 @@ def download_channel(channel_name):
 
     # Descarga la version (puede no estar)
     try:
-        updated_version_data = scrapertools.cachePage( remote_version_url )
+        updated_version_data = scrapertools.cache_page( remote_version_url )
         outfile = open(local_version_path,"w")
         outfile.write(updated_version_data)
         outfile.flush()

@@ -280,4 +280,11 @@
     <string id="30996">Most Voted</string>
     <string id="30997">Academy Awards</string>
     <string id="30998">Last 2 months</string>
+	
+    <!-- =============================================================== -->
+    <!-- scelta skin                                                  -->
+    <!-- =============================================================== -->
+    <string id="50100">scelta skin</string>
+    <string id="50101">Pelisalacarta</string>
+    <string id="50102">PureITA</string>	
 </strings>

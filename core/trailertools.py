@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 #------------------------------------------------------------
-# streamondemand-pureita - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Buscador de Trailers en youtube
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import urlparse,urllib2,urllib,re
@@ -98,7 +98,7 @@ def GetFrom_Trailersdepeliculas(titulovideo):
             if titulo in (string.lower(LimpiarTitulo(match[1]))):
                 urlpage = urlparse.urljoin(url1,match[0])
                 thumbnail = urlparse.urljoin(url1,match[2])
-                data     = scrapertools.cachePage(urlpage)
+                data     = scrapertools.cache_page(urlpage)
                 logger.info("Trailer elegido :  "+match[1])
                 matches2 = re.compile(patronvideos,re.DOTALL).findall(data)
                 for match2 in matches2:
@@ -128,7 +128,7 @@ def GetFromYoutubePlaylist(titulovideo):
         listyoutubeurl += titulovideo.replace(" ","+")+i+"&uni=1"
         listyoutubeurl = listyoutubeurl.replace(" ","")
         logger.info("Youtube url parametros de busqueda  :"+listyoutubeurl)
-        data = scrapertools.cachePage(listyoutubeurl)
+        data = scrapertools.cache_page(listyoutubeurl)
 
         thumbnail=""
         patronyoutube  = '<span><a class="hLink" title="(.*?)" href="(.*?)">.*?'
@@ -403,7 +403,7 @@ def GetVideoFeed(titulo,solo="false"):
                 if c > 10:
                     return (devuelve)
 
-    print '%s Trailers encontrados en Modulo: GetVideoFeed()' % str(c)
+    print '%s Trailer trovati nel modulo: GetVideoFeed()' % str(c)
     return (devuelve)
     
 def youtubeplay(params,url,category):
@@ -421,5 +421,5 @@ def youtubeplay(params,url,category):
     
 def alertaerror():
     ventana = xbmcgui.Dialog()
-    ok= ventana.ok ("Plugin streamondemand-pureita", "Uuppss...la calidad elegida en configuracion",'no esta disponible o es muy baja',"elijá otra calidad distinta y vuelva a probar")
+    ok= ventana.ok ("Plugin streamondemand", "Uuppss...impostazioni di qualità scelte",'non disponibile o troppo limitata',"seleziona una qualità differente e riprova")
 

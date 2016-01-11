@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# streamondemand-pureita - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # XBMC Tools
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import urllib, urllib2
@@ -25,13 +25,13 @@ except:
 DEBUG = True
 
 # TODO: (3.2) Esto es un lío, hay que unificar
-def addnewfolder( canal , accion , category , title , url , thumbnail , plot , Serie="",totalItems=0,fanart="",context="", show="",fulltitle=""):
+def addnewfolder( canal , accion , category , title , url , thumbnail , plot , Serie="",totalItems=0,fanart="",context="", show="",fulltitle="", extrameta=None, extracmds=None):
     if fulltitle=="":
         fulltitle=title
-    ok = addnewfolderextra( canal , accion , category , title , url , thumbnail , plot , "" ,Serie,totalItems,fanart,context,show, fulltitle)
+    ok = addnewfolderextra( canal , accion , category , title , url , thumbnail , plot , "" ,Serie,totalItems,fanart,context,show, fulltitle, extrameta, extracmds)
     return ok
 
-def addnewfolderextra( canal , accion , category , title , url , thumbnail , plot , extradata ,Serie="",totalItems=0,fanart="",context="",show="",fulltitle=""):
+def addnewfolderextra( canal , accion , category , title , url , thumbnail , plot , extradata ,Serie="",totalItems=0,fanart="",context="",show="",fulltitle="", extrameta=None, extracmds=None):
     if fulltitle=="":
         fulltitle=title
     
@@ -54,6 +54,7 @@ def addnewfolderextra( canal , accion , category , title , url , thumbnail , plo
     listitem = xbmcgui.ListItem( title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail )
 
     listitem.setInfo( "video", { "Title" : title, "Plot" : plot, "Studio" : canal } )
+    if extrameta: listitem.setInfo( "video", extrameta )
 
     if fanart!="":
         listitem.setProperty('fanart_image',fanart) 
@@ -98,6 +99,8 @@ def addnewfolderextra( canal , accion , category , title , url , thumbnail , plo
         #logger.info("Modo xbmc")
         if len(contextCommands) > 0:
             listitem.addContextMenuItems ( contextCommands, replaceItems=False)
+        if extracmds:
+            listitem.addContextMenuItems ( extracmds, replaceItems=False)
     
         if totalItems == 0:
             ok = xbmcplugin.addDirectoryItem( handle = pluginhandle, url = itemurl , listitem=listitem, isFolder=True)
@@ -105,7 +108,7 @@ def addnewfolderextra( canal , accion , category , title , url , thumbnail , plo
             ok = xbmcplugin.addDirectoryItem( handle = pluginhandle, url = itemurl , listitem=listitem, isFolder=True, totalItems=totalItems)
     return ok
 
-def addnewvideo( canal , accion , category , server , title , url , thumbnail, plot ,Serie="",duration="",fanart="",IsPlayable='false',context = "", subtitle="", viewmode="", totalItems = 0, show="", password="", extra="",fulltitle=""):
+def addnewvideo( canal , accion , category , server , title , url , thumbnail, plot ,Serie="",duration="",fanart="",IsPlayable='false',context = "", subtitle="", viewmode="", totalItems = 0, show="", password="", extra="",fulltitle="", extrameta=None, extracmds=None):
     contextCommands = []
     ok = False
     try:
@@ -126,6 +129,7 @@ def addnewvideo( canal , accion , category , server , title , url , thumbnail, p
      
     listitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
     listitem.setInfo( "video", { "Title" : title, "FileName" : title, "Plot" : plot, "Duration" : duration, "Studio" : canal, "Genre" : category } )
+    if extrameta: listitem.setInfo( "video", extrameta )
 
     if fanart!="":
         #logger.info("fanart :%s" %fanart)
@@ -163,6 +167,8 @@ def addnewvideo( canal , accion , category , server , title , url , thumbnail, p
 
     if len (contextCommands) > 0:
         listitem.addContextMenuItems ( contextCommands, replaceItems=False)
+    if extracmds:
+        listitem.addContextMenuItems ( extracmds, replaceItems=False)
     try:
         title = title.encode ("utf-8")     #This only aplies to unicode strings. The rest stay as they are.
         plot  = plot.encode ("utf-8")
@@ -281,11 +287,11 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
         if server!="":
             advertencia = xbmcgui.Dialog()
             if "<br/>" in motivo:
-                resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
+                resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
             else:
-                resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo,url)
+                resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo,url)
         else:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...","El servidor donde está alojado no está","soportado en Stream On Demand PureITA todavía",url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...","Il server che lo ospita non è","ancora supportato da streamondemand",url)
 
         if channel=="favoritos": 
             opciones.append(config.get_localized_string(30154)) # "Quitar de favoritos"
@@ -343,9 +349,9 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
         from core import scrapertools
         
         if subtitle!="":
-            data = scrapertools.cachePage(config.get_setting("jdownloader")+"/action/add/links/grabber0/start1/web="+url+ " " +thumbnail + " " + subtitle)
+            data = scrapertools.cache_page(config.get_setting("jdownloader")+"/action/add/links/grabber0/start1/web="+url+ " " +thumbnail + " " + subtitle)
         else:
-            data = scrapertools.cachePage(config.get_setting("jdownloader")+"/action/add/links/grabber0/start1/web="+url+ " " +thumbnail)
+            data = scrapertools.cache_page(config.get_setting("jdownloader")+"/action/add/links/grabber0/start1/web="+url+ " " +thumbnail)
 
         return
 
@@ -355,7 +361,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
         if Serie!="":
             package_name = Serie
         else:
-            package_name = "streamondemand-pureita"
+            package_name = "streamondemand"
 
         from core import pyload_client
         pyload_client.download(url=url,package_name=package_name)
@@ -496,7 +502,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
     # Si hay un tiempo de espera (como en megaupload), lo impone ahora
     if wait_time>0:
         logger.info("b2")
-        continuar = handle_wait(wait_time,server,"Cargando vídeo...")
+        continuar = handle_wait(wait_time,server,"Caricamento vídeo...")
         if not continuar:
             return
 
@@ -523,7 +529,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
                 try:
                   os.remove(ficherosubtitulo)
                 except IOError:
-                  logger.info("Error al eliminar el archivo subtitulo.srt "+ficherosubtitulo)
+                  logger.info("Errore nell'eliminazione del file subtitulo.srt "+ficherosubtitulo)
                   raise
         
             from core import scrapertools
@@ -535,7 +541,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
             #from core import downloadtools
             #downloadtools.downloadfile(subtitle, ficherosubtitulo )
         except:
-            logger.info("Error al descargar el subtítulo")
+            logger.info("Errore nel download del sottotitolo")
 
     # Lanza el reproductor
     if strmfile: #Si es un fichero strm no hace falta el play
@@ -657,7 +663,7 @@ def handle_wait(time_to_wait,title,text):
         secs = secs + 1
         percent = increment*secs
         secs_left = str((time_to_wait - secs))
-        remaining_display = ' Espera '+secs_left+' segundos para que comience el vídeo...'
+        remaining_display = ' Attendi '+secs_left+' secondi per il video...'
         espera.update(percent,' '+text,remaining_display)
         xbmc.sleep(1000)
         if (espera.iscanceled()):
@@ -665,10 +671,10 @@ def handle_wait(time_to_wait,title,text):
              break
 
     if cancelled == True:     
-         logger.info ('Espera cancelada')
+         logger.info ('Attesa eliminata')
          return False
     else:
-         logger.info ('Espera finalizada')
+         logger.info ('Attesa conclusa')
          return True
 
 def getLibraryInfo (mediaurl):
@@ -818,7 +824,7 @@ def playstrm(params,url,category):
     from platformcode.subtitletools import saveSubtitleName
     item = Item(title=title,show=serie)
     saveSubtitleName(item)
-    play_video("Biblioteca Stream On Demand PureITA",server,url,category,title,thumbnail,plot,strmfile=True,Serie=serie,subtitle=subtitle)
+    play_video("Biblioteca streamondemand",server,url,category,title,thumbnail,plot,strmfile=True,Serie=serie,subtitle=subtitle)
 
 def renderItems(itemlist, params, url, category, isPlayable='false'):
     
@@ -844,18 +850,18 @@ def renderItems(itemlist, params, url, category, isPlayable='false'):
 
             if item.folder :
                 if len(item.extra)>0:
-                    addnewfolderextra( item.channel , item.action , item.category , item.title , item.url , item.thumbnail , item.plot , extradata = item.extra , totalItems = len(itemlist), fanart=item.fanart , context=item.context, show=item.show, fulltitle=item.fulltitle )
+                    addnewfolderextra( item.channel , item.action , item.category , item.title , item.url , item.thumbnail , item.plot , extradata = item.extra , totalItems = len(itemlist), fanart=item.fanart , context=item.context, show=item.show, fulltitle=item.fulltitle, extrameta=item.extrameta, extracmds=item.extracmds )
                 else:
-                    addnewfolder( item.channel , item.action , item.category , item.title , item.url , item.thumbnail , item.plot , totalItems = len(itemlist) , fanart = item.fanart, context = item.context, show=item.show, fulltitle=item.fulltitle )
+                    addnewfolder( item.channel , item.action , item.category , item.title , item.url , item.thumbnail , item.plot , totalItems = len(itemlist) , fanart = item.fanart, context = item.context, show=item.show, fulltitle=item.fulltitle, extrameta=item.extrameta, extracmds=item.extracmds )
             else:
                 if config.get_setting("player_mode")=="1": # SetResolvedUrl debe ser siempre "isPlayable = true"
                     isPlayable = "true"
                 
 
                 if item.duration:
-                    addnewvideo( item.channel , item.action , item.category , item.server, item.title , item.url , item.thumbnail , item.plot , "" ,  duration = item.duration , fanart = item.fanart, IsPlayable=isPlayable,context = item.context , subtitle=item.subtitle, totalItems = len(itemlist), show=item.show, password = item.password, extra = item.extra, fulltitle=item.fulltitle )
+                    addnewvideo( item.channel , item.action , item.category , item.server, item.title , item.url , item.thumbnail , item.plot , "" ,  duration = item.duration , fanart = item.fanart, IsPlayable=isPlayable,context = item.context , subtitle=item.subtitle, totalItems = len(itemlist), show=item.show, password = item.password, extra = item.extra, fulltitle=item.fulltitle, extrameta=item.extrameta, extracmds=item.extracmds )
                 else:    
-                    addnewvideo( item.channel , item.action , item.category , item.server, item.title , item.url , item.thumbnail , item.plot, fanart = item.fanart, IsPlayable=isPlayable , context = item.context , subtitle = item.subtitle , totalItems = len(itemlist), show=item.show , password = item.password , extra=item.extra, fulltitle=item.fulltitle )
+                    addnewvideo( item.channel , item.action , item.category , item.server, item.title , item.url , item.thumbnail , item.plot, fanart = item.fanart, IsPlayable=isPlayable , context = item.context , subtitle = item.subtitle , totalItems = len(itemlist), show=item.show , password = item.password , extra=item.extra, fulltitle=item.fulltitle, extrameta=item.extrameta, extracmds=item.extracmds )
             
             if item.viewmode!="list":
                 viewmode = item.viewmode
@@ -879,6 +885,11 @@ def renderItems(itemlist, params, url, category, isPlayable='false'):
                 xbmc.executebuiltin("Container.SetViewMode(503)")
             elif viewmode=="movie":
                 xbmc.executebuiltin("Container.SetViewMode(500)")
+        elif viewmode=="paged_list":
+            # When rendering paged list, force the current viewmode starting with the 2nd page
+            viewmode = repr(xbmcgui.Window(xbmcgui.getCurrentWindowId()).getFocusId())
+            logger.info("[xbmctools] renderItems: setting ViewMode to %s" % viewmode)
+            xbmc.executebuiltin("Container.SetViewMode(%s)" % viewmode)
 
     xbmcplugin.endOfDirectory( handle=pluginhandle, succeeded=True )
 
@@ -923,8 +934,8 @@ def alert_no_puedes_ver_video(server,url,motivo):
     if server!="":
         advertencia = xbmcgui.Dialog()
         if "<br/>" in motivo:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
         else:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo,url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo,url)
     else:
-        resultado = advertencia.ok( "No puedes ver ese vídeo porque...","El servidor donde está alojado no está","soportado en Stream On Demand PureITA todavía",url)
+        resultado = advertencia.ok( "Non è possibile guardare il video perché...","Il server che lo ospita non è","ancora supportato da streamondemand",url)
