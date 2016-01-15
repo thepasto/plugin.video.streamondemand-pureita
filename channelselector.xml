@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>78</tag>
-	<date>9/01/2016</date>
-	<changes>Aggiunti nuovi canali</changes>
+	<tag>79</tag>
+	<date>15/01/2016</date>
+	<changes>Removed Channel</changes>
 </version>
