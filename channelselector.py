@@ -128,10 +128,10 @@ def getchanneltypes(preferred_thumb=""):
     itemlist.append( Item( title=config.get_localized_string(30125) , channel="channelselector" , action="listchannels" , category="D"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_documentales.png")))
     itemlist.append( Item( title="Contenuti Vari" , channel="novedades" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_novedades.png") ) )
     itemlist.append( Item( title=config.get_localized_string(30136) , channel="channelselector" , action="listchannels" , category="VOS" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_vos.png")))
-    itemlist.append( Item( title="Torrent" , channel="channelselector" , action="listchannels" , category="T" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_torrent.png")))
-    itemlist.append( Item( title="Film 3D" , channel="channelselector" , action="listchannels" , category="3" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_3d.png")))
+    itemlist.append( Item( title="Torrent" , channel="channelselector" , action="listchannels" , category="T" ))
+    itemlist.append( Item( title="Film 3D" , channel="channelselector" , action="listchannels" , category="3" ))
     #itemlist.append( Item( title=config.get_localized_string(30126) , channel="channelselector" , action="listchannels" , category="M"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_musica.png")))
-    #itemlist.append( Item( title="Bittorrent" , channel="channelselector" , action="listchannels" , category="T"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_torrent.png")))
+    #itemlist.append( Item( title="Bittorrent" , channel="channelselector" , action="listchannels" , category="T"  , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_torrent.png" )))
     #itemlist.append( Item( title=config.get_localized_string(30127) , channel="channelselector" , action="listchannels" , category="L"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_latino.png")))
     #if config.get_setting("enableadultmode") == "true": itemlist.append( Item( title=config.get_localized_string(30126) , channel="channelselector" , action="listchannels" , category="X"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_adultos.png")))
     #itemlist.append( Item( title=config.get_localized_string(30127) , channel="channelselector" , action="listchannels" , category="G"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_servidores.png")))
@@ -147,6 +147,8 @@ def channeltypes(params,url,category):
 
     # Label (top-right)...
     import xbmcplugin
+@orione7
+Commit changes
     xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category="" )
     xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
     xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
@@ -269,7 +271,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Eurostreaming[/COLOR]"       , channel="eurostreaming"           , language="IT"    , category="F,S"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Eurostreaminginfo[/COLOR]"          , channel="eurostreaminginfo"           , language="IT"    , category="F,S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="fastvideotv"       , language="IT"    , category="F"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Filmitalia.tv[/COLOR]"        , channel="filmitaliatv"       , language="IT"    , category="F"       , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="filmitaliatv"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]FilmGratis.cc[/COLOR]"       , channel="filmgratiscc"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStream.org[/COLOR]"          , channel="filmstream"           , language="IT"    , category="F,S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStream.to[/COLOR]"       , channel="filmstreampw"           , language="IT"    , category="F,S"   , type="generic"))
@@ -284,14 +286,17 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]GriffinITA Streaming[/COLOR]"      , channel="griffinita"           , language="IT"    , category="S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Hubberfilm[/COLOR]"          , channel="hubberfilm"           , language="IT"    , category="F,S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]ildocumento.it[/COLOR]"      , channel="ildocumento"           , language="IT"    , category="D"   , type="generic"))
+    itemlist.append( Item( title="[COLOR white]HDGratis.net[/COLOR]"        , channel="hdgratis"       , language="IT"    , category="F"       , type="generic" ))
+
     itemlist.append( Item( title="[COLOR azure]HD-Streaming.it[/COLOR]"        , channel="hdstreamingit"       , language="IT"    , category="F,3"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]Hokuto no Ken[/COLOR]", channel="hokutonoken", language="IT"  , type="generic" , category="A"))
     itemlist.append( Item( title="[COLOR azure]Instreaming.info[/COLOR]"      , channel="instreaminginfo"           , language="IT"    , category="F"   , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]ItaFilm.tv[/COLOR]"      , channel="itafilmtv"           , language="IT"    , category="F,S,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Italia-Film.co[/COLOR]"      , channel="italiafilm"           , language="IT"    , category="F,S,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Italian-Stream [/COLOR]"        , channel="italianstream"       , language="IT"    , category="F,S"       , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]ItaliaFilm.Video HD[/COLOR]"      , channel="italiafilmvideohd"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Italia Serie[/COLOR]"        , channel="italiaserie"           , language="IT"    , category="F,S,A"   , type="generic"))
-    #itemlist.append( Item( title="[COLOR azure]ItaStreaming[/COLOR]"      , channel="itastreaming" , language="IT" , category="F,S,A" , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]ItaStreaming[/COLOR]"      , channel="itastreaming" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]LiberoITA[/COLOR]"       , channel="liberoita"           , language="IT"    , category="F,S,A"   , type="generic"))
     itemlist.append( Item(title="[COLOR azure]MondoLunatico[/COLOR]"    , channel="mondolunatico"       , language="IT"    , category="B,F"     , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]Multiplayer[/COLOR]"        , channel="multiplayer"       , language="IT"    , category="D"       , type="generic"))
@@ -308,7 +313,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]SimpsonITA Streaming[/COLOR]"      , channel="simpsonita"           , language="IT"    , category="S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]SouthParkITA Streaming[/COLOR]"      , channel="southparkita"           , language="IT"    , category="S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]StorieDellArte[/COLOR]"    , channel="storiedellarte"         , language="IT" , category="D"        , type="generic" , extra="Series" ))
-    itemlist.append( Item( title="[COLOR azure]StreamBlog[/COLOR]"    , channel="streamblog"         , language="IT" , category="S,F,A"        , type="generic" , extra="Series"))
+    #itemlist.append( Item( title="[COLOR azure]StreamBlog[/COLOR]"    , channel="streamblog"         , language="IT" , category="S,F,A"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Streaming01[/COLOR]"    , channel="streaming01"         , language="IT" , category="B,F"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Streaminfilmit[/COLOR]"    , channel="streamingfilmit"         , language="IT" , category="F"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]StreamingPopcorn[/COLOR]"    , channel="streamingpopcorn"         , language="IT" , category="F"        , type="generic" ))
@@ -317,7 +322,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Toonitalia[/COLOR]"        , channel="toonitalia"       , language="IT"    , category="A"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]TheWalkingDeadITA Streaming[/COLOR]"      , channel="walkingdeadita"           , language="IT"    , category="S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="B,S"       , type="generic" ))
-    itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic" ))
+    #itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]Bibliotrailer[/COLOR]"        , channel="bibliotrailer"       , language="IT"    , category="D"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic"))
 
