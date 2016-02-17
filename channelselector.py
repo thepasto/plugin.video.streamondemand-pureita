@@ -131,7 +131,7 @@ def getchanneltypes(preferred_thumb=""):
     itemlist.append( Item( title="Torrent" , channel="channelselector" , action="listchannels" , category="T" ))
     itemlist.append( Item( title="Film 3D" , channel="channelselector" , action="listchannels" , category="3" ))
     #itemlist.append( Item( title=config.get_localized_string(30126) , channel="channelselector" , action="listchannels" , category="M"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_musica.png")))
-    #itemlist.append( Item( title="Bittorrent" , channel="channelselector" , action="listchannels" , category="T"  , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_torrent.png" )))
+    #itemlist.append( Item( title="Bittorrent" , channel="channelselector" , action="listchannels" , category="T"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_torrent.png")))
     #itemlist.append( Item( title=config.get_localized_string(30127) , channel="channelselector" , action="listchannels" , category="L"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_latino.png")))
     #if config.get_setting("enableadultmode") == "true": itemlist.append( Item( title=config.get_localized_string(30126) , channel="channelselector" , action="listchannels" , category="X"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_adultos.png")))
     #itemlist.append( Item( title=config.get_localized_string(30127) , channel="channelselector" , action="listchannels" , category="G"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_servidores.png")))
@@ -140,19 +140,14 @@ def getchanneltypes(preferred_thumb=""):
 '''
 def channeltypes(params,url,category):
     logger.info("channelselector.mainlist channeltypes")
-
     lista = getchanneltypes()
     for item in lista:
         addfolder(item.title,item.channel,item.action,item.category,item.thumbnail,item.thumbnail)
-
     # Label (top-right)...
     import xbmcplugin
-@orione7
-Commit changes
     xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category="" )
     xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
     xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
-
     if config.get_setting("forceview")=="true":
         # Confluence - Thumbnail
         import xbmc
@@ -287,7 +282,6 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Hubberfilm[/COLOR]"          , channel="hubberfilm"           , language="IT"    , category="F,S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]ildocumento.it[/COLOR]"      , channel="ildocumento"           , language="IT"    , category="D"   , type="generic"))
     itemlist.append( Item( title="[COLOR white]HDGratis.net[/COLOR]"        , channel="hdgratis"       , language="IT"    , category="F"       , type="generic" ))
-
     itemlist.append( Item( title="[COLOR azure]HD-Streaming.it[/COLOR]"        , channel="hdstreamingit"       , language="IT"    , category="F,3"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]Hokuto no Ken[/COLOR]", channel="hokutonoken", language="IT"  , type="generic" , category="A"))
     itemlist.append( Item( title="[COLOR azure]Instreaming.info[/COLOR]"      , channel="instreaminginfo"           , language="IT"    , category="F"   , type="generic" ))
