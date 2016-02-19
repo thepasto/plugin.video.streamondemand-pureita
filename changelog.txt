@@ -1,3 +1,7 @@
+5.2.9
+- Added channel solostreaming
+- Part fixed ricerca globale
+
 5.2.8
 - Fixed channels: Hdgratis, Itastreaming, Italiafilmvideohd
 
