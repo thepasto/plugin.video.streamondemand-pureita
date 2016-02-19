@@ -12,6 +12,7 @@ from unicodedata import normalize
 
 import xbmc
 import xbmcgui
+import xbmcaddon
 
 from core import scrapertools
 
@@ -34,8 +35,20 @@ host = "http://www.ibs.it"
 
 DEBUG = config.get_setting("debug")
 
+TMDB_KEY = 'f7f51775877e0bb6703520952b3c7840'
+#try:
+#    TMDBaddon = xbmcaddon.Addon('metadata.themoviedb.org')
+#    TMDBpath = TMDBaddon.getAddonInfo('path')
+#    with open('%s/tmdb.xml'%TMDBpath, 'r') as tmdbfile:
+#        tmdbxml = tmdbfile.read()
+#    api_key_match = re.search('\?api_key=([\da-fA-F]+)\&amp;', tmdbxml)
+#    if api_key_match:
+#        TMDB_KEY = api_key_match.group(1)
+#        logger.info('streamondemand.biblioteca use metadata.themoviedb.org api_key')
+#except Exception, e:
+#    pass
+
 TMDB_URL_BASE = 'http://api.themoviedb.org/3/'
-TMDB_KEY = base64.urlsafe_b64decode('NTc5ODNlMzFmYjQzNWRmNGRmNzdhZmI4NTQ3NDBlYTk=')
 TMDB_IMAGES_BASEURL = 'http://image.tmdb.org/t/p/'
 INCLUDE_ADULT = 'true' if config.get_setting("enableadultmode") else 'false'
 LANGUAGE_ID = 'it'
@@ -81,7 +94,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.biblioteca mainlist")
     itemlist = [Item(channel="buscador",
-                     title="[COLOR yellow]Cerca nei Canali...[/COLOR]",
+                     title="[COLOR lightgreen]Cerca nei Canali...[/COLOR]",
                      action="mainlist",
                      thumbnail="http://i.imgur.com/pE5WSZp.png"),
                 Item(channel=__channel__,
@@ -110,9 +123,15 @@ def mainlist(item):
                      url="search_similar_movie_by_title",
                      thumbnail="http://i.imgur.com/JmcvZDL.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s...[/COLOR]" % NLS_Search_Tvshow_by_Title,
+                     title="[COLOR lightyellow]%s...[/COLOR]" % NLS_Search_Tvshow_by_Title,
                      action="search",
                      url="search_tvshow_by_title",
+                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+                Item(channel=__channel__,
+                     title="[COLOR lightyellow]SerieTV Ultimi Episodi - On-Air[/COLOR]",
+                     action="list_tvshow",
+                     url="tv/on_the_air?",
+                     plot="1",
                      thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]%s[/COLOR]" % NLS_Now_Playing,
@@ -177,6 +196,23 @@ def list_movie(item):
 
     return itemlist
 
+def list_tvshow(item):
+    logger.info("streamondemand.channels.database list_tvshow '%s/%s'" % (item.url, item.plot))
+
+    results = [0, 0]
+    page = int(item.plot)
+    itemlist = build_movie_list(item, tmdb_get_data('%spage=%d&' % (item.url, page), results=results))
+    if page < results[0]:
+        itemlist.append(Item(
+                channel=item.channel,
+                title="[COLOR orange]%s (%d/%d)[/COLOR]" % (NLS_Next_Page, page * len(itemlist), results[1]),
+                action="list_tvshow",
+                url=item.url,
+                plot="%d" % (page + 1),
+                type=item.type,
+                viewmode="" if page <= 1 else "paged_list"))
+
+    return itemlist
 
 def list_genres(item):
     logger.info("streamondemand.channels.database list_genres")
@@ -261,7 +297,7 @@ def search_person_by_name(item, search_terms):
                 break
 
         extracmds = [
-            (NLS_Info_Person, "RunScript(script.extendedinfo,info=extendedactorinfo,id=%d)" % tmdb_tag(person, 'id'))] \
+            (NLS_Info_Person, "RunScript(script.extendedinfo,info=extendedactorinfo,id=%s)" % str(tmdb_tag(person, 'id')))] \
             if xbmc.getCondVisibility('System.HasAddon(script.extendedinfo)') else []
 
         itemlist.append(Item(
@@ -360,7 +396,7 @@ def build_movie_list(item, movies):
             extrameta["Rating"] = rating
             extrameta["Votes"] = "%d" % votes
 
-        extracmds = [(NLS_Info_Title, "RunScript(script.extendedinfo,info=extendedinfo,id=%d)" % tmdb_tag(movie, 'id'))] \
+        extracmds = [(NLS_Info_Title, "RunScript(script.extendedinfo,info=extendedinfo,id=%s)" % str(tmdb_tag(movie, 'id')))] \
             if xbmc.getCondVisibility('System.HasAddon(script.extendedinfo)') else []
 
         found = False
