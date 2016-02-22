@@ -1,3 +1,6 @@
+5.3.0
+- Update channels
+
 5.2.9
 - Added channel solostreaming
 - Part fixed ricerca globale
