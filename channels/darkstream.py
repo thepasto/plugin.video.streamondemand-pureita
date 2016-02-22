@@ -31,6 +31,11 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.darkstream mainlist")
     itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]In Programmazione Nelle Sale[/COLOR]",
+                     action="fichas",
+                     url=host,
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Film per Registi[/COLOR]",
                      action="cat_registi",
                      url="%s/elenco-registi/" % host,
@@ -226,12 +231,13 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<h2 class="art-postheader"><a href="([^"]+)"[^>]+>(.*?)</a></h2>'
+    patron = '<h2 class="art-postheader"><a href="([^"]+)"[^>]+>(.*?)</a></h2>.*?'
+    patron += '<img width[^s]+src="(.*?)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle in matches:
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
-        scrapedthumbnail = ""
+        #scrapedthumbnail = ""
         scrapedplot = ""
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
@@ -267,6 +273,54 @@ def peliculas(item):
 
     return itemlist
 
+def fichas(item):
+    logger.info("streamondemand.darkstream peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<a href="([^"]+)">.*?<img border="0" src="([^"]+)" width="140" height="200"></a><br>([^<]+)</font></td>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedthumbnail,scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedplot = ""
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True))
+
+    # Extrae el paginador
+    patronvideos = '<a class="next page-numbers" href="([^"]+)">Successivo &raquo;</a>/div>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 folder=True))
+
+    return itemlist
+	
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")

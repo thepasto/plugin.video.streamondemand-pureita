@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para cucinarefacile
+# Canal para hdblog
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 #------------------------------------------------------------
 import re
@@ -12,10 +12,10 @@ from core import logger
 from core import scrapertools
 from core.item import Item
 
-__channel__ = "cucinarefacile"
+__channel__ = "hdblog"
 __category__ = "D"
 __type__ = "generic"
-__title__ = "cucinarefacile (IT)"
+__title__ = "hdblog (IT)"
 __language__ = "IT"
 
 
@@ -25,26 +25,21 @@ def isGeneric():
     return True
 
 def mainlist(item):
-    logger.info("streamondemand.cucinarefacile mainlist")
+    logger.info("streamondemand.hdblog mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Videoricette[/COLOR]", action="peliculas", url="http://www.cucinarefacile.com/tipo-ricetta/video-ricette/", thumbnail="http://www.brinkmanscountrycorner.com/images/Recipies.png"))
-
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Video recensioni tecnologiche[/COLOR]", action="peliculas", url="http://hardware.hdblog.it/video/", thumbnail="http://www.crat-arct.org/uploads/images/tic%201.jpg"))
     
     return itemlist
 
 def peliculas(item):
-    logger.info("streamondemand.cucinarefacile peliculas")
+    logger.info("streamondemand.hdblog peliculas")
     itemlist = []
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron  = '<div class="recipe-list-thumb">\s*'
-    patron  += '<a href="(.*?)"><img[^=]+=[^=]+=[^=]+="(.*?)"[^>]+></a>\s*'
-    patron  += '</div>\s*'
-    patron  += '<div[^>]+>\s*'
-    patron  += '<h2>[^>]+>(.*?)</a>'
+    patron  = '<a class="thumb_new_image" href="([^"]+)">\s*<img[^s]+src="([^"]+)"[^>]+>\s*</a>\s*[^>]+>\s*(.*?)\s*<'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -55,7 +50,7 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
-    patronvideos  = 'a class="nextpostslink" rel="next" href="(.*?)">&raquo;'
+    patronvideos  = '<a style=[^f]+f="([^"]+)" class="esteso">Prossima pagina'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 

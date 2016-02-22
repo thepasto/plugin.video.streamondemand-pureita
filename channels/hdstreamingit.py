@@ -47,6 +47,11 @@ def mainlist(item):
                      url=host,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Film 3D[/COLOR]",
+                     action="pelis3d",
+                     url="%s/event_categories/film-3d/" % host,
+                     thumbnail="http://i.imgur.com/wXMmQie.png"),
+                Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
@@ -109,10 +114,62 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
+    data = scrapertools.cache_page(item.url, timeout=5)
+
+    # Extrae las entradas (carpetas)
+    patronvideos = '<a class="link_image" href="[^"]+" title="Permalink to (.*?)">.*?'
+    patronvideos += '<img src="([^"]+)" alt="">.*?'
+    patronvideos += '<div class="button_yellow"><a(?: target="_blank")? href="([^"]+)"'
+    matches = re.compile(patronvideos, re.DOTALL).finditer(data)
+
+    for match in matches:
+        scrapedurl = urlparse.urljoin(item.url, match.group(3))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
+        scrapedtitle = scrapertools.unescape(match.group(1))
+        scrapedplot = ""
+        if (DEBUG): logger.info(
+                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+                Item(channel=__channel__,
+                     action='episodios' if item.extra == 'serie' else 'findvideos',
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl if item.extra == 'serie' else importio_url + scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     plot=scrapedplot,
+                     folder=True))
+
+    # Extrae el paginador
+    patronvideos = "<link rel='next' href='([^']+)' />"
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 folder=True))
+
+    return itemlist
+
+def pelis3d(item):
+    logger.info("streamondemand.hdstreamingit peliculas")
+    itemlist = []
+
+    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = r'<div class="button_red"><a href="([^"]+)"[^>]+>[^>]+>[^>]+>\s*<div class="button_yellow"><a(?: target="_blank")? href="([^"]+)"'
+    patron = r'<div class="button_red"><a href="([^"]+)"[^>]+>[^>]+>[^>]+>\s*<div class="button_yellow">[^>]+>Versione 3D</a><input type="hidden" value="([^"]+)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle, scrapedurl in matches:
@@ -154,7 +211,7 @@ def peliculas(item):
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
-                 action="peliculas",
+                 action="pelis3d",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",

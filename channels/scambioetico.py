@@ -14,10 +14,17 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "scambioetico"
-__category__ = "F"
+__category__ = "F,T"
 __type__ = "generic"
 __title__ = "Scambio Etico(IT)"
 __language__ = "IT"
+
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:43.0) Gecko/20100101 Firefox/43.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Host', 'forum.tntvillage.scambioetico.org'],
+    ['Connection', 'keep-alive']
+]
 
 DEBUG = config.get_setting("debug")
 
@@ -38,16 +45,18 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url,headers=headers,timeout=95)
 
     # Extrae las entradas (carpetas)
-    patron = '<td class=\'row4\'>\s*<a href="(.*?)"[^>]+>(.*?)</a>'
+    #patron = '<td class=\'row4\'>\s*<a href="(.*?)"[^>]+>(.*?)</a>'
+    patron = '<a href="(.*?)" title="discussione inviata[^>]+>(.*?)</a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         url = scrapedurl
+        url = url.replace("&amp;", "&")
         scrapedplot = ""
         scrapedthumbnail = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+url+"], thumbnail=["+scrapedthumbnail+"]")
@@ -69,7 +78,7 @@ def play(item):
     logger.info("[scambioetico.py] play")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url,timeout=95)
     logger.info("data="+data)
     link = scrapertools.get_match(data,'<a href=\'(magnet[^&]+)[^ ]+ title =\'Magnet link\'>')
     link = urlparse.urljoin(item.url,link)
