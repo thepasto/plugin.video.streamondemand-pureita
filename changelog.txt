@@ -1,3 +1,7 @@
+5.3.1
+-Alligned with SOD
+  - channel auto-update
+
 5.3.0
 - Update channels
 
