@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # update_servers.py
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 import os
 import re
@@ -46,6 +46,9 @@ def update_servers():
             # ----------------------------
             progress.update(percentage, ' Update server: ' + server_id)
             # ----------------------------
+
+    for server_id in set(local_dict.keys()) - set(remote_dict.keys()):
+        os.remove(os.path.join(local_folder, server_id + ".py"))
 
     with open(os.path.join(local_folder, "serverlist.xml"), 'wb') as f:
         f.write(xml)
