@@ -184,7 +184,7 @@
     <id>exashare</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/exashare.py</update_url>
     <active>true</active>
-    <version>3</version>
+    <version>4</version>
     <date>31/10/2015</date>
     <changes>Fix Cavalieri dZ</changes>
 </server>
@@ -220,7 +220,7 @@
     <id>fastvideo</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/fastvideo.py</update_url>
     <active>true</active>
-    <version>1</version>
+    <version>3</version>
     <date>12/09/2015</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
 </server>
@@ -328,9 +328,9 @@
     <id>flashx</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/flashx.py</update_url>
     <active>true</active>
-    <version>2</version>
-    <date>24/11/2015</date>
-    <changes>Prima versione di Pelisalacarta 4</changes>
+    <version>4</version>
+    <date>12/02/2016</date>
+    <changes>CmosGit version</changes>
 </server>
 
 <server>
@@ -613,15 +613,6 @@
 </server>
 
 <server>
-    <id>multiplayerit</id>
-    <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/multiplayerit.py</update_url>
-    <active>true</active>
-    <version>2</version>
-    <date>16/10/2015</date>
-    <changes>Added netaddiction account needed</changes>
-</server>
-
-<server>
     <id>netload</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/netload.py</update_url>
     <active>true</active>
@@ -670,9 +661,9 @@
     <id>nowvideo</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/nowvideo.py</update_url>
     <active>true</active>
-    <version>5</version>
+    <version>6</version>
     <date>20/11/2015</date>
-    <changes>Reverted Doc version</changes>
+    <changes>Merged with Pelis</changes>
 </server>
 
 <server>
@@ -724,7 +715,7 @@
     <id>openload</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/openload.py</update_url>
     <active>true</active>
-    <version>5</version>
+    <version>8</version>
     <date>12/09/2015</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
 </server>
@@ -766,6 +757,15 @@
 </server>
 
 <server>
+    <id>putstream</id>
+    <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/putstream.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>05/03/2016</date>
+    <changes>Prima versione SOD</changes>
+</server>
+
+<server>
     <id>rapidgator</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/rapidgator.py</update_url>
     <active>true</active>
@@ -796,8 +796,8 @@
     <id>rapidvideo</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/rapidvideo.py</update_url>
     <active>true</active>
-    <version>5</version>
-    <date>12/09/2015</date>
+    <version>7</version>
+    <date>11/02/2016</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
 </server>
 
@@ -868,7 +868,7 @@
     <id>servertools</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/servertools.py</update_url>
     <active>true</active>
-    <version>6</version>
+    <version>7</version>
     <date>29/09/2015</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
 </server>
@@ -894,6 +894,15 @@
 <server>
     <id>sockshare</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/sockshare.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>12/09/2015</date>
+    <changes>Prima versione di Pelisalacarta 4</changes>
+</server>
+
+<server>
+    <id>speedvid</id>
+    <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/speedvid.py</update_url>
     <active>true</active>
     <version>1</version>
     <date>12/09/2015</date>
