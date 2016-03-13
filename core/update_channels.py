@@ -69,3 +69,4 @@ def read_channels_list(xml):
 
 ### Run
 Thread(target=update_channels).start()
+
