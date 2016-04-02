@@ -172,7 +172,7 @@ def peliculas(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -204,7 +204,7 @@ def episodios(item):
 
     itemlist = []
 
-    # Descarga la p·gina
+    # Descarga la p√°gina
     data = scrapertools.cache_page(item.url)
 
     start = data.find('id="pd_rating_holder')
@@ -261,7 +261,7 @@ def episodios(item):
 def findvid_serie(item):
     logger.info("[italiafilm.py] findvideos")
 
-    # Descarga la p·gina
+    # Descarga la p√°gina
     data = item.extra
 
     itemlist = servertools.find_video_items(data=data)
