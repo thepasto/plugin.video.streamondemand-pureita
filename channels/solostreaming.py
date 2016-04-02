@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# streamondemand-pureita-master.- XBMC Plugin
 # Canale per solo-streaming.com
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita-master.
 # ------------------------------------------------------------
 import urlparse,urllib2,urllib, json
 import re
