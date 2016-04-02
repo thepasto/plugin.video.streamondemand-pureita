@@ -35,7 +35,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.solostreaming mainlist")
+    logger.info("streamondemand-pureita-master.solostreaming mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]ULTIMI EPISODI AGGIORNATI[/COLOR][/B]",
                      action="updateserietv",
@@ -106,15 +106,15 @@ def elencoserieletter(item):
     return itemlist
     
 def cache_jsonpage(url):
-    print "streamondemand.solostreaming cache_jsonpage url="+url
+    print "streamondemand-pureita-master.solostreaming cache_jsonpage url="+url
     response = urllib.urlopen(url)
-    #print "streamondemand.core.scrapertools cache_jsonpage response="+ str(response)
+    #print "streamondemand-pureita-master.core.scrapertools cache_jsonpage response="+ str(response)
     data = json.loads(response.read())
     #print data["total_results"]
     return data
 
 def dailyupdateserietv(item):
-    logger.info("streamondemand.solostreaming dailyupdateserietv")
+    logger.info("streamondemand-pureita-master.solostreaming dailyupdateserietv")
     logger.info("[solostreaming.py dailyupdateserietv url=] " + item.url)
     #print "[solostreaming.py] " + item.url
     itemlist = []
@@ -193,8 +193,8 @@ def dailyupdateserietv(item):
     return itemlist
   
 def showupdateserietv(item):
-    logger.info("streamondemand.solostreaming showupdateserietv")
-    logger.info("streamondemand.solostreaming showupdateserietv item.extra="  + item.extra)
+    logger.info("streamondemand-pureita-master.solostreaming showupdateserietv")
+    logger.info("streamondemand-pureita-master.solostreaming showupdateserietv item.extra="  + item.extra)
     
     extra = json.loads(item.extra)
     from pprint import pprint
@@ -234,7 +234,7 @@ def showupdateserietv(item):
     return itemlist
   
 def updateserietv(item):
-    logger.info("streamondemand.solostreaming update serietv")
+    logger.info("streamondemand-pureita-master.solostreaming update serietv")
     logger.info("[solostreaming.py] " + item.url)
     print "[solostreaming.py] " + item.url
     
@@ -278,7 +278,7 @@ def updateserietv(item):
     return itemlist
     
 def serietv(item):
-    logger.info("streamondemand.solostreaming serietv")
+    logger.info("streamondemand-pureita-master.solostreaming serietv")
     logger.info("[solostreaming.py] " + item.url)
     print "[solostreaming.py] " + item.url
     itemlist = []
@@ -314,7 +314,7 @@ def serietv(item):
    
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 def search(item, texto):
     logger.info("[solostreaming.py] " + item.url + " search " + texto)
