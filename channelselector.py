@@ -301,7 +301,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Liberostreaming[/COLOR]" , channel="liberostreaming" , language="IT" , category="F,S,A" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Pastebin[/COLOR]"   , channel="pastebin"           , language="IT"    , category="F,S,A,VOS"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Pianeta Streaming[/COLOR]"   , channel="pianetastreaming"           , language="IT"    , category="F,S,A"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Pirate Streaming[/COLOR]"    , channel="piratestreaming"           , language="IT"    , category="F,S,A"   , type="generic"  ))
+    itemlist.append( Item( title="[COLOR azure]Pirate Streaming[/COLOR]"    , channel="piratestreaming"           , language="IT"    , category="B,F,S,A"   , type="generic"  ))
     itemlist.append( Item( title="[COLOR azure]Play Cinema[/COLOR]"    , channel="playcinema"           , language="IT"    , category="F"   , type="generic"  ))
     itemlist.append( Item( title="[COLOR azure]PortaleHD[/COLOR]"   , channel="portalehd"           , language="IT"    , category="F,B,3"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Ricette Video[/COLOR]"        , channel="ricettevideo"       , language="IT"    , category="D"       , type="generic" ))
