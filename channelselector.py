@@ -311,7 +311,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Serie TV Sub ITA[/COLOR]"    , channel="serietvsubita"         , language="IT" , category="S,VOS"        , type="generic" , extra="Series"))
     #itemlist.append( Item( title="[COLOR azure]SimpsonITA Streaming[/COLOR]"      , channel="simpsonita"           , language="IT"    , category="S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Solo-Streaming[/COLOR]"      , channel="solostreaming"           , language="IT"    , category="F,S,A,VOS"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]soloserie[/COLOR]"      , channel="soloserie"           , language="IT"    , category="S,B"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]soloserie[/COLOR]"      , channel="soloserie"           , language="IT"    , category="F,S,B"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]SouthParkITA Streaming[/COLOR]"      , channel="southparkita"           , language="IT"    , category="S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]StorieDellArte[/COLOR]"    , channel="storiedellarte"         , language="IT" , category="D"        , type="generic" , extra="Series" ))
     #itemlist.append( Item( title="[COLOR azure]StreamBlog[/COLOR]"    , channel="streamblog"         , language="IT" , category="S,F,A"        , type="generic" , extra="Series"))
