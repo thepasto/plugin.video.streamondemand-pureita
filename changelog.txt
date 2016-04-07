@@ -1,11 +1,15 @@
-5.3.3
--Alligned with SOD
+5.3.4
+- Added channel soloserie
+- Minor Bug Fix in menu "Top Channels"
 
+5.3.3
+- Alligned with SOD
+- 
 5.3.2
 -Alligned with SOD
 
 5.3.1
--Alligned with SOD
+- Alligned with SOD
 - channel auto-update
 
 5.3.0
