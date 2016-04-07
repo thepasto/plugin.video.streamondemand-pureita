@@ -1,6 +1,6 @@
 5.3.4
 - Added channel soloserie
-- Minor Bug Fix in menu "Top Channels"
+- Minor Fix in menu "Top Channels"
 
 5.3.3
 - Alligned with SOD
