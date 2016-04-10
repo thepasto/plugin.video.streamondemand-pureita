@@ -123,55 +123,75 @@ def mainlist(item):
                      url="search_similar_movie_by_title",
                      thumbnail="http://i.imgur.com/JmcvZDL.png"),
                 Item(channel=__channel__,
-                     title="[COLOR lightyellow]%s...[/COLOR]" % NLS_Search_Tvshow_by_Title,
+                     title="[COLOR lime]%s...[/COLOR]" % NLS_Search_Tvshow_by_Title,
                      action="search",
                      url="search_tvshow_by_title",
                      thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
                 Item(channel=__channel__,
-                     title="[COLOR lightyellow]SerieTV Ultimi Episodi - On-Air[/COLOR]",
+                     title="(TV Shows) [COLOR lime]Ultimi Episodi - On-Air[/COLOR]",
                      action="list_tvshow",
                      url="tv/on_the_air?",
                      plot="1",
                      thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Now_Playing,
+                     title="(TV Shows) [COLOR lime]Populars[/COLOR]",
+                     action="list_tvshow",
+                     url="tv/popular?",
+                     plot="1",
+                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+
+                Item(channel=__channel__,
+                     title="(TV Shows) [COLOR lime]Top Rated[/COLOR]",
+                     action="list_tvshow",
+                     url="tv/top_rated?",
+                     plot="1",
+                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+                Item(channel=__channel__,
+                     title="(TV Shows) [COLOR lime]Airing Today[/COLOR]",
+                     action="list_tvshow",
+                     url="tv/airing_today?",
+                     plot="1",
+                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+                Item(channel=__channel__,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Now_Playing,
                      action="list_movie",
                      url="movie/now_playing?",
                      plot="1",
                      thumbnail="http://i.imgur.com/B16HnVh.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Popular,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Popular,
                      action="list_movie",
                      url="movie/popular?",
                      plot="1",
                      thumbnail="http://i.imgur.com/8IBjyzw.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Top_Rated,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Top_Rated,
                      action="list_movie",
                      url="movie/top_rated?",
                      plot="1",
                      thumbnail="http://www.clipartbest.com/cliparts/RiG/6qn/RiG6qn79T.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Most_Voted,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Most_Voted,
                      action="list_movie",
                      url='discover/movie?certification_country=US&sort_by=vote_count.desc&',
                      plot="1",
                      thumbnail="http://i.imgur.com/5ShnO8w.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Oscar,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Oscar,
                      action="list_movie",
                      url='list/509ec17b19c2950a0600050d?',
                      plot="1",
                      thumbnail="http://i.imgur.com/5ShnO8w.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_Last_2_months,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Last_2_months,
                      action="list_movie",
                      url='discover/movie?primary_release_date.gte=%s&primary_release_date.lte=%s&' % (
                          YEAR_DATE, MONTH2_TIME),
                      plot="1",
                      thumbnail="http://i.imgur.com/CsizqUI.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]%s[/COLOR]" % NLS_List_by_Genre,
+                     title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_List_by_Genre,
                      action="list_genres",
                      thumbnail="http://i.imgur.com/uotyBbU.png")]
 
@@ -397,7 +417,7 @@ def build_movie_list(item, movies):
             extrameta["Votes"] = "%d" % votes
 
         extracmds = [(NLS_Info_Title, "RunScript(script.extendedinfo,info=extendedinfo,id=%s)" % str(tmdb_tag(movie, 'id')))] \
-            if xbmc.getCondVisibility('System.HasAddon(script.extendedinfo)') else []
+            if xbmc.getCondVisibility('System.HasAddon(script.extendedinfo)') else [('Movie/Show Info', 'XBMC.Action(Info)')]
 
         found = False
         kodi_db_movies = kodi_database_movies(title)
@@ -405,16 +425,26 @@ def build_movie_list(item, movies):
             logger.info('streamondemand.database set for local playing(%s):\n%s' % (title, str(kodi_db_movie)))
             if year == str(kodi_db_movie["year"]):
                 found = True
+
+                # If some, less relevant, keys are missing locally
+                # try to get them through TMDB anyway.
+                try:
+                    poster = kodi_db_movie["art"]["poster"]
+                    fanart = kodi_db_movie["art"]["fanart"]
+                except KeyError:
+                    poster = poster
+                    fanart = fanart
+
                 itemlist.append(Item(
                         channel=item.channel,
                         action='play',
                         url=kodi_db_movie["file"],
                         title='[COLOR orange][%s][/COLOR] ' % NLS_Library + kodi_db_movie["title"] + jobrole,
-                        thumbnail=kodi_db_movie["art"]["poster"],
+                        thumbnail=poster,
                         category=genres,
                         plot=plot,
                         viewmode='movie_with_plot',
-                        fanart=kodi_db_movie["art"]["fanart"],
+                        fanart=fanart,
                         extrameta=extrameta,
                         extracmds=extracmds,
                         folder=False,
@@ -446,8 +476,10 @@ def normalize_unicode(string, encoding='utf-8'):
             encoding, 'ignore')
 
 
-def tmdb_get_data(url="", results=[0, 0]):
-    url = TMDB_URL_BASE + "%sinclude_adult=%s&language=%s&api_key=%s" % (url, INCLUDE_ADULT, LANGUAGE_ID, TMDB_KEY)
+def tmdb_get_data(url="", results=[0, 0], language=True):
+    url = TMDB_URL_BASE + "%sinclude_adult=%s&api_key=%s" % (url, INCLUDE_ADULT, TMDB_KEY)
+    # Temporary fix until tmdb fixes the issue with getting the genres by language!
+    if language: url += "&language=%s" % LANGUAGE_ID
     response = get_json_response(url)
     results[0] = response['total_pages'] if 'total_pages' in response else 0
     results[1] = response['total_results'] if 'total_results' in response else 0
@@ -477,11 +509,11 @@ def tmdb_image(entry, tag, width='original'):
 
 def tmdb_genre(id):
     if id not in TMDb_genres:
-        genres = tmdb_get_data("genre/list?")
+        genres = tmdb_get_data("genre/list?", language=False)
         for genre in tmdb_tag(genres, 'genres', []):
             TMDb_genres[tmdb_tag(genre, 'id')] = tmdb_tag(genre, 'name')
 
-    return TMDb_genres[id] if id in TMDb_genres else str(id)
+    return TMDb_genres[id] if id in TMDb_genres and TMDb_genres[id] != None else str(id)
 
 
 def kodi_database_movies(title):
