@@ -1,3 +1,7 @@
+5.3.5
+- Alligned with SOD
+- Update channels
+- Part fix menu "Torna Home"
 5.3.4
 - Added channel soloserie
 - Minor Fix in menu "Top Channels"
