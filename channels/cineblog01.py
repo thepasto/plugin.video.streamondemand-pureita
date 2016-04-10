@@ -139,17 +139,35 @@ def peliculasrobalo(item):
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvid",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 viewmode="movie_with_plot",
-                 fanart=scrapedthumbnail))
+        tmdbtitle1 = scrapedtitle.split("[")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+        try:
+           plot, fanart, poster, extrameta = info(tmdbtitle)
+
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="findvid",
+                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                    url=scrapedurl,
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action="findvid",
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    title=scrapedtitle,
+                    url=scrapedurl,
+                    thumbnail=scrapedthumbnail,
+                    plot=scrapedplot,
+                    viewmode="movie_with_plot",
+                    fanart=scrapedthumbnail))
 
     # Next page mark
     try:
@@ -165,7 +183,11 @@ def peliculasrobalo(item):
             scrapedplot = ""
             if (DEBUG): logger.info(
                 "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="HomePage",
+                     title="[COLOR yellow]Torna Home[/COLOR]",
+                     folder=True)),
             itemlist.append(
                 Item(channel=__channel__,
                      action="peliculasrobalo",
@@ -232,7 +254,11 @@ def peliculas(item):
             scrapedplot = ""
             if (DEBUG): logger.info(
                 "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="HomePage",
+                     title="[COLOR yellow]Torna Home[/COLOR]",
+                     folder=True)),
             itemlist.append(
                 Item(channel=__channel__,
                      action="peliculas",
@@ -407,6 +433,11 @@ def listserie(item):
     # Put the next page mark
     try:
         next_page = scrapertools.get_match(data, "<link rel='next' href='([^']+)'")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
         itemlist.append(
             Item(channel=__channel__,
                  action="listserie",
@@ -652,6 +683,11 @@ def listanime(item):
         next_page = scrapertools.get_match(data, "<link rel='next' href='([^']+)'")
         itemlist.append(
             Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
                  action="listanime",
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
@@ -879,7 +915,9 @@ def play(item):
         try:
             data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
         except IndexError:
-            data = scrapertools.get_match(data, r'<a href="([^"]+)" class="btn-wrapper">Clicca per proseguire</a>')
+#            data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
+#   In alternativa, dato che a volte compare "Clicca qui per proseguire":
+            data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
         print "##### play go.php data ##\n%s\n##" % data
     elif "/link/" in item.url:
         data = anti_cloudflare(item.url)
@@ -927,3 +965,26 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+
+def info(title):
+    logger.info("streamondemand.cineblog01 info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        count = 0
+        if oTmdb.total_results > 0:
+           extrameta = {}
+           extrameta["Year"] = oTmdb.result["release_date"][:4]
+           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
+           extrameta["Rating"] = float(oTmdb.result["vote_average"])
+           fanart=oTmdb.get_backdrop()
+           poster=oTmdb.get_poster()
+           plot=oTmdb.get_sinopsis()
+           return plot, fanart, poster, extrameta
+    except:
+        pass	
+
