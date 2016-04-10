@@ -4,7 +4,7 @@
 - Part fix menu "Torna Home"
 5.3.4
 - Added channel soloserie
-- Minor Fix in menu "Top Channels"
+- Minor Fix 
 
 5.3.3
 - Alligned with SOD
