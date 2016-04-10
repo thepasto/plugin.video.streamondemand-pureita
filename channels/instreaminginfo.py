@@ -112,7 +112,7 @@ def peliculas(item):
 
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="item">\s*<a href="(.*?)">\s*[^>]+>\s*<img src="(.*?)" alt="(.*?)"[^>]+>'
+    patron = '<div class="item">\s*<a href="([^"]+)">\s*[^>]+>\s*<img src="([^"]+)" alt="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
@@ -123,16 +123,34 @@ def peliculas(item):
         ## ------------------------------------------------
         scrapedthumbnail += "|" + _headers
         ## ------------------------------------------------
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 folder=True))
+        tmdbtitle1 = scrapedtitle.split("[")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+        try:
+           plot, fanart, poster, extrameta = info(tmdbtitle)
+
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="findvideos",
+                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                    url=scrapedurl,
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action="findvideos",
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                    url=scrapedurl,
+                    thumbnail=scrapedthumbnail,
+                    plot=scrapedplot,
+                    folder=True))
 
     # Extrae el paginador
 
@@ -150,16 +168,12 @@ def peliculas(item):
 def findvideos(item):
     logger.info("[instreaminginfo.py] findvideos")
 
-    data = scrapertools.cache_page(item.url, headers=headers)
+    data = anti_cloudflare(item.url)
 
-    patron = '<a href="https://href.li/?(.*?)" rel="nofollow" target="_blank">'
-    #url = scrapertools.find_single_match(data, patron)
-    url = scrapertools.get_match(data, patron)
-
-    itemlist = servertools.find_video_items(data=url)
+    itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = item.show
+        videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
@@ -182,4 +196,22 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(host + '/' + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
+def info(title):
+    logger.info("streamondemand.instreaminginfo info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        count = 0
+        if oTmdb.total_results > 0:
+           extrameta = {}
+           extrameta["Year"] = oTmdb.result["release_date"][:4]
+           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
+           extrameta["Rating"] = float(oTmdb.result["vote_average"])
+           fanart=oTmdb.get_backdrop()
+           poster=oTmdb.get_poster()
+           plot=oTmdb.get_sinopsis()
+           return plot, fanart, poster, extrameta
+    except:
+        pass	
 

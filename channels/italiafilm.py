@@ -34,7 +34,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Novita'[/COLOR]",
                      action="peliculas",
-                     url="%s/category/film-del-2015-streaming/" % host,
+                     url="%s/category/category/film-streaming-2016/" % host,
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film HD[/COLOR]",
@@ -126,28 +126,46 @@ def peliculas(item):
         title = title.replace("Streaming", "")
         title = scrapertools.decodeHtmlentities(title).strip()
         url = scrapertools.find_single_match(match, '<h3[^<]+<a href="([^"]+)"')
-        html = scrapertools.cache_page(url)
-        start = html.find("<div class=\"entry-content\">")
-        end = html.find("</p>", start)
-        plot = html[start:end]
-        plot = re.sub(r'<[^>]*>', '', plot)
-        plot = scrapertools.decodeHtmlentities(plot)
+        #html = scrapertools.cache_page(url)
+        #start = html.find("<div class=\"entry-content\">")
+        #end = html.find("</p>", start)
+        #plot = html[start:end]
+        #plot = re.sub(r'<[^>]*>', '', plot)
+        #plot = scrapertools.decodeHtmlentities(plot)
+        plot = ""
         thumbnail = scrapertools.find_single_match(match, 'data-echo="([^"]+)"')
 
         if (DEBUG): logger.info("title=[" + title + "], url=[" + url + "], thumbnail=[" + thumbnail + "]")
 
-        itemlist.append(
-                Item(channel=__channel__,
-                     action='episodios' if item.extra == 'serie' else 'findvideos',
-                     fulltitle=title,
-                     show=title,
-                     title="[COLOR azure]" + title + "[/COLOR]",
-                     url=url,
-                     thumbnail=thumbnail,
-                     fanart=thumbnail,
-                     plot=plot,
-                     viewmode="movie_with_plot",
-                     folder=True))
+        tmdbtitle1 = title.split("[")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+        try:
+           plot, fanart, poster, extrameta = info(tmdbtitle)
+
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="episodios' if item.extra == 'serie' else 'findvideos",
+                    title="[COLOR azure]" + title + "[/COLOR]",
+                    url=url,
+                    fulltitle=title,
+                    show=title,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action='episodios' if item.extra == 'serie' else 'findvideos',
+                    fulltitle=title,
+                    show=title,
+                    title="[COLOR azure]" + title + "[/COLOR]",
+                    url=url,
+                    thumbnail=thumbnail,
+                    plot=plot,
+                    viewmode="movie_with_plot",
+                    folder=True))
 
     # Siguiente
     try:
@@ -172,7 +190,7 @@ def peliculas(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -204,7 +222,7 @@ def episodios(item):
 
     itemlist = []
 
-    # Descarga la página
+    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
 
     start = data.find('id="pd_rating_holder')
@@ -261,7 +279,7 @@ def episodios(item):
 def findvid_serie(item):
     logger.info("[italiafilm.py] findvideos")
 
-    # Descarga la página
+    # Descarga la pagina
     data = item.extra
 
     itemlist = servertools.find_video_items(data=data)
@@ -274,3 +292,22 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
+
+def info(title):
+    logger.info("streamondemand.italiafilm info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        count = 0
+        if oTmdb.total_results > 0:
+           extrameta = {}
+           extrameta["Year"] = oTmdb.result["release_date"][:4]
+           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
+           extrameta["Rating"] = float(oTmdb.result["vote_average"])
+           fanart=oTmdb.get_backdrop()
+           poster=oTmdb.get_poster()
+           plot=oTmdb.get_sinopsis()
+           return plot, fanart, poster, extrameta
+    except:
+        pass	
+

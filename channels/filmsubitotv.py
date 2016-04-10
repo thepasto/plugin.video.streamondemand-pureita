@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "FilmSubito.tv"
 __language__ = "IT"
 
-host = "http://www.cinemasubito.com/"
+host = "http://www.cinemasubito.me/"
 
 DEBUG = config.get_setting("debug")
 
@@ -34,7 +34,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Novità[/COLOR]",
                      action="peliculas",
-                     url=host + "film-2015-streaming.html?&page=2",
+                     url=host + "film-2016-streaming.html",
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Genere[/COLOR]",
@@ -91,28 +91,44 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<span class="pm-video-li-thumb-info".*?'
-    patron += 'href="([^"]+)".*?'
-    patron += 'src="([^"]+)" '
-    patron += 'alt="([^"]+)".*?'
-    patron += '<p style="font-size:12px;line-height:15px">(.*?)</p>'
+    patron = '<h3 dir="ltr"><a href="([^"]+)"[^>]+>(.*?)</a></h3>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle, scrapedplot in matches:
+    for scrapedurl, scrapedtitle in matches:
+        scrapedthumbnail = ""
+        scrapedplot = ""
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvid",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 plot=scrapedplot,
-                 thumbnail=scrapedthumbnail,
-                 folder=True,
-                 fanart=scrapedthumbnail))
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        tmdbtitle1 = scrapedtitle.split("[")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+
+        try:
+           plot, fanart, poster, extrameta = info(tmdbtitle)
+
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="findvid",
+                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                    url=scrapedurl,
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action="findvid",
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    title=scrapedtitle,
+                    url=scrapedurl,
+                    plot=scrapedplot,
+                    thumbnail=scrapedthumbnail,
+                    folder=True))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
@@ -347,13 +363,14 @@ def findvid(item):
     # ---------------------------------------------------------------
     servers = {
         '2': 'http://embed.nowvideo.li/embed.php?v=%s',
+        '3': 'http://speedvideo.net/embed-%s-607x360.html',
+        '4': 'http://www.fastvideo.me/embed-%s-607x360.html',
+        '5': 'http://www.rapidvideo.org/embed-%s-607x360.html',
         '11': 'https://openload.co/embed/%s/',
         '16': 'http://youwatch.org/embed-%s-640x360.html',
-        '17': 'http://youwatch.org/embed-%s-640x360.html',
         '21': 'http://vidto.me/embed-%s',
         '22': 'http://www.exashare.com/embed-%s-700x400.html',
         '23': 'http://videomega.tv/cdn.php?ref=%s&width=700&height=430',
-        '29': 'http://embed.novamov.com/embed.php?v=%s',
         '30': 'http://streamin.to/embed-%s-700x370.html'
     }
 
@@ -382,4 +399,22 @@ def findvid(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+
+def info(title):
+    logger.info("streamondemand.filmsubito info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        count = 0
+        if oTmdb.total_results > 0:
+           extrameta = {}
+           extrameta["Year"] = oTmdb.result["release_date"][:4]
+           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
+           extrameta["Rating"] = float(oTmdb.result["vote_average"])
+           fanart=oTmdb.get_backdrop()
+           poster=oTmdb.get_poster()
+           plot=oTmdb.get_sinopsis()
+           return plot, fanart, poster, extrameta
+    except:
+        pass	
