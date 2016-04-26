@@ -302,7 +302,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Play Cinema[/COLOR]"    , channel="playcinema"           , language="IT"    , category="F"   , type="generic"  ))
     itemlist.append( Item( title="[COLOR azure]PortaleHD[/COLOR]"   , channel="portalehd"           , language="IT"    , category="F,B,3"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Ricette Video[/COLOR]"        , channel="ricettevideo"       , language="IT"    , category="D"       , type="generic" ))
-    itemlist.append( Item( title="[COLOR azure]Corsi Programmazione[/COLOR]"        , channel="programmazione"       , language="IT"    , category="A"       , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Corsi Programmazione[/COLOR]"        , channel="programmazione"       , language="IT"    , category="D"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Saint Seiya[/COLOR]"     , channel="saintseiya"       , language="IT"    , category="A"        ))
     itemlist.append( Item( title="[COLOR azure]Scambio Etico - TNT Village[/COLOR]"     , channel="scambioetico"       , language="IT"    , category="F,T" ))
     itemlist.append( Item( title="[COLOR azure]Serie HD[/COLOR]"     , channel="seriehd"       , language="IT"    , category="S"        , type="generic"))
