@@ -248,6 +248,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01[/COLOR]"      , channel="altadefinizione01"           , language="IT"    , category="B,F,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.click[/COLOR]" , channel="altadefinizioneclick" , language="IT" , category="F" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.one[/COLOR]" , channel="altadefinizioneone" , language="IT" , category="F" , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Animestream.it[/COLOR]"   , channel="animestream"           , language="IT"    , category="A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Anime Sub Ita[/COLOR]"   , channel="animesubita"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Asian Sub-Ita[/COLOR]"      , channel="asiansubita"           , language="IT"    , category="F,S,VOS"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]BreakingBadITA Streaming[/COLOR]"      , channel="breakingbadita"           , language="IT"    , category="S"   , type="generic"))
