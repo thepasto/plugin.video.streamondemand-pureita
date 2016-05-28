@@ -1,7 +1,7 @@
 5.3.6
 -Alligned with SOD
 -Update core "Wait for Network"
--Update channels
+-Update Channels
 
 
 5.3.5
