@@ -4,6 +4,7 @@
 # update_servers.py
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
+
 import os
 import re
 from threading import Thread
@@ -21,41 +22,43 @@ local_folder = os.path.join(config.get_runtime_path(), "channels")
 
 ### Procedures
 def update_channels():
-    with open(os.path.join(local_folder, "channelslist.xml"), 'rb') as f:
-        xml = f.read()
-    local_dict = read_channels_list(xml)
+    if scrapertools.wait_for_internet():
+        with open(os.path.join(local_folder, "channelslist.xml"), 'rb') as f:
+            xml = f.read()
+        local_dict = read_channels_list(xml)
 
-    xml = scrapertools.cache_page(remote_url + "channelslist.xml")
-    remote_dict = read_channels_list(xml)
+        xml = scrapertools.cache_page(remote_url + "channelslist.xml")
+        remote_dict = read_channels_list(xml)
 
-    # ----------------------------
-    import xbmcgui
-    progress = xbmcgui.DialogProgressBG()
-    progress.create("Update channels list")
-    # ----------------------------
-
-    for index, channel_id in enumerate(remote_dict.iterkeys()):
         # ----------------------------
-        percentage = index * 100 / len(remote_dict)
+        import xbmcgui
+        progress = xbmcgui.DialogProgressBG()
+        progress.create("Update channels list")
         # ----------------------------
-        if channel_id not in local_dict or remote_dict[channel_id][VERSION_IDX] > local_dict[channel_id][VERSION_IDX]:
-            data = scrapertools.cache_page(remote_dict[channel_id][UPDATE_URL_IDX])
 
-            with open(os.path.join(local_folder, channel_id + ".py"), 'wb') as f:
-                f.write(data)
+        for index, channel_id in enumerate(remote_dict.iterkeys()):
             # ----------------------------
-            progress.update(percentage, ' Update channel: ' + channel_id)
+            percentage = index * 100 / len(remote_dict)
             # ----------------------------
+            if channel_id not in local_dict or remote_dict[channel_id][VERSION_IDX] > local_dict[channel_id][
+                VERSION_IDX]:
+                data = scrapertools.cache_page(remote_dict[channel_id][UPDATE_URL_IDX])
 
-    for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
-        os.remove(os.path.join(local_folder, channel_id + ".py"))
+                with open(os.path.join(local_folder, channel_id + ".py"), 'wb') as f:
+                    f.write(data)
+                # ----------------------------
+                progress.update(percentage, ' Update channel: ' + channel_id)
+                # ----------------------------
 
-    with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
-        f.write(xml)
+        for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
+            os.remove(os.path.join(local_folder, channel_id + ".py"))
 
-    # ----------------------------
-    progress.close()
-    # ----------------------------
+        with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
+            f.write(xml)
+
+        # ----------------------------
+        progress.close()
+        # ----------------------------
 
 
 def read_channels_list(xml):
@@ -69,4 +72,3 @@ def read_channels_list(xml):
 
 ### Run
 Thread(target=update_channels).start()
-
