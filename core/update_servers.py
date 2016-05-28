@@ -4,7 +4,6 @@
 # update_servers.py
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
-
 import os
 import re
 from threading import Thread
@@ -22,42 +21,41 @@ local_folder = os.path.join(config.get_runtime_path(), "servers")
 
 ### Procedures
 def update_servers():
-    if scrapertools.wait_for_internet():
-        xml = scrapertools.cache_page(remote_url + "serverlist.xml")
-        remote_dict = read_servers_list(xml)
+    xml = scrapertools.cache_page(remote_url + "serverlist.xml")
+    remote_dict = read_servers_list(xml)
 
-        with open(os.path.join(local_folder, "serverlist.xml"), 'rb') as f:
-            data = f.read()
-        local_dict = read_servers_list(data)
+    with open(os.path.join(local_folder, "serverlist.xml"), 'rb') as f:
+        data = f.read()
+    local_dict = read_servers_list(data)
 
+    # ----------------------------
+    import xbmcgui
+    progress = xbmcgui.DialogProgressBG()
+    progress.create("Update servers list")
+    # ----------------------------
+
+    for index, server_id in enumerate(remote_dict.iterkeys()):
         # ----------------------------
-        import xbmcgui
-        progress = xbmcgui.DialogProgressBG()
-        progress.create("Update servers list")
+        percentage = index * 100 / len(remote_dict)
         # ----------------------------
+        if server_id not in local_dict or remote_dict[server_id][VERSION_IDX] > local_dict[server_id][VERSION_IDX]:
+            data = scrapertools.cache_page(remote_dict[server_id][UPDATE_URL_IDX])
 
-        for index, server_id in enumerate(remote_dict.iterkeys()):
+            with open(os.path.join(local_folder, server_id + ".py"), 'wb') as f:
+                f.write(data)
             # ----------------------------
-            percentage = index * 100 / len(remote_dict)
+            progress.update(percentage, ' Update server: ' + server_id)
             # ----------------------------
-            if server_id not in local_dict or remote_dict[server_id][VERSION_IDX] > local_dict[server_id][VERSION_IDX]:
-                data = scrapertools.cache_page(remote_dict[server_id][UPDATE_URL_IDX])
 
-                with open(os.path.join(local_folder, server_id + ".py"), 'wb') as f:
-                    f.write(data)
-                # ----------------------------
-                progress.update(percentage, ' Update server: ' + server_id)
-                # ----------------------------
+    for server_id in set(local_dict.keys()) - set(remote_dict.keys()):
+        os.remove(os.path.join(local_folder, server_id + ".py"))
 
-        for server_id in set(local_dict.keys()) - set(remote_dict.keys()):
-            os.remove(os.path.join(local_folder, server_id + ".py"))
+    with open(os.path.join(local_folder, "serverlist.xml"), 'wb') as f:
+        f.write(xml)
 
-        with open(os.path.join(local_folder, "serverlist.xml"), 'wb') as f:
-            f.write(xml)
-
-        # ----------------------------
-        progress.close()
-        # ----------------------------
+    # ----------------------------
+    progress.close()
+    # ----------------------------
 
 
 def read_servers_list(xml):
