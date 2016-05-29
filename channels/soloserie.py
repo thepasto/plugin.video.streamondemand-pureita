@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-pureita-master.- XBMC Plugin
 # Canale per solo-streaming.com
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita-master.
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita.
 # ------------------------------------------------------------
 import urlparse,urllib2,urllib, json
 import re
