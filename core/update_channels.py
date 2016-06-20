@@ -22,43 +22,42 @@ local_folder = os.path.join(config.get_runtime_path(), "channels")
 
 ### Procedures
 def update_channels():
-    if scrapertools.wait_for_internet():
-        with open(os.path.join(local_folder, "channelslist.xml"), 'rb') as f:
-            xml = f.read()
-        local_dict = read_channels_list(xml)
+    with open(os.path.join(local_folder, "channelslist.xml"), 'rb') as f:
+        xml = f.read()
+    local_dict = read_channels_list(xml)
 
-        xml = scrapertools.cache_page(remote_url + "channelslist.xml")
-        remote_dict = read_channels_list(xml)
+    xml = scrapertools.cache_page(remote_url + "channelslist.xml")
+    remote_dict = read_channels_list(xml)
 
+    # ----------------------------
+    import xbmcgui
+    progress = xbmcgui.DialogProgressBG()
+    progress.create("Update channels list")
+    # ----------------------------
+
+    for index, channel_id in enumerate(remote_dict.iterkeys()):
         # ----------------------------
-        import xbmcgui
-        progress = xbmcgui.DialogProgressBG()
-        progress.create("Update channels list")
+        percentage = index * 100 / len(remote_dict)
         # ----------------------------
+        if channel_id not in local_dict or remote_dict[channel_id][VERSION_IDX] > local_dict[channel_id][
+            VERSION_IDX]:
+            data = scrapertools.cache_page(remote_dict[channel_id][UPDATE_URL_IDX])
 
-        for index, channel_id in enumerate(remote_dict.iterkeys()):
+            with open(os.path.join(local_folder, channel_id + ".py"), 'wb') as f:
+                f.write(data)
             # ----------------------------
-            percentage = index * 100 / len(remote_dict)
+            progress.update(percentage, ' Update channel: ' + channel_id)
             # ----------------------------
-            if channel_id not in local_dict or remote_dict[channel_id][VERSION_IDX] > local_dict[channel_id][
-                VERSION_IDX]:
-                data = scrapertools.cache_page(remote_dict[channel_id][UPDATE_URL_IDX])
 
-                with open(os.path.join(local_folder, channel_id + ".py"), 'wb') as f:
-                    f.write(data)
-                # ----------------------------
-                progress.update(percentage, ' Update channel: ' + channel_id)
-                # ----------------------------
+    for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
+        os.remove(os.path.join(local_folder, channel_id + ".py"))
 
-        for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
-            os.remove(os.path.join(local_folder, channel_id + ".py"))
+    with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
+        f.write(xml)
 
-        with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
-            f.write(xml)
-
-        # ----------------------------
-        progress.close()
-        # ----------------------------
+    # ----------------------------
+    progress.close()
+    # ----------------------------
 
 
 def read_channels_list(xml):
