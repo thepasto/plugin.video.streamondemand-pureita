@@ -111,7 +111,7 @@ def mainlist(item):
                      title="[COLOR yellow]%s...[/COLOR]" % NLS_Search_by_Year,
                      action="search",
                      url="search_movie_by_year",
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/orione_images/master/menu_channels/most%20used/movie_year.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]%s...[/COLOR]" % NLS_Search_by_Collection,
                      action="search",
