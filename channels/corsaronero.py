@@ -22,7 +22,7 @@ __language__ = "IT"
 DEBUG = config.get_setting("debug")
 
 host = "http://torcache.net/torrent/"
-site = "http://corsaronero.info"
+site = "http://ilcorsaronero.info"
 
 def isGeneric():
     return True
@@ -65,7 +65,7 @@ def peliculas(item):
         proctitle1 = scrapertools.decodeHtmlentities(scrapedtitle.replace("19","("))
         proctitle = scrapertools.decodeHtmlentities(proctitle1.replace("20","("))
         title = proctitle.split("(")[0]
-        url = scrapedurl
+        url = site + scrapedurl
         scrapedplot = ""
         scrapedthumbnail = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+url+"], thumbnail=["+scrapedthumbnail+"]")
@@ -92,11 +92,11 @@ def play(item):
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
-    logger.info("data="+data)
-    link = scrapertools.get_match(data,'<a class="forbtn magnet" target="_blank" href="(magnet[^"]+)" title="Magnet" ></a>')
-    link = urlparse.urljoin(item.url,link)
-    logger.info("link="+link)
 
+    patron = '<a class="forbtn magnet" target="_blank" href="(magnet[^"]+)" title="Magnet" ></a>'
+    patron = urllib.unquote(patron).decode('utf8')
+    link = scrapertools.find_single_match(data, patron)
+    link = urlparse.urljoin(item.url,link)
 
     itemlist.append( Item(channel=__channel__, action=play, server="torrent", title=item.title , url=link , thumbnail=item.thumbnail , plot=item.plot , folder=False) )
 
@@ -106,7 +106,7 @@ def info(title):
     logger.info("streamondemand.corsaronero info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo="movie", include_adult="true", idioma_busqueda="it")
+        oTmdb= Tmdb(texto_buscado=title, tipo="movie", include_adult="false", idioma_busqueda="it")
         count = 0
         if oTmdb.total_results > 0:
             #Mientras el thumbnail no coincida con el del resultado de la búsqueda, pasa al siguiente resultado

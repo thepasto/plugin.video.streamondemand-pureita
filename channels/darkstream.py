@@ -39,22 +39,22 @@ def mainlist(item):
                      title="[COLOR azure]Film per Registi[/COLOR]",
                      action="cat_registi",
                      url="%s/elenco-registi/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/Director.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Attori[/COLOR]",
                      action="cat_attori",
                      url="%s/elenco-attori/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/All%20Movies%20by%20Actor.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Attrici[/COLOR]",
                      action="cat_attrici",
                      url="%s/elenco-attrici/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/All%20Movies%20by%20Actor.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/A-Z.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -232,7 +232,6 @@ def peliculas(item):
 
     # Extrae las entradas (carpetas)
     patron = '<h2 class="art-postheader"><a href="([^"]+)"[^>]+>(.*?)</a></h2>.*?'
-    #patron += '<img width[^s]+src="(.*?)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -298,7 +297,6 @@ def fichas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    #patron = '<a href="([^"]+)">.*?<img border="0" src="([^"]+)" width="140" height="200"></a><br>([^<]+)</font></td>'
     patron = '<font size="1">\s*<a href="(.*?)">\s*<img[^s]+src="(.*?)"[^>]+></a><br>\s*(.*?)<'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -363,7 +361,7 @@ def info(title):
     logger.info("streamondemand.darkstream info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="false", idioma_busqueda="it")
         count = 0
         if oTmdb.total_results > 0:
            extrameta = {}

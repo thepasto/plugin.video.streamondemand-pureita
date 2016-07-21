@@ -6,7 +6,9 @@
 # ------------------------------------------------------------
 import re
 import urllib2
-
+import sys
+import time
+import urlparse
 from core import config
 from core import logger
 from core import scrapertools
@@ -19,7 +21,7 @@ __type__ = "generic"
 __title__ = "AltaDefinizioneclick"
 __language__ = "IT"
 
-host = "http://altadefinizione.online"
+host = "http://altadefinizione.site"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -39,27 +41,27 @@ def mainlist(item):
              title="[COLOR azure]Novita'[/COLOR]",
              action="fichas",
              url=host + "/nuove-uscite/",
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Anno[/COLOR]",
              action="anno",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film Sub-Ita[/COLOR]",
              action="fichas",
              url=host + "/sub-ita/",
              extra="sub",
-             thumbnail="http://i.imgur.com/qUENzxl.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
 
@@ -86,10 +88,10 @@ def genere(item):
 
     data = anti_cloudflare(item.url)
 
-    patron = '<option value="%s">Seleziona Categoria Film</option>(.*?)</form>' % host
+    patron = '<ul class="listSubCat" id="Film">(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<option value="([^"]+)">(.*?)</option>'
+    patron = '<li><a href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -149,7 +151,7 @@ def fichas(item):
     )
     # ------------------------------------------------
     cookies = ""
-    matches = re.compile('(.altadefinizione.online.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    matches = re.compile('(.altadefinizione.site.*?)\n', re.DOTALL).findall(config.get_cookie_data())
     for cookie in matches:
         name = cookie.split('\t')[5]
         value = cookie.split('\t')[6]
@@ -255,13 +257,6 @@ def findvideos(item):
 
         patron = '<form method="get" action="">\s*<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*<input type="hidden" name="([^"]+)" value="(.*?)"/><input type="hidden" name="([^"]+)" value="([^"]+)"/> <input type="submit" class="[^"]*" name="([^"]+)" value="([^"]+)"/>\s*</form>'
 
-        #patron = '<form method="get" action="">\s*'
-        #patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
-        #patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
-        #patron += '(?:<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*)?'
-        #patron += '<input type="submit" class="[^"]*" name="([^"]+)" value="([^"]+)"/>\s*'
-        #patron += '</form>'
-
         html = []
         for name1, val1, name2, val2, name3, val3, name4, val4, name5, val5 in re.compile(patron).findall(data):
             if name3 == '' and val3 == '':
@@ -305,6 +300,8 @@ def findvideos(item):
     return itemlist
 
 def anti_cloudflare(url):
+    # global headers
+
     try:
         resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
         resp_headers = dict(resp_headers)
@@ -312,13 +309,14 @@ def anti_cloudflare(url):
         resp_headers = e.headers
 
     if 'refresh' in resp_headers:
-        import time
         time.sleep(int(resp_headers['refresh'][:1]))
 
-        scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
-
 
 def unescape(par1, par2, par3):
     var1 = par1
@@ -333,16 +331,15 @@ def info(title):
     logger.info("streamondemand.altadefinizioneclick info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
-        count = 0
+        oTmdb = Tmdb(texto_buscado=title, tipo="movie", include_adult="false", idioma_busqueda="it")
         if oTmdb.total_results > 0:
-           extrameta = {}
-           extrameta["Year"] = oTmdb.result["release_date"][:4]
-           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
-           extrameta["Rating"] = float(oTmdb.result["vote_average"])
-           fanart=oTmdb.get_backdrop()
-           poster=oTmdb.get_poster()
-           plot=oTmdb.get_sinopsis()
-           return plot, fanart, poster, extrameta
+            extrameta = {"Year": oTmdb.result["release_date"][:4],
+                         "Genre": ", ".join(oTmdb.result["genres"]),
+                         "Rating": float(oTmdb.result["vote_average"])}
+            fanart = oTmdb.get_backdrop()
+            poster = oTmdb.get_poster()
+            plot = oTmdb.get_sinopsis()
+            return plot, fanart, poster, extrameta
     except:
-        pass	
+        pass
+

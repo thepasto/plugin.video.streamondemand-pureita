@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para itafilmtv
+# Canal para animestream.it
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 #  By Costaplus
 # ------------------------------------------------------------
 import re
-import sys
+import urllib
 import urlparse
-import urllib2
+
 import xbmc
+
 from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "animestream"
 __category__ = "F"
@@ -26,6 +26,13 @@ DEBUG = config.get_setting("debug")
 
 host = "http://www.animestream.it/"
 hostcategoria="http://www.animestream.it/Ricerca-Tutti-pag1"
+
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', host]
+]
+
 
 def isGeneric():
     return True
@@ -105,8 +112,8 @@ def search(item,texto):
         scrapedthumbnail = scrapedthumbnail.replace("(", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(Item(channel=__channel__, action="episodi", title=scrapedtitle, url=scrapedurl,
-                             thumbnail=host + scrapedthumbnail, fulltitle=scrapedtitle, show=scrapedtitle,
-                             fanart=host + scrapedthumbnail))
+                             thumbnail=urlparse.urljoin(host, scrapedthumbnail), fulltitle=scrapedtitle, show=scrapedtitle,
+                             fanart=urlparse.urljoin(host, scrapedthumbnail)))
 
 
 
@@ -131,12 +138,31 @@ def categoria(item):
 #-----------------------------------------------------------------
 def episodi(item):
     itemlist =[]
-    xbmc.log(host + item.url)
     patron='class="episodio">\s*<.*?href=([^>]+)><img.*?src=(.*?)width[^<]+<[^<]+<[^<]+<[^<]+<.*?>(.*?)</a>'
-    for scrapedurl,scrapedthumbnail,scrapedtitle in scrapedAll(host + item.url, patron):
+    for scrapedurl,scrapedthumbnail,scrapedtitle in scrapedAll(urlparse.urljoin(host, item.url), patron):
         if DEBUG: logger.info("scrapedurl: " + scrapedurl +  " scrapedthumbnail: " + scrapedthumbnail + " scrapedtitle:" + scrapedtitle)
 
-        itemlist.append(Item(channel=__channel__, action="player", title=scrapedtitle, url=scrapedurl,thumbnail=host + scrapedthumbnail, fulltitle=scrapedtitle, show=scrapedtitle,fanart=host + scrapedthumbnail))
+        itemlist.append(Item(channel=__channel__, action="player", title=scrapedtitle, url=scrapedurl,thumbnail=urlparse.urljoin(host, scrapedthumbnail), fulltitle=scrapedtitle, show=scrapedtitle,fanart=urlparse.urljoin(host, scrapedthumbnail)))
+
+    # Voci di selezione per "Torna Home" e per la pagina agli episodi successivi:
+    data= scrapertools.cache_page(urlparse.urljoin(host, item.url), headers=headers)
+    patronvideos = '<a id="nav" href="([^"]+)">></a>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="episodi",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 folder=True))
 
     return itemlist
 #=================================================================
@@ -146,8 +172,8 @@ def player(item):
     itemlist =[]
 
     patron='<source.*?src="(.*?)".*?>'
-    for scrapedurl in scrapedAll(host + item.url, patron):
-        url = host + scrapedurl
+    for scrapedurl in scrapedAll(urlparse.urljoin(host, item.url), patron):
+        url = urlparse.urljoin(host, scrapedurl) + '|' + urllib.urlencode(dict(headers))
         log("player","url Video:"+url)
         itemlist.append(Item(channel=__channel__, action="play", title=item.title, url=url, thumbnail=item.thumbnail,plot=item.plot,fanart=item.fanart, folder=False))
 
@@ -160,7 +186,7 @@ def player(item):
 def scrapedAll(url="",patron=""):
     matches = []
 
-    data = scrapertools.cache_page(url)
+    data = scrapertools.cache_page(url, headers=headers)
     if DEBUG: logger.info("data:"+data)
     MyPatron = patron
     matches = re.compile(MyPatron, re.DOTALL).findall(data)
@@ -172,7 +198,7 @@ def scrapedAll(url="",patron=""):
 #-----------------------------------------------------------------
 def scrapedSingle(url="",single="",patron=""):
     matches =[]
-    data = scrapertools.cache_page(url)
+    data = scrapertools.cache_page(url, headers=headers)
     paginazione = scrapertools.find_single_match(data, single)
     matches = re.compile(patron, re.DOTALL).findall(paginazione)
     scrapertools.printMatches(matches)

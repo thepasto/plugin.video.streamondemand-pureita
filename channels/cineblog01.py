@@ -5,7 +5,6 @@
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
-import sys
 import time
 import urllib2
 import urlparse
@@ -23,15 +22,13 @@ __title__ = "CineBlog 01"
 __language__ = "IT"
 
 sito = "http://www.cb01.co"
+sitoanime = "http://www.cineblog01.cc"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://www.cb01.co'],
-    ['Connection', 'keep-alive']
+    ['Referer', sito]
 ]
-
-sitoanime = "http://www.cineblog01.cc"
 
 DEBUG = config.get_setting("debug")
 
@@ -48,66 +45,66 @@ def mainlist(item):
                      action="peliculasrobalo",
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/popcorn_film.png"),
                 Item(channel=__channel__,
                      action="peliculasrobalo",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
-                     url="http://www.cb01.co/tag/film-hd-altadefinizione/",
-                     thumbnail="http://jcrent.com/apple%20tv%20final/HD.png"),
+                     url="%s/tag/film-hd-altadefinizione/" % sito,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/hd.png"),
                 Item(channel=__channel__,
                      action="menuhd",
                      title="[COLOR azure]Menù HD[/COLOR]",
                      url=sito,
-                     thumbnail="http://files.softicons.com/download/computer-icons/disks-icons-by-wil-nichols/png/256x256/Blu-Ray.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/blueray.png"),
                 Item(channel=__channel__,
                      action="menugeneros",
                      title="[COLOR azure]Per Genere[/COLOR]",
                      url=sito,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
                 Item(channel=__channel__,
                      action="menuanyos",
                      title="[COLOR azure]Per Anno[/COLOR]",
                      url=sito,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Film[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
                 Item(channel=__channel__,
                      action="listserie",
                      title="[COLOR azure]Serie Tv - Novita'[/COLOR]",
-                     url="http://www.cb01.co/serietv/",
+                     url="%s/serietv/" % sito,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Serie Tv[/COLOR]",
                      extra="serie",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
                 Item(channel=__channel__,
                      action="listanime",
                      title="[COLOR azure]Anime - Novita'[/COLOR]",
-                     url="http://www.cineblog01.cc/anime/",
-                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
+                     url="%s/anime/" % sitoanime,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime_New.png"),
                 Item(channel=__channel__,
                      action="animegenere",
                      title="[COLOR azure]Anime - Per Genere[/COLOR]",
-                     url="http://www.cineblog01.cc/anime/",
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Genres.png"),
+                     url="%s/anime/" % sitoanime,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_bygenre.png"),
                 Item(channel=__channel__,
                      action="listaletra",
                      title="[COLOR azure]Anime - Per Lettera A-Z[/COLOR]",
-                     url="http://www.cineblog01.cc/anime/",
-                     thumbnail="http://i.imgur.com/IjCmx5r.png"),
+                     url="%s/anime/" % sitoanime,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/AnimeA-Z.png"),
                 Item(channel=__channel__,
                      action="listaaz",
                      title="[COLOR azure]Anime - Lista Completa[/COLOR]",
-                     url="http://www.cineblog01.cc/anime/lista-completa-anime-cartoon/",
-                     thumbnail="http://i.imgur.com/IjCmx5r.png"),
+                     url="%s/anime/lista-completa-anime-cartoon/" % sitoanime,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_lista.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Anime[/COLOR]",
                      extra="cartoni",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
 
@@ -122,7 +119,6 @@ def peliculasrobalo(item):
     # Descarga la página
     # data = scrapertools.cache_page(item.url)
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'
@@ -141,33 +137,33 @@ def peliculasrobalo(item):
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         tmdbtitle1 = scrapedtitle.split("[")[0]
         tmdbtitle = tmdbtitle1.split("(")[0]
+        year = scrapertools.find_single_match(scrapedtitle, '\((\d+)\)')
         try:
-           plot, fanart, poster, extrameta = info(tmdbtitle)
+            plot, fanart, poster, extrameta = info(tmdbtitle, year)
 
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="findvid",
-                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                    url=scrapedurl,
-                    fulltitle=scrapedtitle,
-                    show=scrapedtitle,
-                    folder=True))
+            itemlist.append(
+                Item(channel=__channel__,
+                     thumbnail=poster,
+                     fanart=fanart if fanart != "" else poster,
+                     extrameta=extrameta,
+                     plot=str(plot),
+                     action="findvid",
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     folder=True))
         except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="findvid",
-                    fulltitle=scrapedtitle,
-                    show=scrapedtitle,
-                    title=scrapedtitle,
-                    url=scrapedurl,
-                    thumbnail=scrapedthumbnail,
-                    plot=scrapedplot,
-                    viewmode="movie_with_plot",
-                    fanart=scrapedthumbnail))
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="findvid",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title=scrapedtitle,
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     plot=scrapedplot,
+                     viewmode="movie_with_plot"))
 
     # Next page mark
     try:
@@ -211,7 +207,6 @@ def peliculas(item):
     # Descarga la página
     # data = scrapertools.cache_page(item.url)
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'
@@ -237,8 +232,7 @@ def peliculas(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
-                 viewmode="movie_with_plot",
-                 fanart=scrapedthumbnail))
+                 viewmode="movie_with_plot"))
 
     # Next page mark
     try:
@@ -277,8 +271,6 @@ def menugeneros(item):
     itemlist = []
 
     data = anti_cloudflare(item.url)
-    # data = scrapertools.cache_page(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select>')
@@ -311,8 +303,6 @@ def menuhd(item):
     itemlist = []
 
     data = anti_cloudflare(item.url)
-    # data = scrapertools.cache_page(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select1"(.*?)</select>')
@@ -344,9 +334,7 @@ def menuanyos(item):
     logger.info("[cineblog01.py] menuvk")
     itemlist = []
 
-    # data = scrapertools.cache_page(item.url)
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select3"(.*?)</select>')
@@ -404,7 +392,6 @@ def listserie(item):
 
     # Descarga la página
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4">\s*<a href="([^"]+)"><img src="([^"]+)".*?<div class="span8">.*?<h1>([^<]+)</h1></a>(.*?)<br><a'
@@ -420,15 +407,33 @@ def listserie(item):
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
         # Añade al listado de XBMC
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="episodios",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot))
+        tmdbtitle1 = scrapedtitle.split("[")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+        try:
+            plot, fanart, poster, extrameta = info_tv(tmdbtitle)
+
+            itemlist.append(
+                Item(channel=__channel__,
+                     thumbnail=poster,
+                     fanart=fanart if fanart != "" else poster,
+                     extrameta=extrameta,
+                     plot=str(plot),
+                     action="episodios",
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     folder=True))
+        except:
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="episodios",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     plot=scrapedplot))
 
     # Put the next page mark
     try:
@@ -550,7 +555,6 @@ def listaaz(item):
     itemlist = []
 
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     patron = '<a href="#char_5a" title="Go to the letter Z">Z</a></span></div>(.*?)</ul></div><div style="clear:both;"></div></div>'
@@ -585,7 +589,6 @@ def listaletra(item):
     itemlist = []
 
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<option value=\'-1\'>Anime per Lettera</option>(.*?)</select>')
@@ -617,7 +620,6 @@ def animegenere(item):
     itemlist = []
 
     data = anti_cloudflare(item.url)
-    logger.info(data)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select>')
@@ -646,7 +648,18 @@ def listanime(item):
 
     # Descarga la página
     data = anti_cloudflare(item.url)
-    logger.info(data)
+
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile('(.cineblog01.cc.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    for cookie in matches:
+        name = cookie.split('\t')[5]
+        value = cookie.split('\t')[6]
+        cookies += name + "=" + value + ";"
+    headers.append(['Cookie', cookies[:-1]])
+    import urllib
+    _headers = urllib.urlencode(dict(headers))
+    ## ------------------------------------------------
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4"> <a.*?<img.*?src="(.*?)".*?'
@@ -665,6 +678,10 @@ def listanime(item):
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
+        ## ------------------------------------------------
+        scrapedthumbnail += "|" + _headers
+        ## ------------------------------------------------				
+
         # Añade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
@@ -675,7 +692,6 @@ def listanime(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  viewmode="movie_with_plot",
-                 fanart=scrapedthumbnail,
                  plot=scrapedplot))
 
     # Put the next page mark
@@ -713,7 +729,6 @@ def findvid(item):
     QualityStr = ""
     for match in matches:
         QualityStr = scrapertools.unescape(match.group(1))[6:]
-        logger.info("QualityStr:" + QualityStr)
 
     ## Extrae las entradas
     streaming = scrapertools.find_single_match(data, '<strong>Streaming:</strong>(.*?)<table height="30">')
@@ -915,9 +930,11 @@ def play(item):
         try:
             data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
         except IndexError:
-#            data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
-#   In alternativa, dato che a volte compare "Clicca qui per proseguire":
+            #            data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
+            #   In alternativa, dato che a volte compare "Clicca qui per proseguire":
             data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
+        if 'vcrypt' in data:
+            data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
         print "##### play go.php data ##\n%s\n##" % data
     elif "/link/" in item.url:
         data = anti_cloudflare(item.url)
@@ -925,7 +942,7 @@ def play(item):
 
         try:
             data = scrapertools.get_match(data, "(eval\(function\(p,a,c,k,e,d.*?)</script>")
-            #data = scrapertools.get_match(data, "(eval.function.p,a,c,k,e,.*?)</script>")
+            # data = scrapertools.get_match(data, "(eval.function.p,a,c,k,e,.*?)</script>")
             data = jsunpack.unpack(data)
             print "##### play /link/ unpack ##\n%s\n##" % data
         except IndexError:
@@ -962,29 +979,48 @@ def anti_cloudflare(url):
     if 'refresh' in resp_headers:
         time.sleep(int(resp_headers['refresh'][:1]))
 
-        scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
 
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
-def info(title):
+
+def info(title, year):
     logger.info("streamondemand.cineblog01 info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
-        count = 0
+        oTmdb = Tmdb(texto_buscado=title, year=year, tipo="movie", include_adult="false", idioma_busqueda="it")
         if oTmdb.total_results > 0:
-           extrameta = {}
-           extrameta["Year"] = oTmdb.result["release_date"][:4]
-           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
-           extrameta["Rating"] = float(oTmdb.result["vote_average"])
-           fanart=oTmdb.get_backdrop()
-           poster=oTmdb.get_poster()
-           plot=oTmdb.get_sinopsis()
-           return plot, fanart, poster, extrameta
+            extrameta = {"Year": oTmdb.result["release_date"][:4],
+                         "Genre": ", ".join(oTmdb.result["genres"]),
+                         "Rating": float(oTmdb.result["vote_average"])}
+            fanart = oTmdb.get_backdrop()
+            poster = oTmdb.get_poster()
+            plot = oTmdb.get_sinopsis()
+            return plot, fanart, poster, extrameta
     except:
-        pass	
+        pass
 
+
+def info_tv(title):
+    logger.info("streamondemand.cineblog01 info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb = Tmdb(texto_buscado=title, tipo="tv", include_adult="false", idioma_busqueda="it")
+        if oTmdb.total_results > 0:
+            extrameta = {"Year": oTmdb.result["release_date"][:4],
+                         "Genre": ", ".join(oTmdb.result["genres"]),
+                         "Rating": float(oTmdb.result["vote_average"])}
+            fanart = oTmdb.get_backdrop()
+            poster = oTmdb.get_poster()
+            plot = oTmdb.get_sinopsis()
+            return plot, fanart, poster, extrameta
+    except:
+        pass

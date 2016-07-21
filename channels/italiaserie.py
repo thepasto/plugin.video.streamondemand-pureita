@@ -11,6 +11,7 @@ import urlparse
 from core import config
 from core import logger
 from core import scrapertools
+from servers import servertools
 from core.item import Item
 
 __channel__ = "italiaserie"
@@ -31,20 +32,25 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.filmpertutti mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Aggiornamenti Serie-TV[/COLOR]",
+                     title="[COLOR azure]Aggiornamenti Serie TV[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/New%20TV%20Shows.png),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Tutte le Serie-TV[/COLOR]",
-                     action="peliculas2",
-                     url="%s/lista-completa/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+                     title="[COLOR azure]Serie TV[/COLOR]",
+                     action="peliculas",
+                     url="%s/category/serie-tv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/tv_series.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Sezione Cartoni Animati - Anime[/COLOR]",
+                     title="[COLOR azure]Anime e Cartoon[/COLOR]",
                      action="peliculas",
                      url="%s/category/anime-e-cartoon/" % host,
-                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Lista Completa[/COLOR]",
+                     action="lista",
+                     url="%s/lista-completa/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_all.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -64,7 +70,6 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
-        # scrapedplot = ""
         html = scrapertools.cache_page(scrapedurl)
         start = html.find("<div class=\"entry-content\">")
         end = html.find("</p>", start)
@@ -85,7 +90,7 @@ def peliculas(item):
                     fanart=fanart if fanart != "" else poster,
                     extrameta=extrameta,
                     plot=str(plot),
-                    action="findvideos",
+                    action="findvid_serie",
                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                     url=scrapedurl,
                     fulltitle=scrapedtitle,
@@ -128,7 +133,7 @@ def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
-def peliculas2(item):
+def lista(item):
     logger.info("streamondemand.italiaserie peliculas")
     itemlist = []
 
@@ -136,17 +141,15 @@ def peliculas2(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<h3><a href="([^"]+)">(.*?)</a></h3>.*?<img.*?src="([^"]+)"'
+    patron = '<li><a href="([^"]+)".*?>([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedurl, scrapedtitle in matches:
         scrapedplot = ""
-        scrapedtitle = scrapedtitle.replace("Streaming", "")
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info(
-                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
@@ -154,7 +157,6 @@ def peliculas2(item):
                      show=scrapedtitle,
                      title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                      url=scrapedurl,
-                     thumbnail=scrapedthumbnail,
                      plot=scrapedplot,
                      folder=True))
 
@@ -199,6 +201,23 @@ def search(item, texto):
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
+
+def findvid_serie(item):
+    logger.info("[eurostreaming.py] findvideos")
+
+    ## Descarga la página
+    data = scrapertools.cache_page(item.url)
+
+    itemlist = servertools.find_video_items(data=data)
+    for videoitem in itemlist:
+        videoitem.title = item.title + videoitem.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
 
 def info_tv(title):
     logger.info("streamondemand.italiaserie info")
