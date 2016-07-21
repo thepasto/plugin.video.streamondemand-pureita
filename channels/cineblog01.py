@@ -74,7 +74,7 @@ def mainlist(item):
                      action="listserie",
                      title="[COLOR azure]Serie Tv - Novita'[/COLOR]",
                      url="%s/serietv/" % sito,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/new_tvshows.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Serie Tv[/COLOR]",
