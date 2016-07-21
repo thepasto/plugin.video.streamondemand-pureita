@@ -49,7 +49,7 @@ def mainlist(item):
                      title="[COLOR azure]Film - HD[/COLOR]",
                      action="peliculas",
                      url="%s/?s=[HD]" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/hd.png),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/hd.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
