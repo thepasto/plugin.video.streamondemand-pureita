@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Sito hdgratis.net  by SchisM
+# Sito hdgratis.org  by SchisM
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
 import urllib2
+import sys
+import time
+import urlparse
 
 from core import config
 from core import logger
@@ -19,7 +22,7 @@ __type__ = "generic"
 __title__ = "HDGratis"
 __language__ = "IT"
 
-host = "http://hdgratis.net"
+host = "http://hdgratis.org"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -38,24 +41,25 @@ def mainlist(item):
         Item(channel=__channel__,
              title="[COLOR azure]Al Cinema[/COLOR]",
              action="fichas",
-             url=host + "/in-sala/",
+             url=host + "/category/in-sala/",
              thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
 
         Item(channel=__channel__,
              title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
              action="fichas",
-             url=host + "/nuove-uscite/",
+             url=host + "/category/nuove-uscite/",
              thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+
         Item(channel=__channel__,
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
 
         Item(channel=__channel__,
              title="[COLOR azure]Film Sub-Ita[/COLOR]",
              action="fichas",
-             url=host + "/sub-ita/",
+             url=host + "/category/sub-ita/",
              thumbnail="http://i.imgur.com/qUENzxl.png"),			 
 			 
 
@@ -89,7 +93,9 @@ def genere(item):
 
     data = anti_cloudflare(item.url)
 
-    patron = '<a href="http://hdgratis.net/film/">Film</a>(.+?)</ul>'
+    patron = '<ul>(.+?)</ul>'
+    #patron = '<li class="cat-item cat-item.*?"><a href="([^"]+)">([^"]+)</a>.*?</li>'
+
     data = scrapertools.find_single_match(data, patron)
     
     patron = '<li class=".*?'
@@ -100,7 +106,7 @@ def genere(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
-        scrapedtitle = scrapedtitle.replace('&amp;','-')
+        #scrapedtitle = scrapedtitle.replace('&amp;','-')
         itemlist.append(
                 Item(channel=__channel__,
                      action="fichas",
@@ -122,7 +128,7 @@ def getsearch(item):
 
     # ------------------------------------------------
     cookies = ""
-    matches = re.compile('(.italiafilm.video.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    matches = re.compile('(.hdgratis.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
     for cookie in matches:
         name = cookie.split('\t')[5]
         value = cookie.split('\t')[6]
@@ -153,14 +159,30 @@ def getsearch(item):
         scrapedthumbnail += "|" + _headers
         # ------------------------------------------------
 
-        itemlist.append(
-                Item(channel=__channel__,
-                     action="findvideos",
-                     title=title,
-                     url=scrapedurl,
-                     thumbnail=scrapedthumbnail,
-                     fulltitle=title,
-                     show=scrapedtitle))
+        try:
+           plot, fanart, poster, extrameta = info(title)
+
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="findvideos",
+                    title="[COLOR azure]" + title + "[/COLOR]",
+                    url=scrapedurl,
+                    fulltitle=title,
+                    show=scrapedtitle,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action="findvideos",
+                    title=title,
+                    url=scrapedurl,
+                    thumbnail=scrapedthumbnail,
+                    fulltitle=title,
+                    show=scrapedtitle))
 
     # Paginación
 	next_page = re.compile('<link rel="next" href="(.+?)"/>', re.DOTALL).findall(data)
@@ -187,7 +209,7 @@ def fichas(item):
 
     # ------------------------------------------------
     cookies = ""
-    matches = re.compile('(.italiafilm.video.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    matches = re.compile('(.hdgratis.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
     for cookie in matches:
         name = cookie.split('\t')[5]
         value = cookie.split('\t')[6]
@@ -244,9 +266,10 @@ def fichas(item):
                     show=scrapedtitle))
 
     # Paginación
-	next_page = re.compile('<link rel="next" href="(.+?)"/>', re.DOTALL).findall(data)
-	for page in next_page:
-		next_page = page
+    next_page = re.compile('<link rel="next" href="(.+?)"/>', re.DOTALL).findall(data)
+    for page in next_page:
+        next_page = page
+        
     if next_page != "":
         itemlist.append(
                 Item(channel=__channel__,
@@ -329,6 +352,8 @@ def findvideos(item):
     return itemlist
 
 def anti_cloudflare(url):
+    # global headers
+
     try:
         resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
         resp_headers = dict(resp_headers)
@@ -336,13 +361,14 @@ def anti_cloudflare(url):
         resp_headers = e.headers
 
     if 'refresh' in resp_headers:
-        import time
         time.sleep(int(resp_headers['refresh'][:1]))
 
-        scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
-
 
 def unescape(par1, par2, par3):
     var1 = par1
@@ -357,7 +383,7 @@ def info(title):
     logger.info("streamondemand.hdgratis info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
+        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="false", idioma_busqueda="it")
         count = 0
         if oTmdb.total_results > 0:
            extrameta = {}

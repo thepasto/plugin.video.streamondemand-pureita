@@ -6,7 +6,6 @@
 # ------------------------------------------------------------
 import os
 import re
-import sys
 import urllib
 import urlparse
 
@@ -24,8 +23,7 @@ __language__ = "IT"
 
 host = "http://mondolunatico.org"
 
-captcha_url = 'http://www.keeplinks.eu/basiccaptcha/securimage_show.php?sid='
-#captcha_url = '%s/pass/CaptchaSecurityImages.php?width=100&height=40&characters=5' % host
+captcha_url = '%s/pass/CaptchaSecurityImages.php?width=100&height=40&characters=5' % host
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -51,13 +49,14 @@ def mainlist(item):
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
+
 
 def categorias(item):
     logger.info("streamondemand.mondolunatico categorias")
@@ -73,33 +72,34 @@ def categorias(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("&nbsp;",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("(",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace(")",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("0",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("1",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("2",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("3",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("4",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("5",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("6",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("7",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("8",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("9",""))
-        scrapedurl= "http://mondolunatico.org/category/film-per-genere/"+scrapedtitle
+        scrapedtitle = scrapedtitle.replace("&nbsp;", "")
+        scrapedtitle = scrapedtitle.replace("(", "")
+        scrapedtitle = scrapedtitle.replace(")", "")
+        scrapedtitle = scrapedtitle.replace("0", "")
+        scrapedtitle = scrapedtitle.replace("1", "")
+        scrapedtitle = scrapedtitle.replace("2", "")
+        scrapedtitle = scrapedtitle.replace("3", "")
+        scrapedtitle = scrapedtitle.replace("4", "")
+        scrapedtitle = scrapedtitle.replace("5", "")
+        scrapedtitle = scrapedtitle.replace("6", "")
+        scrapedtitle = scrapedtitle.replace("7", "")
+        scrapedtitle = scrapedtitle.replace("8", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("9", ""))
+        scrapedurl = "http://mondolunatico.org/category/film-per-genere/" + scrapedtitle
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info(
-                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
-                Item(channel=__channel__,
-                     action="peliculas",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     thumbnail=scrapedthumbnail,
-                     plot=scrapedplot))
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot))
 
     return itemlist
+
 
 def search(item, texto):
     logger.info("[mondolunatico.py] " + item.url + " search " + texto)
@@ -130,32 +130,33 @@ def peliculas(item):
         scrapedplot = ""
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         tmdbtitle = title.split("(")[0]
+        year = scrapertools.find_single_match(title, '\((\d+)\)')
         try:
-           plot, fanart, poster, extrameta = info(tmdbtitle)
+            plot, fanart, poster, extrameta = info(tmdbtitle, year)
 
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="findvideos",
-                    title=title,
-                    url=scrapedurl,
-                    fulltitle=title,
-                    show=title,
-                    folder=True))
+            itemlist.append(
+                Item(channel=__channel__,
+                     thumbnail=poster,
+                     fanart=fanart if fanart != "" else poster,
+                     extrameta=extrameta,
+                     plot=str(plot),
+                     action="findvideos",
+                     title=title,
+                     url=scrapedurl,
+                     fulltitle=title,
+                     show=title,
+                     folder=True))
         except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="findvideos",
-                    title=title,
-                    url=scrapedurl,
-                    thumbnail=scrapedthumbnail,
-                    fulltitle=title,
-                    show=title,
-                    plot=scrapedplot,
-                    folder=True))
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     title=title,
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     fulltitle=title,
+                     show=title,
+                     plot=scrapedplot,
+                     folder=True))
 
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">'
@@ -178,24 +179,19 @@ def peliculas(item):
 
     return itemlist
 
+
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
+
 def findvideos(item):
     logger.info("streamondemand.mondolunatico findvideos")
 
+    itemlist = []
+
     # Descarga la página
     data = scrapertools.cache_page(item.url, headers=headers)
-
-    itemlist = servertools.find_video_items(data=data)
-    for videoitem in itemlist:
-        videoitem.title = item.title + videoitem.title
-        videoitem.fulltitle = item.fulltitle
-        videoitem.thumbnail = item.thumbnail
-        videoitem.show = item.show
-        videoitem.plot = item.plot
-        videoitem.channel = __channel__
 
     # Extrae las entradas
     patron = r'noshade>(.*?)<br>.*?<a href="(http://mondolunatico\.org/pass/index\.php\?ID=[^"]+)"'
@@ -213,6 +209,38 @@ def findvideos(item):
                  show=item.show,
                  server='captcha',
                  folder=False))
+
+    ### robalo fix obfuscator - start ####
+
+    if 'keeplinks.eu' in data:
+        import time
+
+        keeplinks = "http://www.keeplinks.eu/p92/"
+        id = scrapertools.get_match(data, 'href="' + keeplinks + '([^"]+)"')
+
+        _headers = [
+            ['Host', 'www.keeplinks.eu'],
+            ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'],
+            ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+            ['Accept-Language', 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3'],
+            ['Cookie', 'flag[' + id + ']=1; noadvtday=0; nopopatall=' + str(time.time())],
+            ['Accept-Encoding', 'gzip, deflate'],
+            ['Connection', 'keep-alive']
+        ]
+
+        data = scrapertools.cache_page(keeplinks + id, headers=_headers)
+        data = str(scrapertools.find_multiple_matches(data, '</lable><a href="([^"]+)" target="_blank"'))
+
+    ### robalo fix obfuscator - end ####
+
+    for videoitem in servertools.find_video_items(data=data):
+        videoitem.title = item.title + videoitem.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+        itemlist.append(videoitem)
 
     return itemlist
 
@@ -264,21 +292,19 @@ def play(item):
 
     return itemlist
 
-def info(title):
+
+def info(title, year):
     logger.info("streamondemand.mondolunatico info")
     try:
         from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "movie", include_adult="true", idioma_busqueda="it")
-        count = 0
+        oTmdb = Tmdb(texto_buscado=title, year=year, tipo="movie", include_adult="false", idioma_busqueda="it")
         if oTmdb.total_results > 0:
-           extrameta = {}
-           extrameta["Year"] = oTmdb.result["release_date"][:4]
-           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
-           extrameta["Rating"] = float(oTmdb.result["vote_average"])
-           fanart=oTmdb.get_backdrop()
-           poster=oTmdb.get_poster()
-           plot=oTmdb.get_sinopsis()
-           return plot, fanart, poster, extrameta
+            extrameta = {"Year": oTmdb.result["release_date"][:4],
+                         "Genre": ", ".join(oTmdb.result["genres"]),
+                         "Rating": float(oTmdb.result["vote_average"])}
+            fanart = oTmdb.get_backdrop()
+            poster = oTmdb.get_poster()
+            plot = oTmdb.get_sinopsis()
+            return plot, fanart, poster, extrameta
     except:
-        pass	
-
+        pass

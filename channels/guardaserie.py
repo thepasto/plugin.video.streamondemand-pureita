@@ -399,30 +399,11 @@ def anti_cloudflare(url):
     if 'refresh' in resp_headers:
         time.sleep(int(resp_headers['refresh'][:1]))
 
-        scrapertools.get_headers_from_response(host + '/' + resp_headers['refresh'][7:], headers=headers)
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
 
-def info_tv(title, thumbnail):
-    logger.info("streamondemand.guardaserie info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "tv", include_adult="true", idioma_busqueda="it")
-        count = 0
-        if oTmdb.total_results > 0:
-            #Mientras el thumbnail no coincida con el del resultado de la búsqueda, pasa al siguiente resultado
-            while oTmdb.get_poster(size="w185") != thumbnail:
-                count += 1
-                oTmdb.load_resultado(index_resultado=count)
-                if count == oTmdb.total_results : break
-            extrameta = {}
-            extrameta["Year"] = oTmdb.result["release_date"][:4]
-            extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
-            extrameta["Rating"] = float(oTmdb.result["vote_average"])
-            fanart=oTmdb.get_backdrop()
-            poster=oTmdb.get_poster()
-            plot=oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass	
 

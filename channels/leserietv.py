@@ -55,7 +55,7 @@ def mainlist(item):
                          title="[COLOR azure]Categorie[/COLOR]",
                          action="categorias",
                          url=host,
-                         thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+                         thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/series_genere.png"))
 
     itemlist.append(Item(channel=__channel__,
                          action="top50",
