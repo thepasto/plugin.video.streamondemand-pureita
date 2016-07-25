@@ -148,10 +148,10 @@
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/channels/buscador.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>09/06/2016</date>
-    <changes>Smail customization</changes>
+    <date>25/07/2016</date>
+    <changes>images customization</changes>
 </channel>
 
 
