@@ -79,31 +79,6 @@ def mainlist(item):
                      action="search",
                      title="[COLOR yellow]Cerca Serie Tv[/COLOR]",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
-                Item(channel=__channel__,
-                     action="listanime",
-                     title="[COLOR azure]Anime - Novita'[/COLOR]",
-                     url="%s/anime/" % sitoanime,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime_New.png"),
-                Item(channel=__channel__,
-                     action="animegenere",
-                     title="[COLOR azure]Anime - Per Genere[/COLOR]",
-                     url="%s/anime/" % sitoanime,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_bygenre.png"),
-                Item(channel=__channel__,
-                     action="listaletra",
-                     title="[COLOR azure]Anime - Per Lettera A-Z[/COLOR]",
-                     url="%s/anime/" % sitoanime,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/AnimeA-Z.png"),
-                Item(channel=__channel__,
-                     action="listaaz",
-                     title="[COLOR azure]Anime - Lista Completa[/COLOR]",
-                     url="%s/anime/lista-completa-anime-cartoon/" % sitoanime,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_lista.png"),
-                Item(channel=__channel__,
-                     action="search",
-                     title="[COLOR yellow]Cerca Anime[/COLOR]",
-                     extra="cartoni",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
@@ -842,81 +817,6 @@ def findvid_serie(item):
                  fulltitle=item.fulltitle,
                  show=item.show,
                  folder=False))
-
-    return itemlist
-
-
-def episodios_anime(item):
-    logger.info("[cineblog01.py] episodios")
-
-    itemlist = []
-
-    # Descarga la página
-    data = anti_cloudflare(item.url)
-    data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
-
-    patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow">(.*?)(?:</p>)?(?:\s*</span>)?\s*</td>'
-    patron2 = '<a.*?href="([^"]+)"[^>]*>([^<]+)</a>'
-    matches1 = re.compile(patron1, re.DOTALL).findall(data)
-    if len(matches1) > 0:
-        for match1 in re.split('<br />|<p>', matches1[0]):
-            if len(match1) > 0:
-                # Extrae las entradas
-                titulo = None
-                scrapedurl = ''
-                matches2 = re.compile(patron2, re.DOTALL).finditer(match1)
-                for match2 in matches2:
-                    if titulo is None:
-                        titulo = match2.group(2)
-                    scrapedurl += match2.group(1) + '#' + match2.group(2) + '|'
-                if titulo is not None:
-                    title = item.title + " " + titulo
-                    itemlist.append(
-                        Item(channel=__channel__,
-                             action="findvid_anime",
-                             title=title,
-                             extra=scrapedurl,
-                             fulltitle=item.fulltitle,
-                             show=item.show))
-
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title=item.title,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios_anime",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios_anime",
-                 show=item.show))
-
-    return itemlist
-
-
-def findvid_anime(item):
-    logger.info("[cineblog01.py] findvideos")
-
-    itemlist = []
-
-    for match in item.extra.split(r'|'):
-        match_split = match.split(r'#')
-        scrapedurl = match_split[0]
-        if len(scrapedurl) > 0:
-            scrapedtitle = match_split[1]
-            title = item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="play",
-                     title=title,
-                     url=scrapedurl,
-                     fulltitle=item.fulltitle,
-                     show=item.show,
-                     folder=False))
 
     return itemlist
 
