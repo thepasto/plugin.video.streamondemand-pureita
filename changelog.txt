@@ -1,3 +1,8 @@
+5.3.7
+-Update Unload Channels 
+-Update Unplugged Channels
+-Update Channels
+
 5.3.6
 -Alligned with SOD
 -Update core "Wait for Network"
