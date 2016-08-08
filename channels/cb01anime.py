@@ -47,22 +47,22 @@ def mainlist(item):
                      action="novita",
                      title="[COLOR azure]Anime - Novita'[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime_New.png"),
                 Item(channel=__channel__,
                      action="genere",
                      title="[COLOR azure]Anime - Per Genere[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Genres.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_bygenre.png"),
                 Item(channel=__channel__,
                      action="alfabetico",
                      title="[COLOR azure]Anime - Per Lettera A-Z[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="http://i.imgur.com/IjCmx5r.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_az.png"),
                 Item(channel=__channel__,
                      action="listacompleta",
                      title="[COLOR azure]Anime - Lista Completa[/COLOR]",
                      url="%s/anime/lista-completa-anime-cartoon/" % host,
-                     thumbnail="http://i.imgur.com/IjCmx5r.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Anime[/COLOR]",
@@ -78,7 +78,7 @@ def novita(item):
     logger.info("[cb01anime.py] mainlist")
     itemlist = []
 
-    # Descarga la p·gina
+    # Descarga la p√°gina
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     ## ------------------------------------------------
@@ -114,7 +114,7 @@ def novita(item):
         scrapedthumbnail += "|" + _headers
         ## ------------------------------------------------				
 
-        # AÒade al listado de XBMC
+        # A√±ade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
                  action="listacompleta" if scrapedtitle == "Lista Alfabetica Completa Anime/Cartoon" else "episodi",
@@ -261,7 +261,7 @@ def episodi(item):
 
     itemlist = []
 
-    # Descarga la p·gina
+    # Descarga la p√°gina
     data = scrapertools.anti_cloudflare(item.url, headers)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
