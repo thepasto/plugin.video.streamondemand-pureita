@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 #------------------------------------------------------------
-# streamondemand-pureita - XBMC Plugin
+# streamondemand-pureita-master - XBMC Plugin
 # Lista de vídeos favoritos
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita-master/
 #------------------------------------------------------------
 import urllib
 import os

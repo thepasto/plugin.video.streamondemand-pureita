@@ -4,8 +4,8 @@
 # Download Tools
 # Based on the code from VideoMonkey XBMC Plugin
 #------------------------------------------------------------
-# pelisalacarta
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# streamondemand
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand/
 #------------------------------------------------------------
 # Creado por:
 # Jesús (tvalacarta@gmail.com)
@@ -409,11 +409,11 @@ def limpia_nombre_excepto_2(s):
 
 def getfilefromtitle(url,title):
     # Imprime en el log lo que va a descartar
-    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: title="+title )
-    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: url="+url )
-    #logger.info("pelisalacarta.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
+    logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: title="+title )
+    logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: url="+url )
+    #logger.info("streamondemand-pureita-master.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
     plataforma = config.get_system_platform();
-    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: plataforma="+plataforma)
+    logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: plataforma="+plataforma)
     
     #nombrefichero = xbmc.makeLegalFilename(title + url[-4:])
     import scrapertools
@@ -422,7 +422,7 @@ def getfilefromtitle(url,title):
         nombrefichero = limpia_nombre_excepto_1(nombrefichero)
     else:
         nombrefichero = title + scrapertools.get_filename_from_url(url)[-4:]
-        logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+        logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
         if "videobb" in url or "videozer" in url or "putlocker" in url:
             nombrefichero = title + ".flv"
         if "videobam" in url:
@@ -438,14 +438,14 @@ def getfilefromtitle(url,title):
                 
             extension = partes[1][-5:-1]
             nombrefichero = title + extension
-        logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+        logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
 
         nombrefichero = limpia_nombre_caracteres_especiales(nombrefichero)
 
-    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+    logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
 
     fullpath = os.path.join( config.get_setting("downloadpath") , nombrefichero )
-    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: fullpath=%s" % fullpath)
+    logger.info("streamondemand-pureita-master.core.downloadtools getfilefromtitle: fullpath=%s" % fullpath)
     
     return fullpath
 
@@ -454,7 +454,7 @@ def downloadtitle(url,title):
     return downloadfile(url,fullpath)
 
 def downloadbest(video_urls,title,continuar=False):
-    logger.info("pelisalacarta.core.downloadtools downloadbest")
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadbest")
     
     # Le da la vuelta, para poner el de más calidad primero ( list() es para que haga una copia )
     invertida = list(video_urls)
@@ -463,7 +463,7 @@ def downloadbest(video_urls,title,continuar=False):
     for elemento in invertida:
         videotitle = elemento[0]
         url = elemento[1]
-        logger.info("pelisalacarta.core.downloadtools Descargando opción "+title+" "+url.encode('ascii','ignore'))
+        logger.info("streamondemand-pureita-master.core.downloadtools Descargando opción "+title+" "+url.encode('ascii','ignore'))
         
         # Calcula el fichero donde debe grabar
         try:
@@ -505,8 +505,8 @@ def downloadbest(video_urls,title,continuar=False):
     return -2
     
 def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
-    logger.info("pelisalacarta.core.downloadtools downloadfile: url="+url)
-    logger.info("pelisalacarta.core.downloadtools downloadfile: nombrefichero="+nombrefichero)
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: url="+url)
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: nombrefichero="+nombrefichero)
 
     try:
         # Si no es XBMC, siempre a "Silent"
@@ -522,7 +522,7 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
             nombrefichero = xbmc.makeLegalFilename(nombrefichero)
         except:
             pass
-        logger.info("pelisalacarta.core.downloadtools downloadfile: nombrefichero="+nombrefichero)
+        logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: nombrefichero="+nombrefichero)
     
         # El fichero existe y se quiere continuar
         if os.path.exists(nombrefichero) and continuar:
@@ -534,19 +534,19 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
             f = open(nombrefichero, 'r+b')
             existSize = os.path.getsize(nombrefichero)
             
-            logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero existe, size=%d" % existSize)
+            logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: el fichero existe, size=%d" % existSize)
             grabado = existSize
             f.seek(existSize)
 
         # el fichero ya existe y no se quiere continuar, se aborta
         elif os.path.exists(nombrefichero) and not continuar:
-            logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero existe, no se descarga de nuevo")
+            logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: el fichero existe, no se descarga de nuevo")
             return
 
         # el fichero no existe
         else:
             existSize = 0
-            logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero no existe")
+            logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: el fichero no existe")
             
             #try:
             #    import xbmcvfs
@@ -578,13 +578,13 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
                 additional_headers = [ additional_headers ]
     
             for additional_header in additional_headers:
-                logger.info("pelisalacarta.core.downloadtools additional_header: "+additional_header)
+                logger.info("streamondemand-pureita-master.core.downloadtools additional_header: "+additional_header)
                 name = re.findall( "(.*?)=.*?" , additional_header )[0]
                 value = urllib.unquote_plus(re.findall( ".*?=(.*?)$" , additional_header )[0])
                 headers.append( [ name,value ] )
     
             url = url.split("|")[0]
-            logger.info("pelisalacarta.core.downloadtools downloadfile: url="+url)
+            logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: url="+url)
     
         # Timeout del socket a 60 segundos
         socket.setdefaulttimeout(60)
@@ -592,7 +592,7 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
         h=urllib2.HTTPHandler(debuglevel=0)
         request = urllib2.Request(url)
         for header in headers:
-            logger.info("pelisalacarta.core.downloadtools Header="+header[0]+": "+header[1])
+            logger.info("streamondemand-pureita-master.core.downloadtools Header="+header[0]+": "+header[1])
             request.add_header(header[0],header[1])
     
         if existSize > 0:
@@ -603,7 +603,7 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
         try:
             connexion = opener.open(request)
         except urllib2.HTTPError,e:
-            logger.info("pelisalacarta.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" % (e.code,e.msg,url))
+            logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" % (e.code,e.msg,url))
             #print e.code
             #print e.msg
             #print e.hdrs
@@ -733,18 +733,18 @@ def downloadfile(url,nombrefichero,headers=[],silent=False,continuar=False):
     logger.info("Fin descarga del fichero")
 
 def downloadfileGzipped(url,pathfichero):
-    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: url="+url)
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfileGzipped: url="+url)
     nombrefichero = pathfichero
-    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: nombrefichero="+nombrefichero)
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfileGzipped: nombrefichero="+nombrefichero)
 
     import xbmc
     nombrefichero = xbmc.makeLegalFilename(nombrefichero)
-    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: nombrefichero="+nombrefichero)
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfileGzipped: nombrefichero="+nombrefichero)
     patron = "(http://[^/]+)/.+"
     matches = re.compile(patron,re.DOTALL).findall(url)
     
     if len(matches):
-        logger.info("pelisalacarta.core.downloadtools URL principal :"+matches[0])
+        logger.info("streamondemand-pureita-master.core.downloadtools URL principal :"+matches[0])
         url1= matches[0]
     else:
         url1 = url
@@ -779,7 +779,7 @@ def downloadfileGzipped(url,pathfichero):
     try:
         connexion = opener.open(request)
     except urllib2.HTTPError,e:
-        logger.info("pelisalacarta.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" % (e.code,e.msg,url))
+        logger.info("streamondemand-pureita-master.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" % (e.code,e.msg,url))
         #print e.code
         #print e.msg
         #print e.hdrs
@@ -812,7 +812,7 @@ def downloadfileGzipped(url,pathfichero):
     
     existSize = 0
     
-    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: fichero nuevo abierto")
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadfileGzipped: fichero nuevo abierto")
 
     #if existSize > 0:
     #    totalfichero = totalfichero + existSize
@@ -913,10 +913,10 @@ def downloadfileGzipped(url,pathfichero):
     
 def GetTitleFromFile(title):
     # Imprime en el log lo que va a descartar
-    logger.info("pelisalacarta.core.downloadtools GetTitleFromFile: titulo="+title )
-    #logger.info("pelisalacarta.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
+    logger.info("streamondemand-pureita-master.core.downloadtools GetTitleFromFile: titulo="+title )
+    #logger.info("streamondemand-pureita-master.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
     plataforma = config.get_system_platform();
-    logger.info("pelisalacarta.core.downloadtools GetTitleFromFile: plataforma="+plataforma)
+    logger.info("streamondemand-pureita-master.core.downloadtools GetTitleFromFile: plataforma="+plataforma)
     
     #nombrefichero = xbmc.makeLegalFilename(title + url[-4:])
     if plataforma=="xbox":
@@ -933,7 +933,7 @@ def sec_to_hms(seconds):
 
 def downloadIfNotModifiedSince(url,timestamp):
 
-    logger.info("pelisalacarta.core.downloadtools downloadIfNotModifiedSince("+url+","+time.ctime(timestamp)+")")
+    logger.info("streamondemand-pureita-master.core.downloadtools downloadIfNotModifiedSince("+url+","+time.ctime(timestamp)+")")
     
     # Convierte la fecha a GMT
     fechaFormateada = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(timestamp))
