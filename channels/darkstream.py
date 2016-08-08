@@ -39,22 +39,22 @@ def mainlist(item):
                      title="[COLOR azure]Film per Registi[/COLOR]",
                      action="cat_registi",
                      url="%s/elenco-registi/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/Director.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Attori[/COLOR]",
                      action="cat_attori",
                      url="%s/elenco-attori/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/All%20Movies%20by%20Actor.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Attrici[/COLOR]",
                      action="cat_attrici",
                      url="%s/elenco-attrici/" % host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/All%20Movies%20by%20Actor.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Standard/Categories/A-Z.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -324,4 +324,4 @@ def fichas(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
