@@ -1,148 +1,50 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - Kodi add-on
-# Conector for openload.io
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# Fix imported by DrZ3r0, credits to mortael, Fr33m1nd, anton40
+# streamondemand - XBMC Plugin
+# Conector for openload.co
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
-
+import base64
+import math
 import re
-import urllib
 
 from core import logger
 from core import scrapertools
+from lib import png
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
-
-
-def decode_openload(html):
-    aastring = re.search(r"<video(?:.|\s)*?<script\s[^>]*?>((?:.|\s)*?)</script", html,
-                         re.DOTALL | re.IGNORECASE).group(1)
-
-    aastring = aastring.replace(
-        "(\xef\xbe\x9f\xd0\x94\xef\xbe\x9f)[\xef\xbe\x9f\xce\xb5\xef\xbe\x9f]+(o\xef\xbe\x9f\xef\xbd\xb0\xef\xbe\x9fo)+ ((c^_^o)-(c^_^o))+ (-~0)+ (\xef\xbe\x9f\xd0\x94\xef\xbe\x9f) ['c']+ (-~-~1)+",
-        "")
-    aastring = aastring.replace("((ﾟｰﾟ) + (ﾟｰﾟ) + (ﾟΘﾟ))", "9")
-    aastring = aastring.replace("((ﾟｰﾟ) + (ﾟｰﾟ))", "8")
-    aastring = aastring.replace("((ﾟｰﾟ) + (o^_^o))", "7")
-    aastring = aastring.replace("((o^_^o) +(o^_^o))", "6")
-    aastring = aastring.replace("((ﾟｰﾟ) + (ﾟΘﾟ))", "5")
-    aastring = aastring.replace("(ﾟｰﾟ)", "4")
-    aastring = aastring.replace("((o^_^o) - (ﾟΘﾟ))", "2")
-    aastring = aastring.replace("(o^_^o)", "3")
-    aastring = aastring.replace("(ﾟΘﾟ)", "1")
-    aastring = aastring.replace("(+!+[])", "1")
-    aastring = aastring.replace("(c^_^o)", "0")
-    aastring = aastring.replace("(0+0)", "0")
-    aastring = aastring.replace("(ﾟДﾟ)[ﾟεﾟ]", "\\")
-    aastring = aastring.replace("(3 +3 +0)", "6")
-    aastring = aastring.replace("(3 - 1 +0)", "2")
-    aastring = aastring.replace("(!+[]+!+[])", "2")
-    aastring = aastring.replace("(-~-~2)", "4")
-    aastring = aastring.replace("(-~-~1)", "3")
-    aastring = aastring.replace("(-~0)", "1")
-    aastring = aastring.replace("(-~1)", "2")
-    aastring = aastring.replace("(-~3)", "4")
-    aastring = aastring.replace("(0-0)", "0")
-
-    decodestring = re.search(r"\\\+([^(]+)", aastring, re.DOTALL | re.IGNORECASE).group(1)
-    decodestring = "\\+" + decodestring
-    decodestring = decodestring.replace("+", "")
-    decodestring = decodestring.replace(" ", "")
-
-    decodestring = decode(decodestring)
-    decodestring = decodestring.replace("\\/", "/")
-
-    if 'toString' in decodestring:
-        base = int(re.compile('toString\\(a\\+(\\d+)', re.DOTALL | re.IGNORECASE).findall(decodestring)[0])
-        match = re.compile('(\\(\\d[^)]+\\))', re.DOTALL | re.IGNORECASE).findall(decodestring)
-        for rep1 in match:
-            match1 = re.compile('(\\d+),(\\d+)', re.DOTALL | re.IGNORECASE).findall(rep1)
-            base2 = base + int(match1[0][0])
-            rep12 = base10toN(int(match1[0][1]), base2)
-            decodestring = decodestring.replace(rep1, rep12)
-        decodestring = decodestring.replace('+', '')
-        decodestring = decodestring.replace('"', '')
-        videourl = re.search('(http[^\\}]+)', decodestring, re.DOTALL | re.IGNORECASE).group(1)
-    else:
-        videourl = re.search(r"vr\s?=\s?\"|'([^\"']+)", decodestring, re.DOTALL | re.IGNORECASE).group(1)
-    return videourl
-
-
-def decode(encoded):
-    for octc in (c for c in re.findall(r'\\(\d{2,3})', encoded)):
-        encoded = encoded.replace(r'\%s' % octc, chr(int(octc, 8)))
-    return encoded.decode('utf8')
-
-
-def base10toN(num, n):
-    num_rep = {10: 'a',
-               11: 'b',
-               12: 'c',
-               13: 'd',
-               14: 'e',
-               15: 'f',
-               16: 'g',
-               17: 'h',
-               18: 'i',
-               19: 'j',
-               20: 'k',
-               21: 'l',
-               22: 'm',
-               23: 'n',
-               24: 'o',
-               25: 'p',
-               26: 'q',
-               27: 'r',
-               28: 's',
-               29: 't',
-               30: 'u',
-               31: 'v',
-               32: 'w',
-               33: 'x',
-               34: 'y',
-               35: 'z'}
-    new_num_string = ''
-    current = num
-    while current != 0:
-        remainder = current % n
-        if 36 > remainder > 9:
-            remainder_string = num_rep[remainder]
-        elif remainder >= 36:
-            remainder_string = '(' + str(remainder) + ')'
-        else:
-            remainder_string = str(remainder)
-        new_num_string = remainder_string + new_num_string
-        current = current / n
-    return new_num_string
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'}
 
 
 def test_video_exists(page_url):
-    logger.info("[openload.py] test_video_exists(page_url='%s')" % page_url)
+    logger.info("stramondemand.servers.openload test_video_exists(page_url='%s')" % page_url)
 
-    data = scrapertools.cache_page(page_url, headers=headers)
+    data = scrapertools.downloadpageWithoutCookies(page_url)
 
     if 'We are sorry!' in data:
-        return False, 'File Not Found or Removed.'
+        return False, "[Openload] La risorsa non esiste o è stata eliminata"
 
     return True, ""
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("[openload.py] url=" + page_url)
+    logger.info("streamondemand.servers.openload url=" + page_url)
     video_urls = []
 
-    data = scrapertools.cache_page(page_url, headers=headers)
+    data = scrapertools.downloadpageWithoutCookies(page_url)
 
-    url = decode_openload(data)
+    subtitle = scrapertools.find_single_match(data, '<track kind="captions" src="([^"]+)" srclang="it"')
+    # Header para la descarga
+    header_down = "|User-Agent=" + headers['User-Agent'] + "|"
 
-    _headers = urllib.urlencode(dict(headers))
-    # URL del vídeo
-    url += '|' + _headers
-    video_urls.append([".mp4" + " [Openload]", url])
+    extension = scrapertools.find_single_match(data, '<meta name="description" content="([^"]+)"')
+    extension = "." + extension.rsplit(".", 1)[1]
+
+    videourl = decode_openload(data)
+
+    video_urls.append([extension + " [Openload] ", videourl + header_down + extension, 0, subtitle])
+
+    for video_url in video_urls:
+        logger.info("streamondemand.servers.openload %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 
@@ -152,14 +54,14 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = '(?://|\.)openload.../(?:embed|f)/([0-9a-zA-Z-_]+)'
-    logger.info("[openload.py] find_videos #" + patronvideos + "#")
+    patronvideos = '//(?:www.)?openload.../(?:embed|f)/([0-9a-zA-Z-_]+)'
+    logger.info("stramondemand.servers.openload find_videos #" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
     for media_id in matches:
         titulo = "[Openload]"
-        url = 'http://openload.co/embed/%s/' % media_id
+        url = 'https://openload.co/embed/%s/' % media_id
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'openload'])
@@ -168,3 +70,76 @@ def find_videos(text):
             logger.info("  url duplicada=" + url)
 
     return devuelve
+
+
+def decode_openload(data):
+    # If you want to use the code for openload please at least put the info from were you take it:
+    # for example: "Code take from plugin IPTVPlayer: "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/"
+    # It will be very nice if you send also email to me samsamsam@o2.pl and inform were this code will be used
+
+    image_data = scrapertools.find_single_match(data, '''<img[^>]*?id="linkimg"[^>]*?src="([^"]+?)"''')
+    image_data = base64.b64decode(image_data.split('base64,')[-1])
+    _, _, pixel, _ = png.Reader(bytes=image_data).read()
+
+    image_str = ''
+    try:
+        for item in pixel:
+            for p in item:
+                image_str += chr(p)
+    except:
+        pass
+
+    image_tabs = []
+    i = -1
+    for idx in range(len(image_str)):
+        if image_str[idx] == '\0':
+            break
+        if 0 == (idx % (12 * 20)):
+            image_tabs.append([])
+            i += 1
+            j = -1
+        if 0 == (idx % 20):
+            image_tabs[i].append([])
+            j += 1
+        image_tabs[i][j].append(image_str[idx])
+
+    data = scrapertools.downloadpageWithoutCookies('https://openload.co/assets/js/obfuscator/numbers.js')
+    sign_str = scrapertools.find_single_match(data, '''['"]([^"^']+?)['"]''')
+
+    # split signature data
+    sign_tabs = []
+    i = -1
+    for idx in range(len(sign_str)):
+        if sign_str[idx] == '\0':
+            break
+        if 0 == (idx % (11 * 26)):
+            sign_tabs.append([])
+            i += 1
+            j = -1
+        if 0 == (idx % 26):
+            sign_tabs[i].append([])
+            j += 1
+        sign_tabs[i][j].append(sign_str[idx])
+
+    # get link data
+    link_data = {}
+    for i in [2, 3, 5, 7]:
+        link_data[i] = []
+        tmp = ord('c')
+        for j in range(len(sign_tabs[i])):
+            for k in range(len(sign_tabs[i][j])):
+                if tmp > 122:
+                    tmp = ord('b')
+                if sign_tabs[i][j][k] == chr(int(math.floor(tmp))):
+                    if len(link_data[i]) > j:
+                        continue
+                    tmp += 2.5
+                    if k < len(image_tabs[i][j]):
+                        link_data[i].append(image_tabs[i][j][k])
+    res = []
+    for idx in link_data:
+        res.append(''.join(link_data[idx]).replace(',', ''))
+
+    res = res[3] + '~' + res[1] + '~' + res[2] + '~' + res[0]
+    videourl = 'https://openload.co/stream/{0}?mime=true'.format(res)
+    return videourl

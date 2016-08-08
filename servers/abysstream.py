@@ -52,7 +52,7 @@ def find_videos(text):
     devuelve = []
 
     # http://abysstream.net/v/iwbe6genso37
-    patronvideos = 'http://abysstream.com/videos/([A-Za-z0-9]+)'
+    patronvideos = 'http://abysstream.com/videos?/([A-Za-z0-9]+)'
     logger.info("[abysstream.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
