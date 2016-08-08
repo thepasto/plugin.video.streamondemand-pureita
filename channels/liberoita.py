@@ -41,7 +41,7 @@ def mainlist(item):
              title="[COLOR azure]Categorie[/COLOR]",
              action="categorias",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
         Item(channel=__channel__,
              title="[COLOR yellow]Cerca...[/COLOR]",
              action="search",
@@ -51,7 +51,7 @@ def mainlist(item):
              extra="serie",
              action="peliculas_tv",
              url="%s/category/serie-tv" % host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/TV%20Series.png"),
         Item(channel=__channel__,
              title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
              action="search",
@@ -212,7 +212,7 @@ def peliculas_tv(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 
 def episodios(item):
