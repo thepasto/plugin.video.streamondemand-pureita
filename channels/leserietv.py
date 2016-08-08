@@ -78,7 +78,7 @@ def mainlist(item):
     itemlist.append(Item(channel=__channel__,
                          action="info",
                              title="[COLOR lime][I]Info canale[/I][/COLOR]",
-                         thumbnail="http://www.mimediacenter.info/wp-content/uploads/2016/01/newlogo-final.png"))
+                         thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/mimedia.png"))
     return itemlist
 
 
