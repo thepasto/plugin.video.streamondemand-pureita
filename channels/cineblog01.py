@@ -44,19 +44,19 @@ def mainlist(item):
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
                      extra="film",
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/popcorn_cinema.png"),
                 Item(channel=__channel__,
                      action="peliculas",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
                      url="%s/tag/film-hd-altadefinizione/" % sito,
                      extra="film",
-                     thumbnail="http://jcrent.com/apple%20tv%20final/HD.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/hd.png"),
                 Item(channel=__channel__,
                      action="menuhd",
                      title="[COLOR azure]Menù HD[/COLOR]",
                      url=sito,
                      extra="film",
-                     thumbnail="http://files.softicons.com/download/computer-icons/disks-icons-by-wil-nichols/png/256x256/Blu-Ray.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/blueray.png"),
                 Item(channel=__channel__,
                      action="menugeneros",
                      title="[COLOR azure]Per Genere[/COLOR]",
@@ -68,23 +68,23 @@ def mainlist(item):
                      title="[COLOR azure]Per Anno[/COLOR]",
                      url=sito,
                      extra="film",
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Film[/COLOR]",
                      extra="film",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
                 Item(channel=__channel__,
                      action="listserie",
                      title="[COLOR azure]Serie Tv - Novita'[/COLOR]",
                      url="%s/serietv/" % sito,
                      extra="serie",
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/new_tvshows.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Serie Tv[/COLOR]",
                      extra="serie",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
 
@@ -656,4 +656,4 @@ def play(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
