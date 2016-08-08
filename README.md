@@ -10,7 +10,7 @@ Easily installable via Add-on manager on Kodi\Openelec, this version have self-u
 
 All the erotic channels were removed, KODI\Openelec repositories are full of add-on made to view this kind of contents.
 
-Special thanks to forum users:
+Special thanks to forum users:                                                                                                        
 Jesus (for pelisalacarta) robalo (for being a master and a skilled a developer),                                                      
 dentaku65 (for being a vulcano of ideas and a hard worker, and supporting moving the project here),                                   
 robalo (for being a reliable master and a skilled a developer),                                                                       
