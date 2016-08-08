@@ -1,3 +1,12 @@
+5.3.8
+-Update Channels
+-Update core
+-Autoupdate from GitHub
+-Fix Global search
+-Fix Biblioteca
+-Fix FilmOn
+-Alligned with New SOD
+
 5.3.7
 -Update Unload Channels 
 -Update Unplugged Channels
