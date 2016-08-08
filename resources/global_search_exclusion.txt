@@ -20,7 +20,6 @@ multiplayer
 serietvsubita
 seriehd
 storiedellarte
-streamblog
 youtube
 #service channels
 filmontv
@@ -36,6 +35,5 @@ chimerarevo
 webshortfilms
 bibliotrailer
 saghe
-tenentecolombo
-effettolunatico
+
 
