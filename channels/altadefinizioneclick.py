@@ -44,7 +44,7 @@ def mainlist(item):
              title="[COLOR azure]Novita'[/COLOR]",
              action="fichas",
              url=host + "/nuove-uscite/",
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
@@ -54,17 +54,17 @@ def mainlist(item):
              title="[COLOR azure]Film per Anno[/COLOR]",
              action="anno",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film Sub-Ita[/COLOR]",
              action="fichas",
              url=host + "/sub-ita/",
              extra="sub",
-             thumbnail="http://i.imgur.com/qUENzxl.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
 
