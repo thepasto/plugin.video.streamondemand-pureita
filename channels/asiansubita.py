@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para asiansubita
+# Canale per asiansubita
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
