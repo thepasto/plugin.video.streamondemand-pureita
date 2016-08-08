@@ -42,12 +42,12 @@ def mainlist(item):
                      title="[COLOR azure]Ultimi film inseriti[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Sub-Ita[/COLOR]",
                      action="peliculas",
                      url="%s/genere/sub-ita/" % host,
-                     thumbnail="http://i.imgur.com/qUENzxl.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie film[/COLOR]",
                      action="categorias",
@@ -56,7 +56,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
 
     return itemlist
 
@@ -127,7 +127,7 @@ def peliculas(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 
 def categorias(item):
