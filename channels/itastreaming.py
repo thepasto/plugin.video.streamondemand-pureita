@@ -60,7 +60,7 @@ def mainlist(item):
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
              url=host,
-             thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Qualita'[/COLOR]",
              action="quality",
