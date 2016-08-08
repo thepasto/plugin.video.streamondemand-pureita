@@ -5,15 +5,13 @@
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
-import sys
-import time
-import urllib2
 import urlparse
 
 from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
+from core.tmdb import infoSod
 from servers import servertools
 
 __channel__ = "altadefinizione01"
@@ -44,21 +42,21 @@ def mainlist(item):
                      title="[COLOR azure]Ultimi film inseriti[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Sub-Ita[/COLOR]",
                      action="peliculas",
                      url="%s/genere/sub-ita/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
+                     thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie film[/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
 
@@ -70,7 +68,7 @@ def peliculas(item):
     # Descarga la pagina
     # data = scrapertools.cache_page(item.url)
 
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     ## ------------------------------------------------
     cookies = ""
@@ -96,34 +94,14 @@ def peliculas(item):
         ## ------------------------------------------------
         scrapedthumbnail += "|" + _headers
         ## ------------------------------------------------
-        tmdbtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Sub ITA", ""))
-        try:
-           plot, fanart, poster, extrameta = info(tmdbtitle)
 
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="findvid",
-                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                    url=scrapedurl,
-                    fulltitle=scrapedtitle,
-                    show=scrapedtitle,
-                    folder=True))
-        except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="findvid",
-                    title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                    fulltitle=scrapedtitle,
-                    show=scrapedtitle,
-                    url=scrapedurl,
-                    viewmode="movie_with_plot",
-                    thumbnail=scrapedthumbnail,
-                    plot=scrapedplot,
-                    folder=True))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail), tipo="movie"))
 
     # Extrae el paginador
     patronvideos = 'class="nextpostslink" rel="next" href="([^"]+)">&raquo;'
@@ -146,16 +124,18 @@ def peliculas(item):
 
     return itemlist
 
+
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+
 
 def categorias(item):
     logger.info("streamondemand.altadefinizione01 categorias")
     itemlist = []
 
     # data = scrapertools.cache_page(item.url)
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<ul class="kategori_list">(.*?)</ul>')
@@ -195,11 +175,11 @@ def search(item, texto):
         return []
 
 
-def findvid(item):
+def findvideos(item):
     logger.info("[altadefinizione01.py] findvideos")
 
     # Descarga la página
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     itemlist = servertools.find_video_items(data=data)
 
@@ -211,40 +191,3 @@ def findvid(item):
         videoitem.channel = __channel__
 
     return itemlist
-
-
-def anti_cloudflare(url):
-    # global headers
-
-    try:
-        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
-        resp_headers = dict(resp_headers)
-    except urllib2.HTTPError, e:
-        resp_headers = e.headers
-
-    if 'refresh' in resp_headers:
-        time.sleep(int(resp_headers['refresh'][:1]))
-
-        urlsplit = urlparse.urlsplit(url)
-        h = urlsplit.netloc
-        s = urlsplit.scheme
-        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
-
-    return scrapertools.cache_page(url, headers=headers)
-
-def info(title):
-    logger.info("streamondemand.altadefinizione01 info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, tipo="movie", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass
-

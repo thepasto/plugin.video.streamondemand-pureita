@@ -11,6 +11,7 @@ from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
+from core.tmdb import infoSod
 from servers import servertools
 
 __channel__ = "filmpertutti"
@@ -33,43 +34,46 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Ultimi film inseriti[/COLOR]",
                      action="peliculas",
+                     extra="film",
                      url="%s/category/film/news_film/" % host,
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie film[/COLOR]",
                      action="categorias",
+                     extra="film",
                      url="%s/category/film/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/category%26anime.png"),
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
+                     extra="film",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="peliculas_tv",
                      url="%s/category/serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/tv_series.png"),
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Anime & Cartoon in Italiano[/COLOR]",
                      action="anime",
                      url="%s/category/anime-cartoon-italiani/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Cartoons1.png"),
+                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Anime Sub-Ita[/COLOR]",
                      action="anime",
                      url="%s/category/anime-cartoon-sub-ita/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Cartoons_sub.png"),
+                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Anime Sub-Ita...[/COLOR]",
                      action="search",
                      extra="anime",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
 
@@ -93,35 +97,17 @@ def peliculas(item):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        tmdbtitle1 = scrapedtitle.split("[")[0]
-        tmdbtitle = tmdbtitle1.split("(")[0]
-        year = scrapertools.find_single_match(scrapedtitle, '\((\d+)\)')
-        try:
-            plot, fanart, poster, extrameta = info(tmdbtitle, year)
-
-            itemlist.append(
-                Item(channel=__channel__,
-                     thumbnail=poster,
-                     fanart=fanart if fanart != "" else poster,
-                     extrameta=extrameta,
-                     plot=str(plot),
-                     action="episodios" if item.extra == "serie" else "findvideos",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     fulltitle=scrapedtitle,
-                     show=scrapedtitle,
-                     folder=True))
-        except:
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="episodios" if item.extra == "serie" else "findvideos",
-                     fulltitle=scrapedtitle,
-                     show=scrapedtitle,
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     thumbnail=scrapedthumbnail,
-                     plot=scrapedplot,
-                     folder=True))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo='movie'))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)" >Avanti</a>'
@@ -140,6 +126,7 @@ def peliculas(item):
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 extra=item.extra,
                  folder=True))
 
     return itemlist
@@ -164,33 +151,17 @@ def peliculas_tv(item):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        tmdbtitle = scrapedtitle.split("Serie")[0]
-        try:
-            plot, fanart, poster, extrameta = info_tv(tmdbtitle)
-
-            itemlist.append(
-                Item(channel=__channel__,
-                     thumbnail=poster,
-                     fanart=fanart if fanart != "" else poster,
-                     extrameta=extrameta,
-                     plot=str(plot),
-                     action="episodios" if item.extra == "serie" else "findvideos",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     fulltitle=scrapedtitle,
-                     show=scrapedtitle,
-                     folder=True))
-        except:
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="episodios" if item.extra == "serie" else "findvideos",
-                     fulltitle=scrapedtitle,
-                     show=scrapedtitle,
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     thumbnail=scrapedthumbnail,
-                     plot=scrapedplot,
-                     folder=True))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo='tv'))
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)" >Avanti</a>'
@@ -209,6 +180,7 @@ def peliculas_tv(item):
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 extra=item.extra,
                  folder=True))
 
     return itemlist
@@ -240,13 +212,14 @@ def anime(item):
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="episodianime",
+                 action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
+                 extra=item.extra,
                  folder=True))
 
     # Extrae el paginador
@@ -266,6 +239,7 @@ def anime(item):
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 extra=item.extra,
                  folder=True))
 
     return itemlist
@@ -273,7 +247,7 @@ def anime(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
 def categorias(item):
@@ -302,6 +276,7 @@ def categorias(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
+                 extra=item.extra,
                  plot=scrapedplot))
 
     return itemlist
@@ -311,12 +286,12 @@ def search(item, texto):
     logger.info("streamondemand.filmpertutti " + item.url + " search " + texto)
     item.url = host + "/search/" + texto
     try:
+        if item.extra == "film":
+            return peliculas(item)
         if item.extra == "serie":
             return peliculas_tv(item)
         if item.extra == "anime":
             return anime(item)
-        else:
-            return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
@@ -325,8 +300,30 @@ def search(item, texto):
         return []
 
 
+def episodios(item):
+    logger.info("streamondemand.filmpertutti episodios")
+
+    itemlist = episodiserie(item) if item.extra == 'serie' else episodianime(item)
+
+    if config.get_library_support() and len(itemlist) != 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 title=item.title,
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios" + "###" + item.extra,
+                 show=item.show))
+        itemlist.append(
+            Item(channel=__channel__,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios" + "###" + item.extra,
+                 show=item.show))
+
+
 def episodianime(item):
-    logger.info("anime sub ita - episodianime")
+    logger.info("streamondemand.filmpertutti episodianime")
 
     itemlist = []
 
@@ -347,34 +344,18 @@ def episodianime(item):
                 scrapedtitle) < 99 and 'EASYBYTEZ' not in scrapedtitle.upper() and 'CLOUDSIX' not in scrapedtitle.upper():
             itemlist.append(
                 Item(channel=__channel__,
-                     action="findvid_serie",
+                     action="findvideos",
                      title="[COLOR azure]%s[/COLOR]" % scrapedtitle,
-                     url=item.url,
+                     url=data,
                      thumbnail=item.thumbnail,
-                     extra=data,
-                     fulltitle=item.fulltitle,
+                     extra=item.extra,
+                     fulltitle=item.show + ' | ' + item.fulltitle,
                      show=item.show))
-
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title=item.title,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
 
     return itemlist
 
 
-def episodios(item):
+def episodiserie(item):
     def load_episodios(html, item, itemlist, lang_title):
         patron = '((?:.*?<a href="[^"]+" target="_blank" rel="nofollow">[^<]+</a>)+)'
         matches = re.compile(patron).findall(html)
@@ -384,15 +365,15 @@ def episodios(item):
             scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
             itemlist.append(
                 Item(channel=__channel__,
-                     action="findvid_serie",
+                     action="findvideos",
                      title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
-                     url=item.url,
+                     url=data,
                      thumbnail=item.thumbnail,
-                     extra=data,
-                     fulltitle=item.fulltitle,
+                     extra=item.extra,
+                     fulltitle=item.show + ' | ' + item.fulltitle,
                      show=item.show))
 
-    logger.info("streamondemand.filmpertutti episodios")
+    logger.info("streamondemand.filmpertutti episodiserie")
 
     itemlist = []
 
@@ -424,30 +405,14 @@ def episodios(item):
 
         i += 1
 
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title=item.title,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
-
     return itemlist
 
 
-def findvid_serie(item):
+def findvideos(item):
     logger.info("streamondemand.filmpertutti findvideos")
 
     # Descarga la página
-    data = item.extra
+    data = scrapertools.cache_page(item.url) if item.extra == 'film' else item.url
 
     itemlist = servertools.find_video_items(data=data)
 
@@ -460,37 +425,3 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
-
-
-def info(title, year):
-    logger.info("streamondemand.filmpertutti info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, year=year, tipo="movie", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass
-
-
-def info_tv(title):
-    logger.info("streamondemand.filmpertutti info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, tipo="tv", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass

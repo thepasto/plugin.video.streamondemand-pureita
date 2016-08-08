@@ -14,6 +14,7 @@ from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
+from core.tmdb import infoSod
 
 __channel__ = "seriehd"
 __category__ = "S"
@@ -103,7 +104,7 @@ def fichas(item):
     logger.info("[seriehd.py] fichas")
     itemlist = []
 
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     # ------------------------------------------------
     cookies = ""
@@ -126,32 +127,14 @@ def fichas(item):
     for scrapedtitle, scrapedthumbnail, scrapedurl in matches:
         scrapedthumbnail += "|" + _headers
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-
-        tmdbtitle = scrapedtitle.split("(")[0]
-        try:
-            plot, fanart, poster, extrameta = info(tmdbtitle)
-
-            itemlist.append(
-                Item(channel=__channel__,
-                     thumbnail=poster,
-                     fanart=fanart if fanart != "" else poster,
-                     extrameta=extrameta,
-                     plot=str(plot),
-                     action="episodios",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     url=scrapedurl,
-                     fulltitle=scrapedtitle,
-                     show=scrapedtitle,
-                     folder=True))
-        except:
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="episodios",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                     fulltitle=scrapedtitle,
-                     url=scrapedurl,
-                     show=scrapedtitle,
-                     thumbnail=scrapedthumbnail))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 show=scrapedtitle,
+                 thumbnail=scrapedthumbnail), tipo='tv'))
 
     patron = "<span class='current'>\d+</span><a rel='nofollow' class='page larger' href='([^']+)'>\d+</a>"
     next_page = scrapertools.find_single_match(data, patron)
@@ -169,7 +152,7 @@ def episodios(item):
     logger.info("[seriehd.py] episodios")
     itemlist = []
 
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)" allowfullscreen frameborder="0">'
     url = scrapertools.find_single_match(data, patron).replace("?seriehd", "")
@@ -226,7 +209,7 @@ def findvideos(item):
     logger.info("[seriehd1.py] findvideos")
     itemlist = []
 
-    data = anti_cloudflare(item.url).replace('\n', '')
+    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
 
     patron = '<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen="">'
     url = scrapertools.find_single_match(data, patron)
@@ -263,49 +246,6 @@ def findvideos(item):
     return itemlist
 
 
-def parseJSString(s):
-    try:
-        offset = 1 if s[0] == '+' else 0
-        val = int(eval(s.replace('!+[]', '1').replace('!![]', '1').replace('[]', '0').replace('(', 'str(')[offset:]))
-        return val
-    except:
-        pass
-
-
-def anti_cloudflare(url):
-    result = scrapertools.cache_page(url, headers=headers)
-    try:
-        jschl = re.compile('name="jschl_vc" value="(.+?)"/>').findall(result)[0]
-        init = re.compile('setTimeout\(function\(\){\s*.*?.*:(.*?)};').findall(result)[0]
-        builder = re.compile(r"challenge-form\'\);\s*(.*)a.v").findall(result)[0]
-        decrypt_val = parseJSString(init)
-        lines = builder.split(';')
-
-        for line in lines:
-            if len(line) > 0 and '=' in line:
-                sections = line.split('=')
-                line_val = parseJSString(sections[1])
-                decrypt_val = int(eval(str(decrypt_val) + sections[0][-1] + str(line_val)))
-
-        urlsplit = urlparse.urlsplit(url)
-        h = urlsplit.netloc
-        s = urlsplit.scheme
-
-        answer = decrypt_val + len(h)
-
-        query = '%s/cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s' % (url, jschl, answer)
-
-        if 'type="hidden" name="pass"' in result:
-            passval = re.compile('name="pass" value="(.*?)"').findall(result)[0]
-            query = '%s/cdn-cgi/l/chk_jschl?pass=%s&jschl_vc=%s&jschl_answer=%s' % (s + '://' + h, urllib.quote_plus(passval), jschl, answer)
-            time.sleep(5)
-
-        scrapertools.get_headers_from_response(query, headers=headers)
-        return scrapertools.cache_page(url, headers=headers)
-    except:
-        return result
-
-
 def url_decode(url_enc):
     lenght = len(url_enc)
     if lenght % 2 == 0:
@@ -327,20 +267,3 @@ def url_decode(url_enc):
     reverse = url_enc[::-1]
     reverse = reverse + last_car
     return base64.b64decode(reverse)
-
-
-def info(title):
-    logger.info("streamondemand.seriehd info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, tipo="tv", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass
