@@ -7,14 +7,10 @@ bibliotrailer
 breakingbadita
 buscador
 chimerarevo
-cineblogfm
-cinemagratis
 cinestreaming01
 cucinarefacile
 documentaristreaming
 documoo
-eurostreaming
-fastvideotv
 filmgratiscc
 filmontv
 futuramaita
@@ -28,13 +24,11 @@ multiplayer
 novedades
 simpsonita
 storiedellarte
-streamblog
 streamingpopcorn
 tengourl
 walkingdeadita
 webshortfilms
 youtube
 saghe
-tenentecolombo
 effettolunatico
 
