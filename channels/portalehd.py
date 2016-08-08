@@ -13,7 +13,6 @@ from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
-from core.tmdb import infoSod
 from servers import servertools
 
 __channel__ = "portalehd"
@@ -48,7 +47,7 @@ def mainlist(item):
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -106,7 +105,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = anti_cloudflare(item.url)
 
     # ------------------------------------------------
     cookies = ""
@@ -126,22 +125,40 @@ def peliculas(item):
     for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
-        #scrapedthumbnail = ""
         # ------------------------------------------------
         scrapedthumbnail += "|" + _headers
         # ------------------------------------------------
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 folder=True), tipo='movie'))
+        tmdbtitle1 = scrapedtitle.split("Sub ")[0]
+        tmdbtitle = tmdbtitle1.split("(")[0]
+        year = scrapertools.find_single_match(scrapedtitle, '\((\d+)\)')
+        try:
+            plot, fanart, poster, extrameta = info(tmdbtitle, year)
+
+            itemlist.append(
+                Item(channel=__channel__,
+                     thumbnail=poster,
+                     fanart=fanart if fanart != "" else poster,
+                     extrameta=extrameta,
+                     plot=str(plot),
+                     action="findvideos",
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     folder=True))
+        except:
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     plot=scrapedplot,
+                     folder=True))
 
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">Avanti »</a>'
@@ -169,7 +186,7 @@ def findvideos(item):
     logger.info("[portalehd.py] findvideos")
 
     # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = anti_cloudflare(item.url)
 
     itemlist = servertools.find_video_items(data=data)
 
@@ -191,8 +208,59 @@ def parseJSString(s):
     except:
         pass
 
+
+def anti_cloudflare(url):
+    result = scrapertools.cache_page(url, headers=headers)
+    try:
+        jschl = re.compile('name="jschl_vc" value="(.+?)"/>').findall(result)[0]
+        init = re.compile('setTimeout\(function\(\){\s*.*?.*:(.*?)};').findall(result)[0]
+        builder = re.compile(r"challenge-form\'\);\s*(.*)a.v").findall(result)[0]
+        decrypt_val = parseJSString(init)
+        lines = builder.split(';')
+
+        for line in lines:
+            if len(line) > 0 and '=' in line:
+                sections = line.split('=')
+                line_val = parseJSString(sections[1])
+                decrypt_val = int(eval(str(decrypt_val) + sections[0][-1] + str(line_val)))
+
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+
+        answer = decrypt_val + len(h)
+
+        query = '%s/cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s' % (url, jschl, answer)
+
+        if 'type="hidden" name="pass"' in result:
+            passval = re.compile('name="pass" value="(.*?)"').findall(result)[0]
+            query = '%s/cdn-cgi/l/chk_jschl?pass=%s&jschl_vc=%s&jschl_answer=%s' % (
+            s + '://' + h, urllib.quote_plus(passval), jschl, answer)
+            time.sleep(5)
+
+        scrapertools.get_headers_from_response(query, headers=headers)
+        return scrapertools.cache_page(url, headers=headers)
+    except:
+        return result
+
+
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
+def info(title, year):
+    logger.info("streamondemand.portalehd info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb = Tmdb(texto_buscado=title, year=year, tipo="movie", include_adult="false", idioma_busqueda="it")
+        if oTmdb.total_results > 0:
+            extrameta = {"Year": oTmdb.result["release_date"][:4],
+                         "Genre": ", ".join(oTmdb.result["genres"]),
+                         "Rating": float(oTmdb.result["vote_average"])}
+            fanart = oTmdb.get_backdrop()
+            poster = oTmdb.get_poster()
+            plot = oTmdb.get_sinopsis()
+            return plot, fanart, poster, extrameta
+    except:
+        pass
