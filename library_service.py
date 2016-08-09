@@ -83,7 +83,7 @@ try:
                     itemlist = []
 
                     pathchannels = os.path.join(config.get_runtime_path(), 'channels', serie[2] + '.py')
-                    logger.info("streamondemand.library_service Cargando canal  " + pathchannels + " " + serie[2])
+                    logger.info("streamondemand-pureita.library_service Cargando canal  " + pathchannels + " " + serie[2])
                     obj = imp.load_source(serie[2].strip(), pathchannels )
                     itemlist = obj.episodios(item)
 
