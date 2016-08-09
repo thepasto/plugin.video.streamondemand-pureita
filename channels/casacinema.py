@@ -59,7 +59,7 @@ def mainlist(item):
                      action="peliculas",
                      extra="film",
                      url="%s/genere/sub-ita" % host,
-                     thumbnail="http://i.imgur.com/qUENzxl.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
