@@ -8,10 +8,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/altadefinizione01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>18</version>
+    <version>19</version>
     <adult>false</adult>
-    <date>03/05/2015</date>
-    <changes>fix anti-cloudflare</changes>
+    <date>08/08/2016</date>
+    <changes>update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -28,10 +28,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/altadefinizioneclick.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>18</version>
+    <version>19</version>
     <adult>false</adult>
-    <date>14/06/2016</date>
-    <changes>fix domain and categories</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -48,10 +48,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/altadefinizioneone.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</adult>
-    <date>30/04/2016</date>
-    <changes>First release</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -64,9 +64,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/animestream.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</adult>
-    <date>20/06/2016</date>
+    <date>08/08/2016</date>
     <changes>v1: First release of this channel by costaplus - v2: fix "next page"</changes>
     <categories>
         <category>anime</category>
@@ -80,9 +80,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/animetubeita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>08/06/2016</date>
+    <date></date>
     <changes>new anime channel by Costaplus</changes>
     <categories>
         <category>anime</category>
@@ -96,9 +96,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/asiansubita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
-    <date>15/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Added TMDB</changes>
     <categories>
         <category>movie</category>
@@ -115,10 +115,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/ayuda.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>28/08/2015</date>
-    <changes>First streamondemand.4 release</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
 </channel>
 
 
@@ -129,10 +129,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/biblioteca.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>36</version>
+    <version>37</version>
     <adult>false</adult>
-    <date>10/03/2016</date>
-    <changes>Fix by J0rdiZ65</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -148,10 +148,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/buscador.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>10</version>
+    <version>12</version>
     <adult>false</adult>
-    <date>09/06/2016</date>
-    <changes>Smail customization</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
 </channel>
 
 
@@ -162,10 +162,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/casacinema.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>17</version>
+    <version>18</version>
     <adult>false</adult>
-    <date>28/06/2016</date>
-    <changes>fix categories</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -182,10 +182,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/chimerarevo.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>27/02/2016</date>
-    <changes>Re-added channel</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
     </categories>
@@ -199,15 +199,53 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>34</version>
+    <version>35</version>
     <adult>false</adult>
-    <date>23/04/2016</date>
-    <changes>Added TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
         <category>anime</category>
         <category>vos</category>
+    </categories>
+</channel>
+
+
+
+<channel>
+    <id>cineblogfm</id>
+    <name>CineBlog01.FM</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cineblogfm.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>2</version>
+    <adult>false</adult>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
+    <categories>
+        <category>movie</category>
+        <category>serie</category>
+        <category>anime</category>
+        <category>vos</category>
+    </categories>
+</channel>
+
+
+<channel>
+    <id>cb01anime</id>
+    <name>Cb01anime</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cb01anime.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>5</version>
+    <adult>false</adult>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
+    <categories>
+        <category>anime</category>
     </categories>
 </channel>
 
@@ -219,10 +257,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cinemalibero.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>9</version>
+    <version>10</version>
     <adult>false</adult>
-    <date>22/04/2016</date>
-    <changes>Add TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -239,10 +277,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cinemastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>12/04/2016</date>
-    <changes>Add TMDB</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -256,10 +294,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/corsaronero.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>24/05/2016</date>
-    <changes>Small fix</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -273,10 +311,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cucinarefacile.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>24/04/2016</date>
-    <changes>Fix</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
     </categories>
@@ -290,10 +328,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/darkstream.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>07/05/2016</date>
-    <changes>small fix</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -308,10 +346,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/documentaristreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>05/04/2016</date>
-    <changes>Fix search</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
     </categories>
@@ -325,10 +363,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/eurostreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>05/04/2016</date>
-    <changes>Addedd TMDB mvie+series</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -344,10 +382,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/eurostreaminginfo.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>6</version>
+    <version>7</version>
     <adult>false</adult>
-    <date>03/04/2016</date>
-    <changes>Fix TMDB </changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -361,10 +399,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmbelli.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>03/05/2015</date>
-    <changes>New channel by costaplus</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -377,10 +415,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmontv.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>03/04/2015</date>
-    <changes>Fix TMDB integration</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -397,10 +435,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmpertutti.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>17</version>
+    <version>18</version>
     <adult>false</adult>
-    <date>23/04/2016</date>
-    <changes>Added TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -416,10 +454,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmsenzalimiti.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>21/04/2015</date>
-    <changes>Added TMDB distinction to test</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -433,10 +471,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmstream.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>22/04/2016</date>
-    <changes>Added TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -451,10 +489,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmstreampw.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>22/04/2016</date>
-    <changes>Added TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -469,10 +507,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmsubitotv.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>10/04/2016</date>
-    <changes>Added TMDB + domain fix</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -489,10 +527,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/guardarefilm.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>23/04/2016</date>
-    <changes>Added TMDB tv</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -508,10 +546,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/guardaserie.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>14</version>
+    <version>15</version>
     <adult>false</adult>
-    <date>03/05/2016</date>
-    <changes>fix anti-cloudflare</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -527,10 +565,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hdblog.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>21/02/2016</date>
-    <changes>1st release</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
     </categories>
@@ -544,10 +582,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hdgratis.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>11</version>
+    <version>12</version>
     <adult>false</adult>
-    <date>14/06/2016</date>
-    <changes>fix domain and category</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>anime</category>
@@ -562,9 +600,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hdstreamingit.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>28/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Fix episodios - scrapedurl</changes>
     <categories>
         <category>movie</category>
@@ -579,9 +617,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hokutonoken.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>24/11/2015</date>
+    <date>08/08/2016</date>
     <changes>New Channel</changes>
     <categories>
         <category>serie</category>
@@ -596,9 +634,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/itafilmtv.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>27/05/2016</date>
+    <date>08/08/2016</date>
     <changes>Add host</changes>
     <categories>
         <category>movie</category>
@@ -616,9 +654,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/italiafilm.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>19</version>
+    <version>20</version>
     <adult>false</adult>
-    <date>26/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Search fix</changes>
     <categories>
         <category>movie</category>
@@ -635,9 +673,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/italiafilmvideohd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>29/04/2016</date>
+    <date>08/08/2016</date>
     <changes>drzer0 cloudflare fix</changes>
     <categories>
         <category>movie</category>
@@ -654,9 +692,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/italianstream.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>23/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Added TMDB tv</changes>
     <categories>
         <category>movie</category>
@@ -673,9 +711,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/italiaserie.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>14/06/2016</date>
+    <date>08/08/2016</date>
     <changes>some minor fixes</changes>
     <categories>
         <category>serie</category>
@@ -691,9 +729,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/itastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>14</version>
+    <version>15</version>
     <adult>false</adult>
-    <date>13/05/2016</date>
+    <date>08/08/2016</date>
     <changes>fix domain and menu</changes>
     <categories>
         <category>movie</category>
@@ -708,9 +746,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/liberoita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>16</version>
+    <version>17</version>
     <adult>false</adult>
-    <date>01/05/2016</date>
+    <date>08/08/2016</date>
     <changes>small fix TMDB</changes>
     <categories>
         <category>movie</category>
@@ -724,7 +762,7 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/leserietv.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
     <date>08/08/2016</date>
     <changes>Fixed news</changes>
@@ -740,9 +778,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/libreria.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>28/08/2015</date>
+    <date>08/08/2016</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
 </channel>
 
@@ -753,9 +791,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/megafiletube.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>03/06/2016</date>
+    <date>08/08/2016</date>
     <changes>1st versin by Costaplus + fix magnet</changes>
     <categories>
         <category>movie</category>
@@ -769,9 +807,9 @@
     <update_url> https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/mondolunatico.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>23/05/2016</date>
+    <date>08/08/2016</date>
     <changes>add tmdb date</changes>
     <categories>
         <category>movie</category>
@@ -787,9 +825,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/novedades.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
-    <date>16/11/2015</date>
+    <date>08/08/2016</date>
     <changes>First streamondemand.4 release</changes>
 </channel>
 
@@ -801,9 +839,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/pastebin.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>09/11/2015</date>
+    <date>08/08/2016</date>
     <changes>Prima versione di Pastebin</changes>
     <categories>
         <category>movie</category>
@@ -822,9 +860,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/pianetastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>09/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Added TMDB</changes>
     <categories>
         <category>movie</category>
@@ -839,9 +877,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/piratestreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>23/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Added TMDB tv</changes>
     <categories>
         <category>movie</category>
@@ -857,9 +895,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/playcinema.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>8</version>
+    <version>9</version>
     <adult>false</adult>
-    <date>04/05/2016</date>
+    <date>08/08/2016</date>
     <changes>drzer0 cloudflare fix</changes>
     <categories>
         <category>movie</category>
@@ -874,9 +912,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/portalehd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>05/05/2016</date>
+    <date>08/08/2016</date>
     <changes>small fix</changes>
     <categories>
         <category>movie</category>
@@ -892,9 +930,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/programmazione.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>11/05/2016</date>
+    <date>08/08/2016</date>
     <changes>Update programmazione</changes>
     <categories>
         <category>Didattica</category>
@@ -908,9 +946,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/ricettevideo.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>07/05/2016</date>
+    <date>08/08/2016</date>
     <changes>small fix</changes>
     <categories>
         <category>Documentaries</category>
@@ -925,9 +963,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/saghe.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>21/02/2016</date>
+    <date>08/08/2016</date>
     <changes>Changed API</changes>
 </channel>
 
@@ -939,9 +977,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/saintseiya.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>28/10/2015</date>
+    <date>08/08/2016</date>
     <changes>Canale dedicato ai Cavalieri dello Zodiaco</changes>
     <categories>
         <category>anime</category>
@@ -956,9 +994,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/scambioetico.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>04/05/2016</date>
+    <date>08/08/2016</date>
     <changes>Fix magnet + channel update</changes>
     <categories>
         <category>movie</category>
@@ -972,9 +1010,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/scambiofile.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>10/05/2016</date>
+    <date>08/08/2016</date>
     <changes>Fixed magnet</changes>
     <categories>
         <category>movie</category>
@@ -988,9 +1026,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/seriehd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>27</version>
+    <version>28</version>
     <adult>false</adult>
-    <date>28/04/2016</date>
+    <date>08/08/2016</date>
     <changes>robalo cleanup code and drzer0 cloudflare fix</changes>
     <categories>
         <category>serie</category>
@@ -1005,9 +1043,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/serietvsubita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>12/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Add TMDB</changes>
     <categories>
         <category>serie</category>
@@ -1023,9 +1061,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/solostreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>6</version>
+    <version>7</version>
     <adult>false</adult>
-    <date>05/04/2016</date>
+    <date>08/08/2016</date>
     <changes>TMDB - update</changes>
     <categories>
         <category>movie</category>
@@ -1037,15 +1075,33 @@
 
 
 <channel>
+    <id>soloserie</id>
+    <name>soloserie</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/soloserie.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>2</version>
+    <adult>false</adult>
+    <date>08/08/2016</date>
+    <changes>First release update</changes>
+    <categories>
+        <category>serie</category>
+    </categories>
+</channel>
+
+
+
+<channel>
     <id>southparkita</id>
     <name>SouthParkITA Streaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/southparkita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>22/10/2015</date>
+    <date>08/08/2016</date>
     <changes>added channel</changes>
     <categories>
         <category>serie</category>
@@ -1061,9 +1117,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/streamblog.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>6</version>
+    <version>7</version>
     <adult>false</adult>
-    <date>28/08/2015</date>
+    <date>08/08/2016</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
     <categories>
         <category>movie</category>
@@ -1080,9 +1136,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/streaming01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>9</version>
+    <version>10</version>
     <adult>false</adult>
-    <date>10/04/2016</date>
+    <date>08/08/2016</date>
     <changes>Added TMDB</changes>
     <categories>
         <category>movie</category>
@@ -1097,9 +1153,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/streamingpopcorn.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>6</version>
+    <version>7</version>
     <adult>false</adult>
-    <date>05/05/2016</date>
+    <date>08/08/2016</date>
     <changes>Small fix</changes>
     <categories>
         <category>movie</category>
@@ -1114,9 +1170,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/strfilm.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <version>8</version>
     <adult>false</adult>
-    <date>30/04/2016</date>
+    <date>08/08/2016</date>
     <changes>fixed patron</changes>
     <categories>
         <category>movie</category>
@@ -1131,9 +1187,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/tantifilm.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>27/05/2015</date>
+    <date>08/08/2016</date>
     <changes>New host</changes>
     <categories>
         <category>movie</category>
@@ -1149,9 +1205,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/tenentecolombo.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
-    <date>20/03/2016</date>
+    <date>08/08/2016</date>
     <changes>Switched to openload</changes>
     <categories>
         <category>Serie</category>
@@ -1166,10 +1222,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/tengourl.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>28/08/2015</date>
-    <changes>Prima versione di Pelisalacarta 4</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1187,10 +1243,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/toonitalia.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>20/04/2016</date>
-    <changes>Fixed episodes patron</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>Anime</category>
     </categories>
@@ -1204,10 +1260,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/vediserie.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>8</version>
+    <version>9</version>
     <adult>false</adult>
-    <date>04/05/2015</date>
-    <changes>drzer0 cloudflare fix</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>serie</category>
     </categories>
@@ -1221,10 +1277,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/youtube.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</adult>
-    <date>03/09/2015</date>
-    <changes>Cambio viewmode</changes>
+    <date>08/08/2016</date>
+    <changes>Update</changes>
     <categories>
         <category>movie</category>
         <category>anime</category>
