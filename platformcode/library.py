@@ -34,7 +34,7 @@ DEBUG = True
 LIBRARY_PATH = config.get_library_path()
 if not os.path.exists(LIBRARY_PATH):
     logger.info("[library.py] Library path doesn't exist:"+LIBRARY_PATH)
-    os.mkdir(LIBRARY_PATH)
+    config.verify_directories_created()
 
 #MOVIES_PATH
 MOVIES_PATH = xbmc.translatePath( os.path.join( LIBRARY_PATH, 'CINE' ) )
@@ -110,7 +110,8 @@ def savelibrary(titulo="",url="",thumbnail="",server="",plot="",canal="",categor
         #Limpiamos el titulo para usarlo como fichero
         #from  core import scrapertools
         #filename = scrapertools.get_season_and_episode(titulo)+".strm"
-        titulo = re.sub(r"\[^]]*\]", "", titulo)
+        titulo = re.sub(r"\[COLOR [^]]*\]", "", titulo)
+        titulo = re.sub(r"\[/COLOR\]", "", titulo)
         filename=string.translate(titulo,allchars,deletechars)+".strm"
 
         fullfilename = os.path.join(pathserie,filename)
