@@ -35,7 +35,7 @@ except:
 try:
     from core import update_servers
 except:
-    logger.info("streamondemand-pureita.library_service Error en update_servers")
+    logger.info("streamondemand-pureita-master.library_service Error en update_servers")
 # ----------------------------------------------------------------------
 
 import urlparse,urllib2,urllib,re
@@ -49,7 +49,7 @@ from core import logger
 from core.item import Item
 from servers import servertools
 
-logger.info("streamondemand-pureita.library_service Actualizando series...")
+logger.info("streamondemand-pureita-master.library_service Actualizando series...")
 from platformcode import library
 from platformcode import launcher
 import xbmcgui
@@ -71,19 +71,19 @@ try:
         config_canal = open( nombre_fichero_config_canal , "r" )
         
         for serie in config_canal.readlines():
-            logger.info("streamondemand-pureita.library_service serie="+serie)
+            logger.info("streamondemand-pureita-master.library_service serie="+serie)
             serie = serie.split(",")
         
             ruta = os.path.join( config.get_library_path() , "SERIES" , serie[0] )
-            logger.info("streamondemand-pureita.library_service ruta =#"+ruta+"#")
+            logger.info("streamondemand-pureita-master.library_service ruta =#"+ruta+"#")
             if os.path.exists( ruta ):
-                logger.info("streamondemand-pureita.library_service Actualizando "+serie[0])
+                logger.info("streamondemand-pureita-master.library_service Actualizando "+serie[0])
                 item = Item(url=serie[1], show=serie[0])
                 try:
                     itemlist = []
 
                     pathchannels = os.path.join(config.get_runtime_path() , 'channels' ,serie[2].strip() + '.py')
-                    logger.info("streamondemand-pureita.library_service Cargando canal  " + pathchannels + " " + serie[2].strip())
+                    logger.info("streamondemand-pureita-master.library_service Cargando canal  " + pathchannels + " " + serie[2].strip())
                     obj = imp.load_source(serie[2].strip(), pathchannels )
                     itemlist = obj.episodios(item)
 
@@ -92,7 +92,7 @@ try:
                     logger.error(traceback.format_exc())
                     itemlist = []
             else:
-                logger.info("streamondemand-pureita.library_service No actualiza "+serie[0]+" (no existe el directorio)")
+                logger.info("streamondemand-pureita-master.library_service No actualiza "+serie[0]+" (no existe el directorio)")
                 itemlist=[]
 
             for item in itemlist:
@@ -101,12 +101,12 @@ try:
                     item.show=serie[0].strip()
                     library.savelibrary( titulo=item.title , url=item.url , thumbnail=item.thumbnail , server=item.server , plot=item.plot , canal=item.channel , category="Series" , Serie=item.show , verbose=False, accion="play_from_library", pedirnombre=False, subtitle=item.subtitle )
                 except:
-                    logger.info("streamondemand-pureita.library_service Capitulo no valido")
+                    logger.info("streamondemand-pureita-master.library_service Capitulo no valido")
 
         import xbmc
         xbmc.executebuiltin('UpdateLibrary(video)')
     else:
-        logger.info("No actualiza la biblioteca, está desactivado en la configuración de streamondemand-pureita")
+        logger.info("No actualiza la biblioteca, está desactivado en la configuración de streamondemand-pureita-master")
 
 except:
-    logger.info("streamondemand-pureita.library_service No hay series para actualizar")
+    logger.info("streamondemand-pureita-master.library_service No hay series para actualizar")
