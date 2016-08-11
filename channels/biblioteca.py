@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand-pureita-master - XBMC Plugin
-# Ricerca "Biblioteca"
+# Ricerca  "Biblioteca"
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 
