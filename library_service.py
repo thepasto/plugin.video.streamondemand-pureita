@@ -106,7 +106,7 @@ try:
         import xbmc
         xbmc.executebuiltin('UpdateLibrary(video)')
     else:
-        logger.info("No actualiza la biblioteca, está desactivado en la configuración de streamondemand-pureita-master")
+        logger.info("No actualiza la biblioteca, está desactivado en la configuración de streamondemand-pureita")
 
 except:
     logger.info("streamondemand-pureita.library_service No hay series para actualizar")
