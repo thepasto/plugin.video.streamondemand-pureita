@@ -24,7 +24,7 @@ def getmainlist(preferred_thumb=""):
         idiomav = langlistv[0]
 
     # Añade los canales que forman el menú principal
-    itemlist.append( Item( title=config.get_localized_string(30121) , channel="listchannels" , action="channeltypes" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_todos.png") ) )
+    itemlist.append( Item( title=config.get_localized_string(30121) , channel="channelselector" , action="listchannels" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_todos.png") ) )
     #itemlist.append( Item(title=config.get_localized_string(30118) , channel="channelselector" , action="channeltypes", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales.png") ) )
     itemlist.append( Item(title=config.get_localized_string(30119) , channel="channelselector" , action="channeltypes", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales.png") ) )
     #itemlist.append( Item(title=config.get_localized_string(30130) , channel="novedades" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_novedades.png") ) )
