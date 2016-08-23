@@ -102,7 +102,7 @@ def mainlist(item):
     itemlist = [Item(channel="buscador",
                      title="[COLOR lightgreen]Cerca nei Canali...[/COLOR]",
                      action="mainlist",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/cercaneicanali%20(P).png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/cercacanaliP_last.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]%s...[/COLOR]" % NLS_Search_by_Title,
                      action="search",
