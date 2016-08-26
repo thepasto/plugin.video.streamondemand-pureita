@@ -43,7 +43,7 @@ def mainlist(item, preferred_thumbnail="squares"):
         Item(channel=__channel__,
              action="search",
              category="serie",
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP.png.png",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP.png",
              title="[COLOR yellow]Nuova ricerca serie tv...[/COLOR]"),
     ]
 
