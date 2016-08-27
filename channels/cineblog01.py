@@ -44,7 +44,7 @@ def mainlist(item):
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
                      extra="film",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/cinema_popcorn_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="peliculas",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
