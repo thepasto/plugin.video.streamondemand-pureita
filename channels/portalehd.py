@@ -26,6 +26,8 @@ DEBUG = config.get_setting("debug")
 
 host = "http://www.24hd.online"
 
+# site is down 
+
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
@@ -38,27 +40,27 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand-pureita.portalehd mainlist")
+    logger.info("streamondemand.portalehd mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Novita'[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/search.png")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
 
 def categorias(item):
-    logger.info("streamondemand-pureita.portalehd categorias")
+    logger.info("streamondemand.portalehd categorias")
     itemlist = []
 
     data = scrapertools.cache_page(item.url, headers=headers)
@@ -102,7 +104,7 @@ def search(item, texto):
 
 
 def peliculas(item):
-    logger.info("streamondemand-pureita.portalehd peliculas")
+    logger.info("streamondemand.portalehd peliculas")
     itemlist = []
 
     # Descarga la pagina
