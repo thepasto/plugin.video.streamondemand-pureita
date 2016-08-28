@@ -52,7 +52,7 @@ def getmainlist(preferred_thumb=""):
     #   itemlist.append( Item(title="Torrents (Filenium)" , channel="descargasfilenium" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(),"torrents.png")) )
 
     #if config.get_library_support():
-    if config.get_platform()!="rss": itemlist.append( Item(title=config.get_localized_string(30104) , channel="ayuda" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_tvshow_blueP.png")) )
+    if config.get_platform()!="rss": itemlist.append( Item(title=config.get_localized_string(30104) , channel="ayuda" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_help_blueP.png")) )
     return itemlist
 
 # TODO: (3.1) Pasar el código específico de XBMC al laucher
