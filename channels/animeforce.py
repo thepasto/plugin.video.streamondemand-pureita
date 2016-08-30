@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canale per http://animeinstreaming.net/
+# Canale per http://animeforce.org/
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -127,7 +127,7 @@ def episodios(item):
 
 # -----------------------------------------------------------------
 def findvideo(item):
-    logger.info("streamondemand.animeinstreaming play")
+    logger.info("streamondemand.animeforce play")
 
     itemlist = []
 
