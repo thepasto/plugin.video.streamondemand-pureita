@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# streamondemand - XBMC Plugin
 # Conector for openload.co
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
@@ -16,7 +16,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20
 
 
 def test_video_exists(page_url):
-    logger.info("pelisalacarta.servers.openload test_video_exists(page_url='%s')" % page_url)
+    logger.info("streamondemand.servers.openload test_video_exists(page_url='%s')" % page_url)
 
     data = scrapertools.downloadpageWithoutCookies(page_url)
 
@@ -27,7 +27,7 @@ def test_video_exists(page_url):
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("pelisalacarta.servers.openload url=" + page_url)
+    logger.info("streamondemand.servers.openload url=" + page_url)
     video_urls = []
 
     data = scrapertools.downloadpageWithoutCookies(page_url)
@@ -102,7 +102,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                 videourl = get_link_api(page_url)
     except:
         import traceback
-        logger.info("pelisalacarta.servers.openload "+traceback.format_exc())
+        logger.info("streamondemand.servers.openload "+traceback.format_exc())
         # Falla el método, se utiliza la api aunque en horas punta no funciona
         videourl = get_link_api(page_url)
 
@@ -114,7 +114,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         video_urls.append([extension + " [Openload] ", videourl, 0, subtitle])
 
     for video_url in video_urls:
-        logger.info("pelisalacarta.servers.openload %s - %s" % (video_url[0],video_url[1]))
+        logger.info("streamondemand.servers.openload %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -125,7 +125,7 @@ def find_videos(text):
     devuelve = []
 
     patronvideos = '(?:openload|oload).../(?:embed|f)/([0-9a-zA-Z-_]+)'
-    logger.info("pelisalacarta.servers.openload find_videos #" + patronvideos + "#")
+    logger.info("streamondemand.servers.openload find_videos #" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
@@ -268,3 +268,4 @@ def get_link_api(page_url):
         return videourl
 
     return ""
+
