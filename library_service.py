@@ -28,7 +28,7 @@
 try:
     from core import update_channels
 except:
-    logger.info("streamondemand-pureita.library_service Error in update_channels")
+    logger.info("streamondemand.library_service Error in update_channels")
 # ----------------------------------------------------------------------
 
 # -- Update servertools and servers from repository streamondemand-pureita-ui PureITA ------
@@ -78,12 +78,12 @@ try:
             logger.info("streamondemand-pureita.library_service ruta =#"+ruta+"#")
             if os.path.exists( ruta ):
                 logger.info("streamondemand-pureita.library_service Actualizando "+serie[0])
-                item = Item(url=serie[1], show=serie[0], extra=serie[3].split('###')[1].strip() if '###' in serie[3] else '')
+                item = Item(url=serie[1], show=serie[0])
                 try:
                     itemlist = []
 
-                    pathchannels = os.path.join(config.get_runtime_path(), 'channels', serie[2] + '.py')
-                    logger.info("streamondemand-pureita.library_service Cargando canal  " + pathchannels + " " + serie[2])
+                    pathchannels = os.path.join(config.get_runtime_path() , 'channels' ,serie[2].strip() + '.py')
+                    logger.info("streamondemand-pureita.library_service Cargando canal  " + pathchannels + " " + serie[2].strip())
                     obj = imp.load_source(serie[2].strip(), pathchannels )
                     itemlist = obj.episodios(item)
 
