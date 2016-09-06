@@ -2,8 +2,8 @@
 #------------------------------------------------------------
 # Parámetros de configuración (kodi)
 #------------------------------------------------------------
-# streamondemand-pureita-master
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita-master/
+# streamondemand-pureita
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 #------------------------------------------------------------
 # Creado por: Jesús (tvalacarta@gmail.com)
 # Licencia: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
@@ -15,7 +15,8 @@ import os
 import xbmcaddon
 import xbmc
 
-PLATFORM_NAME = "kodi-jarvis"
+PLATFORM_NAME = "kodi-isengard"
+print "streamondemand-pureita.core.config PLATFORM_NAME="+PLATFORM_NAME
 
 PLUGIN_NAME = "streamondemand-pureita-master"
 __settings__ = xbmcaddon.Addon(id="plugin.video."+PLUGIN_NAME)
@@ -105,7 +106,7 @@ def get_cookie_data():
 def verify_directories_created():
     import logger
     import os
-    logger.info("streamondemand-pureita-master.core.config.verify_directories_created")
+    logger.info("streamondemand-pureita.core.config.verify_directories_created")
 
     # Force download path if empty
     download_path = get_setting("downloadpath")
@@ -174,3 +175,4 @@ def verify_directories_created():
             shutil.rmtree(old_xbmc_directory)
         except:
             pass
+

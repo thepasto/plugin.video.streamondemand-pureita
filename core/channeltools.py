@@ -13,19 +13,19 @@ import logger
 import scrapertools
 
 def is_adult(channel_name):
-    logger.info("streamondemand-pureita-master.core.channeltools is_adult channel_name="+channel_name)
+    logger.info("streamondemand-pureita.core.channeltools is_adult channel_name="+channel_name)
 
     channel_parameters = get_channel_parameters(channel_name)
 
     return channel_parameters["adult"]=="true"
 
 def get_channel_parameters(channel_name):
-    logger.info("streamondemand-pureita-master.core.channeltools get_channel_parameters channel_name="+channel_name)
+    logger.info("streamondemand-pureita.core.channeltools get_channel_parameters channel_name="+channel_name)
 
     channel_xml = os.path.join( config.get_runtime_path() , 'channels' , channel_name+".xml" )
 
     if os.path.exists(channel_xml):
-        logger.info("streamondemand-pureita-master.core.channeltools get_channel_parameters "+channel_name+".xml found")
+        logger.info("streamondemand-pureita.core.channeltools get_channel_parameters "+channel_name+".xml found")
 
         infile = open( channel_xml , "rb" )
         data = infile.read()
@@ -51,10 +51,10 @@ def get_channel_parameters(channel_name):
 
         channel_parameters["categories"] = category_list
 
-        logger.info("streamondemand-pureita-master.core.channeltools get_channel_parameters channel_parameters="+repr(channel_parameters) )
+        logger.info("streamondemand-pureita.core.channeltools get_channel_parameters channel_parameters="+repr(channel_parameters) )
 
     else:
-        logger.info("streamondemand-pureita-master.core.channeltools get_channel_parameters "+channel_name+".xml NOT found")
+        logger.info("streamondemand-pureita.core.channeltools get_channel_parameters "+channel_name+".xml NOT found")
 
         channel_parameters = {}
         channel_parameters["adult"] = "false"

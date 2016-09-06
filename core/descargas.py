@@ -258,9 +258,9 @@ def delete_error_bookmark(fullfilename,deletepath=ERROR_PATH):
     favoritos.deletebookmark(fullfilename,deletepath)
 
 def mover_descarga_error_a_pendiente(fullfilename):
-    # La categor�a es el nombre del fichero en favoritos, as� que lee el fichero
+    # La categoria es el nombre del fichero en favoritos, as� que lee el fichero
     canal,titulo,thumbnail,plot,server,url,fulltitle = favoritos.readbookmark(fullfilename,"")
-    # Lo a�ade a la lista de descargas
+    # Lo añade a la lista de descargas
     savebookmark(canal,titulo,url,thumbnail,server,plot,fulltitle)
     # Y lo borra de la lista de errores
     os.remove(fullfilename)
