@@ -63,7 +63,7 @@ def mainlist(item):
                      title="[COLOR azure]Anime & Cartoon in Italiano[/COLOR]",
                      action="anime",
                      url="%s/category/anime-cartoon-italiani/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Anime Sub-Ita[/COLOR]",
                      action="anime",
