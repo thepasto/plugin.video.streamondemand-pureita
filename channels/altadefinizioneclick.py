@@ -44,27 +44,27 @@ def mainlist(item):
              title="[COLOR azure]Novita'[/COLOR]",
              action="fichas",
              url=host + "/nuove-uscite/",
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_new.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Anno[/COLOR]",
              action="anno",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film Sub-Ita[/COLOR]",
              action="fichas",
              url=host + "/sub-ita/",
              extra="sub",
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movies_sub.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
