@@ -58,11 +58,11 @@ def mainlist(item):
                      action="progs",
                      title="[COLOR azure]Programmi TV[/COLOR]",
                      url=host + "/lista-serie-tv-guardaserie/",
-                     thumbnail="http://mujakovic.weebly.com/uploads/1/4/7/9/14799472/3787546.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/colortv_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca...[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
@@ -302,7 +302,7 @@ def episodios(item):
         scrapertools.anti_cloudflare(item.url, headers)
     )
 
-    serie_id = scrapertools.get_match(data, '/?id=(\d+)" rel="nofollow"')
+    serie_id = scrapertools.get_match(data, 'id=([^"]+)" rel="nofollow" target="_blank"')
 
     data = scrapertools.get_match(data, '<div id="episode">(.*?)</div>')
 
