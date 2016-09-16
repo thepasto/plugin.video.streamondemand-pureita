@@ -253,6 +253,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]AnimeInStreaming.net[/COLOR]"   , channel="animeinstreaming"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Animestream.it[/COLOR]"   , channel="animestream"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AnimeTubeIta.com[/COLOR]"   , channel="animetubeita"           , language="IT"    , category="A"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Animevision[/COLOR]"   , channel="animevision"           , language="IT"    , category="A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Anime Sub Ita[/COLOR]"   , channel="animesubita"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Asian Sub-Ita[/COLOR]"      , channel="asiansubita"           , language="IT"    , category="F,S,VOS"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]BreakingBadITA Streaming[/COLOR]"      , channel="breakingbadita"           , language="IT"    , category="S"   , type="generic"))
