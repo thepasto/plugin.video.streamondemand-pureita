@@ -35,18 +35,18 @@ def mainlist(item):
                      action="episodios",
                      title="[COLOR azure]Novità[/COLOR]",
                      url=host,
-                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png",
                      folder=True),
                 Item(channel=__channel__,
                      action="series",
                      title="[COLOR azure]Indice A-Z[/COLOR]",
                      url=host,
-                     thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/A-Z.png",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png",
                      folder=True),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca...[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png",
                      folder=True)]
     return itemlist
 
