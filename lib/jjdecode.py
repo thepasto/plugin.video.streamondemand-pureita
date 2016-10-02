@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Python version of the jjdecode function written by Syed Zainudeen
+# Python version of the jjdecode function written by Syed Zainudeen.
 # http://csc.cs.utm.my/syed/images/files/jjdecode/jjdecode.html
 # 
 # +NCR/CRC! [ReVeRsEr] - crackinglandia@gmail.com
