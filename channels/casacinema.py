@@ -41,41 +41,41 @@ def mainlist(item):
                      action="peliculas",
                      extra="film",
                      url="%s/genere/film" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - HD[/COLOR]",
                      action="peliculas",
                      extra="film",
                      url="%s/?s=[HD]" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+                     thumbnail="http://jcrent.com/apple%20tv%20final/HD.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
                      extra="film",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"),
+                     url="%s/genere/film" % host,
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Sub - Ita[/COLOR]",
                      action="peliculas",
                      extra="film",
                      url="%s/genere/sub-ita" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
+                     thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      extra="film",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="peliculas_tv",
                      url="%s/genere/serie-tv" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
 
@@ -107,19 +107,13 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="box-single-movies">\s*'
-    patron += '<a href="([^>"]+)".*?title="([^>"]+)" >.*?<img class.*?<img.*?src="([^>"]+)"'
+    patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div><div class="title">(.*?)<'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities(scrapedtitle)
-        html = scrapertools.cache_page(scrapedurl)
-        start = html.find("<div class=\"row content-post\" >")
-        end = html.find("<a class=\"addthis_button_facebook_like\" fb:like:layout=\"button_count\"></a>", start)
-        scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
-        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot).strip()
+        scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
@@ -133,7 +127,7 @@ def peliculas(item):
                  folder=True), tipo='movie'))
 
     ## Paginación
-    next_page = scrapertools.find_single_match(data, 'rel="next" href="([^"]+)"')
+    next_page = scrapertools.find_single_match(data, '<li class="active"><a href=[^>]+>[^>]+>[^>]+>[^>]+><a href="([^"]+)">')
 
     if next_page != "":
         itemlist.append(
@@ -161,19 +155,13 @@ def peliculas_tv(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="box-single-movies">\s*'
-    patron += '<a href="([^>"]+)".*?title="([^>"]+)" >.*?<img class.*?<img.*?src="([^>"]+)"'
+    patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div><div class="title">(.*?)<'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities(scrapedtitle)
-        html = scrapertools.cache_page(scrapedurl)
-        start = html.find("<div class=\"row content-post\" >")
-        end = html.find("<a class=\"addthis_button_facebook_like\" fb:like:layout=\"button_count\"></a>", start)
-        scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
-        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot).strip()
+        scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
@@ -187,7 +175,7 @@ def peliculas_tv(item):
                  folder=True), tipo='tv'))
 
     ## Paginación
-    next_page = scrapertools.find_single_match(data, 'rel="next" href="([^"]+)"')
+    next_page = scrapertools.find_single_match(data, '<li class="active"><a href=[^>]+>[^>]+>[^>]+>[^>]+><a href="([^"]+)">')
 
     if next_page != "":
         itemlist.append(
@@ -208,7 +196,7 @@ def peliculas_tv(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
 def categorias(item):
@@ -218,10 +206,12 @@ def categorias(item):
 
     data = scrapertools.anti_cloudflare(item.url, headers)
 
-    # The categories are the options for the combo
-    patron = '<div class="col-xs-6[^=]+="Categoria"[^>]+>[^=]+="(.*?)">(.*?)</a>'
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data, 'Categorie(.*?)</ul>')
 
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    # The categories are the options for the combo
+    patron = '<a href="(.*?)">(.*?)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
