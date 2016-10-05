@@ -409,7 +409,7 @@ def limpia_nombre_excepto_2(s):
 
 def getfilefromtitle(url,title):
     # Imprime en el log lo que va a descartar
-    logger.info("streamondemand-pureita-pureita.core.downloadtools getfilefromtitle: title="+title )
+    logger.info("streamondemand-pureita.core.downloadtools getfilefromtitle: title="+title )
     logger.info("streamondemand-pureita.core.downloadtools getfilefromtitle: url="+url )
     #logger.info("streamondemand-pureita.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
     plataforma = config.get_system_platform();
