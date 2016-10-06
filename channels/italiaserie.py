@@ -30,7 +30,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.filmpertutti mainlist")
+    logger.info("streamondemand.italiaserie mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Aggiornamenti Serie TV[/COLOR]",
                      action="peliculas",
