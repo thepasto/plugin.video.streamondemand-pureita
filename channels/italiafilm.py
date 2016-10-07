@@ -39,7 +39,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Novita'[/COLOR]",
                      action="peliculas",
-                     url="%s/category/category/film-streaming-2016/" % host,
+                     url="%s/category/film-streaming-2016-1/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film HD[/COLOR]",
