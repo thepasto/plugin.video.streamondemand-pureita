@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# streamondemand - XBMC Plugin
 # Conector para MegaHD.tv
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # by DrZ3r0
 # ------------------------------------------------------------
 
@@ -33,7 +33,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         data = data_unpack
 
     video_url = scrapertools.find_single_match(data, 'file"?\s*:\s*"([^"]+)",')
-    video_urls.append(["[megahd]", video_url])
+    video_urls.append([".mp4 [megahd]", video_url])
 
     for video_url in video_urls:
         logger.info("[megahd.py] %s - %s" % (video_url[0], video_url[1]))
