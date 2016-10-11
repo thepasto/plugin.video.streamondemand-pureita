@@ -8,8 +8,8 @@
     <language>it</language>
 
     <fanart></fanart>
-    <thumbnail>http://i.imgur.com/a8Vwz1V.png</thumbnail>
-    <bannermenu>http://i.imgur.com/a8Vwz1V.png</bannermenu>
+    <thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/toonitalia.png</thumbnail>
+    <bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/toonitalia.png</bannermenu>
 
     <update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/
     </update_url>
