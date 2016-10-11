@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <channel>
-	<id>filmontv</id>
-	<name>Filmontv</name>
+	<id>buscadorall</id>
+	<name>Buscadorall</name>
 
 	<active>false</active>
 	<adult>false</adult>
@@ -12,7 +12,7 @@
 	<bannermenu></bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
-	<version>4</version>
+	<version>3</version>
 	<date>10/07/2016</date>
 	<changes>update</changes>
 
@@ -20,12 +20,5 @@
 		<category></category>
 	</categories>
 
-	<settings>
-		<id>include_in_global_search</id>
-		<type>bool</type>
-		<label>Includi ricerca globale</label>
-		<default>false</default>
-		<enabled>false</enabled>
-		<visible>false</visible>
-	</settings>
+	<include_in_global_search>disabled</include_in_global_search>
 </channel>

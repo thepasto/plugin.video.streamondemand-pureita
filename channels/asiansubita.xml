@@ -8,8 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/asiansubita.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/asiansubita.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/Zanzibar82/images/master/posters/asiansubita.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/Zanzibar82/images/master/posters/asiansubita.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>1</version>
@@ -22,6 +22,11 @@
 	</categories>
 
 	<settings>
-		<include_in_global_search>true</include_in_global_search>
+		<id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Includi ricerca globale</label>
+		<default>false</default>
+		<enabled>false</enabled>
+		<visible>false</visible>
 	</settings>
 </channel>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canale per http://animeforce.org/
+# Canale per http://animeinstreaming.net/
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -15,7 +15,7 @@ from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import adfly
-from servers import servertools
+from core import servertools
 
 __channel__ = "animeforce"
 __category__ = "A"
@@ -127,7 +127,7 @@ def episodios(item):
 
 # -----------------------------------------------------------------
 def findvideo(item):
-    logger.info("streamondemand.animeforce play")
+    logger.info("streamondemand.animeinstreaming play")
 
     itemlist = []
 
@@ -206,7 +206,7 @@ def log(funzione="", stringa="", canale=__channel__):
 
 # -----------------------------------------------------------------
 def HomePage(item):
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 
 # =================================================================

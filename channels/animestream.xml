@@ -8,10 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/animestream.png</bannermenu>
-</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/animestream.png</bannermenu>
-</bannermenu>
+	<thumbnail>http://i.imgur.com/83bw6iB.jpg</thumbnail>
+	<bannermenu>http://i.imgur.com/83bw6iB.jpg</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>1</version>
@@ -24,6 +22,11 @@
 	</categories>
 
 	<settings>
-		<include_in_global_search>true</include_in_global_search>
+		<id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Includi ricerca globale</label>
+		<default>false</default>
+		<enabled>false</enabled>
+		<visible>false</visible>
 	</settings>
 </channel>

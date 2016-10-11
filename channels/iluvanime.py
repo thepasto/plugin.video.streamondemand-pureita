@@ -7,13 +7,11 @@
 # ------------------------------------------------------------
 import re
 import urlparse
-from servers import servertools
+
 from core import config
 from core import logger
 from core import scrapertools
-
 from core.item import Item
-from servers import adfly
 
 __channel__ = "iluvanime"
 __category__ = "F,A"
@@ -103,8 +101,8 @@ def episodios(item):
 def play(item):
     logger.info("streamondemand.iluvanime play")
     itemlist = []
-    data = adfly.get_long_url(item.url)
-    head = [['User-Agent','Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'],['Referer', item.url]]
+    data = 'http://www' + item.url.split('www')[1]
+    head = [['Upgrade-Insecure-Requests', '1'], ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0']]
     url=scrapertools.cache_page(data, headers=head)
     patron='<source.*?src="(.*?)".*?type=\'video/mp4\''
     matches=re.compile(patron, re.DOTALL).findall(url)
@@ -121,21 +119,17 @@ def play(item):
 def scrapedAll(url="", patron=""):
 
     data = scrapertools.cache_page(url)
-    logger.info("data:" + data)
     MyPatron = patron
     matches = re.compile(MyPatron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     return matches
 # =================================================================
 
 #-----------------------------------------------------------------
 def scrapedSingle(url="",single="",patron=""):
-    matches =[]
     data = scrapertools.cache_page(url)
     elemento = scrapertools.find_single_match(data, single)
     matches = re.compile(patron, re.DOTALL).findall(elemento)
-    scrapertools.printMatches(matches)
 
     return matches
 #=================================================================
@@ -145,3 +139,5 @@ def scrapedSingle(url="",single="",patron=""):
 # -----------------------------------------------------------------
 AnimeThumbnail = "http://img15.deviantart.net/f81c/i/2011/173/7/6/cursed_candies_anime_poster_by_careko-d3jnzg9.jpg"
 AnimeFanart = "https://superrepo.org/static/images/fanart/original/plugin.video.animeram.jpg"
+
+
