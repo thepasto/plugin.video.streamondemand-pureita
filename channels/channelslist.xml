@@ -486,9 +486,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmhdstreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>false</adult>
-    <date>05/10/2016</date>
+    <date>11/10/2016</date>
     <changes>New Channel</changes>
     <categories>
         <category>movie</category>
