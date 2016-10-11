@@ -8,9 +8,9 @@
     <language>it</language>
 
     <fanart></fanart>
-    <thumbnail>http://www.smartworld.it/wp-content/uploads/2015/02/codice-code-programmazione-fhd-720x480.png</thumbnail>
+    <thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/programmazione.png</thumbnail>
     
-    <bannermenu>http://www.smartworld.it/wp-content/uploads/2015/02/codice-code-programmazione-fhd-720x480.png</bannermenu>
+    <bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/programmazione.png</bannermenu>
     
 
     <update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
