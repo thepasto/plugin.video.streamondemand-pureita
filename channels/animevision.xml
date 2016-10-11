@@ -8,8 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>http://animevision.altervista.org/images/logo.png</thumbnail>
-	<bannermenu>http://animevision.altervista.org/images/logo.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/animevision.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/animevision.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>1</version>
