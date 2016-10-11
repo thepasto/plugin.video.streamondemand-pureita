@@ -218,9 +218,9 @@ def search(item, texto):
 
 ########################################################################
 # Riferimenti a immagini statiche
-GenereThumbnail = "https://farm8.staticflickr.com/7562/15516589868_13689936d0_o.png"
-NovitaThumbnail = "https://superrepo.org/static/images/icons/original/xplugin.video.moviereleases.png.pagespeed.ic.j4bhi0Vp3d.png"
-thumbcerca = "http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"
+GenereThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
+NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
+thumbcerca = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 fanart ="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
