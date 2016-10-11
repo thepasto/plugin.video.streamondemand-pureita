@@ -8,8 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>http://css.hd-cdn.it/new_files/templates/theme_darklight/img/logos_wt/logohdhardware.png</thumbnail>
-	<bannermenu>http://css.hd-cdn.it/new_files/templates/theme_darklight/img/logos_wt/logohdhardware.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/hdblog.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/hdblog.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>1</version>
