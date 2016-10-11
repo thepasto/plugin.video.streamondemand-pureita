@@ -45,7 +45,7 @@
       <font>font_MainMenu</font>
       <textcolor>white</textcolor>
       <align>left</align>
-      <label>On Demand</label>
+      <label>OnDemand</label>
     </control>
     <control type="label" id="302">
       <posx>477</posx><posy>20</posy>
