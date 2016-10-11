@@ -8,8 +8,8 @@
        <language>it</language>
 
        <fanart></fanart>
-       <thumbnail>http://filmhdstreaming.net/css/images/logo3.png</thumbnail>
-       <bannermenu>http://filmhdstreaming.net/css/images/logo3.png</bannermenu>
+       <thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/filmhdstreaming.png</thumbnail>
+       <bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/filmhdstreaming.png</bannermenu>
 
        <update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
        <version>1</version>
