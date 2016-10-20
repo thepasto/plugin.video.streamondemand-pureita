@@ -133,9 +133,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/animetubeita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>13/09/2016</date>
+    <date>20/10/2016</date>
     <changes>new anime channel by Costaplus</changes>
     <categories>
         <category>anime</category>
