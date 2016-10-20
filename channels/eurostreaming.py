@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canale per eurostreaming.tv
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -10,9 +10,9 @@ import urlparse
 from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from servers import servertools
 
 __channel__ = "eurostreaming"
 __category__ = "F,S,A"
@@ -34,7 +34,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - Archivio[/COLOR]",
                      action="peliculas",
-                     extra='film',
+                     extra="movie",
                      url="%s/category/film-in-streaming-vk-putlocker/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/popcorn_film.png"),
                 Item(channel=__channel__,
@@ -197,6 +197,7 @@ def episodios(item):
             end = data.find('<a ')
             if end > 0:
                 scrapedtitle = scrapertools.find_single_match(data[:end], '\d+[^\d]+\d+')
+                scrapedtitle = scrapedtitle.replace('×', 'x')
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos",
@@ -204,7 +205,7 @@ def episodios(item):
                          url=data,
                          thumbnail=item.thumbnail,
                          extra=item.extra,
-                         fulltitle=item.show + ' | ' + scrapedtitle + " (" + lang_title + ")",
+                         fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
 
     logger.info("[eurostreaming.py] episodios")
