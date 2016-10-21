@@ -8,8 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/cineblog01.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/cineblog01.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/cineblog01.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/cineblog01.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>4</version>
