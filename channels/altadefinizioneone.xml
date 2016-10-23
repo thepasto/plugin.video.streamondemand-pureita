@@ -8,8 +8,8 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/altadefinizioneone.png/</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/altadefinizioneone.png/</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/altadefinizioneone.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/altadefinizioneone.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
 	<version>1</version>
@@ -22,6 +22,11 @@
 	</categories>
 
 	<settings>
-		<include_in_global_search>true</include_in_global_search>
+		<id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Includi ricerca globale</label>
+		<default>true</default>
+		<enabled>true</enabled>
+		<visible>true</visible>
 	</settings>
 </channel>
