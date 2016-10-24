@@ -8,11 +8,11 @@
 	<language>it</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/cinemalibero.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/cinemalibero.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/cinemalibero.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/cinemalibero.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
-	<version>1</version>
+	<version>2</version>
 	<date>16/06/2016</date>
 	<changes>update</changes>
 
@@ -23,6 +23,11 @@
 	</categories>
 
 	<settings>
-		<include_in_global_search>true</include_in_global_search>
+		<id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Includi ricerca globale</label>
+		<default>true</default>
+		<enabled>true</enabled>
+		<visible>true</visible>
 	</settings>
 </channel>
