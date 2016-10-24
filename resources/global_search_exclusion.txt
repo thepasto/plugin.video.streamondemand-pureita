@@ -17,7 +17,6 @@ itastreaming
 liberostreaming
 multiplayer
 serietvsubita
-seriehd
 storiedellarte
 youtube
 #service channels
