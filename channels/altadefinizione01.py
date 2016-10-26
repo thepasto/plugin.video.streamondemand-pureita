@@ -39,6 +39,11 @@ def mainlist(item):
     logger.info("streamondemand.altadefinizione01 mainlist")
 
     itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]Film Al Cinema[/COLOR]",
+                     action="peliculas",
+                     url="%s/genere/cinema/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"), 
+                Item(channel=__channel__,
                      title="[COLOR azure]Ultimi film inseriti[/COLOR]",
                      action="peliculas",
                      url=host,
