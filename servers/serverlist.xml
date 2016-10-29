@@ -715,8 +715,8 @@
     <id>openload</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/openload.py</update_url>
     <active>true</active>
-    <version>3</version>
-    <date>27/10/2016</date>
+    <version>4</version>
+    <date>28/10/2016</date>
     <changes>Update</changes>
 </server>
 
