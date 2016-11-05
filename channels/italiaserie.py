@@ -35,26 +35,26 @@ def mainlist(item):
                      title="[COLOR azure]Aggiornamenti Serie TV[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      action="peliculas",
                      url="%s/category/serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/tv_series.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Anime e Cartoon[/COLOR]",
                      action="peliculas",
                      url="%s/category/anime-e-cartoon/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Lista Completa[/COLOR]",
                      action="lista",
                      url="%s/lista-completa/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_all.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_lista_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     return itemlist
 
 
@@ -106,7 +106,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  folder=True))
 
     return itemlist
