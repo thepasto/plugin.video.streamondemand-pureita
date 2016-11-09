@@ -270,9 +270,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>38</version>
+    <version>39</version>
     <adult>false</adult>
-    <date>27/08/2016</date>
+    <date>09/11/2016</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -415,11 +415,11 @@
     <name>Documentari Streaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/documentaristreaming.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>12</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>25/10/2016</date>
+    <date>09/11/2016</date>
     <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
