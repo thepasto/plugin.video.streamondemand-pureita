@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "CineBlog 01"
 __language__ = "IT"
 
-sito = "http://www.cb01.me"
+sito = "http://www.cb01.pw"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -150,7 +150,7 @@ def peliculas(item):
                      action="peliculas",
                      title=scrapedtitle,
                      url=scrapedurl,
-                     thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                      extra=item.extra,
                      plot=scrapedplot))
     except:
@@ -265,10 +265,10 @@ def search(item, texto):
     try:
 
         if item.extra == "film":
-            item.url = "http://www.cb01.me/?s=" + texto
+            item.url = "http://www.cb01.pw/?s=" + texto
             return peliculas(item)
         if item.extra == "serie":
-            item.url = "http://www.cb01.me/serietv/?s=" + texto
+            item.url = "http://www.cb01.pw/serietv/?s=" + texto
             return listserie(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -323,7 +323,7 @@ def listserie(item):
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", ))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png", ))
     except:
         pass
 
@@ -587,7 +587,7 @@ def findvid_serie(item):
 
     # Descarga la página
     data = item.url
-    data = data.replace('http://cineblog01.pw', 'http://k4pp4.pw')
+    data = data.replace('http://cineblog01.pw', 'http://www.cb01.pw/')
 
     patron = '<a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a>'
     # Extrae las entradas
