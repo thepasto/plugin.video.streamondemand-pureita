@@ -669,9 +669,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hdgratis.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>12/09/2016</date>
+    <date>10/11/2016</date>
     <changes>Fix Host</changes>
     <categories>
         <category>movie</category>
