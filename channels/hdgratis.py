@@ -21,7 +21,7 @@ __type__ = "generic"
 __title__ = "HDGratis"
 __language__ = "IT"
 
-host = "http://altadefinizione.black"
+host = "http://altadefinizione.love"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -168,7 +168,7 @@ def fichas(item):
                  action="fichas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
 
     return itemlist
 
