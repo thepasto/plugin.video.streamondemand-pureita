@@ -22,7 +22,7 @@ __type__ = "generic"
 __title__ = "Itastreaming"
 __language__ = "IT"
 
-host = "http://itastreaming.click"
+host = "http://itastreaming.me"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -45,38 +45,38 @@ def mainlist(item):
              title="[COLOR azure]Home[/COLOR]",
              action="fichas",
              url=host,
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Nuove uscite[/COLOR]",
              action="fichas",
              url=host + "/nuove-uscite/",
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Al Cinema[/COLOR]",
              action="fichas",
              url=host + "/al-cinema/",
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Genere[/COLOR]",
              action="genere",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film per Qualita'[/COLOR]",
              action="quality",
              url=host,
-             thumbnail="http://files.softicons.com/download/computer-icons/disks-icons-by-wil-nichols/png/256x256/Blu-Ray.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
 
         Item(channel=__channel__,
              title="[COLOR azure]Film A-Z[/COLOR]",
              action="atoz",
              url=host + "/tag/a/",
-             thumbnail="http://i.imgur.com/IjCmx5r.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
 
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
@@ -158,7 +158,7 @@ def searchfilm(item):
                  action="searchfilm",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
 
     return itemlist
 
@@ -303,7 +303,7 @@ def fichas(item):
                  action="fichas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
 
     return itemlist
 
