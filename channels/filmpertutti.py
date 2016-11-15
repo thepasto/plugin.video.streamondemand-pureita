@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "filmpertutti"
 __language__ = "IT"
 
-host = "http://www.filmpertutti.click"
+host = "http://www.filmpertutti.online"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -114,7 +114,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  extra=item.extra,
                  folder=True))
 
@@ -165,7 +165,7 @@ def peliculas_tv(item):
                  action="peliculas_tv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  extra=item.extra,
                  folder=True))
 
