@@ -39,7 +39,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
                      action="peliculas",
-                     url=host + "film/",
+                     url=host + "/film/",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Genere[/COLOR]",
@@ -59,7 +59,7 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="peliculas_tv",
-                     url=host + "serie-tv/",
+                     url=host + "/serie-tv/",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
@@ -133,7 +133,7 @@ def byyear(item):
 
 def search(item, texto):
     logger.info("[filmstreampw.py] " + item.url + " search " + texto)
-    item.url = host + "index.php?do=search&subaction=search&story=" + texto
+    item.url = host + "/index.php?do=search&subaction=search&story=" + texto
 
     try:
         if item.extra == "serie":
@@ -324,7 +324,7 @@ def episodios(item):
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    post_url = host + 'engine/ajax/a.sseries.php'
+    post_url = host + '/engine/ajax/a.sseries.php'
     serie_id = scrapertools.get_match(data, '\?id=(\d+)" rel="nofollow"')
 
     start = data.find('<select id="sseriesSeason">')
