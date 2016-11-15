@@ -12,9 +12,9 @@
 	<bannermenu>https://raw.githubusercontent.com/Fenice82/images/master/bannermenu/filmsenzalimiti.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
-	<version>2</version>
-	<date>16/06/2016</date>
-	<changes>update</changes>
+	<version>3</version>
+	<date>15/11/2016</date>
+	<changes>Fix Host</changes>
 
 	<categories>
 		<category>movie</category>
@@ -25,5 +25,11 @@
 
 	<settings>
 		<include_in_global_search>true</include_in_global_search>
+		<id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Incluir en busqueda global</label>
+		<default>true</default>
+		<enabled>true</enabled>
+		<visible>true</visible>	
 	</settings>
 </channel>
