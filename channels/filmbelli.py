@@ -23,7 +23,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.filmbelli.net"
+host = "http://www.filmbelli.gratis"
 
 def isGeneric():
     return True
@@ -144,14 +144,14 @@ def HomePage(item):
 #=================================================================
 # riferimenti di servizio
 #---------------------------------------------------------------------------------------------------------------------------------
-NovitaThumbnail="https://superrepo.org/static/images/icons/original/xplugin.video.moviereleases.png.pagespeed.ic.j4bhi0Vp3d.png"
-GenereThumbnail="https://farm8.staticflickr.com/7562/15516589868_13689936d0_o.png"
+NovitaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
+GenereThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
 FilmFanart="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
-CercaThumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"
+CercaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 CercaFanart="https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
 AvantiTxt="[COLOR orange]Successivo>>[/COLOR]"
-AvantiImg="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"
-thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"
+AvantiImg="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"
+thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
 #----------------------------------------------------------------------------------------------------------------------------------#----------------------------------------------------------------------------------------------------------------------------------
