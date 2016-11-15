@@ -22,7 +22,7 @@ __creationdate__ = "20120605"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.filmsenzalimiti.co"
+host = "http://www.filmsenzalimiti.click"
 
 
 def isGeneric():
@@ -154,7 +154,7 @@ def novedades(item):
                  action="novedades",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  extra=item.extra,
                  folder=True))
     except:
@@ -204,7 +204,7 @@ def novedades_tv(item):
                  action="novedades_tv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  extra=item.extra,
                  folder=True))
     except:
