@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "ITA Film TV"
 __language__ = "IT"
 
-host = "http://www.itafilm.net"
+host = "http://www.itafilm.club"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:39.0) Gecko/20100101 Firefox/39.0'],
@@ -39,22 +39,22 @@ def mainlist(item):
                      action="fichas",
                      title="[COLOR azure]Novità[/COLOR]",
                      url=host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="genere",
                      title="[COLOR azure]Film Per Genere[/COLOR]",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/category%26anime.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="nazione",
                      title="[COLOR azure]Film Per Nazione[/COLOR]",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_by_country.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country_P.png"),
                 Item(channel=__channel__,
                      action="anno",
                      title="[COLOR azure]Film Per Anno[/COLOR]",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 Item(channel=__channel__,
                      action="fichas",
                      title="[COLOR azure]Contenuti Erotici[/COLOR]",
@@ -63,17 +63,17 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Film...[/COLOR]",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
                      action="serietv",
                      title="[COLOR azure]Serie TV[/COLOR]",
                      url="%s/telefilm-serie-tv-streaming/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/TV%20Series.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR orange]Cerca Serie...[/COLOR]",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/search.png")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
@@ -137,7 +137,7 @@ def fichas(item):
                  action="fichas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
 
     return itemlist
 
