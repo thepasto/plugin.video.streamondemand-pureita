@@ -22,7 +22,7 @@ __type__ = "generic"
 __title__ = "Serie HD"
 __language__ = "IT"
 
-host = "http://www.seriehd.org"
+host = "http://www.seriehd.co"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -44,16 +44,16 @@ def mainlist(item):
                      action="fichas",
                      title="[COLOR azure]Serie TV[/COLOR]",
                      url=host + "/serie-tv-streaming/",
-                     thumbnail="http://i.imgur.com/rO0ggX2.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="sottomenu",
                      title="[COLOR orange]Sottomenu...[/COLOR]",
                      url=host,
-                     thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR green]Cerca...[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
