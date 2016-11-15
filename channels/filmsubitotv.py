@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "FilmSubito.tv"
 __language__ = "IT"
 
-host = "http://www.cinemasubito.me/"
+host = "http://www.cinemasubito.net/"
 
 DEBUG = config.get_setting("debug")
 
@@ -35,17 +35,17 @@ def mainlist(item):
                      title="[COLOR azure]Film - Novità[/COLOR]",
                      action="peliculas",
                      url=host + "film-2016-streaming.html",
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Genere[/COLOR]",
                      action="genere",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film per Anno[/COLOR]",
                      action="anno",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/movie_year.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 # Item(channel=__channel__,
                 # title="[COLOR azure]Serie TV degli anni '80[/COLOR]",
                 # action="serie80",
@@ -55,7 +55,7 @@ def mainlist(item):
                      title="[COLOR azure]Cartoni animati degli anni '80[/COLOR]",
                      action="cartoni80",
                      url=host,
-                     thumbnail="http://i.imgur.com/JxI5ayi.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/cartoons_P.png"),
                 # Item(channel=__channel__,
                 # title="[COLOR azure]Documentari[/COLOR]",
                 # action="documentari",
@@ -64,7 +64,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url=sito+"serietv-streaming.html", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
 
     return itemlist
@@ -127,7 +127,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  folder=True))
 
     return itemlist
@@ -174,7 +174,7 @@ def serietv80(item):
                  action="serietv80",
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  folder=True))
 
     return itemlist
@@ -329,7 +329,7 @@ def serie(item):
                  action="serie",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                  folder=True))
 
     return itemlist
