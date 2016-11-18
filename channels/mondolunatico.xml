@@ -12,17 +12,24 @@
 	<thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/mondolunatico.png</thumbnail>
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/mondolunatico.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/</update_url>
-	<version>4</version>
+	<update_url>https://github.com/Fenice82/plugin.video.streamondemand-pureita/edit/master/channels/</update_url>
+	<version>7</version>
 	<date>22/06/2016</date>
 	<changes>update</changes>
 
 	<categories>
+		<category>serie</category>
 		<category>movie</category>
 		<category>top channels</category>
 	</categories>
 
 	<settings>
 		<include_in_global_search>true</include_in_global_search>
+	        <id>include_in_global_search</id>
+		<type>bool</type>
+		<label>Includi ricerca globale</label>
+		<default>true</default>
+		<enabled>true</enabled>
+		<visible>true</visible>
 	</settings>
 </channel>
