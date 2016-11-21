@@ -23,6 +23,13 @@ DEBUG = config.get_setting("debug")
 
 host = "http://www.filmissimi.net"
 
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
+    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', host],
+    ['Cache-Control', 'max-age=0']
+]
 
 def isGeneric():
     return True
@@ -31,14 +38,42 @@ def isGeneric():
 # -------------------------------------------------------------------------------------------------------------------------------------------
 def mainlist(item):
     log("mainlist", "init")
-    itemlist = []
-
-    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR yellow]Novita'[/COLOR]"       , url=host                     , thumbnail=NovitaThumbnail, fanart=FilmFanart))
-    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]Film al Cinema[/COLOR]" , url=host+"/genere/cinema"    , thumbnail=NovitaThumbnail, fanart=FilmFanart))
-    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]Film Sub-Ita[/COLOR]"   , url=host+"/genere/sub-ita"   , thumbnail=NovitaThumbnail, fanart=FilmFanart))
-    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]Film HD[/COLOR]"        , url=host+"/genere/film-in-hd", thumbnail=NovitaThumbnail, fanart=FilmFanart))
-    itemlist.append(Item(channel=__channel__, action="genere", title="[COLOR azure]Genere[/COLOR]"         , url=host                     , thumbnail=GenereThumbnail, fanart=FilmFanart))
-    itemlist.append(Item(channel=__channel__, action="search", title="[COLOR orange]Cerca..[/COLOR]"       ,                                thumbnail=CercaThumbnail , fanart=FilmFanart))
+    itemlist = [Item(channel=__channel__,
+                     action="elenco",
+                     title="[COLOR yellow]Novita'[/COLOR]",
+                     url=host,
+                     thumbnail=NovitaThumbnail,
+                     fanart=FilmFanart),
+                Item(channel=__channel__,
+                     action="elenco",
+                     title="[COLOR azure]Film al Cinema[/COLOR]",
+                     url=host + "/genere/cinema",
+                     thumbnail=NovitaThumbnail,
+                     fanart=FilmFanart),
+                Item(channel=__channel__,
+                     action="elenco",
+                     title="[COLOR azure]Film Sub-Ita[/COLOR]",
+                     url=host + "/genere/sub-ita",
+                     thumbnail=NovitaThumbnail,
+                     fanart=FilmFanart),
+                Item(channel=__channel__,
+                     action="elenco",
+                     title="[COLOR azure]Film HD[/COLOR]",
+                     url=host + "/genere/film-in-hd",
+                     thumbnail=NovitaThumbnail,
+                     fanart=FilmFanart),
+                Item(channel=__channel__,
+                     action="genere",
+                     title="[COLOR azure]Genere[/COLOR]",
+                     url=host,
+                     thumbnail=GenereThumbnail,
+                     fanart=FilmFanart),
+                Item(channel=__channel__,
+                     action="search",
+                     extra="movie",
+                     title="[COLOR orange]Cerca..[/COLOR]",
+                     thumbnail=CercaThumbnail,
+                     fanart=FilmFanart)]
 
     return itemlist
 
@@ -50,10 +85,24 @@ def genere(item):
     log("genere", "init")
     itemlist = []
 
-    patron = '<a href="(.*?)">(.*?)</a>'
-    for scrapedurl, scrapedtitle in scrapedSingle(item.url, '<h3 class="title">Categorie</h3><ul>(.*?)</ul>', patron):
-        log("genere", "title=[" + scrapedtitle + "] url=[" + scrapedurl + "]")
-        itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]"+ scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=NovitaThumbnail, fanart=FilmFanart))
+    data = scrapertools.cache_page(item.url, headers=headers)
+    bloque = scrapertools.get_match(data, '<ul id="menu-categorie-1" class="ge">(.*?)</div>')
+
+    patron = '<li id=[^>]+><a href="(.*?)">(.*?)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+ 
+        if DEBUG: logger.info("title=[" + scrapedtitle + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="elenco",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
 
     return itemlist
 
@@ -65,8 +114,12 @@ def elenco(item):
     log("elenco", "init")
     itemlist = []
 
-    patron = '<img src="(.*?)"[^=]+=.*?[^=]+="Thumbnail[^>]+>[^>]+><h2><a.*?href="(.*?)"[^>]+>(.*?)</a></h2>'
-    for scrapedthumbnail, scrapedurl, scrapedtitle in scrapedSingle(item.url, '<ul class="recent-posts">(.*?)</ul>', patron):
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    patron = '<div class="item">\s*<a href="([^"]+)" title="([^"]+)">\s*<[^>]+>\s*<img[^>]+><img src="([^"]+)"[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         log("elenco", "title=[" + scrapedtitle + "] url=[" + scrapedurl + "] thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
@@ -166,7 +219,7 @@ def log(funzione="", stringa="", canale=__channel__):
 
 # -----------------------------------------------------------------
 def HomePage(item):
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 
 # =================================================================
@@ -174,14 +227,14 @@ def HomePage(item):
 # =================================================================
 # riferimenti di servizio
 # ---------------------------------------------------------------------------------------------------------------------------------
-NovitaThumbnail = "https://superrepo.org/static/images/icons/original/xplugin.video.moviereleases.png.pagespeed.ic.j4bhi0Vp3d.png"
-GenereThumbnail = "https://farm8.staticflickr.com/7562/15516589868_13689936d0_o.png"
+NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
+GenereThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"
 FilmFanart = "https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
-CercaThumbnail = "http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"
+CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 CercaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
-AvantiImg = "http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"
+AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
 thumbnail = "http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"
 # ----------------------------------------------------------------------------------------------------------------------------------#----------------------------------------------------------------------------------------------------------------------------------
