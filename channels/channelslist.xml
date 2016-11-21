@@ -512,6 +512,22 @@
         <category>movie</category>
     </categories>
 </channel>   
+
+    <channel>
+    <id>filmissimi</id>
+    <name>Filmissimi</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmissimi.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>1</version>
+    <adult>false</adult>
+    <date>20/11/2016</date>
+    <changes>New Channel</changes>
+    <categories>
+        <category>movie</category>
+    </categories>
+</channel>   
     
 <channel>
     <id>filmontv</id>
