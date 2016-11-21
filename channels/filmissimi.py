@@ -227,7 +227,7 @@ def HomePage(item):
 # =================================================================
 # riferimenti di servizio
 # ---------------------------------------------------------------------------------------------------------------------------------
-NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
+NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
 GenereThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"
 FilmFanart = "https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
@@ -236,5 +236,5 @@ HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
 AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
-thumbnail = "http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"
+thumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
 # ----------------------------------------------------------------------------------------------------------------------------------#----------------------------------------------------------------------------------------------------------------------------------
