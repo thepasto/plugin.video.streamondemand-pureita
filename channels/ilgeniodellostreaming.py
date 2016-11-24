@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para streaminglove
+# Canal para ilgeniodellostreaming
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -14,15 +14,15 @@ from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
-__channel__ = "streaminglove"
+__channel__ = "ilgeniodellostreaming"
 __category__ = "F"
 __type__ = "generic"
-__title__ = "streaminglove (IT)"
+__title__ = "ilgeniodellostreaming (IT)"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.streaminglove.tv"
+host = "http://ilgeniodellostreaming.co"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -37,7 +37,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.streaminglove mainlist")
+    logger.info("streamondemand.ilgeniodellostreaming mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
                      action="peliculas",
@@ -96,7 +96,7 @@ def search(item, texto):
         return []
 
 def peliculas_src(item):
-    logger.info("streamondemand.streaminglove peliculas")
+    logger.info("streamondemand.ilgeniodellostreaming peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -125,7 +125,7 @@ def peliculas_src(item):
     return itemlist
 
 def peliculas(item):
-    logger.info("streamondemand.streaminglove peliculas")
+    logger.info("streamondemand.ilgeniodellostreaming peliculas")
     itemlist = []
 
     # Descarga la pagina
