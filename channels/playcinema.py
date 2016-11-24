@@ -25,8 +25,9 @@ host = "http://www.playcinema.org"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', host]
+ ]
 
 
 def isGeneric():
@@ -39,16 +40,16 @@ def mainlist(item):
                      title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Categoria[/COLOR]",
                      action="categorias",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
@@ -73,7 +74,7 @@ def categorias(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
     return itemlist
@@ -158,7 +159,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
                  folder=True))
 
     return itemlist
