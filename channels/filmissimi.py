@@ -34,10 +34,9 @@ headers = [
 def isGeneric():
     return True
 
-
 # -------------------------------------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    log("mainlist", "init")
+    logger.info("[filmissimi.py] mainlist")
     itemlist = [Item(channel=__channel__,
                      action="elenco",
                      title="[COLOR yellow]Novita'[/COLOR]",
@@ -48,19 +47,19 @@ def mainlist(item):
                      action="elenco",
                      title="[COLOR azure]Film al Cinema[/COLOR]",
                      url=host + "/genere/cinema",
-                     thumbnail=NovitaThumbnail,
+                     thumbnail=CinemaThumbnail,
                      fanart=FilmFanart),
                 Item(channel=__channel__,
                      action="elenco",
                      title="[COLOR azure]Film Sub-Ita[/COLOR]",
                      url=host + "/genere/sub-ita",
-                     thumbnail=NovitaThumbnail,
+                     thumbnail=SubThumbnail,
                      fanart=FilmFanart),
                 Item(channel=__channel__,
                      action="elenco",
                      title="[COLOR azure]Film HD[/COLOR]",
                      url=host + "/genere/film-in-hd",
-                     thumbnail=NovitaThumbnail,
+                     thumbnail=HDThumbnail,
                      fanart=FilmFanart),
                 Item(channel=__channel__,
                      action="genere",
@@ -82,7 +81,7 @@ def mainlist(item):
 
 # -------------------------------------------------------------------------------------------------------------------------------------------
 def genere(item):
-    log("genere", "init")
+    logger.info("[filmissimi.py] genere")
     itemlist = []
 
     data = scrapertools.cache_page(item.url, headers=headers)
@@ -111,17 +110,20 @@ def genere(item):
 
 # -------------------------------------------------------------------------------------------------------------------------------------------
 def elenco(item):
-    log("elenco", "init")
+    logger.info("[filmissimi.py] elenco")
     itemlist = []
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    patron = '<div class="item">\s*<a href="([^"]+)" title="([^"]+)">\s*<[^>]+>\s*<img[^>]+><img src="([^"]+)"[^>]+>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    elemento = scrapertools.find_single_match(data,'<div class="estre">(.*?)<div class="paginacion">')
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    patron='<div class="item">[^<]+<a href="(.*?)"[^<]+<[^<]+<img.*?icon[^<]+<img src="(.*?)" alt="(.*?)"[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+<[^<]+</div>'
+    matches = re.compile(patron, re.DOTALL).findall(elemento)
+
+    for scrapedurl, scrapedthumbnail,scrapedtitle  in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        log("elenco", "title=[" + scrapedtitle + "] url=[" + scrapedurl + "] thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.split("(")[0]
+        logger.info("title=[" + scrapedtitle + "] url=[" + scrapedurl + "] thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -132,28 +134,31 @@ def elenco(item):
 
     # Paginazione
     # ===========================================================================================================================
-    matches = scrapedSingle(item.url, '<div class="navigation">(.*?)</div>',
-                            "current'>.*?</span>.*?class='page-numbers'.*?href='(.*?)'>.*?</a>")
+    matches = scrapedSingle(item.url, '<div class="paginacion">(.*?)</div>',"current'>.*?<\/span><.*?href='(.*?)'>.*?</a>")
     if len(matches) > 0:
         paginaurl = matches[0]
-        itemlist.append(Item(channel=__channel__, action="elenco", title=AvantiTxt, url=paginaurl, thumbnail=AvantiImg))
+        itemlist.append(
+            Item(channel=__channel__, action="elenco", title=AvantiTxt, url=paginaurl, thumbnail=AvantiImg))
         itemlist.append(Item(channel=__channel__, action="HomePage", title=HomeTxt, folder=True))
     else:
         itemlist.append(Item(channel=__channel__, action="mainlist", title=ListTxt, folder=True))
     # ===========================================================================================================================
     return itemlist
-
-
 # ===========================================================================================================================================
+
 
 # -------------------------------------------------------------------------------------------------------------------------------------------
 def search(item, texto):
-    log("search", "init texto=[" + texto + "]")
+    logger.info("[filmissimi.py] init texto=[" + texto + "]")
     itemlist = []
     url = "http://www.filmissimi.net/?s=" + texto
 
-    patron = '<img src="(.*?)"[^=]+=.*?[^=]+="Thumbnail[^>]+>[^>]+><h2><a.*?href="(.*?)"[^>]+>(.*?)</a></h2>'
-    for scrapedthumbnail, scrapedurl, scrapedtitle in scrapedSingle(url, '<ul class="recent-posts">(.*?)</ul>', patron):
+    data = scrapertools.cache_page(url, headers=headers)
+
+    patron = 'class="s-img">[^<]+<.*?src="(.*?)"[^<]+<[^<]+<[^<]+</div>[^<]+<[^<]+<[^<]+<[^<]+</span>[^<]+</span>[^<]+<h3><a href="(.*?)">(.*?)</a></h3>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedthumbnail,scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         log("elenco", "title=[" + scrapedtitle + "] url=[" + scrapedurl + "] thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
@@ -166,7 +171,7 @@ def search(item, texto):
 
     # Paginazione
     # ===========================================================================================================================
-    matches = scrapedSingle(url, '<div class="navigation">(.*?)</div>', "current'>.*?</span>.*?class='page-numbers'.*?href='(.*?)'>.*?</a>")
+    matches = scrapedSingle(url, '<div class="paginacion">(.*?)</div>',"current'>.*?<\/span><.*?href='(.*?)'>.*?</a>")
 
     if len(matches) > 0:
         paginaurl = matches[0]
@@ -176,8 +181,6 @@ def search(item, texto):
         itemlist.append(Item(channel=__channel__, action="mainlist", title=ListTxt, folder=True))
     # ===========================================================================================================================
     return itemlist
-
-
 # ===========================================================================================================================================
 
 # =================================================================
@@ -185,50 +188,39 @@ def search(item, texto):
 # -----------------------------------------------------------------
 def scrapedAll(url="", patron=""):
     matches = []
-    data = scrapertools.cache_page(url)
+    data = scrapertools.cache_page(url, headers=headers)
     log("data ->" + data)
     MyPatron = patron
     matches = re.compile(MyPatron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     return matches
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def scrapedSingle(url="", single="", patron=""):
     matches = []
-    data = scrapertools.cache_page(url)
+    data = scrapertools.cache_page(url, headers=headers)
     elemento = scrapertools.find_single_match(data, single)
-    log("elemento ->" + data)
     matches = re.compile(patron, re.DOTALL).findall(elemento)
     scrapertools.printMatches(matches)
 
     return matches
-
-
-# =================================================================
-
-# -----------------------------------------------------------------
-def log(funzione="", stringa="", canale=__channel__):
-    logger.info("[" + canale + "].[" + funzione + "] " + stringa)
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def HomePage(item):
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
-
 # =================================================================
 
 # =================================================================
 # riferimenti di servizio
 # ---------------------------------------------------------------------------------------------------------------------------------
-NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
+NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
 GenereThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"
+CinemaThumbnail= "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
+HDThumbnail= "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"
+SubThumbnail= "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"
 FilmFanart = "https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 CercaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
@@ -236,5 +228,5 @@ HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
 AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
-thumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
+thumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
 # ----------------------------------------------------------------------------------------------------------------------------------#----------------------------------------------------------------------------------------------------------------------------------
