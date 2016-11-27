@@ -150,7 +150,7 @@ def peliculas(item):
                      action="peliculas",
                      title=scrapedtitle,
                      url=scrapedurl,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
                      extra=item.extra,
                      plot=scrapedplot))
     except:
