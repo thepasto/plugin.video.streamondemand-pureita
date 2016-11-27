@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
+# streamondemand.- XBMC Plugin
 # Canal para cineblog01
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -10,12 +10,12 @@ import urlparse
 from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from servers import servertools
 
 __channel__ = "cineblog01"
-__category__ = "F,S,A"
+__category__ = "F,S"
 __type__ = "generic"
 __title__ = "CineBlog 01"
 __language__ = "IT"
@@ -43,36 +43,36 @@ def mainlist(item):
                      action="peliculas",
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="peliculas",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
                      url="%s/tag/film-hd-altadefinizione/" % sito,
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
                      action="menuhd",
                      title="[COLOR azure]Menù HD[/COLOR]",
                      url=sito,
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/blueray_P.png"),
                 Item(channel=__channel__,
                      action="menugeneros",
                      title="[COLOR azure]Per Genere[/COLOR]",
                      url=sito,
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="menuanyos",
                      title="[COLOR azure]Per Anno[/COLOR]",
                      url=sito,
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Film[/COLOR]",
-                     extra="film",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
                      action="listserie",
@@ -150,7 +150,7 @@ def peliculas(item):
                      action="peliculas",
                      title=scrapedtitle,
                      url=scrapedurl,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png
                      extra=item.extra,
                      plot=scrapedplot))
     except:
@@ -264,7 +264,7 @@ def search(item, texto):
 
     try:
 
-        if item.extra == "film":
+        if item.extra == "movie":
             item.url = "http://www.cb01.pw/?s=" + texto
             return peliculas(item)
         if item.extra == "serie":
@@ -400,12 +400,13 @@ def episodios_serie(item):
             else:
                 scrapedtitle = ''
             if scrapedtitle == '':
-                patron = '<a\s*href="[^"]+"\s*target="_blank">([^<]+)</a>'
+                patron = '<a[^h]+href="[^"]+"[^>]+>([^<])+<\/a>'
                 scrapedtitle = scrapertools.find_single_match(data, patron).strip()
             title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+?\d+')
             if title == '':
                 title = scrapedtitle
             if title != '':
+                title = title.replace('×', 'x')
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos",
@@ -413,7 +414,7 @@ def episodios_serie(item):
                          url=data,
                          thumbnail=item.thumbnail,
                          extra=item.extra,
-                         fulltitle=item.show + ' | ' + title + " (" + lang_title + ")",
+                         fulltitle=title + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
 
     logger.info("[cineblog01.py] episodios")
@@ -422,16 +423,13 @@ def episodios_serie(item):
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers)
-
-    start = data.find('<td bgcolor="#ECEAE1">')
-    end = data.find('</td>', start)
-
-    data = data[start:end]
+    data = scrapertools.decodeHtmlentities(data)
+    data = scrapertools.get_match(data, '<td bgcolor="#ECEAE1">(.*?)</table>')
 
     lang_titles = []
     starts = []
-    patron = r"STAGION[I|E].*?ITA"
-    matches = re.compile(patron).finditer(data)
+    patron = r"Stagione.*?ITA"
+    matches = re.compile(patron, re.IGNORECASE).finditer(data)
     for match in matches:
         season_title = match.group()
         if season_title != '':
@@ -470,10 +468,11 @@ def episodios_serie(item):
 
 
 def findvideos(item):
-    if item.extra == 'film':
+    if item.extra == "movie":
         return findvid_film(item)
     if item.extra == 'serie':
         return findvid_serie(item)
+    return []
 
 
 def findvid_film(item):
@@ -587,7 +586,7 @@ def findvid_serie(item):
 
     # Descarga la página
     data = item.url
-    data = data.replace('http://cineblog01.pw', 'http://www.cb01.pw/')
+    data = data.replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
     patron = '<a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a>'
     # Extrae las entradas
@@ -636,6 +635,8 @@ def play(item):
             print "##### The content is yet unpacked"
 
         data = scrapertools.get_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
+        if 'vcrypt' in data:
+            data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
         print "##### play /link/ data ##\n%s\n##" % data
     else:
         data = item.url
