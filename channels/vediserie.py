@@ -38,16 +38,16 @@ def mainlist(item):
                      action="fichas",
                      title="[COLOR azure]Serie TV[/COLOR]",
                      url=host,
-                     thumbnail="http://i.imgur.com/rO0ggX2.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      action="list_a_z",
                      title="[COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
                      url="%s/lista-completa-serie-tv/" % host,
-                     thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca...[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://github.com/orione7/Pelis_images/blob/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
