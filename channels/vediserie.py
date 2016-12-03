@@ -2,16 +2,16 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para vediserie - based on seriehd channel
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 
 from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from servers import servertools
 
 __channel__ = "vediserie"
 __category__ = "S"
@@ -37,17 +37,18 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      action="fichas",
                      title="[COLOR azure]Serie TV[/COLOR]",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
+                     url="%s/category/serie-complete/" % host,
+                     thumbnail="http://i.imgur.com/rO0ggX2.png"),
                 Item(channel=__channel__,
                      action="list_a_z",
                      title="[COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
                      url="%s/lista-completa-serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
+                     thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
                 Item(channel=__channel__,
                      action="search",
+                     extra="serie",
                      title="[COLOR yellow]Cerca...[/COLOR]",
-                     thumbnail="https://github.com/orione7/Pelis_images/blob/master/channels_icon_pureita/search_P.png")]
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
 
@@ -128,14 +129,15 @@ def fichas(item):
                  show=scrapedtitle,
                  thumbnail=scrapedthumbnail), tipo='tv'))
 
-    patron = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
+    patron = '<span class=\'current\'>[^<]+</span><a class="page larger" href="(.*?)">'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="fichas",
                  title="[COLOR orange]Successivo>>[/COLOR]",
-                 url=next_page))
+                 url=next_page,
+				 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -161,12 +163,12 @@ def episodios(item):
         title = season + "x" + episode
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvid_serie",
+                 action="findvideos",
                  title=title,
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=url,
-                 fulltitle=item.fulltitle,
+                 fulltitle=title + ' - ' + item.show,
                  show=item.show))
 
     if config.get_library_support() and len(itemlist) != 0:
@@ -188,7 +190,7 @@ def episodios(item):
     return itemlist
 
 
-def findvid_serie(item):
+def findvideos(item):
     logger.info("[vediserie.py] findvideos")
 
     # Descarga la página
