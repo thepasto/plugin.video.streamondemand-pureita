@@ -779,6 +779,22 @@
     </categories>
 </channel>    
 
+  <channel>
+    <id>ilgiramondo</id>
+    <name>IlGiramondo</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/ilgiramondo.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>3</version>
+    <adult>false</adult>
+    <date>03/12/2016</date>
+    <changes>Update</changes>
+    <categories>
+        <category>movie</category>
+    </categories>
+</channel>   
+    
 <channel>
     <id>istreaming</id>
     <name>Istreaming</name>
