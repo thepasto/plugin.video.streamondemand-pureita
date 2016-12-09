@@ -417,9 +417,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/darkstream.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>14</version>
+    <version>15</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
+    <date>08/12/2016</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
