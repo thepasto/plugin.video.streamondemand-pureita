@@ -1034,7 +1034,21 @@
     </categories>
 </channel>
 
-
+<channel>
+    <id>mondolunatico_new</id>
+    <name>Mondo Lunatico New</name>
+    <language>it</language>
+    <update_url> https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
+    <active>true</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>10/12/2016</date>
+    <changes>First Release</changes>
+    <categories>
+        <category>movie</category>
+    </categories>
+</channel>
 
 <channel>
     <id>novedades</id>
