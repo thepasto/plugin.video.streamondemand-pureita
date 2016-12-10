@@ -92,7 +92,8 @@ def sottomenu(item):
             Item(channel=__channel__,
                  action="fichas",
                  title=scrapedtitle,
-                 url=scrapedurl))
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"))
 
     # Elimina 'Serie TV' de la lista de 'sottomenu'
     itemlist.pop(0)
@@ -143,7 +144,8 @@ def fichas(item):
             Item(channel=__channel__,
                  action="fichas",
                  title="[COLOR orange]Successivo>>[/COLOR]",
-                 url=next_page))
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
