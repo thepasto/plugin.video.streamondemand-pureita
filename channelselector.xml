@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>149</tag>
-	<date>09/12/2016</date>
-	<changes>Update "filmhdstreaming"</changes>
+	<tag>150</tag>
+	<date>10/12/2016</date>
+	<changes>New channel "mondolunatico_new" & Fix "SerieHD"</changes>
 </version>
