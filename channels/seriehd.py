@@ -2,10 +2,12 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para seriehd - based on guardaserie channel
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import base64
 import re
+import time
+import urllib
 import urlparse
 
 from core import config
@@ -50,7 +52,6 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     extra="serie",
                      title="[COLOR green]Cerca...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
@@ -80,6 +81,8 @@ def sottomenu(item):
     # data = anti_cloudflare(item.url)
     data = scrapertools.cache_page(item.url, headers=headers)
 
+    print data
+
     patron = '<a href="([^"]+)">([^<]+)</a>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -105,7 +108,7 @@ def fichas(item):
 
     # ------------------------------------------------
     cookies = ""
-    matches = config.get_cookie_data(item.url).splitlines()[4:]
+    matches = re.compile('(.seriehd.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
     for cookie in matches:
         name = cookie.split('\t')[5]
         value = cookie.split('\t')[6]
@@ -140,8 +143,7 @@ def fichas(item):
             Item(channel=__channel__,
                  action="fichas",
                  title="[COLOR orange]Successivo>>[/COLOR]",
-                 url=next_page,
-				 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 url=next_page))
 
     return itemlist
 
@@ -158,7 +160,7 @@ def episodios(item):
     data = scrapertools.cache_page(url).replace('\n', '').replace(' class="active"', '')
 
     section_stagione = scrapertools.find_single_match(data, '<h3>STAGIONE</h3><ul>(.*?)</ul>')
-    patron = '<li[^>]+><a href="([^"]+)">(\d+)<'
+    patron = '<li[^>]+><a href="([^"]+)">(\d)<'
     seasons = re.compile(patron, re.DOTALL).findall(section_stagione)
 
     for scrapedseason_url, scrapedseason in seasons:
@@ -180,7 +182,7 @@ def episodios(item):
                      action="findvideos",
                      title=title,
                      url=episode_url,
-                     fulltitle=title + ' - ' + item.show,
+                     fulltitle=item.fulltitle,
                      show=item.show,
                      thumbnail=item.thumbnail))
 
