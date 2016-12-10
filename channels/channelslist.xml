@@ -1025,9 +1025,9 @@
     <update_url> https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/mondolunatico.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>28/10/2016</date>
+    <date>10/12/2016</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -1258,9 +1258,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/seriehd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>29</version>
+    <version>30</version>
     <adult>false</adult>
-    <date>15/11/2016</date>
+    <date>10/12/2016</date>
     <changes>Update</changes>
     <categories>
         <category>serie</category>
