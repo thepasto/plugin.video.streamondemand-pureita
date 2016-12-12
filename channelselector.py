@@ -233,7 +233,7 @@ def channels_history_list():
 def channels_list():
     itemlist = []
 
-    itemlist.append( Item( viewmode="movie", title="Inserisci un URL..."         , channel="tengourl"   , language="" , category="" , type="generic"  ))
+    #itemlist.append( Item( viewmode="movie", title="Inserisci un URL..."         , channel="tengourl"   , language="" , category="" , type="generic"  ))
     if config.get_setting("personalchannel")=="true":
         itemlist.append( Item( title=config.get_setting("personalchannelname") , channel="personal" , language="" , category="" , type="generic"  ))
     if config.get_setting("personalchannel2")=="true":
