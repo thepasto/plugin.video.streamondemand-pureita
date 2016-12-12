@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>150</tag>
-	<date>10/12/2016</date>
-	<changes>New channel "mondolunatico_new" and Fix "SerieHD"</changes>
+	<tag>151</tag>
+	<date>12/12/2016</date>
+	<changes>Removed "Channel URL"</changes>
 </version>
