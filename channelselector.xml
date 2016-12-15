@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>151</tag>
-	<date>12/12/2016</date>
-	<changes>Removed "Channel URL"</changes>
+	<tag>152</tag>
+	<date>15/12/2016</date>
+	<changes>Update "New channel"</changes>
 </version>
