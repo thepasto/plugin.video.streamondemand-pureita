@@ -80,6 +80,8 @@ def episodios(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
+        if scrapedtitle.startswith(("NUOVA PAGINA FACEBOOK")):
+            continue
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
