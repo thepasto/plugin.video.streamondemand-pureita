@@ -101,11 +101,11 @@ def episodios(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Post più vecchi...[/COLOR]",
+                 title="[COLOR orange]Episodi Precedenti...[/COLOR]",
                  url=next_page,
                  action="episodios",
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -134,7 +134,7 @@ def series(item):
                  action="episodiosearch",
                  title="[COLOR azure]" + title + "[/COLOR]",
                  url=url,
-                 thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
                  folder=True))
 
     # paginación
@@ -147,7 +147,7 @@ def series(item):
                  url=next_page,
                  action="series",
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -187,6 +187,6 @@ def episodiosearch(item):
                  url=next_page,
                  action="episodios",
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
