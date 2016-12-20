@@ -7,6 +7,7 @@ cinemagratis
 cucinarefacile
 documentaristreaming
 documoo
+buscador_old
 
 filmgratiscc
 filmstreampw
@@ -25,6 +26,7 @@ youtube.channel
 filmontv
 ayuda
 buscador
+buscador_old
 libreria
 novedades
 tengourl
