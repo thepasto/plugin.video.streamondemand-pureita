@@ -17,6 +17,9 @@ futuramaita
 griffinita
 hubberfilm
 ildocumento
+youtube
+youtube_channel
+youtube.channel
 __init__
 liberostreaming
 libreria
