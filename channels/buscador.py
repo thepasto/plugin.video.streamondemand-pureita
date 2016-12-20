@@ -51,6 +51,7 @@ def mainlist(item, preferred_thumbnail="squares"):
         itemlist.append(
                 Item(channel=__channel__,
                      action="clear_saved_searches",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_deletesearch_violaP.png",
                      title="[COLOR red]Elimina cronologia ricerche[/COLOR]"))
 
     return itemlist
