@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
+# streamondemand.- XBMC Plugin
 # Canal para cineblog01
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
@@ -296,6 +296,8 @@ def listserie(item):
         scrapedthumbnail = match.group(2)
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
+        if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
+            continue
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
@@ -335,7 +337,6 @@ def episodios(item):
 
     if item.extra == 'serie':
         itemlist.extend(episodios_serie(item))
-
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
@@ -441,7 +442,7 @@ def findvid_film(item):
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers)
-    data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
+    data = scrapertools.decodeHtmlentities(data)
 
     # Extract the quality format
     patronvideos = '>([^<]+)</strong></div>'
@@ -455,8 +456,6 @@ def findvid_film(item):
     patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(streaming)
     for scrapedurl, scrapedtitle in matches:
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         logger.debug("##### findvideos Streaming ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -473,8 +472,6 @@ def findvid_film(item):
     patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
     for scrapedurl, scrapedtitle in matches:
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         logger.debug("##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -491,8 +488,6 @@ def findvid_film(item):
     patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
     for scrapedurl, scrapedtitle in matches:
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         logger.debug("##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -509,8 +504,6 @@ def findvid_film(item):
     patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(download)
     for scrapedurl, scrapedtitle in matches:
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         logger.debug("##### findvideos Download ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -527,8 +520,6 @@ def findvid_film(item):
     patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(download_hd)
     for scrapedurl, scrapedtitle in matches:
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         logger.debug("##### findvideos Download HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -554,15 +545,12 @@ def findvid_serie(item):
 
     # Descarga la página
     data = item.url
-    data = data.replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
     patron = '<a rel="nofollow" href="([^"]+)"[^>]+>(.*?)</a>'
     # Extrae las entradas
     matches = re.compile(patron, re.DOTALL).finditer(data)
     for match in matches:
         scrapedurl = match.group(1)
-        if '/goto/' in scrapedurl:
-            scrapedurl = scrapertools.get_header_from_response(scrapedurl, header_to_get="Location")
         scrapedtitle = match.group(2)
         title = item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
@@ -580,38 +568,45 @@ def findvid_serie(item):
 def play(item):
     logger.info("[cineblog01.py] play")
 
-    print "##############################################################"
+    if '/goto/' in item.url:
+        item.url = scrapertools.get_header_from_response(item.url, header_to_get="Location")
+
+    item.url = item.url.replace('http://cineblog01.pw', 'http://k4pp4.pw')
+
+    logger.debug("##############################################################")
     if "go.php" in item.url:
         data = scrapertools.anti_cloudflare(item.url, headers)
         try:
             data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
         except IndexError:
-            #            data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
-            #   In alternativa, dato che a volte compare "Clicca qui per proseguire":
-            data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
+            try:
+                # data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
+                # In alternativa, dato che a volte compare "Clicca qui per proseguire":
+                data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
+            except IndexError:
+                data = scrapertools.get_header_from_response(item.url, headers=headers, header_to_get="Location")
         if 'vcrypt' in data:
             data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
-        print "##### play go.php data ##\n%s\n##" % data
+        logger.debug("##### play go.php data ##\n%s\n##" % data)
     elif "/link/" in item.url:
         data = scrapertools.anti_cloudflare(item.url, headers)
         from core import jsunpack
 
         try:
             data = scrapertools.get_match(data, "(eval\(function\(p,a,c,k,e,d.*?)</script>")
-            # data = scrapertools.get_match(data, "(eval.function.p,a,c,k,e,.*?)</script>")
             data = jsunpack.unpack(data)
-            print "##### play /link/ unpack ##\n%s\n##" % data
+            logger.debug("##### play /link/ unpack ##\n%s\n##" % data)
         except IndexError:
-            print "##### The content is yet unpacked"
+            logger.debug("##### The content is yet unpacked")
 
         data = scrapertools.get_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
         if 'vcrypt' in data:
             data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
-        print "##### play /link/ data ##\n%s\n##" % data
+        logger.debug("##### play /link/ data ##\n%s\n##" % data)
     else:
         data = item.url
-        print "##### play else data ##\n%s\n##" % data
-    print "##############################################################"
+        logger.debug("##### play else data ##\n%s\n##" % data)
+    logger.debug("##############################################################")
 
     itemlist = servertools.find_video_items(data=data)
 
