@@ -28,10 +28,13 @@ def mainlist(item, preferred_thumbnail="squares"):
     itemlist = [
         Item(channel=__channel__,
              action="search",
+             category="film",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP.png",
              title="[COLOR yellow]Nuova ricerca film...[/COLOR]"),
         Item(channel=__channel__,
              action="search",
              category="serie",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP.png",
              title="[COLOR yellow]Nuova ricerca serie tv...[/COLOR]"),
     ]
 
