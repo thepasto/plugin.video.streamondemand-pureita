@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>154</tag>
-	<date>24/12/2016</date>
-	<changes>Update "New channels"</changes>
+	<tag>155</tag>
+	<date>25/12/2016</date>
+	<changes>Update "removed toonitalia, strfilm, italian-stream"</changes>
 </version>
