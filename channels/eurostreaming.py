@@ -165,7 +165,7 @@ def serietv(item):
                  action="serietv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 thumbnail="https://github.com/orione7/Pelis_images/blob/master/vari/successivo_P.png",
                  extra=item.extra,
                  folder=True))
 
@@ -275,3 +275,4 @@ def findvideos(item):
         videoitem.channel = __channel__
 
     return itemlist
+
