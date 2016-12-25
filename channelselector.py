@@ -269,7 +269,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Cinefilm[/COLOR]"          , channel="cinefilm"           , language="IT"    , category="F,S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Cinemalibero[/COLOR]"          , channel="cinemalibero"           , language="IT"    , category="F,S,A,VOS"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Cinemano[/COLOR]"          , channel="cinemano"           , language="IT"    , category="F"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Cinemastreaming.net[/COLOR]"        , channel="cinemastreaming"       , language="IT"    , category="F"       , type="generic"	))
+    #itemlist.append( Item( title="[COLOR azure]Cinemastreaming.net[/COLOR]"        , channel="cinemastreaming"       , language="IT"    , category="F"       , type="generic"	))
     itemlist.append( Item( title="[COLOR azure]Cinemasubito[/COLOR]"        , channel="cinemasubito"       , language="IT"    , category="F,S,VOS"       , type="generic"	))
     itemlist.append( Item( title="[COLOR azure]Corsaro Nero[/COLOR]"        , channel="corsaronero"       , language="IT"    , category="F,T"       , type="generic"	))
     #itemlist.append( Item( title="[COLOR azure]Cucinarefacile[/COLOR]"        , channel="cucinarefacile"       , language="IT"    , category="D"       , type="generic"))
