@@ -38,22 +38,22 @@ def mainlist(item):
                      action="ultimi",
                      title="[COLOR azure]Ultimi Episodi Aggiunti[/COLOR]",
                      url=host + "/aggiornamenti-serie-tv/",
-                     thumbnail="http://i58.tinypic.com/2zs64cz.jpg"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      action="fichas",
                      title="[COLOR azure]Lista Serie TV[/COLOR]",
                      url=host + "/lista-serie-tv-guardaserie/",
-                     thumbnail="http://i58.tinypic.com/2zs64cz.jpg"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      action="anime",
                      title="[COLOR azure]Anime[/COLOR]",
                      url=host + "/lista-serie-tv-guardaserie/",
-                     thumbnail="http://2.bp.blogspot.com/-4AeDx37c3uQ/VAxIHDhm-9I/AAAAAAAABRA/BUnctEGpVYM/s1600/528900971.gif"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      action="cartoni",
                      title="[COLOR azure]Cartoni Animati[/COLOR]",
                      url=host + "/lista-serie-tv-guardaserie/",
-                     thumbnail="http://i.imgur.com/d9GffYm.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/cartoons_P.png"),
                 Item(channel=__channel__,
                      action="progs",
                      title="[COLOR azure]Programmi TV[/COLOR]",
@@ -183,7 +183,7 @@ def anime(item):
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg"), tipo='tv'))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"), tipo='tv'))
 
     return itemlist
 
@@ -216,7 +216,7 @@ def cartoni(item):
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  show=scrapedtitle,
-                 thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg"), tipo='tv'))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_cartoons_P.png"), tipo='tv'))
 
     return itemlist
 
