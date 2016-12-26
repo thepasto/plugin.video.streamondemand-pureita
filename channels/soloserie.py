@@ -39,23 +39,23 @@ def mainlist(item):
                      url="%s/sod/api.php?get=serietv&type=elenco&order=multi&days=30&start=0&end=%d" % (
                      host, result_per_page),
                      extra="serietv",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]AGGIORNAMENTI MENSILI[/COLOR][/B]",
                      action="dailyupdateserietv",
                      url="%s/sod/api.php?get=serietv&type=elenco&order=multi&days=30" % host,
                      extra="serietv",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/New%20TV%20Shows.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]ELENCO COMPLETO SERIE TV[/COLOR][/B]",
                      action="elencoserie",
                      extra="serietv",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/TV%20Series.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]CERCA...[/COLOR][/B]",
                      action="search",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/search.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 ]
 
     return itemlist
@@ -140,7 +140,7 @@ def elencoserieletter(item):
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -329,7 +329,7 @@ def updateserietv(item):
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -393,7 +393,7 @@ def serietv(item):
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
