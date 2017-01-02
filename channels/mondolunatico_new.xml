@@ -13,9 +13,9 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/mondolunatico_new.png</bannermenu>
 
 	<update_url>https://github.com/Fenice82/plugin.video.streamondemand-pureita/edit/master/channels/</update_url>
-	<version>1</version>
-	<date>10/12/2016</date>
-	<changes>First Release</changes>
+	<version>2</version>
+	<date>01/01/2017</date>
+	<changes>Update</changes>
 
 	<categories>
 		<category>movie</category>
