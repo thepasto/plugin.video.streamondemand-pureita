@@ -13,9 +13,9 @@
 
     <update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/channels/
     </update_url>
-    <version>1</version>
-    <date>22/06/2016</date>
-    <changes>update</changes>
+    <version>2</version>
+    <date>05/01/2017</date>
+    <changes>test</changes>
 
     <categories>
         <category>serie</category>
