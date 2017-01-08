@@ -32,17 +32,11 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.eurostreaming mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film - Archivio[/COLOR]",
-                     action="peliculas",
-                     extra="movie",
-                     url="%s/category/film-in-streaming-vk-putlocker/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
-                Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      action="serietv",
                      extra='serie',
                      url="%s/category/serie-tv-archive/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Anime / Cartoni[/COLOR]",
                      action="serietv",
@@ -56,64 +50,6 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
-
-
-def peliculas(item):
-    logger.info("streamondemand.eurostreaming peliculas")
-    itemlist = []
-
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
-
-    # Extrae las entradas (carpetas)
-    patron = '<div class="post-thumb">\s*'
-    patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
-        scrapedplot = ""
-        scrapedtitle = scrapedtitle.replace("Streaming", "")
-        scrapedtitle = scrapedtitle.replace("streaming", "")
-        scrapedtitle = scrapedtitle.replace("streaming ITA", "")
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace(" ITA", ""))
-        if scrapedtitle.startswith("Link to "):
-            scrapedtitle = scrapedtitle[8:]
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 extra=item.extra,
-                 folder=True), tipo='movie'))
-
-    # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
-
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://github.com/orione7/Pelis_images/blob/master/vari/successivo_P.png",
-                 extra=item.extra,
-                 folder=True))
-
-    return itemlist
-
 
 def serietv(item):
     logger.info("streamondemand.eurostreaming peliculas")
@@ -165,7 +101,7 @@ def serietv(item):
                  action="serietv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://github.com/orione7/Pelis_images/blob/master/vari/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
                  extra=item.extra,
                  folder=True))
 
