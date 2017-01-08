@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.piratestreaming.click"
+host = "http://www.piratestreaming.black"
 
 
 def isGeneric():
