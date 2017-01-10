@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
-# Canal para filmontv
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# streamondemand-pureita-master - XBMC Plugin
+# Canale filmontv - Fix by Orione7
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808/
 # ------------------------------------------------------------
 
 import Queue
@@ -84,10 +84,10 @@ def tvoggi(item):
     logger.info("streamondemand.filmontv tvoggi")
     itemlist = []
 
-    # Descarga la pagina
+    # Pagina di Download
     data = scrapertools.cache_page(item.url)
 
-    # Extrae las entradas (carpetas)
+    # Estrazioni voci (Cartelle)
     patron = '<div class="col-xs-5 box-immagine">\s*<img src="([^"]+)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*[^>]+>\s*[^>]+>(.*?)</div>\s*[^>]+>[^>]+>[^>]+>[^>]+>(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -110,7 +110,7 @@ def tvoggi(item):
     return itemlist
 
 
-# Esta es la función que realmente realiza la búsqueda
+# Questa e la funzione che esegue effettivamete la ricerca
 
 def do_search(item):
     logger.info("streamondemand.channels.buscador do_search")
@@ -164,19 +164,19 @@ def do_search(item):
 
         channel_parameters = channeltools.get_channel_parameters(basename_without_extension)
 
-        # No busca si es un canal inactivo
+        # Non cercare se il canale e inattivo
         if channel_parameters["active"] != "true":
             continue
 
-        # No busca si es un canal excluido de la busqueda global
+        # Non Cercare se in canale e escluso dalla ricerca globale
         if channel_parameters["include_in_global_search"] != "true":
             continue
 
-        # No busca si es un canal para adultos, y el modo adulto está desactivado
+        # Non cercare se il canale e per adulti e se la modalita adulti e disabilitata
         if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
             continue
 
-        # No busca si el canal es en un idioma filtrado
+        # Non cercare se il canale e in una lingua filtrata
         if channel_language != "all" and channel_parameters["language"] != channel_language:
             continue
 
