@@ -8,6 +8,7 @@ cucinarefacile
 documentaristreaming
 documoo
 buscador_old
+buscador_all
 filmgratiscc
 filmstreampw
 hubberfilm
@@ -19,6 +20,7 @@ youtube
 youtube.channel
 #service channels
 filmontv
+filmontv_OLD
 ayuda
 buscador
 buscador_old
