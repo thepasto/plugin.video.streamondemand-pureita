@@ -281,7 +281,7 @@ def search_tvshow_by_title(item, search_terms):
     return list_movie(
         Item(channel=item.channel,
              url='search/tv?query=%s&' % url_quote_plus(search_terms),
-             plot="1",
+             plot="1"
              type="serie"))
 
 
