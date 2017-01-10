@@ -37,7 +37,7 @@ def mainlist(item, preferred_thumbnail="squares"):
     itemlist = [
         Item(channel=__channel__,
              action="search",
-             category="film",
+             category="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP.png",
              title="[COLOR yellow]Nuova ricerca film...[/COLOR]"),
         Item(channel=__channel__,
@@ -115,7 +115,7 @@ def do_search(item):
             logger.info("streamondemand-pureita-master.channels.buscador cargado " + basename_without_extension + " de " + infile)
             channel_result_itemlist.extend(obj.search(Item(extra=item.category), tecleado))
             for local_item in channel_result_itemlist:
-                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
+                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR orange]" + basename_without_extension + "[/COLOR]"
                 local_item.viewmode = "list"
         except:
             import traceback
