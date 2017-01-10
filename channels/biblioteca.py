@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand-pureita-master - XBMC Plugin
-# Ricerca  "Biblioteca"
+# Ricerca  "Biblioteca" - Fix by Orione7
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 
@@ -138,6 +138,7 @@ def mainlist(item):
                      action="list_tvshow",
                      url="tv/on_the_air?",
                      plot="1",
+					 type="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/tv_show.png"),
 
                 Item(channel=__channel__,
@@ -145,6 +146,7 @@ def mainlist(item):
                      action="list_tvshow",
                      url="tv/popular?",
                      plot="1",
+					 type="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/tv_show.png"),
 
                 Item(channel=__channel__,
@@ -152,42 +154,49 @@ def mainlist(item):
                      action="list_tvshow",
                      url="tv/top_rated?",
                      plot="1",
+					 type="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/tv_show.png"),
                 Item(channel=__channel__,
                      title="(TV Shows) [COLOR lime]Airing Today[/COLOR]",
                      action="list_tvshow",
                      url="tv/airing_today?",
                      plot="1",
+					 type="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/tv_show.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Now_Playing,
                      action="list_movie",
                      url="movie/now_playing?",
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_ticket.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Popular,
                      action="list_movie",
                      url="movie/popular?",
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_wanted.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Top_Rated,
                      action="list_movie",
                      url="movie/top_rated?",
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_bestseller.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Most_Voted,
                      action="list_movie",
                      url='discover/movie?certification_country=US&sort_by=vote_count.desc&',
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_favorite.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Oscar,
                      action="list_movie",
                      url='list/509ec17b19c2950a0600050d?',
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_favorite.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_Last_2_months,
@@ -195,10 +204,12 @@ def mainlist(item):
                      url='discover/movie?primary_release_date.gte=%s&primary_release_date.lte=%s&' % (
                          YEAR_DATE, MONTH2_TIME),
                      plot="1",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_last2month.png"),
                 Item(channel=__channel__,
                      title="(Movies) [COLOR yellow]%s[/COLOR]" % NLS_List_by_Genre,
                      action="list_genres",
+					 type="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/icoP_movie_genre.png")]
 
     return itemlist
@@ -281,7 +292,7 @@ def search_movie_by_title(item, search_terms):
         Item(channel=item.channel,
              url='search/movie?query=%s&' % url_quote_plus(search_terms),
              plot="1",
-             type="film"))
+             type="movie"))
 
 
 def search_similar_movie_by_title(item, search_terms):
@@ -291,7 +302,7 @@ def search_similar_movie_by_title(item, search_terms):
         Item(channel=item.channel,
              url='search/movie?append_to_response=similar_movies,alternative_title&query=%s&' % url_quote_plus(search_terms),
              plot="1",
-             type='film'))
+             type='movie'))
 
 
 def search_movie_by_year(item, search_terms):
@@ -305,7 +316,7 @@ def search_movie_by_year(item, search_terms):
                 Item(channel=item.channel,
                      url='discover/movie?primary_release_year=%s&' % year,
                      plot="1",
-                     type="film")))
+                     type="movie")))
     return result
 
 
@@ -336,7 +347,7 @@ def search_person_by_name(item, search_terms):
                 thumbnail=poster,
                 viewmode='list',
                 fanart=fanart,
-                type='film'
+                type='movie'
                 # extracmds=extracmds
         ))
 
@@ -383,7 +394,7 @@ def search_collection_by_name(item, search_terms):
                 thumbnail=poster,
                 viewmode='list',
                 fanart=fanart,
-                type='film'
+                type='movie'
         ))
 
     return itemlist
@@ -611,7 +622,7 @@ def do_channels_search(item):
             # item.url contains search type: serie, anime, etc...
             channel_result_itemlist.extend(obj.search(Item(extra=item.url), tecleado))
             for local_item in channel_result_itemlist:
-                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
+                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR orange]" + basename_without_extension + "[/COLOR]"
                 local_item.viewmode = "list"
         except:
             import traceback
@@ -627,19 +638,19 @@ def do_channels_search(item):
 
         channel_parameters = channeltools.get_channel_parameters(basename_without_extension)
 
-        # No busca si es un canal inactivo
+        # Non cercare se il canale e inattivo
         if channel_parameters["active"] != "true":
             continue
 
-        # No busca si es un canal excluido de la busqueda global
+        # Non cercare se un canale e escluso dalla ricerca globale
         if channel_parameters["include_in_global_search"] != "true":
             continue
 
-        # No busca si es un canal para adultos, y el modo adulto está desactivado
+        # Non cercare se un canale e per adulti e la modalita adulta disabilitata
         if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
             continue
 
-        # No busca si el canal es en un idioma filtrado
+        # Non cercare se un canale ha il filtro lingua
         if channel_language != "all" and channel_parameters["language"] != channel_language:
             continue
 
