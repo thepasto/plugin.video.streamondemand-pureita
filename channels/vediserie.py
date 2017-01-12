@@ -2,16 +2,17 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para vediserie - based on seriehd channel
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
+import sys
+import urllib2
 
 from core import config
 from core import logger
 from core import scrapertools
-from core import servertools
 from core.item import Item
-from core.tmdb import infoSod
+from servers import servertools
 
 __channel__ = "vediserie"
 __category__ = "S"
@@ -19,10 +20,11 @@ __type__ = "generic"
 __title__ = "Vedi Serie"
 __language__ = "IT"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
+headers = [['Upgrade-Insecure-Requests', '1'],
+           ['User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/53.0.2785.143 Chrome/53.0.2785.143 Safari/537.36'],
+           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Accept-Language', 'en-US,en;q=0.8']]
 
 host = "http://www.vediserie.com"
 
@@ -36,17 +38,21 @@ def mainlist(item):
 
     itemlist = [Item(channel=__channel__,
                      action="fichas",
-                     title="[COLOR azure]Serie TV[/COLOR]",
-                     url="%s/category/serie-complete/" % host,
+                     title="[COLOR azure]Serie TV - Aggiornamenti Odierne[/COLOR]",
+                     url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
+                     action="fichas",
+                     title="[COLOR azure]Serie TV - Aggiornamenti Settimanali[/COLOR]",
+                     url="%s/aggiornamenti-serie-tv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+				Item(channel=__channel__,
                      action="list_a_z",
                      title="[COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
                      url="%s/lista-completa-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     extra="serie",
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
@@ -73,7 +79,7 @@ def list_a_z(item):
     logger.info("[vediserie.py] ordine alfabetico")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = anti_cloudflare(item.url)
 
     patron = '<li><a href="([^"]+)" title="([^"]+)">.*?</a></li>'
 
@@ -81,10 +87,10 @@ def list_a_z(item):
 
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
-            Item(channel=__channel__,
-                 action="episodios",
-                 title=scrapedtitle,
-                 url=scrapedurl))
+                Item(channel=__channel__,
+                     action="episodios",
+                     title=scrapedtitle,
+                     url=scrapedurl))
 
     return itemlist
 
@@ -93,7 +99,7 @@ def fichas(item):
     logger.info("[vediserie.py] fichas")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = anti_cloudflare(item.url)
 
     # ------------------------------------------------
     cookies = ""
@@ -119,25 +125,40 @@ def fichas(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if scrapedtitle.startswith('<span class="year">'):
             scrapedtitle = scrapedtitle[19:]
+        try:
+           plot, fanart, poster, extrameta = info_tv(scrapedtitle)
 
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="episodios",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl.replace('"', ''),
-                 show=scrapedtitle,
-                 thumbnail=scrapedthumbnail), tipo='tv'))
+           itemlist.append(
+               Item(channel=__channel__,
+                    thumbnail=poster,
+                    fanart=fanart if fanart != "" else poster,
+                    extrameta=extrameta,
+                    plot=str(plot),
+                    action="episodios",
+                    title=scrapedtitle,
+                    url=scrapedurl.replace('"', ''),
+                    fulltitle=scrapedtitle,
+                    show=scrapedtitle,
+                    folder=True))
+        except:
+           itemlist.append(
+               Item(channel=__channel__,
+                    action="episodios",
+                    title=scrapedtitle,
+                    fulltitle=scrapedtitle,
+                    url=scrapedurl.replace('"', ''),
+                    show=scrapedtitle,
+                    thumbnail=scrapedthumbnail))
 
-    patron = '<span class=\'current\'>[^<]+</span><a class="page larger" href="(.*?)">'
+    patron = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
-            Item(channel=__channel__,
-                 action="fichas",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
-                 url=next_page,
-		 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                Item(channel=__channel__,
+                     action="fichas",
+                     title="[COLOR orange]Successivo>>[/COLOR]",
+                     url=next_page,
+					 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -148,7 +169,7 @@ def episodios(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = anti_cloudflare(item.url)
 
     patron = r'<div class="list" data-stagione="([^"]+)">\s*'
     patron += r'<ul class="listEpis">\s*'
@@ -162,35 +183,35 @@ def episodios(item):
         if len(episode) == 1: episode = "0" + episode
         title = season + "x" + episode
         itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title=title,
-                 url=item.url,
-                 thumbnail=item.thumbnail,
-                 extra=url,
-                 fulltitle=title + ' - ' + item.show,
-                 show=item.show))
+                Item(channel=__channel__,
+                     action="findvid_serie",
+                     title=title,
+                     url=item.url,
+                     thumbnail=item.thumbnail,
+                     extra=url,
+                     fulltitle=item.fulltitle,
+                     show=item.show))
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
-            Item(channel=__channel__,
-                 title=item.title,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios",
-                 show=item.show))
+                Item(channel=__channel__,
+                     title=item.title,
+                     url=item.url,
+                     action="add_serie_to_library",
+                     extra="episodios",
+                     show=item.show))
         itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
+                Item(channel=item.channel,
+                     title="Scarica tutti gli episodi della serie",
+                     url=item.url,
+                     action="download_all_episodes",
+                     extra="episodios",
+                     show=item.show))
 
     return itemlist
 
 
-def findvideos(item):
+def findvid_serie(item):
     logger.info("[vediserie.py] findvideos")
 
     # Descarga la página
@@ -206,3 +227,41 @@ def findvideos(item):
         videoitem.channel = __channel__
 
     return itemlist
+
+def anti_cloudflare(url):
+    # global headers
+
+    try:
+        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
+        resp_headers = dict(resp_headers)
+    except urllib2.HTTPError, e:
+        resp_headers = e.headers
+
+    if 'refresh' in resp_headers:
+        time.sleep(int(resp_headers['refresh'][:1]))
+
+        urlsplit = urlparse.urlsplit(url)
+        h = urlsplit.netloc
+        s = urlsplit.scheme
+        scrapertools.get_headers_from_response(s + '://' + h + "/" + resp_headers['refresh'][7:], headers=headers)
+
+    return scrapertools.cache_page(url, headers=headers)
+
+def info_tv(title):
+    logger.info("streamondemand.vediserie info")
+    try:
+        from core.tmdb import Tmdb
+        oTmdb= Tmdb(texto_buscado=title, tipo= "tv", include_adult="true", idioma_busqueda="it")
+        count = 0
+        if oTmdb.total_results > 0:
+           extrameta = {}
+           extrameta["Year"] = oTmdb.result["release_date"][:4]
+           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
+           extrameta["Rating"] = float(oTmdb.result["vote_average"])
+           fanart=oTmdb.get_backdrop()
+           poster=oTmdb.get_poster()
+           plot=oTmdb.get_sinopsis()
+           return plot, fanart, poster, extrameta
+    except:
+        pass	
+
