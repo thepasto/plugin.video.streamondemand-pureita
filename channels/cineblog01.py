@@ -250,8 +250,9 @@ def menuanyos(item):
             Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 thumbnail=scrapedthumbnail,
                  extra=item.extra,
                  plot=scrapedplot))
 
@@ -462,8 +463,9 @@ def findvid_film(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -478,8 +480,9 @@ def findvid_film(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -494,8 +497,9 @@ def findvid_film(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -510,8 +514,9 @@ def findvid_film(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -557,8 +562,9 @@ def findvid_serie(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
+				 fulltitle=item.fulltitle,
                  show=item.show,
                  folder=False))
 
