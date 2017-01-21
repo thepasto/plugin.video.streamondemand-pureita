@@ -252,7 +252,7 @@ def menuanyos(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 thumbnail=scrapedthumbnail,
+                 thumbnail=scrapedthumbnail,
                  extra=item.extra,
                  plot=scrapedplot))
 
@@ -465,7 +465,7 @@ def findvid_film(item):
                  title=title,
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 fulltitle=item.fulltitle,
+                 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -482,7 +482,7 @@ def findvid_film(item):
                  title=title,
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 fulltitle=item.fulltitle,
+                 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -499,7 +499,7 @@ def findvid_film(item):
                  title=title,
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 fulltitle=item.fulltitle,
+                 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -516,7 +516,7 @@ def findvid_film(item):
                  title=title,
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 fulltitle=item.fulltitle,
+                 fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
@@ -564,7 +564,7 @@ def findvid_serie(item):
                  title=title,
                  #url=scrapedurl,
                  url=scrapedurl.split('/')[-1].decode('base64'),
-				 fulltitle=item.fulltitle,
+                 fulltitle=item.fulltitle,
                  show=item.show,
                  folder=False))
 
