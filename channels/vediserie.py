@@ -46,7 +46,7 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Settimanali[/COLOR]",
                      url="%s/aggiornamenti-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
-				Item(channel=__channel__,
+                Item(channel=__channel__,
                      action="list_a_z",
                      title="[COLOR azure]Serie TV - [COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
                      url="%s/lista-completa-serie-tv/" % host,
