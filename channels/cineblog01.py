@@ -557,7 +557,8 @@ def findvid_serie(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 url=scrapedurl,
+                 #url=scrapedurl,
+                 url=scrapedurl.split('/')[-1].decode('base64'),
                  fulltitle=item.fulltitle,
                  show=item.show,
                  folder=False))
