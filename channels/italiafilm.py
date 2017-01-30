@@ -17,7 +17,7 @@ from servers import servertools
 __channel__ = "italiafilm"
 __category__ = "F,S,A"
 __type__ = "generic"
-__title__ = "Italia-Film.co"
+__title__ = "Italia-Film.me"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
