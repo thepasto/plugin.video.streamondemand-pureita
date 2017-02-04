@@ -268,7 +268,7 @@ def get_next_items( item ):
                             loaded_item.thumbnail = os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_nofolder.png" )
 
                 if len(itemlist)==0:
-                    itemlist = [ Item(title="No hay elementos para mostrar", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
+                    itemlist = [ Item(title="Nessun Elemento Da Riprodurre", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
 
     except:
         import traceback
