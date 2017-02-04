@@ -132,7 +132,7 @@ def get_next_items( item ):
                     else:
                         import xbmcgui
                         ventana_error = xbmcgui.Dialog()
-                        ok = ventana_error.ok ("plugin", "No hay nada para reproducir")
+                        ok = ventana_error.ok ("plugin", "Nessun File Da Riprodurre")
                 else:
                     plugintools.log("streamondemand-pureita.navigation.py No channel 'play' method, executing core method")
 
@@ -268,7 +268,7 @@ def get_next_items( item ):
                             loaded_item.thumbnail = os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_nofolder.png" )
 
                 if len(itemlist)==0:
-                    itemlist = [ Item(title="Nessun Elemento Da Riprodurre", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
+                    itemlist = [ Item(title="Nessun Elemento Da Visualizzare", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
 
     except:
         import traceback
