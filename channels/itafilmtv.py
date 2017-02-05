@@ -180,7 +180,8 @@ def serietv(item):
             Item(channel=__channel__,
                  action="serietv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=next_page))
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
 
     return itemlist
 
@@ -191,7 +192,7 @@ def genere(item):
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    patron = '<div class="menu2">(.*?)<div class="left-wrap">'
+    patron = '<div class="menu-janr">(.*?)<div style="clear: both;"></div>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<a href="([^"]+)">(.*?)</a>'
@@ -203,7 +204,7 @@ def genere(item):
                  action="fichas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=urlparse.urljoin(host, scrapedurl),
-                 folder=True))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"))
 
     return itemlist
 
@@ -214,7 +215,7 @@ def nazione(item):
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    patron = '<div class="menu-block-content">(.*?)<div style="clear: both;"></div>'
+    patron = '<div class="sort-menu-content sort-menu-content2">(.*?)<div style="clear: both;"></div>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<a href="([^"]+)">(.*?)</a>'
@@ -226,7 +227,7 @@ def nazione(item):
                  action="fichas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=urlparse.urljoin(host, scrapedurl),
-                 folder=True))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country_P.png"))
 
     return itemlist
 
@@ -237,7 +238,8 @@ def anno(item):
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    data = scrapertools.find_single_match(data, '<div class="menu-col fixcol2">(.*?)<div style="clear: both;"></div>')
+    patron = '<div class="sort-menu-content">(.*?)<div style="clear: both;"></div>'
+    data = scrapertools.find_single_match(data, patron)
 
     patron = '<a href="([^"]+)">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -249,7 +251,7 @@ def anno(item):
                  action="fichas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=urlparse.urljoin(host, scrapedurl),
-                 folder=True))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"))
 
     return itemlist
 
