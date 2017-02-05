@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para itafilmtv
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# streamondemand-pureita.- XBMC Plugin
+# Canale itafilmtv
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
 import re
 import urlparse
