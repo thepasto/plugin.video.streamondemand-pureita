@@ -19,9 +19,9 @@
 	<categories>
 		<category>movie</category>
                 <category>serie</category>
-                </categories>
+        </categories>
 
 	<settings>
-		<include_in_global_search>true</include_in_global_search>
+		<include_in_global_search>false</include_in_global_search>
 	</settings>
 </channel>
