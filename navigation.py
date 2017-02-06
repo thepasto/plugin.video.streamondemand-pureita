@@ -273,7 +273,7 @@ def get_next_items( item ):
     except:
         import traceback
         plugintools.log("navigation.get_next_items "+traceback.format_exc())
-        itemlist = [ Item(title="Se ha producido un error", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
+        itemlist = [ Item(title="Rimozione Effettuata - Riavviare", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
 
 
     return itemlist
