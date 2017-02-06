@@ -31,10 +31,10 @@ def mainlist(item):
         itemlist.append( Item(channel=CHANNELNAME, action="updatebiblio" , title="Cerca nuovi episodi e aggiorna la biblioteca"))
         cuantos = cuantos + 1
 
-    if cuantos>0:
-        itemlist.append( Item(channel=CHANNELNAME, action="tutoriales" , title="Vedere video per guide e tutorial"))
-    else:
-        itemlist.extend(tutoriales(item))
+    #if cuantos>0:
+        #itemlist.append( Item(channel=CHANNELNAME, action="tutoriales" , title="Vedere video per guide e tutorial"))
+    #else:
+        #itemlist.extend(tutoriales(item))
 
     return itemlist
 
