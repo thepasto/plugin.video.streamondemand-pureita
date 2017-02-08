@@ -270,7 +270,7 @@ def episodios(item):
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title + " [COLOR yellow] Aggiungi alla liberia [/COLOR]",
+                 title=item.title + " [COLOR yellow] Aggiungi alla libreria [/COLOR]",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios",
