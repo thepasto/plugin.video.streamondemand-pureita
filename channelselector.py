@@ -275,7 +275,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Cucinarefacile[/COLOR]"        , channel="cucinarefacile"       , language="IT"    , category="D"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Darkstream[/COLOR]"        , channel="darkstream"       , language="IT"    , category="F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]DocumentariStreamingDB[/COLOR]"  , channel="documentaristreamingdb"           , language="IT"    , category="D"   , type="generic"))
-    #itemlist.append( Item( title="[COLOR azure]Documoo[/COLOR]"      , channel="documoo"           , language="IT"    , category="D"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]DreamSub[/COLOR]"      , channel="dreamsub"           , language="IT"    , category="S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Effetto Lunatico[/COLOR]"       , channel="effettolunatico"           , language="IT"    , category="F"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Eurostreaming[/COLOR]"       , channel="eurostreaming"           , language="IT"    , category="F,S"    , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Eurostreaminginfo[/COLOR]"          , channel="eurostreaminginfo"           , language="IT"    , category="F,S"   , type="generic"))
