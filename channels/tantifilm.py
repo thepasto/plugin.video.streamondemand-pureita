@@ -22,14 +22,13 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.tantifilm.org"
+host = "http://www.tantifilm.me"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
     ['Referer', host]
 ]
-
 
 def isGeneric():
     return True
@@ -127,7 +126,7 @@ def search_peliculas(item):
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" title="([^"]+)" rel="[^"]+">\s*<img width="[^"]+" height="[^"]+" src="([^"]+)" class="[^"]+" alt="[^"]+" />'
+    patron = '<a href="([^"]+)" title="([^"]+)" rel="[^"]+">\s*<img width="[^"]+" height="[^"]+" src="([^"]+)" class="[^"]+" alt="[^"]+" srcset="[^"]+" sizes="[^"]+" />'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
@@ -163,7 +162,7 @@ def search_peliculas_tv(item):
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" title="([^"]+)" rel="[^"]+">\s*<img width="[^"]+" height="[^"]+" src="([^"]+)" class="[^"]+" alt="[^"]+" />'
+    patron = '<a href="([^"]+)" title="([^"]+)" rel="[^"]+">\s*<img width="[^"]+" height="[^"]+" src="([^"]+)" class="[^"]+" alt="[^"]+" srcset="[^"]+" sizes="[^"]+" />'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
