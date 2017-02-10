@@ -13,9 +13,9 @@
     <id>adfly</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/adfly.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>10/10/2016</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>10/02/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
