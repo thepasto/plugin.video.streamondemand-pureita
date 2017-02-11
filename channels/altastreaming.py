@@ -30,6 +30,9 @@ headers = [
     ['Referer', host]
 ]
 
+def isGeneric():
+    return True
+
 
 def mainlist(item):
     logger.info("streamondemand.altastreaming mainlist")
@@ -247,23 +250,22 @@ def findvideos_tv(item):
                          fulltitle=item.fulltitle,
                          show=item.fulltitle))
     return itemlist
+
 def findvideos(item):
-    
+
     data = scrapertools.anti_cloudflare(item.url, headers)
-    
+
     itemlist = servertools.find_video_items(data=data)
-    
+
     for videoitem in itemlist:
         videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
-        
-return itemlis
 
+    return itemlist
 
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-    
