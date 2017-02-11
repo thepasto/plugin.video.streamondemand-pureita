@@ -22,10 +22,13 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.altastreaming.com/"
+host = "http://www.altastreaming.tv/"
 
-def isGeneric():
-    return True
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', host]
+]
 
 
 def mainlist(item):
@@ -65,7 +68,7 @@ def categorias(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
     bloque = scrapertools.get_match(data, '<ul>(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
@@ -106,7 +109,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
     patron = '<h3 class="fl-title"> <a href="([^"]+)"  title="([^"]+)">'
@@ -156,7 +159,7 @@ def peliculas_tv(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
     bloque = scrapertools.get_match(data, '<div class="container margin-block">(.*?)<footer class="footer">')
 
     # Extrae las entradas (carpetas)
@@ -207,7 +210,7 @@ def episodios(item):
 
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     patron = '<li id="serie-[^-]+-title="([^"]+)">\s*<span[^<]+<\/span>\s*<span[^<]+<\/span>\s*<a[^=]+=[^=]+=[^=]+=[^=]+=[^=]+="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -232,7 +235,7 @@ def episodios(item):
 
 def findvideos_tv(item):
     itemlist=[]
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     elemento = scrapertools.find_single_match(data, 'file: "(.*?)",')
 
@@ -244,10 +247,23 @@ def findvideos_tv(item):
                          fulltitle=item.fulltitle,
                          show=item.fulltitle))
     return itemlist
+def findvideos(item):
+    
+    data = scrapertools.anti_cloudflare(item.url, headers)
+    
+    itemlist = servertools.find_video_items(data=data)
+    
+    for videoitem in itemlist:
+        videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
+        
+return itemlis
 
 
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
-#channel disabled
+    
