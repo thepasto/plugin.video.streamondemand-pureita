@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "AltaDefinizioneclub"
 __language__ = "IT"
 
-host = "http://altadefinizione.onl"
+host = "http://altadefinizione.bid"
 
 
 
@@ -35,7 +35,7 @@ def mainlist(item):
     itemlist = []
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Prime visioni[/COLOR]",action="peliculas",url="%s/prime_visioni/" % host,thumbnail=ThumbPrimavisione,fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Ultime novità[/COLOR]",action="peliculas",url="%s/news/" % host,thumbnail=ThumbNovita,fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film in HD[/COLOR]",action="peliculas", url="http://altadefinizione.club/?s=[HD]",thumbnail=ThumbFilmHD, fanart=fanart))
+    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film in HD[/COLOR]",action="peliculas", url="http://altadefinizione.bid/?s=[HD]",thumbnail=ThumbFilmHD, fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Genere[/COLOR]",action="genere",url=host+"/", thumbnail=ThumbGenere, fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR yellow]Cerca...[/COLOR]",action="search", thumbnail=ThumbSearch, fanart=fanart))
 
@@ -78,7 +78,7 @@ def peliculas(item):
 def search(item, texto):
     logger.info("[altadefinizioneclub.py] " + item.url + " search " + texto)
     itemlist=[]
-    item.url = "http://altadefinizione.club/?s=%s" % texto
+    item.url = "http://altadefinizione.bid/?s=%s" % texto
 
     return peliculas(item)
 
