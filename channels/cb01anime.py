@@ -47,27 +47,27 @@ def mainlist(item):
                      action="novita",
                      title="[COLOR azure]Anime - Novita'[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime_New.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
                 Item(channel=__channel__,
                      action="genere",
                      title="[COLOR azure]Anime - Per Genere[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_bygenre.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
                      action="alfabetico",
                      title="[COLOR azure]Anime - Per Lettera A-Z[/COLOR]",
                      url="%s/anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/anime_az.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_az_P.png"),
                 Item(channel=__channel__,
                      action="listacompleta",
                      title="[COLOR azure]Anime - Lista Completa[/COLOR]",
                      url="%s/anime/lista-completa-anime-cartoon/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/anime/Anime.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_lista_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Anime[/COLOR]",
                      extra="cartoni",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 #=================================================================
