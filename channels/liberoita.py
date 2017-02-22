@@ -36,27 +36,27 @@ def mainlist(item):
              title="[COLOR azure]Novita'[/COLOR]",
              action="peliculas",
              url=host,
-             thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Categorie[/COLOR]",
              action="categorias",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/most%20used/genres_2.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
              title="[COLOR yellow]Cerca...[/COLOR]",
              action="search",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Serie TV[/COLOR]",
              extra="serie",
              action="peliculas_tv",
              url="%s/category/serie-tv" % host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/General_Popular/series/TV%20Series.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
         Item(channel=__channel__,
              title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
              action="search",
              extra="serie",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
