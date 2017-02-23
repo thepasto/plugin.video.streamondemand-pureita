@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per solo-streaming.com
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# streamondemand-pureita.- XBMC Plugin
+# Canale per soloserie
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
 import json
 import sys
@@ -85,7 +85,7 @@ def elencoserie(item):
 def elencoserieletter(item):
     itemlist = []
 
-    # Descarga la pagina
+    # Pagina di Download
     data = cache_jsonpage(item.url)
 
     for singledata in data['results']:
@@ -154,7 +154,7 @@ def dailyupdateserietv(item):
 
     itemlist = []
 
-    # Descarga la pagina
+    # Pagina di Download
     data = cache_jsonpage(item.url)
 
     dailyupdate = {}
@@ -262,7 +262,7 @@ def updateserietv(item):
 
     itemlist = []
 
-    # Descarga la pagina
+    # Pagina di Download
     data = cache_jsonpage(item.url)
 
     for singledata in data['results']:
@@ -416,7 +416,7 @@ def search(item, texto):
 
     try:
         return serietv(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    # L'eccezione viene catturato, per non interrompere il motore di ricerca globale, se un canale fallisce
     except:
         import sys
         for line in sys.exc_info():
@@ -429,7 +429,7 @@ def episodios(item):
 
     itemlist = []
 
-    # Descarga la página
+    # Pagina di Download
     hosturi = "%s/sod/api.php?get=%s&type=episodi&uri=%s" % (host, item.url.split('||')[1], item.url.split('||')[0])
     data = cache_jsonpage(hosturi)
 
