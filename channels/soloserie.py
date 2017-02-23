@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale per soloserie
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
+# streamondemand.- XBMC Plugin
+# Canale per solo-streaming.com
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import json
-import sys
 import urllib
 from unicodedata import normalize
 
@@ -13,12 +12,13 @@ from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
+from core.tmdb import infoSod
 from servers import servertools
 
 __channel__ = "soloserie"
 __category__ = "S"
 __type__ = "generic"
-__title__ = "soloserie"
+__title__ = "solostreaming"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
@@ -37,7 +37,7 @@ def mainlist(item):
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]ULTIMI EPISODI AGGIORNATI[/COLOR][/B]",
                      action="updateserietv",
                      url="%s/sod/api.php?get=serietv&type=elenco&order=multi&days=30&start=0&end=%d" % (
-                     host, result_per_page),
+                         host, result_per_page),
                      extra="serietv",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
@@ -55,7 +55,7 @@ def mainlist(item):
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]CERCA...[/COLOR][/B]",
                      action="search",
                      extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")
                 ]
 
     return itemlist
@@ -85,7 +85,7 @@ def elencoserie(item):
 def elencoserieletter(item):
     itemlist = []
 
-    # Pagina di Download
+    # Descarga la pagina
     data = cache_jsonpage(item.url)
 
     for singledata in data['results']:
@@ -97,32 +97,16 @@ def elencoserieletter(item):
 
         scrapedplot = ""
         frm_title = "[B][COLOR deepskyblue]%s[/COLOR][/B]" % serie
-        try:
-           plot, fanart, poster, extrameta = info_tv(serie)
-
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="episodios",
-                    title=frm_title,
-                    url=singledata['uri'] + '||' + item.extra,
-                    fulltitle=serie,
-                    show=serie,
-                    folder=True))
-        except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="episodios",
-                    fulltitle=serie,
-                    show=serie,
-                    title=frm_title,
-                    url=singledata['uri'] + '||' + item.extra,
-                    thumbnail=singledata['fileName'],
-                    plot=scrapedplot,
-                    folder=True))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 fulltitle=serie,
+                 show=serie,
+                 title=frm_title,
+                 url=singledata['uri'] + '||' + item.extra,
+                 thumbnail=singledata['fileName'],
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
 
     itemlist.append(
         Item(channel=__channel__,
@@ -150,11 +134,11 @@ def cache_jsonpage(url):
 
 
 def dailyupdateserietv(item):
-    logger.info("streamondemand.soloserie dailyupdateserietv")
+    logger.info("streamondemand.solostreaming dailyupdateserietv")
 
     itemlist = []
 
-    # Pagina di Download
+    # Descarga la pagina
     data = cache_jsonpage(item.url)
 
     dailyupdate = {}
@@ -172,7 +156,7 @@ def dailyupdateserietv(item):
         extra = json.dumps(value)
 
         frm_title = "[B][COLOR deepskyblue]%s-%s-%s[/COLOR][/B] [COLOR white](%d serie aggiornate)[/COLOR]" % (
-        key[8:], key[5:7], key[:4], len(value))
+            key[8:], key[5:7], key[:4], len(value))
 
         itemlist.append(
             Item(channel=__channel__,
@@ -190,7 +174,7 @@ def dailyupdateserietv(item):
 
 
 def showupdateserietv(item):
-    logger.info("streamondemand.soloserie showupdateserietv")
+    logger.info("streamondemand.solostreaming showupdateserietv")
 
     extra = json.loads(item.extra)
 
@@ -210,8 +194,9 @@ def showupdateserietv(item):
             apisingle = host + "/sod/api.php?get=serietv&type=episodi&uri=" + uri + "&ep_num=" + ep_num + "&sub=" + urllib.quote_plus(
                 type)
 
+            fulltitle = serie + ' | ' + ep_num + ' ' + titolo
             frm_title = "[COLOR white](%s)[/COLOR] [B][COLOR royalblue]%s[/COLOR][/B] [B][COLOR deepskyblue]- %s %s[/COLOR][/B]" % (
-            type.upper(), serie, ep_num, titolo)
+                type.upper(), serie, ep_num, titolo)
         else:
             e_num = normalize_unicode(singledata['e_num'])
             s_num = normalize_unicode(singledata['s_num'])
@@ -220,33 +205,18 @@ def showupdateserietv(item):
             apisingle = host + "/sod/api.php?get=anime&type=episodi&uri=" + uri + "&e_num=" + e_num + "&s_num=" + s_num + "&sub=" + urllib.quote_plus(
                 type)
 
+            fulltitle = serie + ' | ' + s_num + 'x' + e_num
             frm_title = "[COLOR white](%s)[/COLOR] [B][COLOR royalblue]%s[/COLOR][/B] [B][COLOR deepskyblue]- %sx%s[/COLOR][/B]" % (
-            type.upper(), serie, s_num, e_num)
+                type.upper(), serie, s_num, e_num)
 
-        try:
-           plot, fanart, poster, extrameta = info_tv(serie)
-
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="findvid_serie",
-                    title=frm_title,
-                    url=apisingle,
-                    fulltitle=frm_title,
-                    show=frm_title,
-                    folder=True))
-        except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="findvid_serie",
-                    fulltitle=frm_title,
-                    show=frm_title,
-                    title=frm_title,
-                    url=apisingle,
-                    thumbnail=singledata['fileName']))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvid_serie",
+                 fulltitle=fulltitle,
+                 show=serie,
+                 title=frm_title,
+                 url=apisingle,
+                 thumbnail=singledata['fileName']), tipo='tv'))
 
     itemlist.append(
         Item(channel=__channel__,
@@ -257,12 +227,11 @@ def showupdateserietv(item):
 
 
 def updateserietv(item):
-    logger.info("streamondemand.
-                update serietv")
+    logger.info("streamondemand.solostreaming update serietv")
 
     itemlist = []
 
-    # Pagina di Download
+    # Descarga la pagina
     data = cache_jsonpage(item.url)
 
     for singledata in data['results']:
@@ -277,8 +246,9 @@ def updateserietv(item):
             apisingle = host + "/sod/api.php?get=serietv&type=episodi&uri=" + uri + "&ep_num=" + ep_num + "&sub=" + urllib.quote_plus(
                 type)
 
+            fulltitle = serie + ' | ' + ep_num + ' ' + titolo
             frm_title = "[COLOR white](%s)[/COLOR] [B][COLOR royalblue]%s[/COLOR][/B] [B][COLOR deepskyblue]- %s %s[/COLOR][/B]" % (
-            type.upper(), serie, ep_num, titolo)
+                type.upper(), serie, ep_num, titolo)
         else:
             e_num = normalize_unicode(singledata['e_num'])
             s_num = normalize_unicode(singledata['s_num'])
@@ -287,33 +257,18 @@ def updateserietv(item):
             apisingle = host + "/sod/api.php?get=anime&type=episodi&uri=" + uri + "&e_num=" + e_num + "&s_num=" + s_num + "&sub=" + urllib.quote_plus(
                 type)
 
+            fulltitle = serie + ' | ' + s_num + 'x' + e_num
             frm_title = "[COLOR white](%s)[/COLOR] [B][COLOR royalblue]%s[/COLOR][/B] [B][COLOR deepskyblue]- %sx%s[/COLOR][/B]" % (
-            type.upper(), serie, s_num, e_num)
+                type.upper(), serie, s_num, e_num)
 
-        try:
-           plot, fanart, poster, extrameta = info_tv(serie)
-
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="findvid_serie",
-                    title=frm_title,
-                    url=apisingle,
-                    fulltitle=frm_title,
-                    show=frm_title,
-                    folder=True))
-        except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="findvid_serie",
-                    fulltitle=frm_title,
-                    show=frm_title,
-                    title=frm_title,
-                    url=apisingle,
-                    thumbnail=singledata['fileName']))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvid_serie",
+                 fulltitle=fulltitle,
+                 show=serie,
+                 title=frm_title,
+                 url=apisingle,
+                 thumbnail=singledata['fileName']), tipo='tv'))
 
     itemlist.append(
         Item(channel=__channel__,
@@ -336,7 +291,7 @@ def updateserietv(item):
 
 
 def serietv(item):
-    logger.info("streamondemand.soloserie serietv")
+    logger.info("streamondemand.solostreaming serietv")
 
     itemlist = []
 
@@ -351,32 +306,16 @@ def serietv(item):
 
         frm_title = "[B][COLOR deepskyblue]%s[/COLOR][/B]" % serie
         scrapedplot = ""
-        try:
-           plot, fanart, poster, extrameta = info_tv(serie)
-
-           itemlist.append(
-               Item(channel=__channel__,
-                    thumbnail=poster,
-                    fanart=fanart if fanart != "" else poster,
-                    extrameta=extrameta,
-                    plot=str(plot),
-                    action="episodios",
-                    title=frm_title,
-                    url=singledata['uri'] + '||' + item.extra,
-                    fulltitle=serie,
-                    show=serie,
-                    folder=True))
-        except:
-           itemlist.append(
-               Item(channel=__channel__,
-                    action="episodios",
-                    fulltitle=serie,
-                    show=serie,
-                    title=frm_title,
-                    url=singledata['uri'] + '||' + item.extra,
-                    thumbnail=singledata['fileName'],
-                    plot=scrapedplot,
-                    folder=True))
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 fulltitle=serie,
+                 show=serie,
+                 title=frm_title,
+                 url=singledata['uri'] + '||' + item.extra,
+                 thumbnail=singledata['fileName'],
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
 
     itemlist.append(
         Item(channel=__channel__,
@@ -401,11 +340,11 @@ def serietv(item):
 
 def HomePage(item):
     import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
 def search(item, texto):
-    logger.info("[soloserie.py] " + item.url + " search " + texto)
+    logger.info("[solostreaming.py] " + item.url + " search " + texto)
 
     if item.extra == 'serie':
         item.url = "%s/sod/api.php?get=serietv&type=data&serie=%s&start=0&end=%d" % (host, texto, result_per_page)
@@ -416,7 +355,7 @@ def search(item, texto):
 
     try:
         return serietv(item)
-    # L'eccezione viene catturato, per non interrompere il motore di ricerca globale, se un canale fallisce
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
@@ -425,11 +364,11 @@ def search(item, texto):
 
 
 def episodios(item):
-    logger.info("[soloserie.py] episodios")
+    logger.info("[solostreaming.py] episodios")
 
     itemlist = []
 
-    # Pagina di Download
+    # Descarga la página
     hosturi = "%s/sod/api.php?get=%s&type=episodi&uri=%s" % (host, item.url.split('||')[1], item.url.split('||')[0])
     data = cache_jsonpage(hosturi)
 
@@ -478,7 +417,7 @@ def episodios(item):
 
 
 def findvid_serie(item):
-    logger.info("[soloserie.py] findvideos")
+    logger.info("[solostreaming.py] findvideos")
 
     # Descarga la página
     if item.extra != "":
@@ -504,22 +443,3 @@ def normalize_unicode(string, encoding='utf-8'):
     if string is None: string = ''
     return normalize('NFKD', string if isinstance(string, unicode) else unicode(string, encoding, 'ignore')).encode(
         encoding, 'ignore')
-
-def info_tv(title):
-    logger.info("streamondemand.soloserie info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb= Tmdb(texto_buscado=title, tipo= "tv", include_adult="true", idioma_busqueda="it")
-        count = 0
-        if oTmdb.total_results > 0:
-           extrameta = {}
-           extrameta["Year"] = oTmdb.result["release_date"][:4]
-           extrameta["Genre"] = ", ".join(oTmdb.result["genres"])
-           extrameta["Rating"] = float(oTmdb.result["vote_average"])
-           fanart=oTmdb.get_backdrop()
-           poster=oTmdb.get_poster()
-           plot=oTmdb.get_sinopsis()
-           return plot, fanart, poster, extrameta
-    except:
-        pass	
-
