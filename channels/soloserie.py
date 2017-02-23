@@ -18,7 +18,7 @@ from servers import servertools
 __channel__ = "soloserie"
 __category__ = "S"
 __type__ = "generic"
-__title__ = "solostreaming"
+__title__ = "soloserie"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
@@ -32,7 +32,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.solostreaming mainlist")
+    logger.info("streamondemand.soloserie mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[B][COLOR royalblue][SERIE TV][/COLOR][/B] [B][COLOR deepskyblue]ULTIMI EPISODI AGGIORNATI[/COLOR][/B]",
                      action="updateserietv",
@@ -150,7 +150,7 @@ def cache_jsonpage(url):
 
 
 def dailyupdateserietv(item):
-    logger.info("streamondemand.solostreaming dailyupdateserietv")
+    logger.info("streamondemand.soloserie dailyupdateserietv")
 
     itemlist = []
 
@@ -190,7 +190,7 @@ def dailyupdateserietv(item):
 
 
 def showupdateserietv(item):
-    logger.info("streamondemand.solostreaming showupdateserietv")
+    logger.info("streamondemand.soloserie showupdateserietv")
 
     extra = json.loads(item.extra)
 
@@ -257,7 +257,8 @@ def showupdateserietv(item):
 
 
 def updateserietv(item):
-    logger.info("streamondemand.solostreaming update serietv")
+    logger.info("streamondemand.
+                update serietv")
 
     itemlist = []
 
@@ -335,7 +336,7 @@ def updateserietv(item):
 
 
 def serietv(item):
-    logger.info("streamondemand.solostreaming serietv")
+    logger.info("streamondemand.soloserie serietv")
 
     itemlist = []
 
@@ -404,7 +405,7 @@ def HomePage(item):
 
 
 def search(item, texto):
-    logger.info("[solostreaming.py] " + item.url + " search " + texto)
+    logger.info("[soloserie.py] " + item.url + " search " + texto)
 
     if item.extra == 'serie':
         item.url = "%s/sod/api.php?get=serietv&type=data&serie=%s&start=0&end=%d" % (host, texto, result_per_page)
@@ -424,7 +425,7 @@ def search(item, texto):
 
 
 def episodios(item):
-    logger.info("[solostreaming.py] episodios")
+    logger.info("[soloserie.py] episodios")
 
     itemlist = []
 
@@ -477,7 +478,7 @@ def episodios(item):
 
 
 def findvid_serie(item):
-    logger.info("[solostreaming.py] findvideos")
+    logger.info("[soloserie.py] findvideos")
 
     # Descarga la página
     if item.extra != "":
@@ -505,7 +506,7 @@ def normalize_unicode(string, encoding='utf-8'):
         encoding, 'ignore')
 
 def info_tv(title):
-    logger.info("streamondemand.solostreaming info")
+    logger.info("streamondemand.soloserie info")
     try:
         from core.tmdb import Tmdb
         oTmdb= Tmdb(texto_buscado=title, tipo= "tv", include_adult="true", idioma_busqueda="it")
