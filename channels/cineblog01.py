@@ -265,10 +265,10 @@ def search(item, texto):
     try:
 
         if item.extra == "movie":
-            item.url = "http://www.cb01.pw/?s=" + texto
+            item.url = "http://www.cb01.uno/?s=" + texto
             return peliculas(item)
         if item.extra == "serie":
-            item.url = "http://www.cb01.pw/serietv/?s=" + texto
+            item.url = "http://www.cb01.uno/serietv/?s=" + texto
             return listserie(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -572,7 +572,7 @@ def play(item):
     if '/goto/' in item.url:
         item.url = scrapertools.get_header_from_response(item.url, header_to_get="Location")
 
-    #item.url = item.url.replace('http://cineblog01.pw', 'http://k4pp4.pw')
+    #item.url = item.url.replace('http://cineblog01.uno', 'http://k4pp4.pw')
 
     logger.debug("##############################################################")
     if "go.php" in item.url:
