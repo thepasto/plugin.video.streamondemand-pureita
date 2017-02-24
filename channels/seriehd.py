@@ -120,7 +120,7 @@ def fichas(item):
     # ------------------------------------------------
 
     patron = '<h2>(.*?)</h2>\s*'
-    patron += '<img src="([^"]+)" alt="[^"]*"/>\s*'
+    patron += '<img src="([^"]+)" alt="[^"]*" />\s*'
     patron += '<A HREF="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
