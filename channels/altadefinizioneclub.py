@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# streamondemand-pureita.- XBMC Plugin
 # Canal para altadefinizione01
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -33,10 +33,10 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.altadefinizione01 mainlist")
     itemlist = []
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Prime visioni[/COLOR]",action="peliculas",url="%s/prime_visioni/" % host,thumbnail=ThumbPrimavisione,fanart=fanart))
+    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Prime visioni[/COLOR]",action="peliculas",url="%s/prime-visioni/" % host,thumbnail=ThumbPrimavisione,fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Ultime novità[/COLOR]",action="peliculas",url="%s/news/" % host,thumbnail=ThumbNovita,fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film in HD[/COLOR]",action="peliculas", url="http://altadefinizione.bid/?s=[HD]",thumbnail=ThumbFilmHD, fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Genere[/COLOR]",action="genere",url=host+"/", thumbnail=ThumbGenere, fanart=fanart))
+    #itemlist.append(Item(channel=__channel__,title="[COLOR azure]Genere[/COLOR]",action="genere",url=host+"/", thumbnail=ThumbGenere, fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR yellow]Cerca...[/COLOR]",action="search", thumbnail=ThumbSearch, fanart=fanart))
 
 
@@ -47,8 +47,8 @@ def peliculas(item):
     logger.info("streamondemand.altadefinizioneclub peliculas")
     itemlist = []
 
-    patron = 'class="box-single-mini-post">[^<]+<.*?href="(.*?)".*?title="(.*?)"[^<]+<[^<]+<[^<]+<.*?lazy".*?src="(.*?)"'
-    for scrapedurl,scrapedtitle,scrapedthumbnail  in scrapedAll(item.url,patron):
+    patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*<div class="title">(.*?)</div>'
+    for scrapedurl,scrapedthumbnail,scrapedtitle  in scrapedAll(item.url,patron):
         logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         xbmc.log(("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]"))
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -135,12 +135,12 @@ def scrapedSingle(url="", single="", patron=""):
 # =================================================================
 
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
-ThumbnailHome="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Dynamic-blue-up.svg/580px-Dynamic-blue-up.svg.png"
+ThumbnailHome="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png"
 ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
-AvantiImg = "http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"
+AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
 ThumbPrimavisione="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
-ThumbNovita="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"
+ThumbNovita="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
 ThumbFilmHD="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"
 ThumbGenere="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"
 ThumbSearch="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
