@@ -591,8 +591,24 @@
     <categories>
         <category>movie</category>
     </categories>
-</channel>   
-    
+</channel>
+
+<channel>
+    <id>filmperevolvere</id>
+    <name>Filmperevolvere</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmperevolvere.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>1</version>
+    <adult>false</adult>
+    <date>24/02/2017</date>
+    <changes>First Release</changes>
+    <categories>
+        <category>movie</category>
+    </categories>
+</channel>
+
 <channel>
     <id>filmontv</id>
     <name>Oggi in TV</name>
@@ -1238,6 +1254,19 @@
         <category>Didattica</category>
     </categories>
 </channel>
+
+<channel>
+    <id>pyaes</id>
+    <name>pyaes</name>
+    <language>es</language>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/pyaes.py</update_url>
+    <active>true</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>1</version>
+    <adult>false</adult>
+    <date>24/02/2017</date>
+    <changes>Fix For Channel "ilmperevolvere"</changes>
+</channel>    
 
 <channel>
     <id>ricettevideo</id>
