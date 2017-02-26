@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://animevision.altervista.org"
+host = "http://www.animevision.it"
 
 def isGeneric():
     return True
