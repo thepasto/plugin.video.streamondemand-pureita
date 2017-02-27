@@ -1,3 +1,11 @@
+5.4.1
+-Fix and Update Servers
+-Fix and Update Channels
+-Minor bug Fix
+-Update Menu Skyn
+-Update Ricerca Globale
+-Various Fix and Update
+
 5.4.0
 -Temporary Fix Update server
 
