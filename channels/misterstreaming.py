@@ -162,7 +162,7 @@ def peliculas_tv(item):
 
     # Descarga la pagina
     data = scrapertools.anti_cloudflare(item.url, headers)
-    bloque = scrapertools.get_match(data, '<div id="text-2" class="widget widget_text">(.*?)</div></div><div class="widgetwrap">')
+    bloque = scrapertools.get_match(data, '<div id="text-2" class="widget widget_text">(.*?)<div id="footerwrap">')
 
     # Extrae las entradas (carpetas)
     patron = '<a href="(.*?)">(.*?)</a>'
