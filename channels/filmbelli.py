@@ -34,7 +34,7 @@ def mainlist(item):
     itemlist =[]
 
     itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR yellow]Novità[/COLOR]"       , url=host                 , thumbnail=NovitaThumbnail, fanart=FilmFanart ))
-    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]Film al Cinema[/COLOR]", url=host+"/genere/cinema", thumbnail=NovitaThumbnail, fanart=FilmFanart ))
+    itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]Film al Cinema[/COLOR]", url=host+"/genere/cinema", thumbnail=CinemaThumbnail, fanart=FilmFanart ))
     itemlist.append(Item(channel=__channel__, action="genere", title="[COLOR azure]Genere[/COLOR]"       , url=host                  , thumbnail=GenereThumbnail, fanart=FilmFanart ))
     itemlist.append(Item(channel=__channel__, action="search", title="[COLOR orange]Cerca..[/COLOR]"      ,                            thumbnail=CercaThumbnail , fanart=FilmFanart))
 
@@ -49,7 +49,7 @@ def genere(item):
     patron ='<a href="(.*?)">(.*?)</a>'
     for scrapedurl, scrapedtitle in scrapedSingle(item.url, '<div class="tag_cloud_post_tag">(.*?)</div>',patron):
         log("genere", "title=[" + scrapedtitle + "] url=[" + scrapedurl + "]")
-        itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]"+ scrapedtitle+"[/COLOR]", url=scrapedurl,thumbnail=NovitaThumbnail, fanart=FilmFanart))
+        itemlist.append(Item(channel=__channel__, action="elenco", title="[COLOR azure]"+ scrapedtitle+"[/COLOR]", url=scrapedurl,thumbnail=GenereThumbnail, fanart=FilmFanart))
 
     return itemlist
 #===========================================================================================================================================
@@ -144,7 +144,8 @@ def HomePage(item):
 #=================================================================
 # riferimenti di servizio
 #---------------------------------------------------------------------------------------------------------------------------------
-NovitaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
+NovitaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
+CinemaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
 GenereThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
 FilmFanart="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 CercaThumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
