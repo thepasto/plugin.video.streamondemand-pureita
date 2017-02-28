@@ -359,7 +359,7 @@ def episodios(item):
 def episodios_serie(item):
     def load_episodios(html, item, itemlist, lang_title):
         # for data in scrapertools.decodeHtmlentities(html).splitlines():
-        patron = '((?:.*?<a rel="nofollow" href=".*?"[^>]+>.*?<\/a>)+)'
+        patron = '((?:.*?<a href=".*?"[^=]+="_blank">.*?<\/a>)+)'
         matches = re.compile(patron).findall(html)
         for data in matches:
             # Extrae las entradas
@@ -546,7 +546,7 @@ def findvid_serie(item):
     # Descarga la página
     data = item.url
 
-    patron = '<a rel="nofollow" href="([^"]+)"[^>]+>(.*?)</a>'
+    patron = '<a href="([^"]+)"[^=]+="_blank">(.*?)</a>'
     # Extrae las entradas
     matches = re.compile(patron, re.DOTALL).finditer(data)
     for match in matches:
