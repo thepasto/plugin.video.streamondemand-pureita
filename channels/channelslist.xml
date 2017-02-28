@@ -304,10 +304,10 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>47</version>
+    <version>48</version>
     <adult>false</adult>
-    <date>23/02/2017</date>
-    <changes>Update</changes>
+    <date>27/02/2017</date>
+    <changes>Fix Serie TV</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
