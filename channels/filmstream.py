@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://film-stream.info"
+host = "http://film-stream.eu"
 
 
 def isGeneric():
@@ -54,12 +54,12 @@ def mainlist(item):
                      action="peliculas_tv",
                      url="%s/category/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                #Item(channel=__channel__,
-                #     title="[COLOR azure]Aggiornamento Serie TV[/COLOR]",
-                #     extra="serie",
-                #     action="aggiornamenti",
-                #     url="%s/serietv/" % host,
-                #     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Aggiornamento Serie TV[/COLOR]",
+                     extra="serie",
+                     action="aggiornamenti",
+                     url="%s/serietv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
@@ -116,7 +116,6 @@ def search(item, texto):
         return []
 
 
-# FATTO IO
 
 def aggiornamenti(item):
     logger.info("streamondemand.filmstream aggiornamenti")
@@ -124,7 +123,7 @@ def aggiornamenti(item):
     Day_List = []
     starts = []
     # Descarga la pagina
-    data = scrapertools.cache_page("http://film-stream.cc/serietv/")
+    data = scrapertools.cache_page("http://film-stream.eu/serietv/")
 
     # Extrae las entradas (carpetas)
 
@@ -155,7 +154,7 @@ def aggiornamenti(item):
                  title="[COLOR yellow]" + ToDay + "[/COLOR]",
                  folder=True)),
 
-        patron = '<p>[^<]{,10} <a href="http://film-stream.cc/[^<]+'
+        patron = '<p>[^<]{,10} <a href="http://film-stream.eu/[^<]+'
         matches = re.compile(patron, re.IGNORECASE).finditer(html)
         lista = list(matches)
 
