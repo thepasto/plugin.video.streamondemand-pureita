@@ -56,7 +56,7 @@
     <!-- app version -->
     <control type="label">
       <posx>425</posx><posy>650</posy>
-      <width>500</width><height>34</height>
+      <width>453</width><height>34</height>
       <font>font10_title</font>
       <textcolor>FFCCCCCC</textcolor>
       <align>right</align>
