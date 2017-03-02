@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureota.- XBMC Plugin
+# streamondemand-pureita.- XBMC Plugin
 # Canale vediserie - based on seriehd channel
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
