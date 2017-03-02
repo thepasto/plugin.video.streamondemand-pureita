@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para vediserie - based on seriehd channel
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# streamondemand-pureota.- XBMC Plugin
+# Canale vediserie - based on seriehd channel
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
 import re
 import sys
