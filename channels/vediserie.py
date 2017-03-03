@@ -44,7 +44,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="fichas",
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Settimanali[/COLOR]",
-                     url="%s/aggiornamenti-serie-tv/" % host,
+                     url="%s/page/2/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="list_a_z",
@@ -99,7 +99,7 @@ def fichas(item):
     logger.info("[vediserie.py] fichas")
     itemlist = []
 
-    data = anti_cloudflare(item.url)
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
     # ------------------------------------------------
     cookies = ""
@@ -150,15 +150,15 @@ def fichas(item):
                     show=scrapedtitle,
                     thumbnail=scrapedthumbnail))
 
-    patron = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
+    patron = '<span class=\'current\'>[^<]+</span><a class="page larger" href="(.*?)">'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
-                Item(channel=__channel__,
-                     action="fichas",
-                     title="[COLOR orange]Successivo>>[/COLOR]",
-                     url=next_page,
-					 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+            Item(channel=__channel__,
+                 action="fichas",
+                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
@@ -183,30 +183,30 @@ def episodios(item):
         if len(episode) == 1: episode = "0" + episode
         title = season + "x" + episode
         itemlist.append(
-                Item(channel=__channel__,
-                     action="findvid_serie",
-                     title=title,
-                     url=item.url,
-                     thumbnail=item.thumbnail,
-                     extra=url,
-                     fulltitle=item.fulltitle,
-                     show=item.show))
+            Item(channel=__channel__,
+                 action="findvid_serie",
+                 title=title,
+                 url=item.url,
+                 thumbnail=item.thumbnail,
+                 extra=url,
+                 fulltitle=item.fulltitle,
+                 show=item.show))
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
-                Item(channel=__channel__,
-                     title=item.title,
-                     url=item.url,
-                     action="add_serie_to_library",
-                     extra="episodios",
-                     show=item.show))
+            Item(channel=__channel__,
+                 title=item.title,
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
         itemlist.append(
-                Item(channel=item.channel,
-                     title="Scarica tutti gli episodi della serie",
-                     url=item.url,
-                     action="download_all_episodes",
-                     extra="episodios",
-                     show=item.show))
+            Item(channel=item.channel,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 
