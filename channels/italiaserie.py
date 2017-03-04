@@ -145,24 +145,7 @@ def lista(item):
                  folder=True))
 
 
-    # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="(.*?)">'
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
-                 folder=True))
 
     return itemlist
 
