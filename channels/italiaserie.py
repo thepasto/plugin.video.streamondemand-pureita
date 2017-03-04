@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para piratestreaming
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# streamondemand-pureita.- XBMC Plugin
+# Canale italiaserie
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -42,9 +42,9 @@ def mainlist(item):
                      url="%s/genere/netflix/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 #Item(channel=__channel__,
-                     #title="[COLOR azure]Serie TV -[/COLOR][COLOR orange] Top 10[/COLOR]",
+                     #title="[COLOR azure]Serie TV -[COLOR orange] Top 10[/COLOR]",
                      #action="peliculas",
-                     #url="%s/category/anime-e-cartoon/" % host,
+                     #url="%s/top-10/" % host,
                      #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Lista Completa[/COLOR]",
