@@ -32,25 +32,25 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.italiaserie mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Aggiornamenti Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV -[COLOR orange] Aggiornamenti[/COLOR]",
                      action="peliculas",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV -[/COLOR][COLOR orange] Popolari[/COLOR]",
                      action="peliculas",
-                     url="%s/category/serie-tv/" % host,
+                     url="%s/genere/netflix/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Anime e Cartoon[/COLOR]",
-                     action="peliculas",
-                     url="%s/category/anime-e-cartoon/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
+                #Item(channel=__channel__,
+                     #title="[COLOR azure]Serie TV -[/COLOR][COLOR orange] Top 10[/COLOR]",
+                     #action="peliculas",
+                     #url="%s/category/anime-e-cartoon/" % host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Lista Completa[/COLOR]",
                      action="lista",
                      url="%s/lista-completa/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_lista_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -91,7 +91,7 @@ def peliculas(item):
                  folder=True), tipo='tv'))
 
     # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="(.*?)">Next'
+    patronvideos = '<a class="next page-numbers" href="(.*?)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -144,6 +144,26 @@ def lista(item):
                  plot=scrapedplot,
                  folder=True))
 
+
+    # Extrae el paginador
+    patronvideos = '<a class="next page-numbers" href="(.*?)">'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 folder=True))
+
     return itemlist
 
 
@@ -151,7 +171,7 @@ def anime(item):
     itemlist = []
     data = scrapertools.cache_page(item.url)
 
-    patron = '</h2><ul><li><strong>Categoria:</strong>(.*?)</ul></li><li>'
+
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<li><a href="([^"]+)" title="([^"]+)">.*?</a></li>'
