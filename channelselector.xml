@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>171</tag>
-	<date>04/03/2017</date>
-	<changes>Disabled Channel</changes>
+	<tag>172</tag>
+	<date>05/03/2017</date>
+	<changes>Fix category Film</changes>
 </version>
