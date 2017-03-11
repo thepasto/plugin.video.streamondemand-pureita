@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand 5
+# streamondemand-pureita
 # Copyright 2015 tvalacarta@gmail.com
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
