@@ -90,7 +90,7 @@ def mainlist(item):
 
 
 def peliculas(item):
-    logger.info("[cineblog01.py] mainlist")
+    logger.info("[cineblog01.py] peliculas")
     itemlist = []
 
     if item.url == "":
@@ -117,6 +117,7 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
+                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title=scrapedtitle,
@@ -185,7 +186,7 @@ def menugeneros(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  extra=item.extra,
                  plot=scrapedplot))
 
@@ -193,7 +194,7 @@ def menugeneros(item):
 
 
 def menuhd(item):
-    logger.info("[cineblog01.py] menugeneros")
+    logger.info("[cineblog01.py] menuhd")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers)
@@ -218,7 +219,7 @@ def menuhd(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png",
                  extra=item.extra,
                  plot=scrapedplot))
 
@@ -251,7 +252,7 @@ def menuanyos(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  extra=item.extra,
                  plot=scrapedplot))
 
@@ -280,7 +281,7 @@ def search(item, texto):
 
 
 def listserie(item):
-    logger.info("[cineblog01.py] mainlist")
+    logger.info("[cineblog01.py] listaserie")
     itemlist = []
 
     # Descarga la página
@@ -337,16 +338,17 @@ def episodios(item):
 
     if item.extra == 'serie':
         itemlist.extend(episodios_serie(item))
+
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title,
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios" + "###" + item.extra,
                  show=item.show))
         itemlist.append(
-            Item(channel=item.channel,
+            Item(channel=__channel__,
                  title="Scarica tutti gli episodi della serie",
                  url=item.url,
                  action="download_all_episodes",
@@ -370,6 +372,7 @@ def episodios_serie(item):
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos",
+                         contentType="episode",
                          title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
                          url=data,
                          thumbnail=item.thumbnail,
@@ -411,7 +414,7 @@ def episodios_serie(item):
         i += 1
 
     if len(itemlist) == 0:
-        patron = r'<div class="sp-head(?: unfolded)?" title="Expand">([^<]+)</div>\s*<div class="sp-body(?: folded)?">(.*?)<div class="spdiv">\[chiudi\]</div>'
+        patron = r'<div class="sp-head(?: unfolded)?" title="Expand">([^<]+)</div>\s*<div class="sp-body(?: folded)?">(.*?)<div class="spdiv">\[collapse\]</div>'
         matches = re.compile(patron, re.DOTALL).findall(data)
         for lang_title, match in matches:
             lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
@@ -436,7 +439,7 @@ def findvideos(item):
 
 
 def findvid_film(item):
-    logger.info("[cineblog01.py] findvideos")
+    logger.info("[cineblog01.py] findvid_film")
 
     itemlist = []
 
@@ -539,7 +542,7 @@ def findvid_film(item):
 
 
 def findvid_serie(item):
-    logger.info("[cineblog01.py] findvideos")
+    logger.info("[cineblog01.py] findvid_serie")
 
     itemlist = []
 
@@ -557,8 +560,7 @@ def findvid_serie(item):
             Item(channel=__channel__,
                  action="play",
                  title=title,
-                 # url=scrapedurl,
-                 url=scrapedurl.split('/')[-1].decode('base64'),
+                 url=scrapedurl,
                  fulltitle=item.fulltitle,
                  show=item.show,
                  folder=False))
@@ -570,9 +572,9 @@ def play(item):
     logger.info("[cineblog01.py] play")
 
     if '/goto/' in item.url:
-        item.url = scrapertools.get_header_from_response(item.url, header_to_get="Location")
+        item.url = item.url.split('/goto/')[-1].decode('base64')
 
-    #item.url = item.url.replace('http://cineblog01.uno', 'http://k4pp4.pw')
+    item.url = item.url.replace('http://cineblog01.uno', 'http://k4pp4.pw')
 
     logger.debug("##############################################################")
     if "go.php" in item.url:
@@ -586,7 +588,7 @@ def play(item):
                 data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
             except IndexError:
                 data = scrapertools.get_header_from_response(item.url, headers=headers, header_to_get="Location")
-        if 'vcrypt' in data:
+        while 'vcrypt' in data:
             data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
         logger.debug("##### play go.php data ##\n%s\n##" % data)
     elif "/link/" in item.url:
@@ -598,10 +600,10 @@ def play(item):
             data = jsunpack.unpack(data)
             logger.debug("##### play /link/ unpack ##\n%s\n##" % data)
         except IndexError:
-            logger.debug("##### The content is yet unpacked")
+            logger.debug("##### The content is yet unpacked ##\n%s\n##" % data)
 
-        data = scrapertools.get_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
-        if 'vcrypt' in data:
+        data = scrapertools.find_single_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
+        while 'vcrypt' in data:
             data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
         logger.debug("##### play /link/ data ##\n%s\n##" % data)
     else:
