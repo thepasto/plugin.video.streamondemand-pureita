@@ -32,25 +32,29 @@ host = "http://www.vediserie.com"
 def isGeneric():
     return True
 
-
 def mainlist(item):
     logger.info("[vediserie.py] mainlist")
 
     itemlist = [Item(channel=__channel__,
                      action="fichas",
-                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Odierni[/COLOR]",
+                     title="[COLOR azure]Serie TV [/COLOR]",
+                     url="%s/category/serie-tv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+                Item(channel=__channel__,
+                     action="fichas",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Odieni[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      action="fichas",
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Settimanali[/COLOR]",
-                     url="%s/page/2/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
-                Item(channel=__channel__,
-                     action="list_a_z",
-                     title="[COLOR azure]Serie TV - [COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
-                     url="%s/lista-completa-serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
+                     url="%s/aggiornamenti-serie-tv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),					 
+                #Item(channel=__channel__,
+                     #action="list_a_z",
+                     #title="[COLOR azure]Serie TV - [COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
+                     #url="%s/lista-completa-serie-tv/" % host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -75,24 +79,24 @@ def search(item, texto):
         return []
 
 
-def list_a_z(item):
-    logger.info("[vediserie.py] ordine alfabetico")
-    itemlist = []
+#def list_a_z(item):
+    #logger.info("[vediserie.py] ordine alfabetico")
+    #itemlist = []
 
-    data = anti_cloudflare(item.url)
+    #data = anti_cloudflare(item.url)
 
-    patron = '<li><a href="([^"]+)" title="([^"]+)">.*?</a></li>'
+    #patron = '<li><a href="([^"]+)" title="([^"]+)">.*?</a></li>'
 
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    #matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle in matches:
-        itemlist.append(
-                Item(channel=__channel__,
-                     action="episodios",
-                     title=scrapedtitle,
-                     url=scrapedurl))
+    #for scrapedurl, scrapedtitle in matches:
+        #itemlist.append(
+                #Item(channel=__channel__,
+                     #action="episodios",
+                     #title=scrapedtitle,
+                     #url=scrapedurl))
 
-    return itemlist
+    #return itemlist
 
 
 def fichas(item):
