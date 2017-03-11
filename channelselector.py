@@ -350,7 +350,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Tenente Colombo Streaming[/COLOR]"        , channel="tenentecolombo"       , language="IT"    , category="S"       , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]Toonitalia[/COLOR]"        , channel="toonitalia"       , language="IT"    , category="A"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]UMSFunSub[/COLOR]"      , channel="umsfunsub"           , language="IT"    , category="A"   , type="generic"))
-    #itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="B,S"       , type="generic" ))
+    itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="B,S"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]VideotecaDiClasse[/COLOR]"        , channel="videotecadiclasse"       , language="IT"    , category="F"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]Wstreaming[/COLOR]"        , channel="wstreaming"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic"))
