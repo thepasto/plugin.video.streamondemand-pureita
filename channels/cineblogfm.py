@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para piratestreaming
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# Streamondemand-PureITA (Son of Pelisalacarta-UI).- XBMC Plugin
+# Channel for "Cineblog01.blog".
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 #------------------------------------------------------------
 import urlparse
 import urllib2
@@ -13,7 +13,7 @@ from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
-from servers import servertools
+from core import servertools
 
 __channel__ = "cineblogfm"
 __category__ = "F,S"
@@ -21,7 +21,7 @@ __type__ = "generic"
 __title__ = "CineBlog01.FM"
 __language__ = "IT"
 
-sito="https://www.cineblog01.tube/""
+sito="https://www.cineblog01.blog/"
 
 DEBUG = config.get_setting("debug")
 
@@ -59,7 +59,7 @@ def categorias(item):
     for url,titulo in matches:
         scrapedtitle = titulo
         scrapedurl = urlparse.urljoin(item.url,url)
-        scrapedthumbnail = ""
+        scrapedthumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
@@ -84,7 +84,7 @@ def catpays(item):
     for url,titulo in matches:
         scrapedtitle = titulo
         scrapedurl = urlparse.urljoin(item.url,url)
-        scrapedthumbnail = ""
+        scrapedthumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country_P.png"
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="peliculas" ,title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, folder=True ))
@@ -109,7 +109,7 @@ def catyear(item):
     for url,titulo in matches:
         scrapedtitle = titulo
         scrapedurl = urlparse.urljoin(item.url,url)
-        scrapedthumbnail = ""
+        scrapedthumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, folder=True ))
@@ -118,14 +118,14 @@ def catyear(item):
 
 def search(item,texto):
     logger.info("[cineblogfm.py] "+item.url+" search "+texto)
-    item.url = "http://www.cineblog01.fm/xfsearch/" + texto
+    item.url = "http://www.cineblog01.blog/xfsearch/" + texto
     try:
 
         if item.extra == "serie":
-            item.url = "http://www.cineblog01.fm/xfsearch/" + texto
+            item.url = "http://www.cineblog01.blog/xfsearch/" + texto
             return serie_tv(item)
         else:
-            item.url = "http://www.cineblog01.fm/xfsearch/" + texto
+            item.url = "http://www.cineblog01.blog/xfsearch/" + texto
             return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -160,7 +160,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png", folder=True) )
 
     return itemlist
 
@@ -190,7 +190,7 @@ def serie_tv(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serie_tv", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serie_tv", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png", folder=True) )
 
     return itemlist
 
