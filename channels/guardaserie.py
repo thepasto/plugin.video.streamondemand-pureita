@@ -216,7 +216,7 @@ def cartoni(item):
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  show=scrapedtitle,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_cartoons_P.png"), tipo='tv'))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/cartoons_P.png"), tipo='tv'))
 
     return itemlist
 
