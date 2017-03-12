@@ -4,6 +4,7 @@
 # Channel for "Cineblog01.blog".
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 #------------------------------------------------------------
+
 import urlparse
 import urllib2
 import re
@@ -127,7 +128,7 @@ def search(item,texto):
         else:
             item.url = "http://www.cineblog01.blog/xfsearch/" + texto
             return peliculas(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    # The exception is caught, so as not to interrupt the global searcher if a channel fails
     except:
         import sys
         for line in sys.exc_info():
@@ -138,10 +139,10 @@ def peliculas(item):
     logger.info("streamondemand.cineblogfm peliculas")
     itemlist = []
 
-    # Descarga la pagina
+    # Download the page
     data = scrapertools.cache_page(item.url)
 
-    # Extrae las entradas (carpetas)
+    # Extract the entradas (carpetas)
     patron = '<div class="short-story">\s*'
     patron += '<a href="(.*?)" title="(.*?)">\s*'
     patron += '<img.*?:url\((.*?)\)'
@@ -153,7 +154,7 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
-    # Extrae el paginador
+    # Extract the paginador
     patronvideos  = '<span class="nav_ext">...</span> <a href=".*?">.*?</a> <a href="(.*?)">Avanti</a></div></div>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
@@ -168,10 +169,10 @@ def serie_tv(item):
     logger.info("streamondemand.cineblogfm peliculas")
     itemlist = []
 
-    # Descarga la pagina
+    # Download the page
     data = scrapertools.cache_page(item.url)
 
-    # Extrae las entradas (carpetas)
+    # Extract the entries (carpetas)
     patron = '<div class="short-story">\s*'
     patron += '<a href="(.*?)" title="(.*?)">\s*'
     patron += '<img.*?:url\((.*?)\)'
@@ -183,7 +184,7 @@ def serie_tv(item):
         itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
-    # Extrae el paginador
+    # Extract the paginador
     patronvideos  = '<span class="nav_ext">...</span> <a href=".*?">.*?</a> <a href="(.*?)">Avanti</a></div></div>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
@@ -199,14 +200,14 @@ def episodios( item ):
 
     itemlist = []
 
-    ## Descarga la página
+    ## Download the page
     data = scrapertools.cache_page( item.url )
 
     plot = scrapertools.htmlclean(
         scrapertools.get_match( data, '</span></h1></div>(.*?)<td class="full-right">' )
     ).strip()
 
-    ## Extrae las datos - Episodios
+    ## Extract the data - Episodios
     patron = '<br />(\d+x\d+).*?href="//ads.ad-center.com/[^<]+</a>(.*?)<a href="//ads.ad-center.com/[^<]+</a>'
     matches = re.compile( patron, re.DOTALL ).findall( data )
     if len( matches ) == 0:
@@ -215,7 +216,7 @@ def episodios( item ):
 
     print "##### episodios matches ## %s ##" % matches
 
-    ## Extrae las datos - sub ITA/ITA
+    ## Extract the data - sub ITA/ITA
     patron = '<b>.*?STAGIONE.*?(sub|ITA).*?</b>'
     lang = re.compile( patron, re.IGNORECASE ).findall( data )
 
@@ -245,9 +246,9 @@ def findvid_series( item ):
 
     itemlist = []
 
-    ## Extrae las datos
+    ## Extract the data
     if "|" not in item.url:
-        ## Descarga la página
+        ## Download the page
         data = scrapertools.cache_page( item.url)
 
         sources = scrapertools.get_match( data, '(<noindex> <div class="video-player-plugin">.*?</noindex>)')
@@ -272,7 +273,7 @@ def findvid_series( item ):
 def play( item ):
     logger.info( "[cineblogfm.py] play" )
 
-    ## Sólo es necesario la url
+    ## You only need the url
     data = item.url
 
     itemlist = servertools.find_video_items( data=data )
