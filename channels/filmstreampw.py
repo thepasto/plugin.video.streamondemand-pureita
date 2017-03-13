@@ -25,7 +25,7 @@ headers = [
     ['Accept-Encoding', 'gzip, deflate']
 ]
 
-host = 'http://filmstreamita.com'
+host = 'http://beststreaming.info/'
 
 DEBUG = config.get_setting("debug")
 
