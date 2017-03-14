@@ -13,9 +13,9 @@ import xbmc
 from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from servers import adfly
-from core import servertools
 
 __channel__ = "animeforce"
 __category__ = "A"
@@ -28,7 +28,7 @@ DEBUG = config.get_setting("debug")
 host = "http://animeforce.org"
 
 headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0'],
     ['Accept-Encoding', 'gzip, deflate'],
     ['Referer', host]
 ]
@@ -94,7 +94,8 @@ def episodios(item):
         scrapedtitle = '[COLOR azure][B]' + scrapedtitle + '[/B][/COLOR]'
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideo",
+                 action="findvideos",
+                 contentType="episode",
                  title=scrapedtitle,
                  url=urlparse.urljoin(host, scrapedurl),
                  fulltitle=scrapedtitle,
@@ -107,13 +108,13 @@ def episodios(item):
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title="Aggiungi " + item.title + " alla libreria",
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios",
                  show=item.show))
         itemlist.append(
-            Item(channel=item.channel,
+            Item(channel=__channel__,
                  title="Scarica tutti gli episodi della serie",
                  url=item.url,
                  action="download_all_episodes",
@@ -126,18 +127,30 @@ def episodios(item):
 # ==================================================================
 
 # -----------------------------------------------------------------
-def findvideo(item):
+def findvideos(item):
     logger.info("streamondemand.animeinstreaming play")
 
     itemlist = []
 
     url = item.url
-    if '.ly' in item.url:
-        url = adfly.get_long_url(item.url)
+    if 'adf.ly' in url:
+        url = adfly.get_long_url(url)
+    elif 'bit.ly' in url:
+        url = scrapertools.getLocationHeaderFromResponse(url)
 
     if 'animeforce' in url:
-        url = url.split('&')[0]
         headers.append(['Referer', item.url])
+        data = scrapertools.cache_page(url, headers=headers)
+        itemlist.extend(servertools.find_video_items(data=data))
+
+        for videoitem in itemlist:
+            videoitem.title = item.title + videoitem.title
+            videoitem.fulltitle = item.fulltitle
+            videoitem.show = item.show
+            videoitem.thumbnail = item.thumbnail
+            videoitem.channel = __channel__
+
+        url = url.split('&')[0]
         data = scrapertools.cache_page(url, headers=headers)
         patron = """<source\s*src=(?:"|')([^"']+?)(?:"|')\s*type=(?:"|')video/mp4(?:"|')>"""
         matches = re.compile(patron, re.DOTALL).findall(data)
@@ -206,7 +219,7 @@ def log(funzione="", stringa="", canale=__channel__):
 
 # -----------------------------------------------------------------
 def HomePage(item):
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand)")
 
 
 # =================================================================
