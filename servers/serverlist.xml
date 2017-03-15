@@ -841,8 +841,8 @@
     <id>rapidvideo</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/rapidvideo.py</update_url>
     <active>true</active>
-    <version>3</version>
-    <date>13/03/2017</date>
+    <version>4</version>
+    <date>15/03/2017</date>
     <changes>Update</changes>
 </server>
 
@@ -850,8 +850,8 @@
     <id>rapidvideocom</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/rapidvideocom.py</update_url>
     <active>true</active>
-    <version>2</version>
-    <date>13/03/2017</date>
+    <version>3</version>
+    <date>15/03/2017</date>
     <changes>Update</changes>
 </server>
 
