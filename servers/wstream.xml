@@ -2,12 +2,12 @@
 <server>
 	<active>true</active>
 	<changes>Versión incial</changes>
-	<date>25/03/2016</date>
+	<date>18/03/2017</date>
 	<free>true</free>
 	<id>wstream</id>
 	<name>wstream</name>
 	<premium></premium>
 	<thumbnail></thumbnail>
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/servers/</update_url>
-	<version>1</version>
+	<version>2</version>
 </server>
