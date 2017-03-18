@@ -751,9 +751,9 @@
     <id>onefichier</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/onefichier.py</update_url>
     <active>true</active>
-    <version>2</version>
-    <date>17/11/2016</date>
-    <changes>Prima versione</changes>
+    <version>3</version>
+    <date>18/03/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
@@ -976,9 +976,9 @@
     <id>speedvideo</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/speedvideo.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>10/10/2016</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>18/03/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
