@@ -1256,8 +1256,8 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/videostoring.py</update_url>
     <active>true</active>
     <version>1</version>
-    <date>10/10/2016/date>
-    <changes>Prima versione</changes>
+    <date>10/10/2016</date>
+        <changes>Prima versione</changes>
 </server>
 
 <server>
@@ -1422,6 +1422,15 @@
     <changes>Prima versione</changes>
 </server>
 
+<server>
+    <id>wstream</id>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/wstream.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>18/01/2017</date>
+    <changes>Prima versione</changes>
+</server>    
+    
 <server>
     <id>xmltoplaylist</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/xmltoplaylist.py</update_url>
