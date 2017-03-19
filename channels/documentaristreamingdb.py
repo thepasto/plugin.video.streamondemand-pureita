@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para documentaristreamingdb
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# Streamondemand-PureITA.- XBMC Plugin
+# Canale documentaristreamingdb
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -38,12 +38,12 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Aggiornamenti[/COLOR]",
                      action="peliculas",
-                     url="%s/?searchtype=movie&post_type=movie&s=" % host,
+                     url="http://www.documentari-streaming-db.com/?searchtype=movie&post_type=movie&sl=lasts&s=",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
-                     url=host,
+                     url="http://www.documentari-streaming-db.com/documentari-streaming-database/",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -58,24 +58,30 @@ def categorias(item):
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data, '<ul role="menu" class="collapse collapse-1156">(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<ul role="menu" class="collapse collapse-1156 ">(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
-    patron = '<li[^>]+><a[^h]+href="([^"]+)">(.*?)</a>'
+    patron = '<a href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-        
+
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Documentari ", ""))
-        if scrapedtitle.startswith(("Tutte")):
+        if scrapedtitle.startswith("Tutte"):
             continue
-        
+
+        strip = scrapedtitle
+        strip = strip.replace(" ", "")
+        from unidecode import unidecode
+        strip = unidecode(strip)
+        url = host + "/?searchtype=movie&post_type=movie&sl=lasts&cat=" +  strip.encode("ascii").lower() + "&s="
+
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
+                 url=url,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
@@ -102,10 +108,10 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="movie-poster">\s*<img[^s]+src="(.*?)"[^=]+=[^=]+="(.*?)"[^>]+>\s*<a[^h]+href="(.*?)">'
+    patron = '<div class="movie-poster">\s*<img[^=]+=[^=]+=[^=]+="([^"]+)"[^>]+>\s*<a[^=]+=[^=]+="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedthumbnail, scrapedtitle, scrapedurl in matches:
+    for scrapedthumbnail, scrapedurl in matches:
         #html = scrapertools.cache_page(scrapedurl)
         #start = html.find("</div><h2>")
         #end = html.find("<p><strong>", start)
@@ -113,13 +119,14 @@ def peliculas(item):
         #scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         #scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Serie Documentari ", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Documentario ", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Documentari ", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("streaming", " "))
-        scrapedtitle = scrapedtitle.split('"')[0]
+        scrapedtitle = scrapedurl
+        scrapedtitle = scrapedtitle.replace(host, "")
+        scrapedtitle = scrapedtitle.replace("/", "")
+        scrapedtitle = scrapedtitle.replace("-streaming", "")
+        scrapedtitle = scrapedtitle.replace("-", " ")
+        scrapedtitle = scrapedtitle.title()
         if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+            "url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -138,10 +145,12 @@ def peliculas(item):
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
+        scrapedurl = scrapedurl.replace("&#038;", "&")
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
