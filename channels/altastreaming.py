@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para altastreaming
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# streamondemand-pureita.- XBMC Plugin
+# Canale "altastreaming".
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -128,6 +128,7 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
+                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -146,6 +147,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -197,6 +199,7 @@ def peliculas_tv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -229,10 +232,27 @@ def episodios(item):
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 contentType="episode",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
+
+    if config.get_library_support() and len(itemlist) != 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 title="Aggiungi alla libreria",
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
+        itemlist.append(
+            Item(channel=__channel__,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 
@@ -269,3 +289,5 @@ def findvideos(item):
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+
+#channel disabled
