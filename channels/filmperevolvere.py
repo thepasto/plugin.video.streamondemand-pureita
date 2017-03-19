@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para filmperevolvere
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# streamondemand-PureITA.- XBMC Plugin
+# Canale filmperevolvere
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -144,6 +144,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
