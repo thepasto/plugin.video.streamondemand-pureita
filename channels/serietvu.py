@@ -196,7 +196,7 @@ def episodi(item):
                  action="download_all_episodes",
                  extra="episodi",
                  show=item.show))
-            return itemlist
+    return itemlist
 
 # ================================================================================================================
 
