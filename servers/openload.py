@@ -8,7 +8,7 @@
 import re
 
 from core import config
-from core import httptools
+from servers import httptools
 from core import logger
 from core import scrapertools
 
