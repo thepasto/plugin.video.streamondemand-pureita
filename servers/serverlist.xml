@@ -1306,6 +1306,24 @@
 </server>
 
 <server>
+    <id>vidgg</id>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/vidgg.py</update_url>
+    <active>true</active>
+    <version>2</version>
+    <date>23/01/2017</date>
+    <changes>Prima versione</changes>
+</server>
+
+<server>
+    <id>vidlox</id>
+    <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/vidlox.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>23/01/2017</date>
+    <changes>Prima versione</changes>
+</server>
+
+<server>
     <id>vidhog</id>
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/servers/vidhog.py</update_url>
     <active>true</active>
