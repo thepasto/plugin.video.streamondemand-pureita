@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemad - XBMC Plugin
+# streamondemand-pureita - XBMC Plugin
 # Conector for openload.co
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
 import re
@@ -27,7 +27,7 @@ def test_video_exists(page_url):
     if 'We’re Sorry!' in data:
         data = httptools.downloadpage(page_url.replace("/embed/", "/f/"), headers=header, cookies=False).data
         if 'We’re Sorry!' in data:
-            return False, "[Openload] File inesistente" 
+            return False, "[Openload] File non trovato" 
 
     return True, ""
 
