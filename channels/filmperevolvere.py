@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-PureITA.- XBMC Plugin
-# Canale filmperevolvere
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# streamondemand.- XBMC Plugin
+# Canal para filmperevolvere
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -23,7 +23,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://filmperevolvere.ga"
+host = "http://filmperevolvere.byethost4.com"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0'],
@@ -54,6 +54,16 @@ def mainlist(item):
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Per Anno[/COLOR]",
+                     action="peranno",
+                     url="%s/film-list" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Lista completa[/COLOR]",
+                     action="listacompleta",
+                     url="%s/film-list" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/all_movies_P.png"),
+                Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      extra="movie",
@@ -79,45 +89,127 @@ def search(item, texto):
 def categorie(item):
     itemlist = []
 
-    #c = get_test_cookie(item.url)
-    #if c: headers.append(['Cookie', c])
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data, '<ul class="sub-menu">(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<h3>Categorie</h3>(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
-    patron = '<li.*?class=".*?"><a href="([^"]+)".*?>[^>]+>([^<]+)<[^>]+>[^>]+></li>'
+    patron = '<a href="(.*?)" >(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-        if "Serie TV" not in scrapedtitle: # Ha poche serie TV.
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="peliculas",
-                     title=scrapedtitle,
-                     url=scrapedurl,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
-                     folder=True))
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
 
     return itemlist
+
+def peranno(item):
+    logger.info("streamondemand.filmperevolvere peranno")
+    itemlist = []
+
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
+
+     # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+    bloque = scrapertools.get_match(data, '<ul class="scrolling">(.*?)</ul>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a class="ito" HREF="(.*?)">(.*?)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedyear in matches:
+        if DEBUG: logger.info(
+            "year=[" + scrapedyear + "], url=[" + scrapedurl + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title=scrapedyear,
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
+                 folder=True))
+
+    return itemlist
+
+def listacompleta(item):
+    logger.info("streamondemand.filmperevolvere listacompleta")
+    itemlist = []
+
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
+
+     # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+    bloque = scrapertools.get_match(data, '<div class="entry-content pagess">(.*?)</div>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href=\'(.*?)\'>([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedtitle = scrapedtitle.title()
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 plot=scrapedplot,
+                 thumbnail=scrapedthumbnail,
+                 folder=True), tipo='movie'))
+
+    # Extrae el paginador
+    patronvideos = '<link rel=\'next\' href=\'(.*?)\' />'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+    return itemlist
+    
 
 def peliculas(item):
     logger.info("streamondemand.filmperevolvere peliculas")
     itemlist = []
 
-    #c = get_test_cookie(item.url)
-    #if c: headers.append(['Cookie', c])
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class=".*?col-md-12">\s*<a href="([^"]+)" title="([^"]+)"><img.*?src="([^"]+)".*?>'
+    patron = '<a href="([^"]+)">\s*<div class="image">\s*<img src="([^"]+)" alt="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.title()
         if DEBUG: logger.info(
@@ -125,7 +217,6 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -135,7 +226,7 @@ def peliculas(item):
                  folder=True), tipo='movie'))
 
     # Extrae el paginador
-    patronvideos = 'rel=\'next\' href=\'(.*?)\' />'
+    patronvideos = '<link rel=\'next\' href=\'(.*?)\' />'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -156,11 +247,12 @@ def peliculas(item):
 
     return itemlist
 
+
 def findvideos(item):
     logger.info("streamondemand.filmperevolvere findvideos")
 
-    #c = get_test_cookie(item.url)
-    #if c: headers.append(['Cookie', c])
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
 
     # Descarga la página
     data = scrapertools.cache_page(item.url, headers=headers)
@@ -181,7 +273,7 @@ def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
-'''
+
 def get_test_cookie(url):
     data = scrapertools.cache_page(url, headers=headers)
     a = scrapertools.find_single_match(data, 'a=toNumbers\("([^"]+)"\)')
@@ -193,4 +285,3 @@ def get_test_cookie(url):
                 cookie = aes.AESModeOfOperationCBC(a.decode('hex'), iv=b.decode('hex')).decrypt(c.decode('hex'))
                 return '__test=%s' % cookie.encode('hex')
     return ''
-'''
