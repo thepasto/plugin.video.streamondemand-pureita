@@ -236,7 +236,7 @@ def update(params):
 def get_channel_remote_url(channel_name):
     _remote_channel_url_ = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
     if channel_name <> "channelselector":
-        _remote_channel_url_ = "https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/"
+        _remote_channel_url_ = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         _remote_channel_url_+= "channels/"
     remote_channel_url = _remote_channel_url_+channel_name+".py"
     remote_version_url = _remote_channel_url_+channel_name+".xml"
