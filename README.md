@@ -29,5 +29,6 @@ Zanzibar1982 (for editing channels and for adapting Pelisalacarta Classic to Str
 costaplus (keep up the good job!),                                                                                                    
 
 Chryses (for initial, raw, idea about auto-updates),                                                                                  
-...and anyone else supporting the project with their effort.                                                                                                                                                                                                                                                                                                                                                          
+
+...and anyone else supporting the project with their effort.                                                                                                                                                                                                                       
 Also refer to forum: http://www.mimediacenter.info/foro/viewforum.php?f=36
