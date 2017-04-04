@@ -1,3 +1,12 @@
+5.4.3
+-Various Fix and Update 
+-Fix "Update" after transition
+-Fix "Ricerca Globale"
+-Fix and Update Channels
+
+5.4.2
+-Transition from the old Github
+
 5.4.1
 -Fix and Update Servers
 -Fix and Update Channels
