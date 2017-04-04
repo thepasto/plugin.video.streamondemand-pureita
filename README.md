@@ -20,10 +20,9 @@ Special thanks to forum users:
 
 -DrZ3r0 (for being an Italian skilled developer, author of many important servers' files),                                             
 
--Raùl (for his native "general search" function we found here http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6654&p=24982#p24982      was very handy ),                                    
+-Raùl (for his native "general search" function we found here                                                                                http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6654&p=24982#p24982      was very handy ),                                    
 
--Zanzibar1982 (for editing channels and for adapting Pelisalacarta Classic to Streamondemand,
-              https://github.com/Zanzibar82/plugin.video.streamondemand),                                                             
+-Zanzibar1982 (for editing channels and for adapting Pelisalacarta Classic to Streamondemand                                                https://github.com/Zanzibar82/plugin.video.streamondemand),                                                             
 
 -costaplus (keep up the good job!),                                                                                                    
 
