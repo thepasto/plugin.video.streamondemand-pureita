@@ -28,9 +28,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/altadefinizioneclick.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>23</version>
+    <version>24</version>
     <adult>false</adult>
-    <date>03/02/2017</date>
+    <date>04/04/2017</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -846,9 +846,9 @@
     <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/hdgratis.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>19/12/2016</date>
+    <date>04/04/2017</date>
     <changes>Fix Host</changes>
     <categories>
         <category>movie</category>
