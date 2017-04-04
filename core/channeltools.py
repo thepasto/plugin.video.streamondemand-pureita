@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# tvalacarta - XBMC Plugin
+# streamondemand-pureita - XBMC Plugin
 #------------------------------------------------------------
 # channeltools
 # Herramientas para trabajar con canales

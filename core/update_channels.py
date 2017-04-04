@@ -15,7 +15,7 @@ DEBUG = config.get_setting("debug")
 
 UPDATE_URL_IDX, VERSION_IDX = xrange(0, 2)
 
-remote_url = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/"
+remote_url = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/"
 local_folder = os.path.join(config.get_runtime_path(), "channels")
 
 

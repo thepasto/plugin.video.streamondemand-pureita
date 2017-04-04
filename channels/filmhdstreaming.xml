@@ -11,7 +11,7 @@
        <thumbnail>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/filmhdstreaming.png</thumbnail>
        <bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/filmhdstreaming.png</bannermenu>
 
-       <update_url>https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/channels/filmhdstreaming.py/</update_url>
+       <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
        <version>03</version>
        <date>09/12/2016</date>
        <changes>Update</changes>

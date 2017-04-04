@@ -19,21 +19,21 @@ if thumbnail_type=="":
     thumbnail_type="2"
 logger.info("thumbnail_type="+thumbnail_type)
 if thumbnail_type=="0":
-    IMAGES_PATH = 'https://raw.githubusercontent.com/Fenice82/images/master/posters/'
+    IMAGES_PATH = 'https://raw.githubusercontent.com/orione7/Pelis_images/master/posters/'
 elif thumbnail_type=="1":
-    IMAGES_PATH = 'https://raw.githubusercontent.com/Fenice82/images/master/banners/'
+    IMAGES_PATH = 'https://raw.githubusercontent.com/orione7/Pelis_images/master/banners/'
 elif thumbnail_type=="2":
-    IMAGES_PATH = 'https://raw.githubusercontent.com/Fenice82/images/master/squares/'
+    IMAGES_PATH = 'https://raw.githubusercontent.com/orione7/Pelis_images/master/squares/'
 
 ## Installation path.
 ROOT_DIR = config.get_runtime_path()
 
 ## Remote path to download plugin.zip and version file.
-REMOTE_PATH = "https://github.com/Fenice82/plugin.video.streamondemand-pureita/archive/master.zip"
+REMOTE_PATH = "https://github.com/orione7/plugin.video.streamondemand-pureita/archive/master.zip"
 
 
 ## Full path of the remote file version.
-REMOTE_VERSION_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/version.xml"
+REMOTE_VERSION_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/version.xml"
 
 ## Full path of the local file version.
 LOCAL_VERSION_FILE = os.path.join( ROOT_DIR , "version.xml" )
@@ -49,38 +49,38 @@ try:
     logger.info("streamondemand-pureita.core.updater get_system_platform="+config.get_system_platform())
     if config.get_platform()=="kodi-isengard":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
     elif config.get_platform()=="kodi-helix":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
     elif config.get_platform()=="xbmceden":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
     elif config.get_platform()=="xbmcfrodo":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
     elif config.get_platform()=="xbmcgotham":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
     elif config.get_platform()=="xbmc":
         import xbmc
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = xbmc.translatePath( "special://home/plugins/video")
     elif config.get_platform()=="wiimc":
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = os.path.join(config.get_runtime_path(),"..")
     elif config.get_platform()=="rss":
-        REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+        REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
         DESTINATION_FOLDER = os.path.join(config.get_runtime_path(),"..")
 
 except:
     import xbmc
-    REMOTE_FILE = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+    REMOTE_FILE = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
     DESTINATION_FOLDER = xbmc.translatePath( "special://home/addons")
 
 def checkforupdates(plugin_mode=True):
@@ -206,7 +206,7 @@ def checkforupdates(plugin_mode=True):
 def update(params):
     # Descarga el ZIP
     logger.info("streamondemand-pureita.core.updater update")
-    remotefilename = "https://github.com/Fenice82/plugin.video.streamondemand-pureita/archive/master.zip"
+    remotefilename = "https://github.com/orione7/plugin.video.streamondemand-pureita/archive/master.zip"
     localfilename = LOCAL_FILE
     logger.info("streamondemand-pureita.core.updater remotefilename=%s" % remotefilename)
     logger.info("streamondemand-pureita.core.updater localfilename=%s" % localfilename)
@@ -234,9 +234,9 @@ def update(params):
     logger.info("streamondemand-pureita.core.updater ...fichero borrado")
 
 def get_channel_remote_url(channel_name):
-    _remote_channel_url_ = "https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/"
+    _remote_channel_url_ = "https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/"
     if channel_name <> "channelselector":
-        _remote_channel_url_ = "https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/"
+        _remote_channel_url_ = "https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/"
         _remote_channel_url_+= "channels/"
     remote_channel_url = _remote_channel_url_+channel_name+".py"
     remote_version_url = _remote_channel_url_+channel_name+".xml"

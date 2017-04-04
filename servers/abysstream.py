@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# StreamOnDemand - Kodi Plugin
+# StreamOnDemand-PureITA - Kodi Plugin
 # Server per abysstream.com
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # by DrZ3r0
