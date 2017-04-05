@@ -112,6 +112,7 @@ def elencoserieletter(item):
         Item(channel=__channel__,
              action="HomePage",
              title="[COLOR yellow]Torna Home[/COLOR]",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
              folder=True))
 
     if len(data['results']) == result_per_page:
@@ -321,6 +322,7 @@ def serietv(item):
         Item(channel=__channel__,
              action="HomePage",
              title="[COLOR yellow]Torna Home[/COLOR]",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
              folder=True))
 
     if len(data['results']) == result_per_page:
