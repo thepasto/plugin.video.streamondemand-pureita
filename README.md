@@ -1,15 +1,14 @@
 # Stream On Demand PureITA
-
 ![alt tag](https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/icon.png)
 
 
 Fork of Pelisalacarta-ui, fully translated and customized with only italian channels.
 
-Made for touch devices and thinked to have the same User Interface on all your KODI\Openelec installations and skins.
+Made for touch devices and thinked to have the same User Interface on all your Kodi, LibreElec, OpenElec installations and skins.
 
-Easily installable via Add-on manager on Kodi\Openelec, this version have self-updates enabled by default.
+Easily installable via Add-on manager on Kodi, LibreElec, OpenElec, this version have self-updates enabled by default.
 
-All the erotic channels were removed, KODI\Openelec repositories are full of add-on made to view this kind of contents.
+All the erotic channels were removed, Kodi, LibreElec, OpenElec repositories are full of add-on made to view this kind of contents.
 
 Special thanks to forum users:                                                                                                        
 
