@@ -297,7 +297,9 @@ def updateserietv(item):
     itemlist.append(
         Item(channel=__channel__,
              action="HomePage",
-             title="[COLOR yellow]Torna Home[/COLOR]"))
+             title="[COLOR yellow]Torna Home[/COLOR]",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+             folder=True))
 
     if len(data['results']) == result_per_page:
         end = int(scrapertools.find_single_match(item.url, r"&end=(\d+)"))
