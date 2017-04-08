@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para corsaronero
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -41,11 +41,12 @@ def mainlist(item):
                      title="[COLOR azure]Novità-Film .torrent stream[/COLOR]",
                      action="peliculas",
                      url="%s/cat/1" % host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     extra="torrent",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
@@ -115,7 +116,7 @@ def play(item):
 
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    patron = '<a class="forbtn magnet" target="_blank" href="(magnet[^"]+)" title="Magnet" ></a>'
+    patron = '<a class="forbtn magnet"[^h]+href="(magnet[^"]+)" title="Magnet" ></a>'
     link = scrapertools.find_single_match(data, patron)
 
     itemlist.append(
