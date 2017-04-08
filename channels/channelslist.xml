@@ -432,12 +432,13 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/corsaronero.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>8</version>
+    <version>9</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
+    <date>08/04/2017</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
+        <category>torrent</category>
     </categories>
 </channel>
 
