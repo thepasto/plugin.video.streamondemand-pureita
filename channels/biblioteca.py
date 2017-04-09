@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita-master - XBMC Plugin
+# streamondemand-pureita - XBMC Plugin
 # Ricerca  "Biblioteca" - Fix by Orione7
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
