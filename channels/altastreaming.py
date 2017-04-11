@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale "altastreaming".
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# streamondemand.- XBMC Plugin
+# Canal para altastreaming
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -22,10 +22,10 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.altastreaming.me/"
+host = "http://altastreaming.me"
 
 headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'],
     ['Accept-Encoding', 'gzip, deflate'],
     ['Referer', host]
 ]
@@ -115,7 +115,7 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<h3 class="fl-title"> <a href="([^"]+)"  title="([^"]+)">'
+    patron = '<h3 class="fl-title"> <a href="([^"]+)"[^t]+title="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
@@ -147,7 +147,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -168,7 +168,7 @@ def peliculas_tv(item):
     bloque = scrapertools.get_match(data, '<div class="container margin-block">(.*?)<footer class="footer">')
 
     # Extrae las entradas (carpetas)
-    patron = '<h3 class="fl-title"> <a href="([^"]+)"  title="([^"]+)">'
+    patron = '<h3 class="fl-title"> <a href="([^"]+)"[^t]+title="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).finditer(bloque)
 
     for match in matches:
@@ -199,7 +199,7 @@ def peliculas_tv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
