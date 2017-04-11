@@ -1,7 +1,7 @@
 5.4.3
 -Various Fix and Update 
 -Fix "Update" after transition
--Fix "Ricerca Globale"
+-Fix and Update "Ricerca Globale"
 -Fix and Update Channels
 
 5.4.2
