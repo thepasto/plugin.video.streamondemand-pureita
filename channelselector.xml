@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>179</tag>
-	<date>29/03/2017</date>
-	<changes>Update and fix Channels</changes>
+	<tag>180</tag>
+	<date>21/04/2017</date>
+	<changes>Disabled Channel</changes>
 </version>
