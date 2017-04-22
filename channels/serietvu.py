@@ -154,7 +154,7 @@ def lista_serie(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def episodios(item):
-    logger.info("[SerieTVU.py]==> episodi")
+    logger.info("[SerieTVU.py]==> episodis")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
