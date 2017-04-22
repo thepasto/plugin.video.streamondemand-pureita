@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canale per http://film-stream.cc
+# Canale per http://film-stream.biz
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
+
 import urlparse
 
 from core import config
@@ -22,7 +23,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://film-stream.eu"
+host = "http://film-stream.biz"
 
 
 def isGeneric():
@@ -54,12 +55,12 @@ def mainlist(item):
                      action="peliculas_tv",
                      url="%s/category/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Aggiornamento Serie TV[/COLOR]",
-                     extra="serie",
-                     action="aggiornamenti",
-                     url="%s/serietv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
+                #Item(channel=__channel__,
+                #     title="[COLOR azure]Aggiornamento Serie TV[/COLOR]",
+                #     extra="serie",
+                #     action="aggiornamenti",
+                #     url="%s/serietv/" % host,
+                #     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
@@ -116,6 +117,7 @@ def search(item, texto):
         return []
 
 
+# FATTO IO
 
 def aggiornamenti(item):
     logger.info("streamondemand.filmstream aggiornamenti")
@@ -123,7 +125,7 @@ def aggiornamenti(item):
     Day_List = []
     starts = []
     # Descarga la pagina
-    data = scrapertools.cache_page("http://film-stream.eu/serietv/")
+    data = scrapertools.cache_page("http://film-stream.cc/serietv/")
 
     # Extrae las entradas (carpetas)
 
@@ -154,7 +156,7 @@ def aggiornamenti(item):
                  title="[COLOR yellow]" + ToDay + "[/COLOR]",
                  folder=True)),
 
-        patron = '<p>[^<]{,10} <a href="http://film-stream.eu/[^<]+'
+        patron = '<p>[^<]{,10} <a href="http://film-stream.cc/[^<]+'
         matches = re.compile(patron, re.IGNORECASE).finditer(html)
         lista = list(matches)
 
@@ -208,6 +210,7 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
+                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -227,6 +230,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -290,6 +294,7 @@ def peliculas_tv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -321,6 +326,7 @@ def episodios(item):
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos",
+                         contentType="episode",
                          title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
                          url=data,
                          thumbnail=item.thumbnail,
@@ -328,7 +334,7 @@ def episodios(item):
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
 
-    logger.info("[filmsenzalimiti.py] episodios")
+    logger.info("streamondemand.filmstream episodios")
 
     itemlist = []
 
@@ -364,7 +370,7 @@ def episodios(item):
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title,
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios" + "###" + item.extra,
