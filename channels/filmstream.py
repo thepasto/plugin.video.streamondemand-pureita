@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canale per http://film-stream.biz
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# Canale  http://film-stream.biz
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 
