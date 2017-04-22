@@ -2,7 +2,7 @@
 <server>
 	<active>true</active>
 	<changes>Versión incial</changes>
-	<date>25/03/2016</date>
+	<date>22/04/2017</date>
 	<free>true</free>
 	<id>youwatch</id>
 	<name>youwatch</name>
@@ -10,6 +10,6 @@
 		<value>realdebrid</value>
 	</premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_youwatch.png</thumbnail>
-	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/servers/</update_url>
-	<version>1</version>
+	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/</update_url>
+	<version>2</version>
 </server>
