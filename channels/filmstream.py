@@ -33,7 +33,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.filmstream mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
+                     title="[COLOR azure]Ultimi Video Inseriti[/COLOR]",
                      extra="movie",
                      action="peliculas",
                      url=host,
