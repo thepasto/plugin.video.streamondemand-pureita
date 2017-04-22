@@ -117,7 +117,6 @@ def search(item, texto):
         return []
 
 
-# FATTO IO
 
 def aggiornamenti(item):
     logger.info("streamondemand.filmstream aggiornamenti")
