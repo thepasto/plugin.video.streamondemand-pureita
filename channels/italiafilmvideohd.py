@@ -58,7 +58,7 @@ def mainlist(item):
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png")]
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
