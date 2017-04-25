@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# streamondemand-PureITA.- XBMC Plugin
 # Canale per http://animeinstreaming.net/
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 
@@ -19,12 +19,12 @@ from core.item import Item
 __channel__ = "animeinstreaming"
 __category__ = "A"
 __type__ = "generic"
-__title__ = "AnimeInStreaming"
+__title__ = "animeitahd"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://animeinstreaming.net/"
+host = "http://animeitahd.org/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -46,34 +46,34 @@ def mainlist(item):
                      url=host,
                      thumbnail=AnimeThumbnail,
                      fanart=AnimeFanart),
-                Item(channel=__channel__,
-                     action="lista_anime_genere",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Genere[/COLOR]",
-                     url=host,
-                     thumbnail=CategoriaThumbnail,
-                     fanart=CategoriaFanart),
-                Item(channel=__channel__,
-                     action="lista_anime_anno",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Anno[/COLOR]",
-                     url=host,
-                     thumbnail=CategoriaThumbnail,
-                     fanart=CategoriaFanart),
+                #Item(channel=__channel__,
+                     #action="lista_anime_genere",
+                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Genere[/COLOR]",
+                     #url=host,
+                     #thumbnail=CategoriaThumbnail,
+                     #fanart=CategoriaFanart),
+                #Item(channel=__channel__,
+                     #action="lista_anime_anno",
+                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Anno[/COLOR]",
+                     #url=host,
+                     #thumbnail=CategoriaThumbnail,
+                     #fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="lista_anime_tutti",
                      title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
                      url=host + "lista-anime/",
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
-                Item(channel=__channel__,
-                     action="lista_anime_lettera",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista A-Z[/COLOR]",
-                     url=host,
-                     thumbnail=CategoriaThumbnail,
-                     fanart=CategoriaFanart),
+                #Item(channel=__channel__,
+                     #action="lista_anime_lettera",
+                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista A-Z[/COLOR]",
+                     #url=host,
+                     #thumbnail=CategoriaThumbnail,
+                     #fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR lime]Cerca...[/COLOR]",
-                     url="http://www.animeinstreaming.net/?s=",
+                     url="http://www.animeitahd.net/?s=",
                      thumbnail=CercaThumbnail,
                      fanart=CercaFanart)]
 
@@ -245,8 +245,8 @@ def lista_anime_lettera(item):
 
 # -----------------------------------------------------------------
 def search(item, texto):
-    log("lista_anime_categoria", "search")
-    item.url = item.url + texto
+    log("lista_anime", "search")
+    item.url = "http://animeitahd.org/?s=" + texto
 
     try:
         return lista_anime(item)
@@ -399,7 +399,7 @@ def episodios(item):
 
 # -----------------------------------------------------------------
 def findvideo(item):
-    logger.info("streamondemand.animeinstreaming play")
+    logger.info("streamondemand.animeitahd play")
 
     itemlist = []
 
