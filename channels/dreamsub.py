@@ -32,7 +32,6 @@ headers = [
 def isGeneric():
     return True
 
-
 def mainlist(item):
     logger.info("streamondemand.dreamsub mainlist")
     itemlist = [Item(channel=__channel__,
@@ -97,6 +96,7 @@ def serietv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -108,7 +108,6 @@ def serietv(item):
                  folder=True))
 
     return itemlist
-
 
 def HomePage(item):
     import xbmc
@@ -141,23 +140,21 @@ def episodios(item):
 
     for scrapedurl, title1, title2, title3  in matches:
         scrapedurl = host + scrapedurl
-        scrapedplot = ""
-        scrapedthumbnail = ""
         scrapedtitle = title1 + " " + title2 + title3
         scrapedtitle = scrapedtitle.replace("Download", "")
         scrapedtitle = scrapedtitle.replace("Streaming", "")
         scrapedtitle = scrapedtitle.replace("& ", "")
 
-        itemlist.append(infoSod(
+        itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 folder=True), tipo='tv'))
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
 
     return itemlist
 
