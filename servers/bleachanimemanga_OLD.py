@@ -8,7 +8,7 @@
 import re
 import urllib
 
-from lib import jsunpack
+from core import jsunpack
 from core import logger
 from core import scrapertools
 
@@ -34,7 +34,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         videourl = match
         logger.info(match)
         videourl = urllib.unquote(videourl)
-        videourl = videourl
+        videourl = 'http://www.bleachanimemanga.org/' + videourl
         video_urls.append( [ "[bleachanimemanga]" , videourl ] )
 
     for video_url in video_urls:
