@@ -1,4 +1,4 @@
-# Stream On Demand PureITA
+ Stream On Demand PureITA
 ![alt tag](https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/icon.png)
 
 
