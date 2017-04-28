@@ -5,15 +5,12 @@
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
-import time
-import urllib2
-import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "cb01anime"
 __category__ = "A"
@@ -23,14 +20,11 @@ __language__ = "IT"
 
 host = "http://www.cineblog01.cc"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
-
+headers = [['Upgrade-Insecure-Requests', '1'],
+           ['User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/53.0.2785.143 Chrome/53.0.2785.143 Safari/537.36'],
+           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
+           ['Accept-Encoding', 'gzip, deflate, sdch'],
+           ['Accept-Language', 'en-US,en;q=0.8']]
 
 DEBUG = config.get_setting("debug")
 
@@ -38,7 +32,8 @@ DEBUG = config.get_setting("debug")
 def isGeneric():
     return True
 
-#-----------------------------------------------------------------
+
+# -----------------------------------------------------------------
 def mainlist(item):
     logger.info("[cb01anime.py] mainlist")
 
@@ -66,32 +61,22 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Anime[/COLOR]",
-                     extra="cartoni",
+                     extra="anime",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
-#=================================================================
 
 
-#-----------------------------------------------------------------
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def novita(item):
     logger.info("[cb01anime.py] mainlist")
     itemlist = []
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers)
-
-    ## ------------------------------------------------
-    cookies = ""
-    matches = re.compile('(.cineblog01.cc.*?)\n', re.DOTALL).findall(config.get_cookie_data())
-    for cookie in matches:
-        name = cookie.split('\t')[5]
-        value = cookie.split('\t')[6]
-        cookies += name + "=" + value + ";"
-    headers.append(['Cookie', cookies[:-1]])
-    import urllib
-    _headers = urllib.urlencode(dict(headers))
-    ## ------------------------------------------------
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4"> <a.*?<img src="(.*?)".*?'
@@ -111,13 +96,13 @@ def novita(item):
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
         ## ------------------------------------------------
-        scrapedthumbnail += "|" + _headers
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         ## ------------------------------------------------				
 
         # Añade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
-                 action="listacompleta" if scrapedtitle == "Lista Alfabetica Completa Anime/Cartoon" else "episodi",
+                 action="listacompleta" if scrapedtitle == "Lista Alfabetica Completa Anime/Cartoon" else "episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title=scrapedtitle,
@@ -133,21 +118,24 @@ def novita(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
                  action="novita",
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
-                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
     except:
         pass
 
-    return itemlist	
-#=================================================================
+    return itemlist
 
 
-#-----------------------------------------------------------------
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def genere(item):
     logger.info("[cb01anime.py] genere")
     itemlist = []
@@ -173,10 +161,12 @@ def genere(item):
                  url=host + scrapedurl))
 
     return itemlist
-#=================================================================
 
 
-#-----------------------------------------------------------------	
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def alfabetico(item):
     logger.info("[cb01anime.py] listacompleta")
     itemlist = []
@@ -187,7 +177,7 @@ def alfabetico(item):
     bloque = scrapertools.get_match(data, '<option value=\'-1\'>Anime per Lettera</option>(.*?)</select>')
 
     # The categories are the options for the combo  
-    patron = '<option value="([^"]+)">(\([^<]+)\)</option>'
+    patron = '<option value="([^"]+)">\(([^<]+)\)</option>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
@@ -202,14 +192,16 @@ def alfabetico(item):
                  action="novita",
                  title=scrapedtitle,
                  url=host + scrapedurl,
-                 thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_cartoons_P.png",
                  plot=scrapedplot))
 
     return itemlist
-#=================================================================
-	
-	
-#-----------------------------------------------------------------	
+
+
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def listacompleta(item):
     logger.info("[cb01anime.py] listacompleta")
     itemlist = []
@@ -233,37 +225,41 @@ def listacompleta(item):
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="episodi",
+                 action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_lista_P.png",
                  plot=scrapedplot))
 
     return itemlist
-#=================================================================
-	
-	
-#-----------------------------------------------------------------
+
+
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def search(item, texto):
     logger.info("[cb01anime.py] " + item.url + " search " + texto)
 
-    item.url = "http://www.cineblog01.cc/anime/?s=" + texto
-	
+    item.url = host + "/anime/?s=" + texto
+
     return novita(item)
-#=================================================================
-	
-	
-#-----------------------------------------------------------------
-def episodi(item):
+
+
+# =================================================================
+
+
+# -----------------------------------------------------------------
+def episodios(item):
     logger.info("[cb01anime.py] episodios")
 
     itemlist = []
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers)
-    data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
+    data = scrapertools.decodeHtmlentities(data)
 
     patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow">(.*?)(?:</p>)?(?:\s*</span>)?\s*</td>'
     patron2 = '<a.*?href="([^"]+)"[^>]*>([^<]+)</a>'
@@ -283,7 +279,8 @@ def episodi(item):
                     title = item.title + " " + titulo
                     itemlist.append(
                         Item(channel=__channel__,
-                             action="findvideo",
+                             action="findvideos",
+                             contentType="episode",
                              title=title,
                              extra=scrapedurl,
                              fulltitle=item.fulltitle,
@@ -292,25 +289,27 @@ def episodi(item):
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title,
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
-                 extra="episodi",
+                 extra="episodios",
                  show=item.show))
         itemlist.append(
-            Item(channel=item.channel,
+            Item(channel=__channel__,
                  title="Scarica tutti gli episodi della serie",
                  url=item.url,
                  action="download_all_episodes",
-                 extra="episodi",
+                 extra="episodios",
                  show=item.show))
 
     return itemlist
-#=================================================================
-	
-	
-#-----------------------------------------------------------------
-def findvideo(item):
+
+
+# =================================================================
+
+
+# -----------------------------------------------------------------
+def findvideos(item):
     logger.info("[cb01anime.py] findvideos")
 
     itemlist = []
@@ -331,43 +330,54 @@ def findvideo(item):
                      folder=False))
 
     return itemlist
-#=================================================================
-	
-	
-#-----------------------------------------------------------------
+
+
+# =================================================================
+
+
+# -----------------------------------------------------------------
 def play(item):
     logger.info("[cb01anime.py] play")
 
-    print "##############################################################"
+    if '/goto/' in item.url:
+        item.url = item.url.split('/goto/')[-1].decode('base64')
+
+    item.url = item.url.replace('http://cineblog01.pw', 'http://k4pp4.pw')
+
+    logger.debug("##############################################################")
     if "go.php" in item.url:
-        data = anti_cloudflare(item.url)
+        data = scrapertools.anti_cloudflare(item.url, headers)
         try:
             data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
         except IndexError:
-            #            data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
-            #   In alternativa, dato che a volte compare "Clicca qui per proseguire":
-            data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
-        if 'vcrypt' in data:
+            try:
+                # data = scrapertools.get_match(data, r'<a href="([^"]+)">clicca qui</a>')
+                # In alternativa, dato che a volte compare "Clicca qui per proseguire":
+                data = scrapertools.get_match(data, r'<a href="([^"]+)".*?class="btn-wrapper">.*?licca.*?</a>')
+            except IndexError:
+                data = scrapertools.get_header_from_response(item.url, headers=headers, header_to_get="Location")
+        while 'vcrypt' in data:
             data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
-        print "##### play go.php data ##\n%s\n##" % data
+        logger.debug("##### play go.php data ##\n%s\n##" % data)
     elif "/link/" in item.url:
-        data = anti_cloudflare(item.url)
-        from core import jsunpack
+        data = scrapertools.anti_cloudflare(item.url, headers)
+        from lib import jsunpack
 
         try:
             data = scrapertools.get_match(data, "(eval\(function\(p,a,c,k,e,d.*?)</script>")
-            # data = scrapertools.get_match(data, "(eval.function.p,a,c,k,e,.*?)</script>")
             data = jsunpack.unpack(data)
-            print "##### play /link/ unpack ##\n%s\n##" % data
+            logger.debug("##### play /link/ unpack ##\n%s\n##" % data)
         except IndexError:
-            print "##### The content is yet unpacked"
+            logger.debug("##### The content is yet unpacked ##\n%s\n##" % data)
 
-        data = scrapertools.get_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
-        print "##### play /link/ data ##\n%s\n##" % data
+        data = scrapertools.find_single_match(data, 'var link(?:\s)?=(?:\s)?"([^"]+)";')
+        while 'vcrypt' in data:
+            data = scrapertools.get_header_from_response(data, headers=headers, header_to_get="Location")
+        logger.debug("##### play /link/ data ##\n%s\n##" % data)
     else:
         data = item.url
-        print "##### play else data ##\n%s\n##" % data
-    print "##############################################################"
+        logger.debug("##### play else data ##\n%s\n##" % data)
+    logger.debug("##############################################################")
 
     itemlist = servertools.find_video_items(data=data)
 
@@ -379,49 +389,8 @@ def play(item):
         videoitem.channel = __channel__
 
     return itemlist
-#=================================================================
 
 
-#-----------------------------------------------------------------
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-#=================================================================
-
-
-#-----------------------------------------------------------------
-def info(title, year):
-    logger.info("streamondemand.cb01anime info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, year=year, tipo="movie", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass
-#=================================================================
-		
-		
-#-----------------------------------------------------------------
-def info_tv(title):
-    logger.info("streamondemand.cb01anime info")
-    try:
-        from core.tmdb import Tmdb
-        oTmdb = Tmdb(texto_buscado=title, tipo="tv", include_adult="false", idioma_busqueda="it")
-        if oTmdb.total_results > 0:
-            extrameta = {"Year": oTmdb.result["release_date"][:4],
-                         "Genre": ", ".join(oTmdb.result["genres"]),
-                         "Rating": float(oTmdb.result["vote_average"])}
-            fanart = oTmdb.get_backdrop()
-            poster = oTmdb.get_poster()
-            plot = oTmdb.get_sinopsis()
-            return plot, fanart, poster, extrameta
-    except:
-        pass
-#=================================================================
