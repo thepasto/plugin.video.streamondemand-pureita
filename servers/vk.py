@@ -17,7 +17,7 @@ def test_video_exists(page_url):
     data = scrapertools.cache_page(page_url)
 
     if "This video has been removed from public access" in data:
-        return False, "El archivo ya no esta disponible<br/>en VK (ha sido borrado)"
+        return False, "Il video √® stato rimosso"
     else:
         return True, ""
 
@@ -28,7 +28,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
     video_urls = []
 
-    # Lee la p·gina y extrae el ID del vÌdeo
+    # Lee la p√°gina y extrae el ID del v√≠deo
     data = scrapertools.cache_page(page_url)
 
     try:
