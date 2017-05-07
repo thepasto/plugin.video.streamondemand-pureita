@@ -247,7 +247,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR red]SkyStreaming[/COLOR]"        , channel="iptv"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01[/COLOR]"      , channel="altadefinizione01"           , language="IT"    , category="B,F,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.click[/COLOR]" , channel="altadefinizioneclick" , language="IT" , category="F" , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]AltadefinizioneHD[/COLOR]" , channel="altadefinizionehd" , language="IT" , category="F" , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]AltadefinizioneHD[/COLOR]" , channel="altadefinizionehd" , language="IT" , category="F" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.club[/COLOR]" , channel="altadefinizioneclub" , language="IT" , category="F" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.one[/COLOR]" , channel="altadefinizioneone" , language="IT" , category="F" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltadefinizioneZone[/COLOR]" , channel="altadefinizionezone" , language="IT" , category="F" , type="generic"))
