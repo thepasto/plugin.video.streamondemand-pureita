@@ -37,7 +37,7 @@ def mainlist(item):
     logger.info("[StreamingItaliano.py]==> mainlist")
     itemlist = [Item(channel=__channel__,
                      action="peliculas",
-                     title=color("Nuovi Film", "yellow"),
+                     title=color("Nuovi Film", "azure"),
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
