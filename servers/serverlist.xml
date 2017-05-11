@@ -121,9 +121,9 @@
     <id>cloudifer</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/cloudifer.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>10/10/2016</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>10/05/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
