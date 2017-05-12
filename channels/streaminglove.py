@@ -52,7 +52,7 @@ def mainlist(item):
                      title="[COLOR azure]Sub ITA[/COLOR]",
                      action="peliculas",
                      url="%s/genere/sub-ita/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.pngg"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Categoria[/COLOR]",
                      action="categorias",
