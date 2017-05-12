@@ -36,17 +36,17 @@ def mainlist(item):
                      title="[COLOR red]Serie Netflix[/COLOR]",
                      url="%s/classifiche/top-10-serie-tv-le-migliori-serie-tv-su-netflix-italia/" % host,
                      action="serietv",
-                     thumbnail="http://www.netflixlovers.it/img/logo-dark.png?v=2"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR red]Film Netflix[/COLOR]",
                      action="film",
                      url="%s/classifiche/top-10-film-i-migliori-film-su-netflix-italia/" % host,
-                     thumbnail="http://www.netflixlovers.it/img/logo-dark.png?v=2"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR red]Documentari Netflix[/COLOR]",
                      action="film",
                      url="%s/classifiche/top-10-documentari-i-migliori-documentari-su-netflix-italia/" % host,
-                     thumbnail="http://www.netflixlovers.it/img/logo-dark.png?v=2")]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_doc_P.png")]
 
     return itemlist
 
