@@ -42,7 +42,7 @@ def mainlist(item):
                      title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
                      action="peliculas",
                      url="%s/film-streaming/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.pngg"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Categoria[/COLOR]",
                      action="categorias",
