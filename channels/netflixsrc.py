@@ -71,7 +71,7 @@ def serietv(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="do_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'serie',
+                 extra=urllib.quote_plus(scrapedtitle),
                  title=scrapedtitle + "[COLOR red]   " + scrapedtv + "[/COLOR]",
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
@@ -121,7 +121,7 @@ def film(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="do_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'movie',
+                 extra=urllib.quote_plus(scrapedtitle),
                  title=scrapedtitle + "[COLOR red]   " + scrapedtv + "[/COLOR]",
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
