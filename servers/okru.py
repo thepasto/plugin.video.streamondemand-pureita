@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand-pureita - XBMC Plugin
-# Conector for ok.ru
+# Connettore per ok.ru
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # by DrZ3r0
 # ------------------------------------------------------------
