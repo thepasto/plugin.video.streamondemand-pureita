@@ -1701,7 +1701,7 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/streaminglove.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
     <date>11/05/2017</date>
     <changes>Update</changes>
