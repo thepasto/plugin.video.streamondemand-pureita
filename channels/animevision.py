@@ -6,8 +6,6 @@
 # By costaplus
 # ------------------------------------------------------------
 import re
-import urllib
-import urlparse
 
 from core import config
 from core import logger
@@ -50,7 +48,7 @@ def lista_anime(item):
 
     data = scrapertools.cache_page(item.url)
 
-    patron = "<div class='epContainer'>[^=]+='imgEp'[^<]+<a href='(.*?)'>[^>]+><img src='(.*?)'[^<]+<[^>]+>(.*?)</div>"
+    patron = "<div class='epContainer' >[^=]+='imgEp'[^<]+<a href='(.*?)'>[^>]+><img src='(.*?)'[^<]+<[^>]+>(.*?)</div>"
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl,scrapedimg, scrapedtitle in matches:
