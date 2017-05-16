@@ -1215,7 +1215,7 @@
 <channel>
     <id>libreria</id>
     <name>Libreria</name>
-    <language>es</language>
+    <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/libreria.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
@@ -1223,6 +1223,19 @@
     <adult>false</adult>
     <date>08/08/2016</date>
     <changes>Prima versione di Pelisalacarta 4</changes>
+</channel>
+
+<channel>
+    <id>majintoon</id>
+    <name>Majintoon</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/majintoon.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>1</version>
+    <adult>false</adult>
+    <date>16/05/2017</date>
+    <changes>First Release</changes>
 </channel>
 
 <channel>
