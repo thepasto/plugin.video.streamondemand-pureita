@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canale per http://www.serietvu.com/
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # By MrTruth
 # ------------------------------------------------------------
 
@@ -37,7 +37,7 @@ def mainlist(item):
     logger.info("[SerieTVU.py]==> mainlist")
     itemlist = [Item(channel=__channel__,
                      action="lista_serie",
-                     title=color("Nuove serie TV Aggiunte", "orange"),
+                     title=color("Nuove serie TV", "orange"),
                      url="%s/category/serie-tv" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
@@ -75,33 +75,6 @@ def search(item, texto):
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
-def ultimifilm(item):
-    logger.info("[SerieTVU.py]==> ultimifilm")
-    itemlist = []
-
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, '<div class="es-carousel">(.*?)</div></li></ul>')
-    patron = '<h5><a href="(.*?)".*?>(.*?)</a></h5>'
-    matches = re.compile(patron, re.DOTALL).findall(blocco)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 contentType="tv",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 extra="tv",
-                 thumbnail=item.thumbnail,
-                 folder=True), tipo="tv"))
-
-    return itemlist
-
-# ================================================================================================================
-
-# ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
     logger.info("[SerieTVU.py]==> categorie")
     itemlist = []
@@ -126,7 +99,6 @@ def categorie(item):
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
-# (Il problema è del sito stesso, non del canale) - Non è possibile aggiungere l'item "Successivo" perchè il sito mostra l'homepage quando viene cliccato
 def lista_serie(item):
     logger.info("[SerieTVU.py]==> lista_serie")
     itemlist = []
@@ -148,13 +120,31 @@ def lista_serie(item):
                  thumbnail=scrapedimg,
                  show=scrapedtitle,
                  folder=True), tipo="tv"))
+
+    # Pagine
+    patron = r'<li><a href="([^"]+)"\s*>Pagina'
+    next_page = scrapertools.find_single_match(data, patron)
+    if len(matches) > 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="lista_serie",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
     return itemlist
 
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
 def episodios(item):
-    logger.info("[SerieTVU.py]==> episodis")
+    logger.info("[SerieTVU.py]==> episodios")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
@@ -219,6 +209,10 @@ def findvideos(item):
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
+
 def color(text, color):
     return "[COLOR "+color+"]"+text+"[/COLOR]"
 
