@@ -1,6 +1,6 @@
 # Stream On Demand PureITA
 
-![alt tag](https://raw.githubusercontent.com/Fenice82/plugin.video.streamondemand-pureita/master/icon.png)
+![alt tag](https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/icon.png)
 
 
 Fork of Pelisalacarta-ui, fully translated and customized with only italian channels.
