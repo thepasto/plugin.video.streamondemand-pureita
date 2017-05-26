@@ -563,9 +563,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/dreamsub.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>26/04/2017</date>
+    <date>25/05/2017</date>
     <changes>Update</changes>
     <categories>
         <category>serie</category>
