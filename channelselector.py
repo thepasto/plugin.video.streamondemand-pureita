@@ -285,7 +285,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]FFilms[/COLOR]"          , channel="ffilms"           , language="IT"    , category="F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="fastvideotv"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="filmitaliatv"       , language="IT"    , category="F"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]FilmGratis[/COLOR]"       , channel="filmgratis"           , language="IT"    , category="F"   , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]FilmGratis[/COLOR]"       , channel="filmgratis"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Filmbelli.net[/COLOR]"          , channel="filmbelli"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Filmhdstreaming[/COLOR]"          , channel="filmhdstreaming"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Filmissimi[/COLOR]"          , channel="filmissimi"           , language="IT"    , category="F"   , type="generic"))
