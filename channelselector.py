@@ -27,7 +27,7 @@ def getmainlist(preferred_thumb=""):
     itemlist.append( Item( title=config.get_localized_string(30121) , channel="channelselector" , action="listchannels" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_all_blueP.png") ) )
     #itemlist.append( Item(title=config.get_localized_string(30118) , channel="channelselector" , action="channeltypes", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales.png") ) )
     itemlist.append( Item(title=config.get_localized_string(30119) , channel="channelselector" , action="channeltypes", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_category_blueP.png") ) )
-    #itemlist.append( Item(title=config.get_localized_string(30130) , channel="novedades" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_novedades.png") ) )
+    #itemlist.append( Item(title=config.get_localized_string(50002) , channel="novedades" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_novedades.png") ) )
     #itemlist.append( Item(title=config.get_localized_string(30103) , channel="buscador" , action="mainlist" , thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_buscar.png")) )
     #itemlist.append( Item(title="The Movie Database" , channel="database" , action="mainlist" , thumbnail= "http://www.userlogos.org/files/logos/Vyp3R/TMDb.png" ) )
     itemlist.append( Item(title="Ricerca Globale" , channel="biblioteca" , action="mainlist" , thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_search_blueP.png")) )
