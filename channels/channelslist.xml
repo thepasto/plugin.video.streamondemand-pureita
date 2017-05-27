@@ -645,11 +645,11 @@
     <name>FilmGratis</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmgratis.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>2</version>
     <adult>false</adult>
-    <date>06/05/2017</date>
+    <date>26/05/2017</date>
     <changes>First Release</changes>
     <categories>
         <category>movie</category>
