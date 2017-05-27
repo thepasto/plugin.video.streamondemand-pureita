@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# streamondemand-pureita.- XBMC Plugin
 # Canale per dreamsub
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
@@ -63,6 +63,37 @@ def mainlist(item):
                      action="search",
                      extra='serie',
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+
+    return itemlist
+
+def newest(categoria):
+    logger.info("streamondemand.altadefinizione01 newest" + categoria)
+    itemlist = []
+    item = Item()
+    try:
+        if categoria == "series":
+            item.url = "https://www.dreamsub.it"
+            item.action = "ultimiep"
+            item.extra = "serie"
+            itemlist = ultimiep(item)
+
+            if itemlist[-1].action == "ultimiep":
+                itemlist.pop()
+        
+        if categoria == "anime":
+            item.url = "https://www.dreamsub.it"
+            item.action = "ultimiep"
+            item.extra = "anime"
+            itemlist = ultimiep(item)
+
+            if itemlist[-1].action == "ultimiep":
+                itemlist.pop()
+    # Se captura la excepción, para no interrumpir al canal novedades si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("{0}".format(line))
+        return []
 
     return itemlist
 
@@ -195,12 +226,28 @@ def episodios(item):
             Item(channel=__channel__,
                  action="findvideos",
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 show=item.show,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
                  folder=True))
+
+    if config.get_library_support() and len(itemlist) != 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 title="Aggiungi alla libreria",
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
+        itemlist.append(
+            Item(channel=__channel__,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 
