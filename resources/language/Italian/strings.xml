@@ -120,7 +120,7 @@
     <string id="30117">Vuoi definire la ricerca utilizzando la tastiera?</string> <!-- ¿Quieres refinar la búsqueda con el teclado? -->
     <string id="30135">Aggiunto alla libreria</string>
 
-    <string id="30130">Novità</string>
+    <string id="30130">Nuovo</string>
     <string id="30118">Canali</string>
     <string id="30119">Scegli una categoria</string>
     <string id="30120">Scegli una lingua</string>
@@ -140,6 +140,8 @@
     <string id="30134">Nuovi</string>
     <string id="50000">Saghe</string>
     <string id="50001">Oggi in TV</string>
+    <string id="50002">Novità</string>
+    <string id="50003">Liste Netflix</string>
 
     <!-- =============================================================== -->
     <!-- 30150 to 30199: Menù azioni / Menù contestuale                  -->
