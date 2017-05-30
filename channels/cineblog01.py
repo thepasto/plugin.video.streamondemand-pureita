@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "CineBlog 01"
 __language__ = "IT"
 
-sito = "https://www.cb01.uno/"
+sito = "https://www.cb01.uno"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -298,8 +298,6 @@ def listserie(item):
         scrapedthumbnail = match.group(2)
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
-        if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
-            continue
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
@@ -456,10 +454,15 @@ def findvid_film(item):
     for match in matches:
         QualityStr = scrapertools.unescape(match.group(1))[6:]
 
+    # STREAMANGO
+    matches = []
+    u = scrapertools.find_single_match(data, '(?://|\.)streamango\.com/(?:f/|embed/)?[0-9a-zA-Z]+')
+    if u: matches.append((u, 'Streamango'))
+
     # Extrae las entradas
     streaming = scrapertools.find_single_match(data, '<strong>Streaming:</strong>(.*?)<table height="30">')
-    patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
-    matches = re.compile(patron, re.DOTALL).findall(streaming)
+    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
+    matches = re.compile(patron, re.DOTALL).findall(streaming) + matches
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming ## %s ## %s ##" % (scrapedurl, scrapedtitle))
         title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
@@ -474,7 +477,7 @@ def findvid_film(item):
                  folder=False))
 
     streaming_hd = scrapertools.find_single_match(data, '<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">')
-    patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
+    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
@@ -490,7 +493,7 @@ def findvid_film(item):
                  folder=False))
 
     streaming_3D = scrapertools.find_single_match(data, '<strong>Streaming 3D[^<]+</strong>(.*?)<table height="30">')
-    patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
+    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle))
@@ -506,7 +509,7 @@ def findvid_film(item):
                  folder=False))
 
     download = scrapertools.find_single_match(data, '<strong>Download:</strong>(.*?)<table height="30">')
-    patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
+    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(download)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Download ## %s ## %s ##" % (scrapedurl, scrapedtitle))
@@ -522,7 +525,7 @@ def findvid_film(item):
                  folder=False))
 
     download_hd = scrapertools.find_single_match(data, '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">')
-    patron = '<td><a\s*href="([^"]+)"\s*target="_blank">([^<]+)</a></td>'
+    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(download_hd)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Download HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
@@ -576,7 +579,7 @@ def play(item):
     if '/goto/' in item.url:
         item.url = item.url.split('/goto/')[-1].decode('base64')
 
-    item.url = item.url.replace('https://cineblog01.uno', 'http://k4pp4.pw')
+    item.url = item.url.replace('http://cineblog01.uno', 'http://k4pp4.pw')
 
     logger.debug("##############################################################")
     if "go.php" in item.url:
@@ -595,7 +598,7 @@ def play(item):
         logger.debug("##### play go.php data ##\n%s\n##" % data)
     elif "/link/" in item.url:
         data = scrapertools.anti_cloudflare(item.url, headers)
-        from core import jsunpack
+        from lib import jsunpack
 
         try:
             data = scrapertools.get_match(data, "(eval\(function\(p,a,c,k,e,d.*?)</script>")
