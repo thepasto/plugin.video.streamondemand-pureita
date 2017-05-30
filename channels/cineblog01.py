@@ -298,6 +298,8 @@ def listserie(item):
         scrapedthumbnail = match.group(2)
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
+        if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
+           continue
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
