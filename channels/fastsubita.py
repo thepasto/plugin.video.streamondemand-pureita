@@ -73,7 +73,7 @@ def serietv(item):
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
                  plot=scrapedplot,
                  extra=item.extra,
                  folder=True))
@@ -126,7 +126,7 @@ def all_quick(item):
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
                  plot=scrapedplot,
                  extra=item.extra,
                  folder=True))
