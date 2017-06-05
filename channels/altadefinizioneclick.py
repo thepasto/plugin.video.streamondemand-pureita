@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-PureITA.- XBMC Plugin
+# streamondemand-pureita.- XBMC Plugin
 # Canal para altadefinizioneclick
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import base64
 import re
 import urlparse
 
-from core import config
+from core import httptools
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from servers import servertools
 
 __channel__ = "altadefinizioneclick"
 __category__ = "F,S,A"
@@ -59,11 +59,11 @@ def mainlist(item):
              title="[COLOR azure]Film Sub-Ita[/COLOR]",
              action="fichas",
              url=host + "/sub-ita/",
-             extra="sub",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
+             extra="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
@@ -152,17 +152,6 @@ def fichas(item):
         '<fix>IMDB: 0.0</fix>',
         data
     )
-    # ------------------------------------------------
-    cookies = ""
-    matches = re.compile('(.altadefinizione.site.*?)\n', re.DOTALL).findall(config.get_cookie_data())
-    for cookie in matches:
-        name = cookie.split('\t')[5]
-        value = cookie.split('\t')[6]
-        cookies += name + "=" + value + ";"
-    headers.append(['Cookie', cookies[:-1]])
-    import urllib
-    _headers = urllib.urlencode(dict(headers))
-    # ------------------------------------------------
 
     if "/?s=" in item.url:
         patron = '<div class="col-lg-3 col-md-3 col-xs-3">.*?'
@@ -194,12 +183,13 @@ def fichas(item):
         title += " (" + scrapedcalidad + ") (" + scrapedpuntuacion + ")"
 
         # ------------------------------------------------
-        scrapedthumbnail += "|" + _headers
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         # ------------------------------------------------
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
+                 contentType="movie",
                  title="[COLOR azure]" + title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -220,7 +210,9 @@ def fichas(item):
 
 
 def findvideos(item):
-    logger.info("[italiafilmvideohd.py] findvideos")
+    logger.info("[altadefinizioneclick.py] findvideos")
+
+    itemlist = []
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
@@ -264,7 +256,7 @@ def findvideos(item):
             videoitem.plot = item.plot
             videoitem.channel = __channel__
 
-        return itemlist
+    return itemlist
 
 
 def url_decode(url_enc):
