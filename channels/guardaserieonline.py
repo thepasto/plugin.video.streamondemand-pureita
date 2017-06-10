@@ -186,7 +186,7 @@ def categorie(item):
                  title=scrapedtitle,
                  contentType="tv",
                  url=scrapedurl,
-                 thumbnail=item.thumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  extra="tv",
                  folder=True))
 
