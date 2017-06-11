@@ -47,7 +47,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Categoria[/COLOR]",
                      action="categorias",
-                     url="%s/stream/movies/" % host,
+                     url="%s/stream/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -63,7 +63,7 @@ def categorias(item):
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data, '<ul class="genres scrolling">(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<ul class="genres falsescroll">(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
     patron = '<li[^>]+><a href="([^"]+)"[^>]>(.*?)<\/a>'
