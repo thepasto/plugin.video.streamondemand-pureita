@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per http://animeinstreaming.net/
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# streamondemand-pureita.- XBMC Plugin
+# Canale animeforce
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urllib
@@ -44,26 +44,26 @@ def mainlist(item):
     log("mainlist", "mainlist")
     itemlist = [Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Lista Completa[/COLOR]",
                      url=host + "/lista-anime/",
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="animeaggiornati",
-                     title="[COLOR azure]Anime Aggiornati[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Aggiornamenti[/COLOR]",
                      url=host,
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="ultimiep",
-                     title="[COLOR azure]Ultimi Episodi[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Ultimi Episodi[/COLOR]",
                      url=host,
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca ...[/COLOR]",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+                     thumbnail=CercaThumbnail)]
 
     return itemlist
 
@@ -178,8 +178,6 @@ def ultimiep(item):
     itemlist = []
 
     data = scrapertools.cache_page(item.url, headers=headers)
-
-    blocco = scrapertools.get_match(data, r'<div class="main-loop-inner">(.*?)<br class="clearer"/>\s*</div>')
 
     patron = r'<img.*?src="([^"]+)"[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+><a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -389,7 +387,7 @@ def log(funzione="", stringa="", canale=__channel__):
 
 # -----------------------------------------------------------------
 def HomePage(item):
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
 
 
 # =================================================================
@@ -399,10 +397,10 @@ def HomePage(item):
 # -----------------------------------------------------------------
 AnimeThumbnail = "http://img15.deviantart.net/f81c/i/2011/173/7/6/cursed_candies_anime_poster_by_careko-d3jnzg9.jpg"
 AnimeFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
-CategoriaThumbnail = "http://static.europosters.cz/image/750/poster/street-fighter-anime-i4817.jpg"
+CategoriaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"
 CategoriaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
-CercaThumbnail = "http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"
+CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 CercaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
-AvantiImg = "http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png"
+AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
