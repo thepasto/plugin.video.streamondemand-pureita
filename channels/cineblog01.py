@@ -147,7 +147,7 @@ def peliculas(item):
             itemlist.append(
                 Item(channel=__channel__,
                      action="HomePage",
-                     title="[COLOR yellow]Home[/COLOR]",
+                     title="[COLOR yellow]Torna Home[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                      folder=True)),
             itemlist.append(
@@ -301,6 +301,8 @@ def listserie(item):
         scrapedthumbnail = match.group(2)
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
+        if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
+            continue
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
@@ -320,7 +322,7 @@ def listserie(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
-                 title="[COLOR yellow]Home[/COLOR]",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
