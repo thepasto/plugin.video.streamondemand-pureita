@@ -44,6 +44,30 @@ def mainlist(item):
 # =================================================================
 
 #------------------------------------------------------------------
+def newest(categoria):
+    logger.info("filmhdstreaming newest" + categoria)
+    itemlist = []
+    item = Item()
+    try:
+        if categoria == "peliculas":
+            item.url = "http://filmhdstreaming.org/page/1.html"
+            item.action = "elenco"
+            itemlist = elenco(item)
+
+            if itemlist[-1].action == "elenco":
+                itemlist.pop()
+
+    # Se captura la excepción, para no interrumpir al canal novedades si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("{0}".format(line))
+        return []
+
+    return itemlist
+# =================================================================
+
+#------------------------------------------------------------------
 # Funzione elenco top
 def elenco_top(item):
     logger.info("filmhdstreaming elenco_top")
@@ -93,7 +117,7 @@ def elenco(item):
     itemlist = []
     data = scrapertools.cache_page(item.url)
 
-    patron = '_b2"><a href="([^"]+)" title="(.*?)"><img src="([^"]+)"'
+    patron = r'<a href="([^"]+)" title="([^"]+)"><img src="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
@@ -106,6 +130,7 @@ def elenco(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
+                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -115,15 +140,16 @@ def elenco(item):
                  folder=True), tipo='movie'))
 
     # Extrae el paginador
-    patronvideos = '<a class="page dark gradient" href="(.*?)">Avanti'
+    patronvideos = r'<a class="page dark gradient" href=["|\']+([^"]+)["|\']+>AVANTI'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        scrapedurl = urlparse.urljoin(re.sub(r'\d+.html$', '', item.url), matches[0])
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -136,7 +162,6 @@ def elenco(item):
     return itemlist
 
 # =================================================================
-
 
 #------------------------------------------------------------------
 # Funzione elenco genere
@@ -202,7 +227,7 @@ def search(item, texto):
 
     itemlist = []
 
-    item.url = "http://filmhdstreaming.net/tag/" + texto + "/"
+    item.url = "http://hdcineblog01.com/search/" + texto
 
     try:
         return elenco(item)
@@ -214,9 +239,6 @@ def search(item, texto):
         return []
 
 #------------------------------------------------------------------
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 ########################################################################
 # Riferimenti a immagini statiche
