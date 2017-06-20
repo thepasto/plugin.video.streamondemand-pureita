@@ -26,7 +26,7 @@ __language__ = "IT"
 # riferimento alla gestione del log
 DEBUG = config.get_setting("debug")
 
-host = "http://filmhdstreaming.org"
+host = "http://hdcineblog01.com"
 
 # -----------------------------------------------------------------
 # Elenco inziale del canale
