@@ -20,7 +20,7 @@ __type__ = "generic"
 __title__ = "guardarefilm (IT)"
 __language__ = "IT"
 
-host = "https://www.guardarefilm.one"
+host = "https://www.guardarefilm.biz"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -297,13 +297,7 @@ def episodios(item):
                  action="add_serie_to_library",
                  extra="episodios",
                  show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
+
 
     return itemlist
 
