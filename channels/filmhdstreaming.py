@@ -239,6 +239,9 @@ def search(item, texto):
         return []
 
 #------------------------------------------------------------------
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 ########################################################################
 # Riferimenti a immagini statiche
