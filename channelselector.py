@@ -283,7 +283,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Effetto Lunatico[/COLOR]"       , channel="effettolunatico"           , language="IT"    , category="F"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Eurostreaming[/COLOR]"       , channel="eurostreaming"           , language="IT"    , category="F,S"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FastSubITA[/COLOR]"        , channel="fastsubita"       , language="IT"    , category="S,VOS"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]FFilms[/COLOR]"          , channel="ffilms"           , language="IT"    , category="F"   , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]FFilms[/COLOR]"          , channel="ffilms"           , language="IT"    , category="F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="filmitaliatv"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]FilmGratis[/COLOR]"       , channel="filmgratis"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Filmbelli.net[/COLOR]"          , channel="filmbelli"           , language="IT"    , category="F"   , type="generic"))
