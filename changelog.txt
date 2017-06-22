@@ -1,3 +1,10 @@
+5.4.4
+-Fix and Update "servers"
+-Fix and Update "channels" (now works also in Kodi Jarvis)
+-Various Fix and Update
+
+
+
 5.4.3
 -Various Fix and Update 
 -Fix "Update" after transition
