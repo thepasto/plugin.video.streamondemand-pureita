@@ -1,6 +1,6 @@
 5.4.4
 -Fixed and Updated "servers"
--Fix and Updated "channels" (now works also in Kodi Jarvis)
+-Fixed and Updated "channels" (now works also in Kodi Jarvis)
 -Various Fix and Update 
 -Minor Bug Fixed
 
