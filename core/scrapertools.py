@@ -1,785 +1,112 @@
-﻿#------------------------------------------------------------
-# -*- coding: utf-8 -*-
-#------------------------------------------------------------
-# Download Tools
-# Based on the code from VideoMonkey XBMC Plugin
-#------------------------------------------------------------
-# streamondemand-pureita-master
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita-master/
-#------------------------------------------------------------
-# Creado por:
-# Jesús (tvalacarta@gmail.com)
-# jurrabi (jurrabi@gmail.com)
-# bandavi (xbandavix@gmail.com)
-# Licencia: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
-#------------------------------------------------------------
-# Historial de cambios:
-#------------------------------------------------------------
+﻿# -*- coding: utf-8 -*-
+# ------------------------------------------------------------
+# streamondemand 5
+# Copyright 2015 tvalacarta@gmail.com
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
+#
+# Distributed under the terms of GNU General Public License v3 (GPLv3)
+# http://www.gnu.org/licenses/gpl-3.0.html
+# ------------------------------------------------------------
+# This file is part of streamondemand 5.
+#
+# streamondemand 5 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# streamondemand 5 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with streamondemand 5.  If not, see <http://www.gnu.org/licenses/>.
+# --------------------------------------------------------------------------------
+# Scraper tools for reading and processing web elements
+# --------------------------------------------------------------------------------
 
-import StringIO
-import gzip
-import os
 import re
 import socket
 import time
-import urllib
-import urllib2
-import urlparse
 
-import config
-import downloadtools
 import logger
+from core import httptools
 
-# True - Muestra las cabeceras HTTP en el log
-# False - No las muestra
-DEBUG_LEVEL = False
 
-CACHE_ACTIVA = "0"  # Automatica
-CACHE_SIEMPRE = "1" # Cachear todo
-CACHE_NUNCA = "2"   # No cachear nada
-
-CACHE_PATH = config.get_setting("cache.dir")
-
-DEFAULT_TIMEOUT = 20
-
-DEBUG = False
-
-def cache_page(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modo_cache=CACHE_ACTIVA, timeout=DEFAULT_TIMEOUT):
+def cache_page(url,post=None,headers=None,modo_cache=None, timeout=None):
     return cachePage(url,post,headers,modo_cache,timeout=timeout)
 
-def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modoCache=CACHE_ACTIVA, timeout=DEFAULT_TIMEOUT):
-    logger.info("streamondemand-pureita.core.scrapertools cachePage url="+url)
 
-    # Cache desactivada
-    modoCache = CACHE_NUNCA #config.get_setting("cache.mode")
-
-    '''
-    if config.get_platform()=="plex":
-        from PMS import HTTP
-        try:
-            logger.info("url="+url)
-            data = HTTP.Request(url)
-            logger.info("descargada")
-        except:
-            data = ""
-            logger.error("Error descargando "+url)
-            import sys
-            for line in sys.exc_info():
-                logger.error( "%s" % line )
-        
-        return data
-    '''
-    # CACHE_NUNCA: Siempre va a la URL a descargar
-    # obligatorio para peticiones POST
-    if modoCache == CACHE_NUNCA or post is not None:
-        logger.info("streamondemand-pureita.core.scrapertools MODO_CACHE=2 (no cachear)")
-        
-        try:
-            data = downloadpage(url,post,headers, timeout=timeout)
-        except:
-            data=""
-    
-    # CACHE_SIEMPRE: Siempre descarga de cache, sin comprobar fechas, excepto cuando no está
-    elif modoCache == CACHE_SIEMPRE:
-        logger.info("streamondemand-pureita.core.scrapertools MODO_CACHE=1 (cachear todo)")
-        
-        # Obtiene los handlers del fichero en la cache
-        cachedFile, newFile = getCacheFileNames(url)
-    
-        # Si no hay ninguno, descarga
-        if cachedFile == "":
-            logger.debug("[scrapertools.py] No está en cache")
-    
-            # Lo descarga
-            data = downloadpage(url,post,headers)
-    
-            # Lo graba en cache
-            outfile = open(newFile,"w")
-            outfile.write(data)
-            outfile.flush()
-            outfile.close()
-            logger.info("streamondemand-pureita.core.scrapertools Grabado a " + newFile)
-        else:
-            logger.info("streamondemand-pureita.core.scrapertools Leyendo de cache " + cachedFile)
-            infile = open( cachedFile )
-            data = infile.read()
-            infile.close()
-    
-    # CACHE_ACTIVA: Descarga de la cache si no ha cambiado
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools MODO_CACHE=0 (automática)")
-        
-        # Datos descargados
-        data = ""
-        
-        # Obtiene los handlers del fichero en la cache
-        cachedFile, newFile = getCacheFileNames(url)
-    
-        # Si no hay ninguno, descarga
-        if cachedFile == "":
-            logger.debug("[scrapertools.py] No está en cache")
-    
-            # Lo descarga
-            data = downloadpage(url,post,headers)
-            
-            # Lo graba en cache
-            outfile = open(newFile,"w")
-            outfile.write(data)
-            outfile.flush()
-            outfile.close()
-            logger.info("streamondemand-pureita.core.scrapertools Grabado a " + newFile)
-    
-        # Si sólo hay uno comprueba el timestamp (hace una petición if-modified-since)
-        else:
-            # Extrae el timestamp antiguo del nombre del fichero
-            oldtimestamp = time.mktime( time.strptime(cachedFile[-20:-6], "%Y%m%d%H%M%S") )
-    
-            logger.info("streamondemand-pureita.core.scrapertools oldtimestamp="+cachedFile[-20:-6])
-            logger.info("streamondemand-pureita.core.scrapertools oldtimestamp="+time.ctime(oldtimestamp))
-            
-            # Hace la petición
-            updated,data = downloadtools.downloadIfNotModifiedSince(url,oldtimestamp)
-            
-            # Si ha cambiado
-            if updated:
-                # Borra el viejo
-                logger.debug("[scrapertools.py] Borrando "+cachedFile)
-                os.remove(cachedFile)
-                
-                # Graba en cache el nuevo
-                outfile = open(newFile,"w")
-                outfile.write(data)
-                outfile.flush()
-                outfile.close()
-                logger.info("streamondemand-pureita.core.scrapertools Grabado a " + newFile)
-            # Devuelve el contenido del fichero de la cache
-            else:
-                logger.info("streamondemand-pureita.core.scrapertools Leyendo de cache " + cachedFile)
-                infile = open( cachedFile )
-                data = infile.read()
-                infile.close()
-
+def cachePage(url,post=None,headers=None,modoCache=None, timeout=None):
+    data = downloadpage(url,post=post,headers=headers, timeout=timeout)
     return data
 
-def getCacheFileNames(url):
 
-    # Obtiene el directorio de la cache para esta url
-    siteCachePath = getSiteCachePath(url)
-        
-    # Obtiene el ID de la cache (md5 de la URL)
-    cacheId = get_md5(url)
-        
-    logger.debug("[scrapertools.py] cacheId="+cacheId)
-
-    # Timestamp actual
-    nowtimestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    logger.debug("[scrapertools.py] nowtimestamp="+nowtimestamp)
-
-    # Nombre del fichero
-    # La cache se almacena en una estructura CACHE + URL
-    ruta = os.path.join( siteCachePath , cacheId[:2] , cacheId[2:] )
-    newFile = os.path.join( ruta , nowtimestamp + ".cache" )
-    logger.debug("[scrapertools.py] newFile="+newFile)
-    if not os.path.exists(ruta):
-        os.makedirs( ruta )
-
-    # Busca ese fichero en la cache
-    cachedFile = getCachedFile(siteCachePath,cacheId)
-
-    return cachedFile, newFile 
-
-# Busca ese fichero en la cache
-def getCachedFile(siteCachePath,cacheId):
-    mascara = os.path.join(siteCachePath,cacheId[:2],cacheId[2:],"*.cache")
-    logger.debug("[scrapertools.py] mascara="+mascara)
-    import glob
-    ficheros = glob.glob( mascara )
-    logger.debug("[scrapertools.py] Hay %d ficheros con ese id" % len(ficheros))
-
-    cachedFile = ""
-
-    # Si hay más de uno, los borra (serán pruebas de programación) y descarga de nuevo
-    if len(ficheros)>1:
-        logger.debug("[scrapertools.py] Cache inválida")
-        for fichero in ficheros:
-            logger.debug("[scrapertools.py] Borrando "+fichero)
-            os.remove(fichero)
-        
-        cachedFile = ""
-
-    # Hay uno: fichero cacheado
-    elif len(ficheros)==1:
-        cachedFile = ficheros[0]
-
-    return cachedFile
-
-def getSiteCachePath(url):
-    # Obtiene el dominio principal de la URL    
-    dominio = urlparse.urlparse(url)[1]
-    logger.debug("[scrapertools.py] dominio="+dominio)
-    nombres = dominio.split(".")
-    if len(nombres)>1:
-        dominio = nombres[len(nombres)-2]+"."+nombres[len(nombres)-1]
+def downloadpage(url,post=None,headers=None, follow_redirects=True, timeout=None, header_to_get=None):
+    response = httptools.downloadpage(url, post=post, headers=headers, follow_redirects = follow_redirects, timeout=timeout)
+    
+    if header_to_get:
+      return response.headers.get(header_to_get)
     else:
-        dominio = nombres[0]
-    logger.debug("[scrapertools.py] dominio="+dominio)
+      return response.data
+
+
+def downloadpageWithResult(url,post=None,headers=None,follow_redirects=True, timeout=None, header_to_get=None):
+    response = httptools.downloadpage(url, post=post, headers=headers, follow_redirects = follow_redirects, timeout=timeout)
     
-    # Crea un directorio en la cache para direcciones de ese dominio
-    siteCachePath = os.path.join( CACHE_PATH , dominio )
-    if not os.path.exists(CACHE_PATH):
-        try:
-            os.mkdir( CACHE_PATH )
-        except:
-            logger.error("[scrapertools.py] Error al crear directorio "+CACHE_PATH)
-
-    if not os.path.exists(siteCachePath):
-        try:
-            os.mkdir( siteCachePath )
-        except:
-            logger.error("[scrapertools.py] Error al crear directorio "+siteCachePath)
-    
-    logger.debug("[scrapertools.py] siteCachePath="+siteCachePath)
-
-    return siteCachePath
-
-def cachePage2(url,headers):
-
-    logger.info("Descargando " + url)
-    inicio = time.clock()
-    req = urllib2.Request(url)
-    for header in headers:
-        logger.info(header[0]+":"+header[1])
-        req.add_header(header[0], header[1])
-
-    try:
-        response = urllib2.urlopen(req)
-    except:
-        req = urllib2.Request(url.replace(" ","%20"))
-        for header in headers:
-            logger.info(header[0]+":"+header[1])
-            req.add_header(header[0], header[1])
-        response = urllib2.urlopen(req)
-    data=response.read()
-    response.close()
-    fin = time.clock()
-    logger.info("Descargado en %d segundos " % (fin-inicio+1))
-
-    '''
-        outfile = open(localFileName,"w")
-        outfile.write(data)
-        outfile.flush()
-        outfile.close()
-        logger.info("Grabado a " + localFileName)
-    '''
-    return data
-
-def cachePagePost(url,post):
-
-    logger.info("Descargando " + url)
-    inicio = time.clock()
-    req = urllib2.Request(url,post)
-    req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-
-    try:
-        response = urllib2.urlopen(req)
-    except:
-        req = urllib2.Request(url.replace(" ","%20"),post)
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        response = urllib2.urlopen(req)
-    data=response.read()
-    response.close()
-    fin = time.clock()
-    logger.info("Descargado en %d segundos " % (fin-inicio+1))
-
-    '''
-        outfile = open(localFileName,"w")
-        outfile.write(data)
-        outfile.flush()
-        outfile.close()
-        logger.info("Grabado a " + localFileName)
-    '''
-    return data
-
-class NoRedirectHandler(urllib2.HTTPRedirectHandler):
-    def http_error_302(self, req, fp, code, msg, headers):
-        infourl = urllib.addinfourl(fp, headers, req.get_full_url())
-        infourl.status = code
-        infourl.code = code
-        return infourl
-    http_error_300 = http_error_302
-    http_error_301 = http_error_302
-    http_error_303 = http_error_302
-    http_error_307 = http_error_302
-
-def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],follow_redirects=True, timeout=DEFAULT_TIMEOUT, header_to_get=None):
-    logger.info("streamondemand-pureita.core.scrapertools downloadpage")
-    logger.info("streamondemand-pureita.core.scrapertools url="+url)
-    
-    if post is not None:
-        logger.info("streamondemand-pureita.core.scrapertools post="+post)
+    if header_to_get:
+      return response.headers.get(header_to_get)
     else:
-        logger.info("streamondemand-pureita.core.scrapertools post=None")
-    
-    # ---------------------------------
-    # Instala las cookies
-    # ---------------------------------
+      return response.data, response.code
 
-    #  Inicializa la librería de las cookies
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("streamondemand-pureita.core.scrapertools ficherocookies="+ficherocookies)
 
-    cj = None
-    ClientCookie = None
-    cookielib = None
-
-    # Let's see if cookielib is available
-    try:
-        logger.info("streamondemand-pureita.core.scrapertools Importando cookielib")
-        import cookielib
-    except ImportError:
-        logger.info("streamondemand-pureita.core.scrapertools cookielib no disponible")
-        # If importing cookielib fails
-        # let's try ClientCookie
-        try:
-            logger.info("streamondemand-pureita.core.scrapertools Importando ClientCookie")
-            import ClientCookie
-        except ImportError:
-            logger.info("streamondemand-pureita.core.scrapertools ClientCookie no disponible")
-            # ClientCookie isn't available either
-            urlopen = urllib2.urlopen
-            Request = urllib2.Request
-        else:
-            logger.info("streamondemand-pureita.core.scrapertools ClientCookie disponible")
-            # imported ClientCookie
-            urlopen = ClientCookie.urlopen
-            Request = ClientCookie.Request
-            cj = ClientCookie.MozillaCookieJar()
-
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools cookielib disponible")
-        # importing cookielib worked
-        urlopen = urllib2.urlopen
-        Request = urllib2.Request
-
-        logger.info("streamondemand-pureita.core.scrapertools cambio en politicas")
-
-        #cj = cookielib.LWPCookieJar(ficherocookies,policy=MyCookiePolicy())
-        #cj = cookielib.MozillaCookieJar(ficherocookies,policy=MyCookiePolicy)
-        #cj = cookielib.FileCookieJar(ficherocookies)
-        try:
-            cj = cookielib.MozillaCookieJar()
-            cj.set_policy(MyCookiePolicy())
-        except:
-            import traceback
-            logger.info(traceback.format_exc())
-    if cj is not None:
-    # we successfully imported
-    # one of the two cookie handling modules
-        logger.info("streamondemand-pureita.core.scrapertools Hay cookies")
-
-        if os.path.isfile(ficherocookies):
-            logger.info("streamondemand-pureita.core.scrapertools Leyendo fichero cookies")
-            # if we have a cookie file already saved
-            # then load the cookies into the Cookie Jar
-            try:
-                cj.load(ficherocookies,ignore_discard=True)
-            except:
-                logger.info("streamondemand-pureita.core.scrapertools El fichero de cookies existe pero es ilegible, se borra")
-                os.remove(ficherocookies)
-
-        # Now we need to get our Cookie Jar
-        # installed in the opener;
-        # for fetching URLs
-        if cookielib is not None:
-            logger.info("streamondemand-pureita.core.scrapertools opener usando urllib2 (cookielib)")
-            # if we use cookielib
-            # then we get the HTTPCookieProcessor
-            # and install the opener in urllib2
-            if not follow_redirects:
-                opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj),NoRedirectHandler())
-            else:
-                opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj))
-            urllib2.install_opener(opener)
-
-        else:
-            logger.info("streamondemand-pureita.core.scrapertools opener usando ClientCookie")
-            # if we use ClientCookie
-            # then we get the HTTPCookieProcessor
-            # and install the opener in ClientCookie
-            opener = ClientCookie.build_opener(ClientCookie.HTTPCookieProcessor(cj))
-            ClientCookie.install_opener(opener)
-
-    # -------------------------------------------------
-    # Cookies instaladas, lanza la petición
-    # -------------------------------------------------
-
-    # Contador
-    inicio = time.clock()
-
-    # Diccionario para las cabeceras
-    txheaders = {}
-
-    # Construye el request
-    if post is None:
-        logger.info("streamondemand-pureita.core.scrapertools petición GET")
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools petición POST")
-    
-    # Añade las cabeceras
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    for header in headers:
-        logger.info("streamondemand-pureita.core.scrapertools header %s=%s" % (str(header[0]),str(header[1])) )
-        txheaders[header[0]]=header[1]
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    req = Request(url, post, txheaders)
-
-    try:
-        if timeout is None:
-            logger.info("streamondemand-pureita.core.scrapertools Peticion sin timeout")
-            handle=urlopen(req)
-        else:        
-            logger.info("streamondemand-pureita.core.scrapertools Peticion con timeout")
-            #Para todas las versiones:
-            deftimeout = socket.getdefaulttimeout()
-            socket.setdefaulttimeout(timeout)
-            handle=urlopen(req)            
-            socket.setdefaulttimeout(deftimeout)
-        logger.info("streamondemand-pureita.core.scrapertools ...hecha")
-        
-        # Actualiza el almacén de cookies
-        logger.info("streamondemand-pureita.core.scrapertools Grabando cookies...")
-        cj.save(ficherocookies,ignore_discard=True) #  ,ignore_expires=True
-        logger.info("streamondemand-pureita.core.scrapertools ...hecho")
-
-        # Lee los datos y cierra
-        if handle.info().get('Content-Encoding') == 'gzip':
-            logger.info("streamondemand-pureita.core.scrapertools gzipped")
-            fin = inicio
-            import StringIO
-            data=handle.read()
-            compressedstream = StringIO.StringIO(data)
-            import gzip
-            gzipper = gzip.GzipFile(fileobj=compressedstream)
-            data = gzipper.read()
-            gzipper.close()
-            fin = time.clock()
-        else:
-            logger.info("streamondemand-pureita.core.scrapertools normal")
-            data = handle.read()
-    except urllib2.HTTPError,e:
-        import traceback
-        logger.info(traceback.format_exc())
-        data = e.read()
-        #logger.info("data="+repr(data))
-        return data
-
-    info = handle.info()
-    logger.info("streamondemand-pureita.core.scrapertools Respuesta")
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    for header in info:
-        logger.info("streamondemand-pureita.core.scrapertools "+header+"="+info[header])
-
-        # Truco para devolver el valor de un header en lugar del cuerpo entero
-        if header_to_get is not None:
-            if header==header_to_get:
-                data=info[header]
-
-    handle.close()
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    '''
-    # Lanza la petición
-    try:
-        response = urllib2.urlopen(req)
-    # Si falla la repite sustituyendo caracteres especiales
-    except:
-        req = urllib2.Request(url.replace(" ","%20"))
-    
-        # Añade las cabeceras
-        for header in headers:
-            req.add_header(header[0],header[1])
-
-        response = urllib2.urlopen(req)
-    '''
-    
-    # Tiempo transcurrido
-    fin = time.clock()
-    logger.info("streamondemand-pureita.core.scrapertools Descargado en %d segundos " % (fin-inicio+1))
-
-    return data
-
-import cookielib
-class MyCookiePolicy(cookielib.DefaultCookiePolicy):
-    def set_ok(self, cookie, request):
-        #logger.info("set_ok Cookie "+repr(cookie)+" request "+repr(request))
-        #cookie.discard = False
-        #cookie.
-        devuelve = cookielib.DefaultCookiePolicy.set_ok(self, cookie, request)
-        #logger.info("set_ok "+repr(devuelve))
-        return devuelve
-
-    def return_ok(self, cookie, request):
-        #logger.info("return_ok Cookie "+repr(cookie)+" request "+repr(request))
-        #cookie.discard = False
-        devuelve = cookielib.DefaultCookiePolicy.return_ok(self, cookie, request)
-        #logger.info("return_ok "+repr(devuelve))
-        return devuelve
-
-    def domain_return_ok(self, domain, request):
-        #logger.info("domain_return_ok domain "+repr(domain)+" request "+repr(request))
-        devuelve = cookielib.DefaultCookiePolicy.domain_return_ok(self, domain, request)
-        #logger.info("domain_return_ok "+repr(devuelve))
-        return devuelve
-
-    def path_return_ok(self,path, request):
-        #logger.info("path_return_ok path "+repr(path)+" request "+repr(request))
-        devuelve = cookielib.DefaultCookiePolicy.path_return_ok(self, path, request)
-        #logger.info("path_return_ok "+repr(devuelve))
-        return devuelve
-
-def downloadpagewithcookies(url):
-    # ---------------------------------
-    # Instala las cookies
-    # ---------------------------------
-
-    #  Inicializa la librería de las cookies
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("streamondemand-pureita.core.scrapertools Cookiefile="+ficherocookies)
-
-    cj = None
-    ClientCookie = None
-    cookielib = None
-
-    # Let's see if cookielib is available
-    try:
-        import cookielib
-    except ImportError:
-        # If importing cookielib fails
-        # let's try ClientCookie
-        try:
-            import ClientCookie
-        except ImportError:
-            # ClientCookie isn't available either
-            urlopen = urllib2.urlopen
-            Request = urllib2.Request
-        else:
-            # imported ClientCookie
-            urlopen = ClientCookie.urlopen
-            Request = ClientCookie.Request
-            cj = ClientCookie.MozillaCookieJar()
-
-    else:
-        # importing cookielib worked
-        urlopen = urllib2.urlopen
-        Request = urllib2.Request
-        cj = cookielib.MozillaCookieJar()
-        # This is a subclass of FileCookieJar
-        # that has useful load and save methods
-
-    if cj is not None:
-    # we successfully imported
-    # one of the two cookie handling modules
-
-        if os.path.isfile(ficherocookies):
-            # if we have a cookie file already saved
-            # then load the cookies into the Cookie Jar
-            try:
-                cj.load(ficherocookies)
-            except:
-                logger.info("streamondemand-pureita.core.scrapertools El fichero de cookies existe pero es ilegible, se borra")
-                os.remove(ficherocookies)
-
-        # Now we need to get our Cookie Jar
-        # installed in the opener;
-        # for fetching URLs
-        if cookielib is not None:
-            # if we use cookielib
-            # then we get the HTTPCookieProcessor
-            # and install the opener in urllib2
-            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-            urllib2.install_opener(opener)
-
-        else:
-            # if we use ClientCookie
-            # then we get the HTTPCookieProcessor
-            # and install the opener in ClientCookie
-            opener = ClientCookie.build_opener(ClientCookie.HTTPCookieProcessor(cj))
-            ClientCookie.install_opener(opener)
-
-    #print "-------------------------------------------------------"
-    theurl = url
-    # an example url that sets a cookie,
-    # try different urls here and see the cookie collection you can make !
-
-    #txheaders =  {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3',
-    #              'Referer':'http://www.megavideo.com/?s=signup'}
-    txheaders =  {
-    'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3',
-    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Host':'www.meristation.com',
-    'Accept-Language':'es-es,es;q=0.8,en-us;q=0.5,en;q=0.3',
-    'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-    'Keep-Alive':'300',
-    'Connection':'keep-alive'}
-
-    # fake a user agent, some websites (like google) don't like automated exploration
-
-    req = Request(theurl, None, txheaders)
-    handle = urlopen(req)
-    cj.save(ficherocookies) # save the cookies again
-
-    data=handle.read()
-    handle.close()
-
-    return data
-    
 def downloadpageWithoutCookies(url):
-    logger.info("streamondemand-pureita.core.scrapertools Descargando " + url)
-    inicio = time.clock()
-    req = urllib2.Request(url)
-    req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 6.0; es-ES; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14')
-    req.add_header('X-Requested-With','XMLHttpRequest')
-    try:
-        response = urllib2.urlopen(req)
-    except:
-        req = urllib2.Request(url.replace(" ","%20"))
-        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 6.0; es-ES; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14')
+    response = httptools.downloadpage(url, cookies=False)
+    return response.data
 
-        response = urllib2.urlopen(req)
-    data=response.read()
-    response.close()
-    fin = time.clock()
-    logger.info("streamondemand-pureita.core.scrapertools Descargado en %d segundos " % (fin-inicio+1))
-    return data
-    
 
 def downloadpageGzip(url):
+    response = httptools.downloadpage(url, add_referer=True)
+    return response.data
+
+
+def getLocationHeaderFromResponse(url):
+    response = httptools.downloadpage(url, only_headers=True, follow_redirects=False)
+    return response.headers.get("location")
+
+
+def get_header_from_response(url, header_to_get="", post=None, headers=None, follow_redirects=False):
+    header_to_get = header_to_get.lower()
+    response = httptools.downloadpage(url, post=post, headers=headers, only_headers=True,
+                                      follow_redirects=follow_redirects)
+    return response.headers.get(header_to_get)
+
+
+def get_headers_from_response(url, post=None, headers=None, follow_redirects=False):
+    response = httptools.downloadpage(url, post=post, headers=headers, only_headers=True,
+                                      follow_redirects=follow_redirects)
+    return response.headers.items()
     
-    #  Inicializa la librería de las cookies
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("Cookiefile="+ficherocookies)
-    inicio = time.clock()
-    
-    cj = None
-    ClientCookie = None
-    cookielib = None
 
-    # Let's see if cookielib is available
-    try:
-        import cookielib
-    except ImportError:
-        # If importing cookielib fails
-        # let's try ClientCookie
-        try:
-            import ClientCookie
-        except ImportError:
-            # ClientCookie isn't available either
-            urlopen = urllib2.urlopen
-            Request = urllib2.Request
-        else:
-            # imported ClientCookie
-            urlopen = ClientCookie.urlopen
-            Request = ClientCookie.Request
-            cj = ClientCookie.MozillaCookieJar()
+def read_body_and_headers(url, post=None, headers=None, follow_redirects=False, timeout=None):
+    response = httptools.downloadpage(url, post=post, headers=headers, follow_redirects=follow_redirects, timeout=timeout)
+    return response.data, response.headers
 
-    else:
-        # importing cookielib worked
-        urlopen = urllib2.urlopen
-        Request = urllib2.Request
-        cj = cookielib.MozillaCookieJar()
-        # This is a subclass of FileCookieJar
-        # that has useful load and save methods
 
-    # ---------------------------------
-    # Instala las cookies
-    # ---------------------------------
+def anti_cloudflare(url, headers=None, post=None):
+    #anti_cloudfare ya integrado en httptools por defecto
+    response = httptools.downloadpage(url, post=post, headers=headers)
+    return response.data
 
-    if cj is not None:
-    # we successfully imported
-    # one of the two cookie handling modules
 
-        if os.path.isfile(ficherocookies):
-            # if we have a cookie file already saved
-            # then load the cookies into the Cookie Jar
-            try:
-                cj.load(ficherocookies)
-            except:
-                logger.info("streamondemand-pureita.core.scrapertools El fichero de cookies existe pero es ilegible, se borra")
-                os.remove(ficherocookies)
 
-        # Now we need to get our Cookie Jar
-        # installed in the opener;
-        # for fetching URLs
-        if cookielib is not None:
-            # if we use cookielib
-            # then we get the HTTPCookieProcessor
-            # and install the opener in urllib2
-            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-            urllib2.install_opener(opener)
-
-        else:
-            # if we use ClientCookie
-            # then we get the HTTPCookieProcessor
-            # and install the opener in ClientCookie
-            opener = ClientCookie.build_opener(ClientCookie.HTTPCookieProcessor(cj))
-            ClientCookie.install_opener(opener)
-
-    #print "-------------------------------------------------------"
-    theurl = url
-    # an example url that sets a cookie,
-    # try different urls here and see the cookie collection you can make !
-
-    #txheaders =  {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3',
-    #              'Referer':'http://www.megavideo.com/?s=signup'}
-
-    parsedurl = urlparse.urlparse(url)
-    logger.info("parsedurl="+str(parsedurl))
-        
-    txheaders =  {
-    'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3',
-    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language':'es-es,es;q=0.8,en-us;q=0.5,en;q=0.3',
-    'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-    'Accept-Encoding':'gzip,deflate',
-    'Keep-Alive':'300',
-    'Connection':'keep-alive',
-    'Referer':parsedurl[0]+"://"+parsedurl[1]}
-    logger.info(str(txheaders))
-
-    # fake a user agent, some websites (like google) don't like automated exploration
-
-    req = Request(theurl, None, txheaders)
-    handle = urlopen(req)
-    cj.save(ficherocookies) # save the cookies again
-
-    data=handle.read()
-    handle.close()
-    
-    fin = time.clock()
-    logger.info("streamondemand-pureita.core.scrapertools Descargado 'Gzipped data' en %d segundos " % (fin-inicio+1))
-        
-    # Descomprime el archivo de datos Gzip
-    try:
-        fin = inicio
-        import StringIO
-        compressedstream = StringIO.StringIO(data)
-        import gzip
-        gzipper = gzip.GzipFile(fileobj=compressedstream)
-        data1 = gzipper.read()
-        gzipper.close()
-        fin = time.clock()
-        logger.info("streamondemand-pureita.core.scrapertools 'Gzipped data' descomprimido en %d segundos " % (fin-inicio+1))
-        return data1
-    except:
-        return data
 
 def printMatches(matches):
     i = 0
     for match in matches:
-        logger.info("streamondemand-pureita.core.scrapertools %d %s" % (i , match))
+        logger.info("streamondemand-pureita-master.core.scrapertools %d %s" % (i , match))
         i = i + 1
-        
+
 def get_match(data,patron,index=0):
     matches = re.findall( patron , data , flags=re.DOTALL )
     return matches[index]
@@ -799,7 +126,7 @@ def entityunescape(cadena):
     return unescape(cadena)
 
 def unescape(text):
-    """Removes HTML or XML character references 
+    """Removes HTML or XML character references
        and entities from a text string.
        keep &amp;, &gt;, &lt; in the source code.
     from Fredrik Lundh
@@ -810,11 +137,11 @@ def unescape(text):
         if text[:2] == "&#":
             # character reference
             try:
-                if text[:3] == "&#x":   
+                if text[:3] == "&#x":
                     return unichr(int(text[3:-1], 16)).encode("utf-8")
                 else:
                     return unichr(int(text[2:-1])).encode("utf-8")
-                  
+
             except ValueError:
                 logger.info("error de valor")
                 pass
@@ -859,9 +186,9 @@ def decodeHtmlentities(string):
                 return unichr(cp).encode('utf-8')
             else:
                 return match.group()
-                
+
     return entity_re.subn(substitute_entity, string)[0]
-    
+
 def entitiesfix(string):
     # Las entidades comienzan siempre con el símbolo & , y terminan con un punto y coma ( ; ).
     string = string.replace("&aacute","&aacute;")
@@ -896,7 +223,7 @@ def htmlclean(cadena):
     cadena = cadena.replace("</u>","")
     cadena = cadena.replace("<li>","")
     cadena = cadena.replace("</li>","")
-    cadena = cadena.replace("<tbody>","")
+    cadena = cadena.replace("<turl>","")
     cadena = cadena.replace("</tbody>","")
     cadena = cadena.replace("<tr>","")
     cadena = cadena.replace("</tr>","")
@@ -917,16 +244,16 @@ def htmlclean(cadena):
     cadena = re.compile("<i[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</iframe>","")
     cadena = cadena.replace("</i>","")
-    
+
     cadena = re.compile("<table[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</table>","")
-    
+
     cadena = re.compile("<td[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</td>","")
-    
+
     cadena = re.compile("<div[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</div>","")
-    
+
     cadena = re.compile("<dd[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</dd>","")
 
@@ -935,7 +262,7 @@ def htmlclean(cadena):
 
     cadena = re.compile("<font[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</font>","")
-    
+
     cadena = re.compile("<strong[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</strong>","")
 
@@ -947,16 +274,16 @@ def htmlclean(cadena):
 
     cadena = re.compile("<a[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</a>","")
-    
+
     cadena = re.compile("<p[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</p>","")
 
     cadena = re.compile("<ul[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</ul>","")
-    
+
     cadena = re.compile("<h1[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</h1>","")
-    
+
     cadena = re.compile("<h2[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</h2>","")
 
@@ -967,9 +294,9 @@ def htmlclean(cadena):
     cadena = cadena.replace("</h4>","")
 
     cadena = re.compile("<!--[^-]+-->",re.DOTALL).sub("",cadena)
-    
+
     cadena = re.compile("<img[^>]*>",re.DOTALL).sub("",cadena)
-    
+
     cadena = re.compile("<object[^>]*>",re.DOTALL).sub("",cadena)
     cadena = cadena.replace("</object>","")
     cadena = re.compile("<param[^>]*>",re.DOTALL).sub("",cadena)
@@ -988,9 +315,9 @@ def htmlclean(cadena):
 
 
 def slugify(title):
-    
+
     #print title
-    
+
     # Sustituye acentos y eñes
     title = title.replace("Á","a")
     title = title.replace("É","e")
@@ -1022,23 +349,23 @@ def slugify(title):
     # Pasa a minúsculas
     title = title.lower().strip()
 
-    # Elimina caracteres no válidos 
+    # Elimina caracteres no válidos
     validchars = "abcdefghijklmnopqrstuvwxyz1234567890- "
     title = ''.join(c for c in title if c in validchars)
 
     # Sustituye espacios en blanco duplicados y saltos de línea
     title = re.compile("\s+",re.DOTALL).sub(" ",title)
-    
+
     # Sustituye espacios en blanco por guiones
     title = re.compile("\s",re.DOTALL).sub("-",title.strip())
 
     # Sustituye espacios en blanco duplicados y saltos de línea
     title = re.compile("\-+",re.DOTALL).sub("-",title)
-    
+
     # Arregla casos especiales
     if title.startswith("-"):
         title = title [1:]
-    
+
     if title=="":
         title = "-"+str(time.time())
 
@@ -1059,197 +386,18 @@ def remove_show_from_title(title,show):
 
         if title.startswith("-"):
             title = title[ 1: ].strip()
-    
+
         if title=="":
             title = str( time.time() )
-        
+
         # Vuelve a utf-8
         title = title.encode("utf-8","ignore")
         show = show.encode("utf-8","ignore")
-    
+
     return title
 
 def getRandom(str):
     return get_md5(str)
-
-def getLocationHeaderFromResponse(url):
-    return get_header_from_response(url,header_to_get="location")
-
-def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']]):
-    header_to_get = header_to_get.lower()
-    logger.info("streamondemand-pureita.core.scrapertools get_header_from_response url="+url+", header_to_get="+header_to_get)
-
-    if post is not None:
-        logger.info("streamondemand-pureita.core.scrapertools post="+post)
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools post=None")
-    
-    #  Inicializa la librería de las cookies
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("streamondemand-pureita.core.scrapertools ficherocookies="+ficherocookies)
-
-    cj = None
-    ClientCookie = None
-    cookielib = None
-
-    import cookielib
-    # importing cookielib worked
-    urlopen = urllib2.urlopen
-    Request = urllib2.Request
-    cj = cookielib.MozillaCookieJar()
-    # This is a subclass of FileCookieJar
-    # that has useful load and save methods
-
-    if os.path.isfile(ficherocookies):
-        logger.info("streamondemand-pureita.core.scrapertools Leyendo fichero cookies")
-        # if we have a cookie file already saved
-        # then load the cookies into the Cookie Jar
-        try:
-            cj.load(ficherocookies)
-        except:
-            logger.info("streamondemand-pureita.core.scrapertools El fichero de cookies existe pero es ilegible, se borra")
-            os.remove(ficherocookies)
-
-    if header_to_get=="location":
-        opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj),NoRedirectHandler())
-    else:
-        opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj))
-
-    urllib2.install_opener(opener)
-
-    # Contador
-    inicio = time.clock()
-
-    # Diccionario para las cabeceras
-    txheaders = {}
-
-    # Traza la peticion
-    if post is None:
-        logger.info("streamondemand-pureita.core.scrapertools petición GET")
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools petición POST")
-    
-    # Login y password Filenium
-    # http://abcd%40gmail.com:mipass@filenium.com/get/Oi8vd3d3/LmZpbGVz/ZXJ2ZS5j/b20vZmls/ZS9kTnBL/dm11/b0/?.zip
-    if "filenium" in url:
-        from servers import filenium
-        url , authorization_header = filenium.extract_authorization_header(url)
-        headers.append( [ "Authorization",authorization_header ] )
-    
-    # Array de cabeceras
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    for header in headers:
-        logger.info("streamondemand-pureita.core.scrapertools header=%s" % str(header[0]))
-        txheaders[header[0]]=header[1]
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    # Construye el request
-    req = Request(url, post, txheaders)
-    handle = urlopen(req)
-    
-    # Actualiza el almacén de cookies
-    cj.save(ficherocookies)
-
-    # Lee los datos y cierra
-    #data=handle.read()
-    info = handle.info()
-    logger.info("streamondemand-pureita.core.scrapertools Respuesta")
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    location_header=""
-    for header in info:
-        logger.info("streamondemand-pureita.core.scrapertools "+header+"="+info[header])
-        if header==header_to_get:
-            location_header=info[header]
-    handle.close()
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    # Tiempo transcurrido
-    fin = time.clock()
-    logger.info("streamondemand-pureita.core.scrapertools Descargado en %d segundos " % (fin-inicio+1))
-
-    return location_header
-
-def get_headers_from_response(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']]):
-    return_headers = []
-    logger.info("streamondemand-pureita.core.scrapertools get_headers_from_response url="+url)
-
-    if post is not None:
-        logger.info("streamondemand-pureita.core.scrapertools post="+post)
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools post=None")
-    
-    #  Inicializa la librería de las cookies
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("streamondemand-pureita.core.scrapertools ficherocookies="+ficherocookies)
-
-    cj = None
-    ClientCookie = None
-    cookielib = None
-
-    import cookielib
-    # importing cookielib worked
-    urlopen = urllib2.urlopen
-    Request = urllib2.Request
-    cj = cookielib.MozillaCookieJar()
-    # This is a subclass of FileCookieJar
-    # that has useful load and save methods
-
-    if os.path.isfile(ficherocookies):
-        logger.info("streamondemand-pureita.core.scrapertools Leyendo fichero cookies")
-        # if we have a cookie file already saved
-        # then load the cookies into the Cookie Jar
-        try:
-            cj.load(ficherocookies)
-        except:
-            logger.info("streamondemand-pureita.core.scrapertools El fichero de cookies existe pero es ilegible, se borra")
-            os.remove(ficherocookies)
-
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj),NoRedirectHandler())
-    urllib2.install_opener(opener)
-
-    # Contador
-    inicio = time.clock()
-
-    # Diccionario para las cabeceras
-    txheaders = {}
-
-    # Traza la peticion
-    if post is None:
-        logger.info("streamondemand-pureita.core.scrapertools petición GET")
-    else:
-        logger.info("streamondemand-pureita.core.scrapertools petición POST")
-    
-    # Array de cabeceras
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    for header in headers:
-        logger.info("streamondemand-pureita.core.scrapertools header=%s" % str(header[0]))
-        txheaders[header[0]]=header[1]
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    # Construye el request
-    req = Request(url, post, txheaders)
-    handle = urlopen(req)
-    
-    # Actualiza el almacén de cookies
-    cj.save(ficherocookies)
-
-    # Lee los datos y cierra
-    #data=handle.read()
-    info = handle.info()
-    logger.info("streamondemand-pureita.core.scrapertools Respuesta")
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-    location_header=""
-    for header in info:
-        logger.info("streamondemand-pureita.core.scrapertools "+header+"="+info[header])
-        return_headers.append( [header,info[header]] )
-    handle.close()
-    logger.info("streamondemand-pureita.core.scrapertools ---------------------------")
-
-    # Tiempo transcurrido
-    fin = time.clock()
-    logger.info("streamondemand-pureita.core.scrapertools Descargado en %d segundos " % (fin-inicio+1))
-
-    return return_headers
 
 def unseo(cadena):
     if cadena.upper().startswith("VER GRATIS LA PELICULA "):
@@ -1268,7 +416,7 @@ def unseo(cadena):
 
 #scrapertools.get_filename_from_url(media_url)[-4:]
 def get_filename_from_url(url):
-    
+
     import urlparse
     parsed_url = urlparse.urlparse(url)
     try:
@@ -1286,7 +434,7 @@ def get_filename_from_url(url):
     return filename
 
 def get_domain_from_url(url):
-    
+
     import urlparse
     parsed_url = urlparse.urlparse(url)
     try:
@@ -1300,17 +448,39 @@ def get_domain_from_url(url):
 
     return filename
 
-# Parses the title of a tv show episode and returns the season id + episode id in format "1x01"
 def get_season_and_episode(title):
-    logger.info("get_season_and_episode('"+title+"')")
+    """
+    Retorna el numero de temporada y de episodio en formato "1x01" obtenido del titulo de un episodio
+    Ejemplos de diferentes valores para title y su valor devuelto:
+        "serie 101x1.strm", "s101e1.avi", "t101e1.avi"  -> '101x01'
+        "Name TvShow 1x6.avi" -> '1x06'
+        "Temp 3 episodio 2.avi" -> '3x02'
+        "Alcantara season 13 episodie 12.avi" -> '13x12'
+        "Temp1 capitulo 14" -> '1x14'
+        "Temporada 1: El origen Episodio 9" -> '' (entre el numero de temporada y los episodios no puede haber otro texto)
+        "Episodio 25: titulo episodio" -> '' (no existe el numero de temporada)
+        "Serie X Temporada 1" -> '' (no existe el numero del episodio)
+    @type title: str
+    @param title: titulo del episodio de una serie
+    @rtype: str
+    @return: Numero de temporada y episodio en formato "1x01" o cadena vacia si no se han encontrado
+    """
+    filename = ""
 
-    patron ="(\d+)[x|X](\d+)"
-    matches = re.compile(patron).findall(title)
-    logger.info(str(matches))
-    filename=matches[0][0]+"x"+matches[0][1]
+    patrons = ["(\d+)x(\d+)", "(?:s|t)(\d+)e(\d+)",
+               "(?:season|stag\w*)\s*(\d+)\s*(?:capitolo|epi\w*)\s*(\d+)"]
 
-    logger.info("get_season_and_episode('"+title+"') -> "+filename)
-    
+    for patron in patrons:
+        try:
+            matches = re.compile(patron, re.I).search(title)
+            if matches:
+                filename = matches.group(1) + "x" + matches.group(2).zfill(2)
+                break
+        except:
+            pass
+
+    logger.info("'" + title + "' -> '" + filename + "'")
+
     return filename
 
 def get_sha1(cadena):
@@ -1321,7 +491,7 @@ def get_sha1(cadena):
         import sha
         import binascii
         devuelve = binascii.hexlify(sha.new(cadena).digest())
-    
+
     return devuelve
 
 def get_md5(cadena):
@@ -1332,179 +502,8 @@ def get_md5(cadena):
         import md5
         import binascii
         devuelve = binascii.hexlify(md5.new(cadena).digest())
-    
+
     return devuelve
-
-def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, timeout=None):
-    logger.info("read_body_and_headers "+url)
-
-    if post is not None:
-        logger.info("read_body_and_headers post="+post)
-
-    if len(headers)==0:
-        headers.append(["User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:18.0) Gecko/20100101 Firefox/18.0"])
-
-    # Start cookie lib
-    ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("read_body_and_headers cookies_file="+ficherocookies)
-
-    cj = None
-    ClientCookie = None
-    cookielib = None
-
-    # Let's see if cookielib is available
-    try:
-        logger.info("read_body_and_headers importing cookielib")
-        import cookielib
-    except ImportError:
-        logger.info("read_body_and_headers cookielib no disponible")
-        # If importing cookielib fails
-        # let's try ClientCookie
-        try:
-            logger.info("read_body_and_headers importing ClientCookie")
-            import ClientCookie
-        except ImportError:
-            logger.info("read_body_and_headers ClientCookie not available")
-            # ClientCookie isn't available either
-            urlopen = urllib2.urlopen
-            Request = urllib2.Request
-        else:
-            logger.info("read_body_and_headers ClientCookie available")
-            # imported ClientCookie
-            urlopen = ClientCookie.urlopen
-            Request = ClientCookie.Request
-            cj = ClientCookie.MozillaCookieJar()
-
-    else:
-        logger.info("read_body_and_headers cookielib available")
-        # importing cookielib worked
-        urlopen = urllib2.urlopen
-        Request = urllib2.Request
-        cj = cookielib.MozillaCookieJar()
-        # This is a subclass of FileCookieJar
-        # that has useful load and save methods
-
-    if cj is not None:
-    # we successfully imported
-    # one of the two cookie handling modules
-        logger.info("read_body_and_headers Cookies enabled")
-
-        if os.path.isfile(ficherocookies):
-            logger.info("read_body_and_headers Reading cookie file")
-            # if we have a cookie file already saved
-            # then load the cookies into the Cookie Jar
-            try:
-                cj.load(ficherocookies)
-            except:
-                logger.info("read_body_and_headers Wrong cookie file, deleting...")
-                os.remove(ficherocookies)
-
-        # Now we need to get our Cookie Jar
-        # installed in the opener;
-        # for fetching URLs
-        if cookielib is not None:
-            logger.info("read_body_and_headers opener using urllib2 (cookielib)")
-            # if we use cookielib
-            # then we get the HTTPCookieProcessor
-            # and install the opener in urllib2
-            if not follow_redirects:
-                opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj),NoRedirectHandler())
-            else:
-                opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=DEBUG_LEVEL),urllib2.HTTPCookieProcessor(cj))
-            urllib2.install_opener(opener)
-
-        else:
-            logger.info("read_body_and_headers opener using ClientCookie")
-            # if we use ClientCookie
-            # then we get the HTTPCookieProcessor
-            # and install the opener in ClientCookie
-            opener = ClientCookie.build_opener(ClientCookie.HTTPCookieProcessor(cj))
-            ClientCookie.install_opener(opener)
-
-    # -------------------------------------------------
-    # Cookies instaladas, lanza la petición
-    # -------------------------------------------------
-
-    # Contador
-    inicio = time.clock()
-
-    # Diccionario para las cabeceras
-    txheaders = {}
-
-    # Construye el request
-    if post is None:
-        logger.info("read_body_and_headers GET request")
-    else:
-        logger.info("read_body_and_headers POST request")
-    
-    # Añade las cabeceras
-    logger.info("read_body_and_headers ---------------------------")
-    for header in headers:
-        logger.info("read_body_and_headers header %s=%s" % (str(header[0]),str(header[1])) )
-        txheaders[header[0]]=header[1]
-    logger.info("read_body_and_headers ---------------------------")
-
-    req = Request(url, post, txheaders)
-    if timeout is None:
-        handle=urlopen(req)
-    else:        
-        #Disponible en python 2.6 en adelante --> handle = urlopen(req, timeout=timeout)
-        #Para todas las versiones:
-        try:
-            import socket
-            deftimeout = socket.getdefaulttimeout()
-            socket.setdefaulttimeout(timeout)
-            handle=urlopen(req)            
-            socket.setdefaulttimeout(deftimeout)
-        except:
-            import sys
-            for line in sys.exc_info():
-                logger.info( "%s" % line )
-    
-    # Actualiza el almacén de cookies
-    cj.save(ficherocookies)
-
-    # Lee los datos y cierra
-    if handle.info().get('Content-Encoding') == 'gzip':
-        buf = StringIO.StringIO( handle.read())
-        f = gzip.GzipFile(fileobj=buf)
-        data = f.read()
-    else:
-        data=handle.read()
-
-    info = handle.info()
-    logger.info("read_body_and_headers Response")
-
-    returnheaders=[]
-    logger.info("read_body_and_headers ---------------------------")
-    for header in info:
-        logger.info("read_body_and_headers "+header+"="+info[header])
-        returnheaders.append([header,info[header]])
-    handle.close()
-    logger.info("read_body_and_headers ---------------------------")
-
-    '''
-    # Lanza la petición
-    try:
-        response = urllib2.urlopen(req)
-    # Si falla la repite sustituyendo caracteres especiales
-    except:
-        req = urllib2.Request(url.replace(" ","%20"))
-    
-        # Añade las cabeceras
-        for header in headers:
-            req.add_header(header[0],header[1])
-
-        response = urllib2.urlopen(req)
-    '''
-    
-    # Tiempo transcurrido
-    fin = time.clock()
-    logger.info("read_body_and_headers Downloaded in %d seconds " % (fin-inicio+1))
-    logger.info("read_body_and_headers body="+data)
-
-    return data,returnheaders
-
 
 def internet(host="8.8.8.8", port=53, timeout=3):
     """
@@ -1524,54 +523,14 @@ def internet(host="8.8.8.8", port=53, timeout=3):
 
 
 def wait_for_internet(wait=30, retry=5):
+    import xbmc
+
+    monitor = xbmc.Monitor()
     count = 0
     while True:
         if internet():
             return True
         count += 1
-        if count >= retry:
+        if count >= retry or monitor.abortRequested():
             return False
-        time.sleep(wait)
-
-
-def parseJSString(s):
-    try:
-        offset = 1 if s[0] == '+' else 0
-        val = int(eval(s.replace('!+[]', '1').replace('!![]', '1').replace('[]', '0').replace('(', 'str(')[offset:]))
-        return val
-    except:
-        pass
-
-
-def anti_cloudflare(url, headers):
-    result = cache_page(url, headers=headers)
-    try:
-        jschl = re.compile('name="jschl_vc" value="(.+?)"/>').findall(result)[0]
-        init = re.compile('setTimeout\(function\(\){\s*.*?.*:(.*?)};').findall(result)[0]
-        builder = re.compile(r"challenge-form\'\);\s*(.*)a.v").findall(result)[0]
-        decrypt_val = parseJSString(init)
-        lines = builder.split(';')
-
-        for line in lines:
-            if len(line) > 0 and '=' in line:
-                sections = line.split('=')
-                line_val = parseJSString(sections[1])
-                decrypt_val = int(eval(str(decrypt_val) + sections[0][-1] + str(line_val)))
-
-        urlsplit = urlparse.urlsplit(url)
-        h = urlsplit.netloc
-        s = urlsplit.scheme
-
-        answer = decrypt_val + len(h)
-
-        query = '%s/cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s' % (url, jschl, answer)
-
-        if 'type="hidden" name="pass"' in result:
-            passval = re.compile('name="pass" value="(.*?)"').findall(result)[0]
-            query = '%s/cdn-cgi/l/chk_jschl?pass=%s&jschl_vc=%s&jschl_answer=%s' % (s + '://' + h, urllib.quote_plus(passval), jschl, answer)
-            time.sleep(5)
-
-        get_headers_from_response(query, headers=headers)
-        return cache_page(url, headers=headers)
-    except:
-        return result
+        monitor.waitForAbort(wait)
