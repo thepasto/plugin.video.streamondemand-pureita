@@ -1,7 +1,7 @@
 5.4.4
 -Fix and Update "servers"
 -Fix and Update "channels" (now works also in Kodi Jarvis)
--Various Fix and Update
+-Various Fix and Update 
 
 
 
