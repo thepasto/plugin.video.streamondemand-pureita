@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <server>
-	<active>true</active>
+	<active>false</active>
 	<changes>Versión incial</changes>
 	<date>25/03/2016</date>
 	<free>true</free>
