@@ -1,9 +1,8 @@
 5.4.4
--Fix and Update "servers"
--Fix and Update "channels" (now works also in Kodi Jarvis)
+-Fixed and Updated "servers"
+-Fix and Updated "channels" (now works also in Kodi Jarvis)
 -Various Fix and Update 
-
-
+-Minor Bug Fixed
 
 5.4.3
 -Various Fix and Update 
@@ -51,65 +50,63 @@
 
 
 5.3.5
-- Alligned with SOD
-- Update channels
-- Part fix menu "Torna Home"
+-Alligned with SOD
+-Update channels
+-Part fix menu "Torna Home"
 
 5.3.4
-- Added channel soloserie
-- Minor Fix 
+-Added channel soloserie
+-Minor Fix 
 
 5.3.3
-- Alligned with SOD
+-Alligned with SOD
 
 5.3.2
 -Alligned with SOD
 
 5.3.1
-- Alligned with SOD
-- channel auto-update
+-Alligned with SOD
+-channel auto-update
 
 5.3.0
-- Update channels
+-Update channels
 
 5.2.9
-- Added channel solostreaming
-- Part fixed ricerca globale
+-Added channel solostreaming
+-Part fixed ricerca globale
 
 5.2.8
-- Fixed channels: Hdgratis, Itastreaming, Italiafilmvideohd
+-Fixed channels: Hdgratis, Itastreaming, Italiafilmvideohd
 
 5.2.7
+-Update & Fix
+
 
 5.2.6
-
-fixed Ricerca globale
-fixed scelta skin nel menu configurazione
-allineato alla versione 5.1.9 di Stream OnDemand Classico
+-fixed Ricerca globale
+-fixed scelta skin nel menu configurazione
+-allineato alla versione 5.1.9 di Stream OnDemand Classico
 
 5.2.5
+-Update & Fix
 
 5.2.4
-
-- Update Ricerca Globale (thanks giordiz999)
-- Fixed channels: SerieHD, FilmitaliaTV, GuardaSerie, AnimeSubITA
-- Fixed servers: okru, videomega, thevideome
+-Update Ricerca Globale (thanks giordiz999)
+-Fixed channels: SerieHD, FilmitaliaTV, GuardaSerie, AnimeSubITA
+-Fixed servers: okru, videomega, thevideome
 
 
 5.2.3
+-risolto bug che impediva l'esecuzione dell'addon
 
-risolto bug che impediva l'esecuzione dell'addon
 5.2.2
-
-aggiornata lista canali
-ottimizzazioni ai motori di ricerca
+-aggiornata lista canali
+-ottimizzazioni ai motori di ricerca
 
 5.2.1
-
-Minor Fix
+-Minor Fix
 
 5.2.0
-
  - Aggiunta nuova skin attivabile dal menu Configurazione.
      Uscire da SOD PureITA e rientrare per attivare il cambiamento.
  - Minor Bug Fix
@@ -117,15 +114,15 @@ Minor Fix
    
 5.1.4
  
- - Migliorato il motore di ricerca globale
- - Minor Bug Fix
+ -Migliorato il motore di ricerca globale
+ -Minor Bug Fix
  
 5.0.1 --- 5.1.3
  
- - Attivata la funzione di download
- - Attivata la funzione per aggiungere le serie alla libreria di Kodi
- - MOLTI Bug Fix
+ -Attivata la funzione di download
+ -Attivata la funzione per aggiungere le serie alla libreria di Kodi
+ -MOLTI Bug Fix
 
 5.0.0
  
- - Prima Release
+ -Prima Release
