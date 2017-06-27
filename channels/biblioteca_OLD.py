@@ -41,7 +41,7 @@ host = "http://www.ibs.it"
 
 DEBUG = config.get_setting("debug")
 
-TMDB_KEY = '6889f6089877fd092454d00edb44a84d'
+TMDB_KEY = 'f7f51775877e0bb6703520952b3c7840'
 #try:
 #    TMDBaddon = xbmcaddon.Addon('metadata.themoviedb.org')
 #    TMDBpath = TMDBaddon.getAddonInfo('path')
