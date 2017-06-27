@@ -44,19 +44,19 @@ def mainlist(item):
     log("mainlist", "mainlist")
     itemlist = [Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Lista Completa[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
                      url=host + "/lista-anime/",
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="animeaggiornati",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Aggiornamenti[/COLOR]",
+                     title="[COLOR azure]Anime Aggiornati[/COLOR]",
                      url=host,
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="ultimiep",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Ultimi Episodi[/COLOR]",
+                     title="[COLOR azure]Ultimi Episodi[/COLOR]",
                      url=host,
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
@@ -192,8 +192,10 @@ def ultimiep(item):
             cleantitle = re.sub(r'Episodio?\s*\d+\s*(?:\(\d+\)|)', '', scrapedtitle).strip()
             # Creazione URL
             episodio = scrapertools.find_single_match(scrapedtitle.lower(), r'episodio?\s*(\d+)')
-            scrapedurl = re.sub(r'episodio?-?\d+-?(?:\d+-|)[oav]*', '', scrapedurl)
-            extra = "<tr>\s*<td[^>]+><strong>Episodio %s[^<]*</strong></td>" % episodio
+            scrapedurl = re.sub(r'episodio?-?\d+-?(?:\d+-|)[oav]*', '', scrapedurl).replace('-fine', '')
+            if 'download' not in scrapedurl:
+                scrapedurl = scrapedurl.replace('-streaming', '-download-streaming')
+            extra = "<tr>\s*<td[^>]+><strong>Episodio %s(?:[^>]+>[^>]+>|[^<]*)</strong></td>" % episodio
             print "EPISODIO: " + episodio + "\nTITLE: " + scrapedtitle + "\nExtra: " + extra + "\nURL: " + scrapedurl
             itemlist.append(infoSod(
                 Item(channel=__channel__,
@@ -387,7 +389,7 @@ def log(funzione="", stringa="", canale=__channel__):
 
 # -----------------------------------------------------------------
 def HomePage(item):
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
 
 # =================================================================
