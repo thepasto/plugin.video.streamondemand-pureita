@@ -2,12 +2,12 @@
 <server>
 	<active>true</active>
 	<changes>Versión incial</changes>
-	<date>25/03/2016</date>
+	<date>27/06/2017</date>
 	<free>true</free>
 	<id>streaminto</id>
 	<name>streaminto</name>
 	<premium></premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_streaminto.png</thumbnail>
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/servers/</update_url>
-	<version>2</version>
+	<version>3</version>
 </server>

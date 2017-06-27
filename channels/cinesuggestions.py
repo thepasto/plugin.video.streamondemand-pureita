@@ -29,7 +29,16 @@ headers = [
     ['Accept-Encoding', 'gzip, deflate']
 ]
 
-unshort = "https://unshorten.me/s/"
+headers_src = [
+    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:54.0) Gecko/20100101 Firefox/54.0'],
+    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Accept-Language', 'en-US,en;q=0.5'],
+    ['Referer', host],
+    ['DNT', '1'],
+    ['Upgrade-Insecure-Requests', '1'],
+    ['Cache-Control', 'max-age=0']
+]
 
 def isGeneric():
     return True
@@ -47,6 +56,52 @@ def mainlist(item):
                      action="archivio",
                      url="http://csarchiviofilm.blogfree.net/?t=5309224",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/all_movies_P.png")]
+                #Item(channel=__channel__,
+                #     title="[COLOR yellow]Cerca...[/COLOR]",
+                #     action="search",
+                #     extra="movie",
+                #     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+
+    return itemlist
+
+def search(item, texto):
+    logger.info("[cinesuggestions.py] " + item.url + " search " + texto)
+    item.url = "http://csfilm01.blogspot.com/search?q=" + texto
+    try:
+        return peliculas_src(item)
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
+
+def peliculas_src(item):
+    logger.info("streamondemand.cinesuggestions peliculas_src")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers_src)
+
+    # Extrae las entradas (carpetas)
+    patron = '<h2 class="post-title entry-title">\s*<a href="([^"]+)">(.*?)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
+
 
     return itemlist
 
@@ -89,7 +144,8 @@ def peliculas(item):
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="play",
+                 action="findvideos",
+                 contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -103,8 +159,8 @@ def peliculas(item):
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
-        scrapedurl = scrapedurl.replace("&amp;", "&")
         scrapedurl = urlparse.urljoin(item.url, matches[0])
+        scrapedurl = scrapedurl.replace("&amp;", "&")
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
@@ -120,22 +176,20 @@ def peliculas(item):
 
     return itemlist
 
-def play(item):
-    logger.info("streamondemand.streamblog findvideos_tv")
+def findvideos(item):
+    logger.info("streamondemand.cinesuggestions findvideos")
 
+    # Descarga la página
     data = scrapertools.cache_page(item.url, headers=headers)
-    path = scrapertools.find_single_match(data, '<a href="([^"]+)" target="_blank">https[^<]+<')
-    from lib import requests
-    url = path
-    redir = requests.get(url)
+    data = data.replace("&#33;", "!")
 
-    itemlist = servertools.find_video_items(data=redir.url)
+    itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = item.title + videoitem.title
+        videoitem.title = "".join([item.title, '[COLOR green][B]', videoitem.title, '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
-        videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
         videoitem.plot = item.plot
         videoitem.channel = __channel__
 
@@ -144,3 +198,4 @@ def play(item):
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+
