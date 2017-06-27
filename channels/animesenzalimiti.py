@@ -11,73 +11,56 @@ import xbmc
 
 from core import logger
 from core import servertools
+from core import httptools
 from core import scrapertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "animesenzalimiti"
-__category__ = "A"
-__type__ = "generic"
-__title__ = "AnimeSenzaLimiti"
-__language__ = "IT"
 
 host = "http://www.animesenzalimiti.com"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host]
-]
-
-def isGeneric():
-    return True
-
 # ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    logger.info("[AnimeSenzaLimiti.py]==> mainlist")
+    logger.info()
     itemlist = [Item(channel=__channel__,
                      action="animepopolari",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Popolari[/COLOR]",
+                     title=color("Anime più popolari", "orange"),
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
-                Item(channel=__channel__,
-                     action="ultimiep",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Ultimi Episodi[/COLOR]",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Film[/COLOR]",
+                     title=color("Film Anime", "azure"),
                      url="%s/category/film-anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Serie[/COLOR]",
+                     title=color("Serie Anime", "azure"),
                      url="%s/category/serie-anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Programmazione[/COLOR]",
+                     title=color("Anime in corso", "azure"),
                      url="%s/category/serie-anime-in-corso/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      action="categorie",
                      title=color("Categorie", "azure"),
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      action="search",
                      title=color("Cerca anime ...", "yellow"),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")
                 ]
 
     return itemlist
 
 # ================================================================================================================
-
+'''
 # ----------------------------------------------------------------------------------------------------------------
 def newest(categoria):
-    logger.info("[AnimeSenzaLimiti.py]==> newest " + categoria)
+    logger.info()
     itemlist = []
     item = Item()
     try:
@@ -98,10 +81,10 @@ def newest(categoria):
     return itemlist
 
 # ================================================================================================================
-
+'''
 # ----------------------------------------------------------------------------------------------------------------
 def search(item, texto):
-    logger.info("[AnimeSenzaLimiti.py]==> search")
+    logger.info()
     item.url = host + "/?s=" + texto
     try:
         return lista_anime(item)
@@ -117,10 +100,10 @@ def search(item, texto):
 
 # ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
-    logger.info("[AnimeSenzaLimiti.py]==> categorie")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     blocco = scrapertools.get_match(data, r'</h4><div class="tagcloud">(.*?)</div></aside>')
     patron = r"<a href='([^']+)'.*?title='([0-9.]+) \w+'[^>]+>([^<]+)</a>"
     matches = re.compile(patron, re.DOTALL).findall(blocco)
@@ -142,10 +125,10 @@ def categorie(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def animepopolari(item):
-    logger.info("[AnimeSenzaLimiti.py]==> animepopolari")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     blocco = scrapertools.get_match(data, r"<div class='widgets-grid-layout no-grav'>(.*?)</div>\s*</div>\s*</div>")
     patron = r'<a href="([^"]+)" title="([^"]+)"[^>]+>\s*<img.*?src="([^?]+)[^"]+"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -170,10 +153,10 @@ def animepopolari(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def ultimiep(item):
-    logger.info("[AnimeSenzaLimiti.py]==> ultimiep")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
 
     blocco = scrapertools.get_match(data, r'<div class="mh-wrapper clearfix">(.*?)<div class="mh-loop-pagination clearfix">')
 
@@ -211,10 +194,10 @@ def ultimiep(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def lista_anime(item):
-    logger.info("[AnimeSenzaLimiti.py]==> lista_anime")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     patron = r'<a href="([^"]+)"><img.*?src="([^?]+)[^"]+"[^>]+>'
     patron += r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -258,10 +241,10 @@ def lista_anime(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def episodi(item):
-    logger.info("[AnimeSenzaLimiti.py]==> episodi")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     blocco = scrapertools.find_single_match(data, r'(?:<p style="text-align: left;">|<div class="pagination clearfix">\s*)(.*?)</span></a></div>')
 
     # Il primo episodio è la pagina stessa
@@ -296,9 +279,9 @@ def episodi(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
-    logger.info("[AnimeSenzaLimiti.py]==> findvideos")
+    logger.info()
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
