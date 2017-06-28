@@ -25,33 +25,38 @@ def mainlist(item):
     logger.info()
     itemlist = [Item(channel=__channel__,
                      action="animepopolari",
-                     title=color("Anime più popolari", "orange"),
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Popolari[/COLOR]",
                      url=host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
+                Item(channel=__channel__,
+                     action="ultimiep",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Ultimi Episodi[/COLOR]",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title=color("Film Anime", "azure"),
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Film[/COLOR]",
                      url="%s/category/film-anime/" % host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title=color("Serie Anime", "azure"),
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Serie[/COLOR]",
                      url="%s/category/serie-anime/" % host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title=color("Anime in corso", "azure"),
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR yellow]Programmazione[/COLOR]",
                      url="%s/category/serie-anime-in-corso/" % host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
                      action="categorie",
                      title=color("Categorie", "azure"),
                      url=host,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title=color("Cerca anime ...", "yellow"),
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")
                 ]
 
     return itemlist
@@ -177,6 +182,8 @@ def ultimiep(item):
 
         if 'sub-ita' in scrapedurl:
             scrapedurl = re.sub(r'/$', '', scrapedurl).replace('-sub-ita', '') + "-sub-ita/"
+        if scrapedtitle.startswith(("TOP 10 Anime da Vedere (vol. 1)")):
+            continue	
 
         print "EPISODIO: " + ep + "\nTITLE: " + scrapedtitle + "\nURL: " + scrapedurl
         itemlist.append(infoSod(
@@ -291,6 +298,7 @@ def findvideos(item):
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
+
     return itemlist
 
 # ================================================================================================================
