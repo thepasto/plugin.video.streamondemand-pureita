@@ -1544,9 +1544,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/saghe.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
+    <date>28/06/2017</date>
     <changes>Changed API</changes>
 </channel>
 
