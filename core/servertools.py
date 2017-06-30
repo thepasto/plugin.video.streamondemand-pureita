@@ -206,7 +206,7 @@ def resolve_video_urls_for_playing(server, url, video_password="", muestra_dialo
             # Muestra un diágo de progreso
             if muestra_dialogo:
                 from platformcode import platformtools
-                progreso = platformtools.dialog_progress("streamondemand-pureita-master", "Connessione con " + server)
+                progreso = platformtools.dialog_progress("StreamOnDemand PureITA", "Connessione con " + server)
             server_parameters = get_server_parameters(server)
 
             # Cuenta las opciones disponibles, para calcular el porcentaje
