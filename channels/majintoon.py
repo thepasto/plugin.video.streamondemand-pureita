@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita-master.- XBMC Plugin
+# streamondemand.- XBMC Plugin
 # Canale per https://majintoon.wordpress.com/
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # By MrTruth
 # ------------------------------------------------------------
 
@@ -11,31 +11,19 @@ import re
 from core import config
 from core import logger
 from core import servertools
+from core import httptools
 from core import scrapertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "majintoon"
-__category__ = "A, S"
-__type__ = "generic"
-__title__ = "Majintoon"
-__language__ = "IT"
 
 host = "https://majintoon.wordpress.com"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host]
-]
-
-
-def isGeneric():
-    return True
 
 # ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    logger.info("[Majintoon.py]==> mainlist")
+    logger.info()
     itemlist = [Item(channel=__channel__,
                      action="categorie",
                      title=color("Categorie", "azure"),
@@ -73,7 +61,7 @@ def mainlist(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def search(item, texto):
-    logger.info("[Majintoon.py]==> search")
+    logger.info()
     item.url = host + "/?s=" + texto
     try:
         return lista_anime(item)
@@ -88,11 +76,11 @@ def search(item, texto):
 
 # ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
-    logger.info("[Majintoon.py]==> categorie")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, r'Categorie</a>\s*<ul class="sub-menu">(.*?)</ul>\s*</li>')
+    data = httptools.downloadpage(item.url).data
+    blocco = scrapertools.get_match(data, r'Categorie</a>\s*<ul\s*class="sub-menu">(.*?)</ul>\s*</li>')
     patron = r'<li[^>]+><a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -112,10 +100,10 @@ def categorie(item):
 
 # ----------------------------------------------------------------------------------------------------------------
 def lista_anime(item):
-    logger.info("[Majintoon.py]==> lista_anime")
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
 
     patron = r'<figure class="post-image">\s*<a title="([^"]+)" href="([^"]+)">'
     patron += r'\s*<img.*?src="([^"]*)".*?/>\s*</a>\s*</figure>'
@@ -125,7 +113,7 @@ def lista_anime(item):
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodi",
+                 action="links",
                  contentType="tv",
                  title=scrapedtitle,
                  fulltitle=scrapedtitle,
@@ -160,14 +148,34 @@ def lista_anime(item):
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
-def episodi(item):
-    logger.info("[Majintoon.py]==> episodi")
+def links(item):
+    logger.info()
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
 
-    patron = r'<a href="([^"]+)" target="_blank"(?:\s*rel="noopener noreferrer"|)>([^<]+)</a>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    blocchi = scrapertools.find_multiple_matches(data, r'<p><span style="[^"]+">Links?\s*([^<]+)</span>(?:</p>\s*|<br\s*/>)(.*?)</p>')
+    for scrapedtitle, blocco in blocchi:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="episodi",
+                 title=color("Guarda con " + scrapedtitle, "orange"),
+                 url=blocco,
+                 thumbnail=item.thumbnail,
+                 folder=True))
+
+    return itemlist
+
+# ================================================================================================================
+
+# ----------------------------------------------------------------------------------------------------------------
+def episodi(item):
+    logger.info()
+    itemlist = []
+
+    patron = r'<a href="([^"]+)" target="_blank"(?:\s*rel="[^"]+"|)>([^<]+)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(item.url)
 
     for scrapedurl, scrapedtitle in matches:
         if 'wikipedia' not in scrapedurl:
@@ -176,7 +184,7 @@ def episodi(item):
                 Item(channel=__channel__,
                      action="findvideos",
                      contentType="tv",
-                     title=scrapedtitle,
+                     title=color(scrapedtitle, "azure"),
                      fulltitle=scrapedtitle,
                      url=scrapedurl,
                      extra="tv",
@@ -184,22 +192,13 @@ def episodi(item):
                      thumbnail=item.thumbnail,
                      folder=True))
 
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Aggiungi alla libreria (%s)" % color("Solo Serie TV", "red"),
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodi",
-                 show=item.show))
-
     return itemlist
 
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
-    logger.info("[Majintoon.py]==> findvideos")
+    logger.info()
     itemlist = servertools.find_video_items(data=item.url)
     
     for videoitem in itemlist:
