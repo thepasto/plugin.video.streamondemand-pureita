@@ -1336,9 +1336,9 @@
     <id>vidlox</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/vidlox.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>23/01/2017</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>02/07/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
@@ -1471,8 +1471,8 @@
     <id>wstream</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/wstream.py</update_url>
     <active>true</active>
-    <version>4</version>
-    <date>12/05/2017</date>
+    <version>5</version>
+    <date>02/07/2017</date>
     <changes>Update server</changes>
 </server>    
     
