@@ -748,9 +748,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmpertutti.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>23</version>
+    <version>24</version>
     <adult>false</adult>
-    <date>25/02/2017</date>
+    <date>02/07/2017</date>
     <changes>Fix Host</changes>
     <categories>
         <category>movie</category>
