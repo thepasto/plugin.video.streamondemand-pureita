@@ -17,14 +17,14 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     logger.info("[vidloxtv.py] url=" + page_url)
     video_urls = []
 
-    headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0' }
+    headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' }
 
     html = scrapertools.cache_page(page_url, headers=headers)
     match = re.search('sources:\s*\[([^]]+)\]', html, re.DOTALL)
     if match:
         match = re.search('"(https://.*?[^"])"', match.group(1))
         if match:
-            video_urls.append(["su vidlox.tv", match.group(1) + "|" + urllib.urlencode(dict(headers))])
+            video_urls.append(["su vidlox.tv", match.group(1) + "|" + urllib.urlencode(headers)])
 
     return video_urls
 
