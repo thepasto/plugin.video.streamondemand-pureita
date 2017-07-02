@@ -12,13 +12,7 @@ import time
 from core import logger
 from core import scrapertools
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
-    ['Accept-Language', 'en-US,en;q=0.5'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
-
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0']]
 
 # Returns an array of possible video url's from the page_url
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
@@ -52,7 +46,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         data = jsunpack.unpack(data_pack)
 
     video_url = scrapertools.find_single_match(data, 'file"?\s*:\s*"([^"]+)",')
-    video_urls.append([".mp4 [wstream]", video_url])
+    video_urls.append([".mp4 [wstream]", video_url + '|' + urllib.urlencode(dict(headers))])
 
     for video_url in video_urls:
         logger.info("[wstream.py] %s - %s" % (video_url[0], video_url[1]))
