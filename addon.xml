@@ -12,6 +12,8 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="it">Film e serie tv on demand</summary>
     <description lang="it">Cinema, Serie TV, Documentari, Anime, ... tutto ciò che puoi trovare su Internet in streaming ora è sul tuo media center.</description>
+    <summary lang="en">Italian Movies and TV Shows on demand</summary>
+    <description lang="en">Italian Movies, Series, Documentaries, Anime... any streaming website you can find on Internet now on is ported to your media center. </description>
     <platform>all</platform>
   </extension>
   <extension point="xbmc.service" library="library_service.py" start="login|startup">
