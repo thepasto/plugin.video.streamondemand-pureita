@@ -343,6 +343,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Scambio Etico - TNT Village[/COLOR]"     , channel="scambioetico"       , language="IT"    , category="T" ))
     #itemlist.append( Item( title="[COLOR azure]Scambiofile[/COLOR]"     , channel="scambiofile"       , language="IT"    , category="T" ))
     itemlist.append( Item( title="[COLOR azure]Serie HD[/COLOR]"     , channel="seriehd"       , language="IT"    , category="B,S"        , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Serietvonline[/COLOR]"     , channel="serietvonline"       , language="IT"    , category="B,S"        , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Serie TV Sub ITA[/COLOR]"    , channel="serietvsubita"         , language="IT" , category="S,VOS"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]SerieTVU[/COLOR]"      , channel="serietvu"           , language="IT"    , category="S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Solo-Streaming[/COLOR]"      , channel="solostreaming"           , language="IT"    , category="F,S,A,VOS"   , type="generic" , extra="Series" ))
