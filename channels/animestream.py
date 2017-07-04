@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para animestream.it
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 #  By Costaplus
 # ------------------------------------------------------------
 import re
@@ -10,30 +10,21 @@ import urlparse
 
 import xbmc
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
 from core.item import Item
 
 __channel__ = "animestream"
-__category__ = "F"
-__type__ = "generic"
-__title__ = "animestram.it"
-__language__ = "IT"
-
-DEBUG = config.get_setting("debug")
 
 host = "http://www.animestream.it/"
+
 hostcategoria = "http://www.animestream.it/Ricerca-Tutti-pag1"
-
-
-def isGeneric():
-    return True
-
 
 # -----------------------------------------------------------------
 def mainlist(item):
-    log("mainlist", "mainlist")
+    logger.info("streamondemand.animestram mainlist")
+
     itemlist = [Item(channel=__channel__,
                      action="lista_anime",
                      title="[COLOR azure]Anime[/COLOR]",
@@ -50,24 +41,22 @@ def mainlist(item):
                      action="search",
                      title="[COLOR orange]Cerca...[/COLOR]",
                      url="http://www.leserie.tv/index.php?do=search",
+                     extra="anime",
                      thumbnail=CercaThumbnail,
                      fanart=CercaFanart)]
 
     return itemlist
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def lista_anime(item):
-    log("lista_anime", "lista_anime")
+    logger.info("streamondemand.animestram lista_anime")
     itemlist = []
 
     patron = 'class="anime"[^<]+<.*?window.location=\'(.*?)\'.*?url\((.*?)\);">[^=]+[^<]+[^>]+[^<]+<h4>(.*?)</h4>'
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in scrapedAll(item.url, patron):
-        log("lista_anime",
-            "scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
+        logger.debug("streamondemand.animestram lista_anime scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
         scrapedthumbnail = scrapedthumbnail.replace("(", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
@@ -85,7 +74,7 @@ def lista_anime(item):
     pagina = scrapedSingle(item.url, '<div class="navc">.*?</div>', '<b.*?id="nav".*>.*?</b>[^<]+<.*?>(.*?)</a>')
     if len(pagina) > 0:
         paginaurl = Crea_Url(pagina[0], "ricerca")
-        log("lista_anime.Paginazione", "Paginaurl: " + paginaurl)
+        logger.debug("streamondemand.animestram lista_anime Paginaurl: " + paginaurl)
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_anime",
@@ -95,21 +84,19 @@ def lista_anime(item):
                  folder=True))
         itemlist.append(Item(channel=__channel__, action="HomePage", title=HomeTxt, folder=True))
     # ===========================================================
+
     return itemlist
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def lista_anime_categoria(item):
-    log("lista_anime_categoria", "lista_anime_categoria")
+    logger.info("streamondemand.animestram lista_anime_categoria")
     itemlist = []
 
     patron = 'class="anime"[^<]+<.*?window.location=\'(.*?)\'.*?url\((.*?)\);">[^=]+[^<]+[^>]+[^<]+<h4>(.*?)</h4>'
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in scrapedAll(item.url, patron):
-        log("lista_anime_categoria",
-            "scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
+        logger.debug("streamondemand.animestram lista_anime_categoria scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
         scrapedthumbnail = scrapedthumbnail.replace("(", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
@@ -127,7 +114,7 @@ def lista_anime_categoria(item):
     pagina = scrapedSingle(item.url, '<div class="navc">.*?</div>', '<b.*?id="nav".*>.*?</b>[^<]+<.*?>(.*?)</a>')
     if len(pagina) > 0:
         paginaurl = Crea_Url(pagina[0], "ricerca", item.title)
-        log("lista_anime.Paginazione", "Paginaurl: " + paginaurl)
+        logger.debug("streamondemand.animestram Paginaurl: " + paginaurl)
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_anime_categoria",
@@ -139,21 +126,18 @@ def lista_anime_categoria(item):
     # ===========================================================
     return itemlist
 
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def search(item, texto):
-    log("lista_anime_categoria", "search")
+    logger.info("streamondemand.animestram search "+ texto)
     itemlist = []
 
     url = Crea_Url("1", "ricerca", "", texto)
-
     patron = 'class="anime"[^<]+<.*?window.location=\'(.*?)\'.*?url\((.*?)\);">[^=]+[^<]+[^>]+[^<]+<h4>(.*?)</h4>'
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in scrapedAll(url, patron):
-        log("search",
-            "scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
+        logger.debug("scrapedurl: " + scrapedurl + " scrapedthumbnail:" + scrapedthumbnail + "scrapedtitle:" + scrapedtitle)
         scrapedthumbnail = scrapedthumbnail.replace("(", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
@@ -167,17 +151,15 @@ def search(item, texto):
                  fanart=urlparse.urljoin(host, scrapedthumbnail)))
 
     return itemlist
-
-
 # =================================================================
+
 # -----------------------------------------------------------------
 def categoria(item):
-    log("categoria", "categoria")
+    logger.info("streamondemand.animestram categoria")
     itemlist = []
     patron = '<option value="(.*?)">.*?</option>'
 
     for scrapedCategoria in scrapedAll(item.url, patron):
-        if DEBUG: logger.info("scrapedCategoria: " + scrapedCategoria)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedCategoria)
         cat = Crea_Url("", "ricerca", scrapedtitle.replace(' ', "%20"))
         if len(scrapedtitle) > 0:
@@ -192,27 +174,24 @@ def categoria(item):
                      fanart=AnimeFanart))
 
     return itemlist
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def episodios(item):
+    logger.info("streamondemand.animestram episodios")
     itemlist = []
 
     patron = 'class="episodio">\s*<.*?href=([^>]+)><img.*?src=(.*?)width[^<]+<[^<]+<[^<]+<[^<]+<.*?>(.*?)</a>'
     patronvideos = '<a id="nav" href="([^"]+)">></a>'
-
     url = urlparse.urljoin(host, item.url)
 
     while True:
         for scrapedurl, scrapedthumbnail, scrapedtitle in scrapedAll(url, patron):
-            if DEBUG: logger.info(
-                "scrapedurl: " + scrapedurl + " scrapedthumbnail: " + scrapedthumbnail + " scrapedtitle:" + scrapedtitle)
 
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
+                     contentType="episode",
                      title=scrapedtitle,
                      url=scrapedurl,
                      thumbnail=urlparse.urljoin(host, scrapedthumbnail),
@@ -220,7 +199,7 @@ def episodios(item):
                      show=item.show,
                      fanart=urlparse.urljoin(host, scrapedthumbnail)))
 
-        data = scrapertools.cache_page(urlparse.urljoin(host, item.url))
+        data = httptools.downloadpage(urlparse.urljoin(host, item.url)).data
         matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
         if len(matches) > 0:
@@ -231,32 +210,24 @@ def episodios(item):
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title,
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios",
                  show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
 
     return itemlist
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def findvideos(item):
+    logger.info("streamondemand.animestram findvideos")
     itemlist = []
 
     patron = '<source.*?src="(.*?)".*?>'
     for scrapedurl in scrapedAll(urlparse.urljoin(host, item.url), patron):
         url = urlparse.urljoin(host, scrapedurl)
-        log("player", "url Video:" + url)
+        logger.debug("streamondemand.animestram player url Video:" + url)
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -268,8 +239,6 @@ def findvideos(item):
                  folder=False))
 
     return itemlist
-
-
 # =================================================================
 
 # =================================================================
@@ -277,27 +246,22 @@ def findvideos(item):
 # -----------------------------------------------------------------
 def scrapedAll(url="", patron=""):
 
-    data = scrapertools.cache_page(url)
-    if DEBUG: logger.info("data:" + data)
+    data = httptools.downloadpage(url).data
     MyPatron = patron
     matches = re.compile(MyPatron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     return matches
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def scrapedSingle(url="", single="", patron=""):
-    data = scrapertools.cache_page(url)
+    data = httptools.downloadpage(url).data
     paginazione = scrapertools.find_single_match(data, single)
     matches = re.compile(patron, re.DOTALL).findall(paginazione)
     scrapertools.printMatches(matches)
 
     return matches
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
@@ -305,24 +269,14 @@ def Crea_Url(pagina="1", azione="ricerca", categoria="", nome=""):
     # esempio
     # chiamate.php?azione=ricerca&cat=&nome=&pag=
     Stringa = host + "chiamate.php?azione=" + azione + "&cat=" + categoria + "&nome=" + nome + "&pag=" + pagina
-    log("crea_Url", Stringa)
+    logger.debug("streamondemand.animestram CreaUrl " + Stringa)
+
     return Stringa
-
-
-# =================================================================
-
-# -----------------------------------------------------------------
-def log(funzione="", stringa="", canale=__channel__):
-    if DEBUG: logger.info("[" + canale + "].[" + funzione + "] " + stringa)
-
-
 # =================================================================
 
 # -----------------------------------------------------------------
 def HomePage(item):
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
-
 # =================================================================
 
 # =================================================================
