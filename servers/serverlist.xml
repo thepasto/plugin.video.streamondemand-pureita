@@ -427,9 +427,9 @@
     <id>googlevideo</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/googlevideo.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>10/10/2016</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>04/07/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
@@ -1381,8 +1381,8 @@
     <id>vidtome</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/vidtome.py</update_url>
     <active>true</active>
-    <version>2</version>
-    <date>02/04/2017</date>
+    <version>3</version>
+    <date>04/07/2017</date>
     <changes>Update</changes>
 </server>
 
