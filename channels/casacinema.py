@@ -157,7 +157,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 title="[COLOR yellow]Home[/COLOR]",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png"))
         itemlist.append(
             Item(channel=__channel__,
@@ -205,7 +205,7 @@ def peliculas_tv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 title="[COLOR yellow]Home[/COLOR]",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
