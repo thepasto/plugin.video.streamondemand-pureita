@@ -3,5 +3,3 @@
 -----------------------------------------
 
 This Italian version of peliscalacarta is a mod of original project
-
---snip--
