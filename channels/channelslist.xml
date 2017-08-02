@@ -116,9 +116,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>9</version>
+    <version>10</version>
     <adult>false</adult>
-    <date>22/05/2017</date>
+    <date>30/07/2017</date>
     <changes>Update Host</changes>
     <categories>
         <category>movie</category>
@@ -646,12 +646,12 @@
     <name>Filmbelli.net</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmbelli.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</adult>
-    <date>15/11/2016</date>
-    <changes>Update</changes>
+    <date>30/07/2017</date>
+    <changes>disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1309,12 +1309,12 @@
     <name>Mondo Lunatico New</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
     <version>03</version>
     <adult>false</adult>
-    <date>11/06/2017</date>
-    <changes>Update</changes>
+    <date>30/07/2017</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1778,12 +1778,12 @@
     <name>StreamingLove</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/streaminglove.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>6</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>7</version>
     <adult>false</adult>
-    <date>11/05/2017</date>
-    <changes>Update</changes>
+    <date>30/07/2017</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1966,12 +1966,12 @@
     <name>Wstreaminge</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/wstreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>2</version>
     <adult>false</adult>
-    <date>25/02/2017</date>
-    <changes>First Release</changes>
+    <date>30/07/2017</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
