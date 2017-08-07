@@ -706,8 +706,8 @@
     <id>nowvideo</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/nowvideo.py</update_url>
     <active>true</active>
-    <version>3</version>
-    <date>13/03/2017</date>
+    <version>4</version>
+    <date>04/07/2017</date>
     <changes>Update</changes>
 </server>
 
