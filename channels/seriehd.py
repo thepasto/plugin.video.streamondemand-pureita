@@ -202,6 +202,7 @@ def episodios(item):
                  url=item.url,
                  action="download_all_episodes",
                  extra="episodios",
+                 contentType="episode",
                  show=item.show))
 
     return itemlist
@@ -213,7 +214,7 @@ def findvideos(item):
 
     data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
 
-    patron = '<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen="">'
+    patron = '<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
     url = scrapertools.find_single_match(data, patron)
 
     data = scrapertools.cache_page(url, headers=headers).replace('\n', '').replace('> <', '><')
