@@ -34,9 +34,10 @@ def mainlist(item):
     logger.info("streamondemand.altadefinizione01 mainlist")
     itemlist = []
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Prime visioni[/COLOR]",action="peliculas",url="%s/prime-visioni/" % host,thumbnail=ThumbPrimavisione,fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Ultime novità[/COLOR]",action="peliculas",url="%s/news/" % host,thumbnail=ThumbNovita,fanart=fanart))
+    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film[/COLOR]",action="peliculas",url="%s/genere/film/" % host,thumbnail=ThumbNovita,fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film in HD[/COLOR]",action="peliculas", url="http://altadefinizione.bid/?s=[HD]",thumbnail=ThumbFilmHD, fanart=fanart))
-    #itemlist.append(Item(channel=__channel__,title="[COLOR azure]Genere[/COLOR]",action="genere",url=host+"/", thumbnail=ThumbGenere, fanart=fanart))
+    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Serie TV - [COLOR orange]Nuove[/COLOR]",action="peliculas",url=host+"/genere/serie-tv/", thumbnail=ThumbTVShow, fanart=fanart))
+    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",action="peliculas",url=host+"/aggiornamenti-serie-tv/", thumbnail=ThumbTVShowNew, fanart=fanart))
     itemlist.append(Item(channel=__channel__,title="[COLOR yellow]Cerca...[/COLOR]",action="search", thumbnail=ThumbSearch, fanart=fanart))
 
 
@@ -142,7 +143,8 @@ AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/chann
 ThumbPrimavisione="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
 ThumbNovita="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
 ThumbFilmHD="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"
-ThumbGenere="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"
+ThumbTVShow="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"
+ThumbTVShowNew="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"
 ThumbSearch="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 FilmFanart="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 fanart="http://www.virgilioweb.it/wp-content/uploads/2015/06/film-streaming.jpg"
