@@ -37,26 +37,31 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.tantifilm mainlist")
     itemlist = [Item(channel=__channel__,
-                     #title="[COLOR azure]Ultime Uscite[/COLOR]",
-                     #action="latest",
-                     #url=host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
-                #Item(channel=__channel__,
+                     title="[COLOR azure]Categorie[/COLOR]",
+                     action="categorias",
+                     url=host+"/watch-genre/3d/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Al Cinema[/COLOR]",
                      action="peliculas",
                      url="%s/watch-genre/al-cinema/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),                     
                 Item(channel=__channel__,
                      title="[COLOR azure]HD - Alta Definizione[/COLOR]",
                      action="peliculas",
                      url="%s/watch-genre/altadefinizione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR azure]Film Per Categoria[/COLOR]",
-                     #action="categorias",
-                     #url=host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
-                Item(channel=__channel__,
+                Item(channel=__channel__,	 
+                     title="[COLOR azure]Film - 3D[/COLOR]",
+                     action="peliculas",
+                     url=host+"/watch-genre/3d/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_3D_P.png"),
+                Item(channel=__channel__,	 
+                     title="[COLOR azure]Film - Raccomandati[/COLOR]",
+                     action="peliculas",
+                     url=host+"/watch-genre/featured/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+               Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
@@ -64,7 +69,13 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="peliculas_tv",
-                     url="%s/watch-genre/serie-tv" % host,
+                     url="%s/watch-genre/series-tv-featured/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV - Altadefinizione[/COLOR]",
+                     extra="serie",
+                     action="peliculas_tv",
+                     url="%s/watch-genre/serie-altadefinizione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
@@ -80,8 +91,7 @@ def categorias(item):
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data,
-                                    '<select class="select_join" onchange="location.href = this.value" size="1" name="linkIole2">(.*?)</select>')
+    bloque = scrapertools.get_match(data,'<select class="select_join" onchange="location.href = this.value" size="1" name="linkIole2">(.*?)</select>')
 
     # Extrae las entradas (carpetas)
     patron = r'<option[^>]+><a href=\'([^\']+)\'>(.*?)</a></option>'
@@ -233,6 +243,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -288,6 +299,7 @@ def peliculas_tv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -351,6 +363,7 @@ def latest(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
