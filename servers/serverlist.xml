@@ -362,10 +362,10 @@
 
 <server>
     <id>flashx</id>
-    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/flashx.py</update_url>
+    <update_url>https://raw.githubusercontent.com/alfapureita/plugin.video.streamondemand-pureita/master/servers/flashx.py</update_url>
     <active>true</active>
-    <version>16</version>
-    <date>26/05/2017</date>
+    <version>17</version>
+    <date>20/08/2017</date>
     <changes>Update</changes>
 </server>
 
