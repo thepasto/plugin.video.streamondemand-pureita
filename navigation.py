@@ -60,7 +60,7 @@ def get_next_items( item ):
                         if actualizado:
                             import xbmcgui
                             advertencia = xbmcgui.Dialog()
-                            advertencia.ok("tvalacarta",config.get_localized_string(30064))
+                            advertencia.ok("PureITA",config.get_localized_string(30064))
                     except:
                         pass
             # ----------------------------------------------------------------
