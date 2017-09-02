@@ -13,7 +13,7 @@ __channel__ = "novedades"
 __category__ = "F"
 __type__ = "generic"
 __title__ = "Novedades"
-__language__ = "ES"
+__language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
@@ -71,13 +71,13 @@ def peliculas(item):
     item.url = "http://www.italia-film.gratis/novita-streaming/"
     itemlist.extend(italiafilm.peliculas(item))
 
-    from channels import piratestreaming
-    item.url = "http://www.piratestreaming.black/film-aggiornamenti.php"
-    itemlist.extend(piratestreaming.peliculas(item))
+    #from channels import piratestreaming
+    #item.url = "http://www.piratestreaming.black/film-aggiornamenti.php"
+    #itemlist.extend(piratestreaming.peliculas(item))
 
-    from channels import itafilmtv
-    item.url = "http://www.itafilm.tube"
-    itemlist.extend(itafilmtv.fichas(item))
+    #from channels import itafilmtv
+    #item.url = "http://www.italia-film.gratis"
+    #itemlist.extend(itafilmtv.peliculas(item))
 
 
 
