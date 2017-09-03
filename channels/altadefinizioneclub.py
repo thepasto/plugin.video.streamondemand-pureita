@@ -1,150 +1,192 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale per altadefinizioneclub
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# streamondemand-PureITA - XBMC Plugin
+# Canale  altadefinizioneclub
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
-import xbmc
 
 from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizioneclub"
-__category__ = "F,S,A"
+__category__ = "F,S"
 __type__ = "generic"
-__title__ = "AltaDefinizioneclub"
+__title__ = "altadefinizioneclub (IT)"
 __language__ = "IT"
+
+DEBUG = config.get_setting("debug")
 
 host = "http://altadefinizione.bid"
 
-
-
-DEBUG = config.get_setting("debug")
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', host]
+]
 
 def isGeneric():
     return True
 
 
 def mainlist(item):
-    logger.info("streamondemand.altadefinizione01 mainlist")
-    itemlist = []
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Prime visioni[/COLOR]",action="peliculas",url="%s/prime-visioni/" % host,thumbnail=ThumbPrimavisione,fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film[/COLOR]",action="peliculas",url="%s/genere/film/" % host,thumbnail=ThumbNovita,fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Film in HD[/COLOR]",action="peliculas", url="http://altadefinizione.bid/?s=[HD]",thumbnail=ThumbFilmHD, fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Serie TV - [COLOR orange]Nuove[/COLOR]",action="peliculas",url=host+"/genere/serie-tv/", thumbnail=ThumbTVShow, fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",action="peliculas",url=host+"/aggiornamenti-serie-tv/", thumbnail=ThumbTVShowNew, fanart=fanart))
-    itemlist.append(Item(channel=__channel__,title="[COLOR yellow]Cerca...[/COLOR]",action="search", thumbnail=ThumbSearch, fanart=fanart))
-
+    logger.info("streamondemand-pureita.altadefinizione01 mainlist")
+    itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]Prime visioni[/COLOR]",
+                     action="peliculas",
+                     url="%s/prime-visioni/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Ultimi Film[/COLOR]",
+                     action="peliculas",
+                     url="%s/genere/film/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Film in HD[/COLOR]",
+                     action="peliculas",
+                     url="http://altadefinizione.bid/?s=[HD]",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Film Per Categoria[/COLOR]",
+                     action="categorias",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV - [COLOR orange]Nuove[/COLOR]",
+                     action="peliculas",
+                     url=host+"/genere/serie-tv/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
+                     action="peliculas",
+                     url=host+"/aggiornamenti-serie-tv/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     action="search",
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
 
-def peliculas(item):
-    logger.info("streamondemand.altadefinizioneclub peliculas")
+def categorias(item):
     itemlist = []
 
-    patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*<div class="title">(.*?)</div>'
-    for scrapedurl,scrapedthumbnail,scrapedtitle  in scrapedAll(item.url,patron):
-        logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        xbmc.log(("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]"))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("[HD]","")
-        itemlist.append(infoSod(
-                        Item(channel=__channel__,
-                              action="findvideos",
-                               title=scrapedtitle,
-                           fulltitle=scrapedtitle,
-                                 url=scrapedurl,
-                           thumbnail=scrapedthumbnail,
-                            viewmode="movie"),
-                                tipo="movie",))
+    # Descarga la pagina
+    data = scrapertools.anti_cloudflare(item.url, headers)
+    bloque = scrapertools.get_match(data, '<h3 class="widget-title">Categorie</h3>\s*<ul>.*?</ul>')
 
-    # Paginazione
-    # ===========================================================================================================================
-    matches = scrapedSingle(item.url, '<span class=\'pages\'>(.*?)class="clearfix"',"class='current'>.*?</span>.*?href=\"(.*?)\">.*?</a>")
-    if len(matches) > 0:
-        paginaurl = scrapertools.decodeHtmlentities(matches[0])
-        itemlist.append(Item(channel=__channel__, action="peliculas", title=AvantiTxt, url=paginaurl, thumbnail=AvantiImg))
-        itemlist.append(Item(channel=__channel__, action="HomePage", title=HomeTxt, thumbnail=ThumbnailHome, folder=True))
-    else:
-        itemlist.append(Item(channel=__channel__, action="mainlist", title=ListTxt, thumbnail=ThumbnailHome,folder=True))
-    # ===========================================================================================================================
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)">(.*?)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = host + scrapedurl
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
+
     return itemlist
+
 
 def search(item, texto):
-    logger.info("[altadefinizioneclub.py] " + item.url + " search " + texto)
-    itemlist=[]
+    logger.info("streamondemand-pureita.altadefinizioneclub " + item.url + " search " + texto)
     item.url = "http://altadefinizione.bid/?s=%s" % texto
+    try:
+        if item.extra == "movie":
+            return peliculas(item)
+        if item.extra == "serie":
+            return peliculas(item)
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
 
-    return peliculas(item)
+def peliculas(item):
+    logger.info("streamondemand-pureita.altadefinizioneclub peliculas")
+    itemlist = []
 
+    # Descarga la pagina
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
-def genere(item):
-    itemlist=[]
+    # Extrae las entradas (carpetas)
+    patron = '<a href="([^"]+)" data-thumbnail=".*?"><div>\s*<div class="title">([^>]+)</div>'
+    matches = re.compile(patron, re.DOTALL).finditer(data)
 
-    patron='<li class="cat-item.*?"[^<]+<.*?href="(.*?)".*?>(.*?)</a>'
-    single='class="box-sidebar-header">[^C]+Categorie(.*?)class="box-sidebar general">'
-    for scrapedurl,scrapedtitle in scrapedSingle(item.url,single,patron):
+    for match in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
 
-        itemlist.append(Item(channel=__channel__,
-                              action="peliculas",
-                               title=scrapedtitle,
-                           fulltitle=scrapedtitle,
-                                 url=scrapedurl,
-                           thumbnail=""))
+    # Extrae el paginador
+    patronvideos = '</li>\s*<li><a href="([^>]+)" >Pagina successiva &raquo;</a></li>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
 
     return itemlist
 
 
+
+
+def findvideos(item):
+
+    data = scrapertools.anti_cloudflare(item.url, headers)
+
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
+
+    return itemlist
+
 def HomePage(item):
+    import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
-# =================================================================
-# Funzioni di servizio
-# -----------------------------------------------------------------
-def scrapedAll(url="", patron=""):
-    matches = []
-    headers = [
-        ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-        ['Referer',url]
-    ]
-    data = scrapertools.cache_page(url)
-    data=data.replace('<span class="hdbox">HD</span>',"")
-    #logger.info("data->"+data)
-    xbmc.log("ok"+data)
-    MyPatron = patron
-    matches = re.compile(MyPatron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-    return matches
-# =================================================================
-
-# -----------------------------------------------------------------
-def scrapedSingle(url="", single="", patron=""):
-    matches = []
-    data = scrapertools.cache_page(url)
-    elemento = scrapertools.find_single_match(data, single)
-    logger.info("elemento ->" + elemento)
-    xbmc.log("elemento ->" + elemento)
-    matches = re.compile(patron, re.DOTALL).findall(elemento)
-    scrapertools.printMatches(matches)
-    return matches
-# =================================================================
-
-HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
-ThumbnailHome="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png"
-ListTxt = "[COLOR orange]Torna a elenco principale [/COLOR]"
-AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
-AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
-ThumbPrimavisione="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"
-ThumbNovita="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
-ThumbFilmHD="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"
-ThumbTVShow="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"
-ThumbTVShowNew="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"
-ThumbSearch="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
-FilmFanart="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
-fanart="http://www.virgilioweb.it/wp-content/uploads/2015/06/film-streaming.jpg"

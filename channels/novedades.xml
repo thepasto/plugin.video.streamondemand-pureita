@@ -12,22 +12,12 @@
 	<thumbnail></thumbnail>
 	
 	<update_url></update_url>
-	<version>5</version>
+	<version>6</version>
 	
 	<changes>
 		<change> 
-			<date>26/05/17</date>
-			<autor>MrTruth</autor>
-			<description>Merge from pelisalacarta</description>
-		</change>
-		<change>
-			<date>11/10/2016</date>
-			<autor>Costaplus</autor>
-			<description>Fix ita</description>
-		</change>
-		<change> 
-			<date>29/04/16</date>
-			<autor>super_berny</autor>
+			<date>02/09/17</date>
+			<autor>PureITA</autor>
 			<description>Posibilidad de incluir otros canales, mediante configuracion</description>
 		</change>
 	</changes>
