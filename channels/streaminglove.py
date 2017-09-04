@@ -230,7 +230,7 @@ def serie(item):
                  folder=True), tipo='tv'))
 
    
-    patronvideos = '<span class="current">[^<]+<[^>]+><a href=\'(.*?)\''
+    patronvideos = '<link rel="next" href="([^"]+)"/>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -239,6 +239,7 @@ def serie(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
