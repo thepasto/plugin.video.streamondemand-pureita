@@ -32,7 +32,13 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.eurostreaming mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV -  [COLOR orange]Aggiornate[/COLOR]",
+                     action="serietv",
+                     extra='serie',
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV -  [COLOR orange]Archivio[/COLOR]",
                      action="serietv",
                      extra='serie',
                      url="%s/category/serie-tv-archive/" % host,
