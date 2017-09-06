@@ -86,7 +86,7 @@ def serietv(item):
                  folder=True), tipo='tv'))
 
     # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'
+    patronvideos = '<a class="next page-numbers" href="([^"]+)">Avanti &raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
