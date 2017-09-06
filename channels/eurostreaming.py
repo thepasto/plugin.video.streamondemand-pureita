@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per eurostreaming.tv
+# PureITA.- XBMC Plugin
+# Canale  eurostreaming.club
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
