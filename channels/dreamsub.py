@@ -35,18 +35,6 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.dreamsub mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[/COLOR]",
-                     action="serietv",
-                     extra='serie',
-                     url="%s/serie-tv" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Ultimi episodi Serie TV[/COLOR]",
-                     action="ultimiep",
-                     extra='serie',
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
-                Item(channel=__channel__,
                      title="[COLOR azure]Anime / Cartoni[/COLOR]",
                      action="serietv",
                      extra='serie',
