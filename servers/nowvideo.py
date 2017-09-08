@@ -78,7 +78,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
         video_urls.append([scrapertools.get_filename_from_url(location)[-4:] + " [premium][nowvideo]", location])
     else:
-        url = page_url.replace("http://www.nowvideo.li/video/", "http://embed.nowvideo.li/embed/?v=")
+        url = page_url.replace("http://www.nowvideo.sx/video/", "http://embed.nowvideo.sx/embed/?v=")
         data = httptools.downloadpage(url).data
 
         videourls = scrapertools.find_multiple_matches(data, 'src\s*:\s*[\'"]([^\'"]+)[\'"]')
@@ -87,7 +87,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         for videourl in videourls:
             if videourl.endswith(".mpd"):
                 id = scrapertools.find_single_match(videourl, '/dash/(.*?)/')
-                videourl = "http://www.nowvideo.li/download.php%3Ffile=mm" + "%s.mp4" % id
+                videourl = "http://www.nowvideo.sx/download.php%3Ffile=mm" + "%s.mp4" % id
 
             videourl = re.sub(r'/dl(\d)*/', '/dl/', videourl)
             ext = scrapertools.get_filename_from_url(videourl)[-4:]
@@ -113,7 +113,7 @@ def find_videos(data):
 
     for match in matches:
         titulo = "[nowvideo]"
-        url = "http://www.nowvideo.li/video/" + match
+        url = "http://www.nowvideo.sx/video/" + match
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'nowvideo'])
