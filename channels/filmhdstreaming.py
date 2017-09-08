@@ -26,7 +26,7 @@ __language__ = "IT"
 # riferimento alla gestione del log
 DEBUG = config.get_setting("debug")
 
-host = "http://hdcineblog01.com"
+host = "https://cb01.mobi/"
 
 # -----------------------------------------------------------------
 # Elenco inziale del canale
@@ -34,11 +34,11 @@ def mainlist(item):
     logger.info("filmhdstreaming mainlist")
 
     itemlist = []
-    #itemlist.append(Item(channel=item.channel, action="elenco_ten", title="[COLOR yellow]Film Top 10[/COLOR]", url=host,thumbnail=NovitaThumbnail, fanart=fanart))
-    itemlist.append(Item(channel=item.channel, action="elenco", title="[COLOR azure]Film Top[/COLOR]", url=host,thumbnail=NovitaThumbnail, fanart=fanart))
-    itemlist.append(Item(channel=item.channel, action="elenco", title="[COLOR azure]Aggiornamenti Film[/COLOR]", url=host+"/page/1.html",thumbnail=NovitaThumbnail, fanart=fanart))
-    itemlist.append(Item(channel=item.channel, action="elenco_genere", title="[COLOR azure]Film per Genere[/COLOR]", url=host,thumbnail=GenereThumbnail, fanart=fanart))
-    itemlist.append(Item(channel=item.channel, action="search", title="[COLOR orange]Cerca film...[/COLOR]", extra="movie",thumbnail=thumbcerca, fanart=fanart))
+    itemlist.append(Item(channel=item.channel, action="elenco", title="[COLOR azure]Film - [COLOR orange]Top[/COLOR]", url=host,thumbnail=TopThumbnail, fanart=fanart))
+    itemlist.append(Item(channel=item.channel, action="elenco", title="[COLOR azure]Film - [COLOR orange]Aggiornati[/COLOR]", url=host+"/page/1.html",thumbnail=NovitaThumbnail, fanart=fanart))
+    itemlist.append(Item(channel=item.channel, action="elenco_years", title="[COLOR azure]Film - [COLOR orange]per Anno[/COLOR]", url=host,thumbnail=AnnoThumbnail, fanart=fanart))
+    itemlist.append(Item(channel=item.channel, action="elenco_genere", title="[COLOR azure]Film - [COLOR orange]per Categoria[/COLOR]", url=host,thumbnail=GenereThumbnail, fanart=fanart))
+    itemlist.append(Item(channel=item.channel, action="search", title="[COLOR yellow]Cerca film...[/COLOR]", extra="movie",thumbnail=thumbcerca, fanart=fanart))
 
     return itemlist
 # =================================================================
@@ -175,7 +175,7 @@ def elenco_genere(item):
     bloque = scrapertools.get_match(data, '<ul>(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
-    patron = '<li><a href="(.*?)"><i class=[^s]+strong>(.*?)<\/strong><\/a><\/li>'
+    patron = '<li><a href="(.*?)"><i class="fa fa-caret-right"></i> (.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
@@ -195,27 +195,30 @@ def elenco_genere(item):
 
 #------------------------------------------------------------------
 # Funzione elenco genere
-def elenco_ten(item):
-    logger.info("filmhdstreaming elenco_ten")
+
+def elenco_years(item):
+    logger.info("filmhdstreaming elenco_genere")
 
     itemlist = []
+
+
     data = scrapertools.cache_page(item.url)
-    patron = '<ul class="lista">(.*?)</ul>'
+    bloque = scrapertools.get_match(data, '<input type="checkbox" id="drop-2"/>\s*<ul>(.*?)</ul>')
 
-    filtro= scrapertools.find_single_match(data, patron)
-    patron = '<li>.*?href="(.*?)">(.*?)</a>'
-    matches = scrapertools.find_multiple_matches(filtro, patron)
 
-    for scrapedurl,scrapedtitle in matches:
-        logger.info("Url:" + scrapedurl + " title:" + scrapedtitle)
-        itemlist.append(infoSod(Item(channel=item.channel,
-                             action="findvideos",
-                             title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                             fulltitle=scrapedtitle,
-                             url=scrapedurl,
-                             thumbnail="",
-                             fanart=""
-                             )))
+    patron = '<li><a href="(.*?)"><i class="fa fa-caret-right"></i> (.*?)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapedtitle.replace("Film streaming ", "")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="elenco",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
+                 folder=True))
 
     return itemlist
 #==================================================================
@@ -246,7 +249,9 @@ def HomePage(item):
 ########################################################################
 # Riferimenti a immagini statiche
 GenereThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"
-NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
+NovitaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"
+TopThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"
+AnnoThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"
 thumbcerca = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 fanart ="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
