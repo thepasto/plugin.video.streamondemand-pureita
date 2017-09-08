@@ -1,40 +1,25 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para seriehd - based on guardaserie channel
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# streamondemand-pureita- XBMC Plugin
+# Canale seriehd
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import base64
 import re
-import time
-import urllib
 import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "seriehd"
-__category__ = "S"
-__type__ = "generic"
-__title__ = "Serie HD"
-__language__ = "IT"
 
 host = "http://www.seriehd.me"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
-
-
-def isGeneric():
-    return True
+headers = [['Referer', host]]
 
 
 def mainlist(item):
@@ -44,14 +29,15 @@ def mainlist(item):
                      action="fichas",
                      title="[COLOR azure]Serie TV[/COLOR]",
                      url=host + "/serie-tv-streaming/",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      action="sottomenu",
-                     title="[COLOR orange]Sottomenu...[/COLOR]",
+                     title="[COLOR orange]Categoria[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="search",
+                     extra="serie",
                      title="[COLOR green]Cerca...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
@@ -78,10 +64,7 @@ def sottomenu(item):
     logger.info("[seriehd.py] sottomenu")
     itemlist = []
 
-    # data = anti_cloudflare(item.url)
-    data = scrapertools.cache_page(item.url, headers=headers)
-
-    print data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<a href="([^"]+)">([^<]+)</a>'
 
@@ -105,19 +88,7 @@ def fichas(item):
     logger.info("[seriehd.py] fichas")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
-
-    # ------------------------------------------------
-    cookies = ""
-    matches = re.compile('(.seriehd.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
-    for cookie in matches:
-        name = cookie.split('\t')[5]
-        value = cookie.split('\t')[6]
-        cookies += name + "=" + value + ";"
-    headers.append(['Cookie', cookies[:-1]])
-    import urllib
-    _headers = urllib.urlencode(dict(headers))
-    # ------------------------------------------------
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<h2>(.*?)</h2>\s*'
     patron += '<img src="([^"]+)" alt="[^"]*" />\s*'
@@ -126,7 +97,7 @@ def fichas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle, scrapedthumbnail, scrapedurl in matches:
-        scrapedthumbnail += "|" + _headers
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -154,21 +125,22 @@ def episodios(item):
     logger.info("[seriehd.py] episodios")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)" allowfullscreen frameborder="0">'
     url = scrapertools.find_single_match(data, patron).replace("?seriehd", "")
 
-    data = scrapertools.cache_page(url).replace('\n', '').replace(' class="active"', '')
+    data = httptools.downloadpage(url).data.replace('\n', '').replace(' class="active"', '')
+
 
     section_stagione = scrapertools.find_single_match(data, '<h3>STAGIONE</h3><ul>(.*?)</ul>')
-    patron = '<li[^>]+><a href="([^"]+)">(\d)<'
+    patron = '<li[^>]+><a href="([^"]+)">(\d+)<'
     seasons = re.compile(patron, re.DOTALL).findall(section_stagione)
 
     for scrapedseason_url, scrapedseason in seasons:
 
         season_url = urlparse.urljoin(url, scrapedseason_url)
-        data = scrapertools.cache_page(season_url).replace('\n', '').replace(' class="active"', '')
+        data = httptools.downloadpage(season_url).data.replace('\n', '').replace(' class="active"', '')
 
         section_episodio = scrapertools.find_single_match(data, '<h3>EPISODIO</h3><ul>(.*?)</ul>')
         patron = '<li><a href="([^"]+)">(\d+)<'
@@ -182,69 +154,71 @@ def episodios(item):
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
+                     contentType="episode",
                      title=title,
                      url=episode_url,
-                     fulltitle=item.fulltitle,
+                     fulltitle=title + ' - ' + item.show,
                      show=item.show,
                      thumbnail=item.thumbnail))
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
-                 title=item.title + " (Add Serie to Library)",
+                 title="Aggiungi alla libreria",
                  url=item.url,
                  action="add_serie_to_library",
                  extra="episodios",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 contentType="episode",
                  show=item.show))
 
     return itemlist
 
 
 def findvideos(item):
-    logger.info("[seriehd1.py] findvideos")
+    logger.info("[seriehd.py] findvideos")
+
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
+    # Descarga la página
+    data = httptools.downloadpage(item.url, headers=headers).data.replace('\n', '')
 
-    patron = '<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
+    patron = r'<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
     url = scrapertools.find_single_match(data, patron)
 
-    data = scrapertools.cache_page(url, headers=headers).replace('\n', '').replace('> <', '><')
+    if 'hdpass' in url:
+        data = httptools.downloadpage(url, headers=headers).data
 
-    patron_res = '<div class="row mobileRes">(.*?)</div>'
-    patron_mir = '<div class="row mobileMirrs">(.*?)</div>'
-    patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"/>'
+        start = data.find('<div class="row mobileRes">')
+        end = data.find('<div id="playerFront">', start)
+        data = data[start:end]
 
-    res = scrapertools.find_single_match(data, patron_res)
+        patron_res = '<div class="row mobileRes">(.*?)</div>'
+        patron_mir = '<div class="row mobileMirrs">(.*?)</div>'
+        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"/>'
 
-    for res_url, res_video in scrapertools.find_multiple_matches(res, '<option.*?value="([^"]+?)">([^<]+?)</option>'):
+        res = scrapertools.find_single_match(data, patron_res)
 
-        data = scrapertools.cache_page(urlparse.urljoin(item.url, res_url), headers=headers).replace('\n', '').replace('> <', '><')
+        urls = []
+        for res_url, res_video in scrapertools.find_multiple_matches(res, '<option.*?value="([^"]+?)">([^<]+?)</option>'):
 
-        mir = scrapertools.find_single_match(data, patron_mir)
+            data = httptools.downloadpage(urlparse.urljoin(url, res_url), headers=headers).data.replace('\n', '')
 
-        for mir_url in scrapertools.find_multiple_matches(mir, '<option.*?value="([^"]+?)">[^<]+?</value>'):
+            mir = scrapertools.find_single_match(data, patron_mir)
 
-            data = scrapertools.cache_page(urlparse.urljoin(item.url, mir_url), headers=headers).replace('\n', '').replace('> <', '><')
+            for mir_url in scrapertools.find_multiple_matches(mir, '<option.*?value="([^"]+?)">[^<]+?</value>'):
 
-            for media_label, media_url in re.compile(patron_media).findall(data):
-                media_label = scrapertools.decodeHtmlentities(media_label)
+                data = httptools.downloadpage(urlparse.urljoin(url, mir_url), headers=headers).data.replace('\n', '')
 
-                itemlist.append(
-                    Item(channel=__channel__,
-                         server=media_label,
-                         action="play",
-                         title=item.title + ' - [%s @%s]' % (media_label, res_video),
-                         url=url_decode(media_url),
-                         folder=False))
+                for media_label, media_url in re.compile(patron_media).findall(data):
+                    urls.append(url_decode(media_url))
+
+        itemlist = servertools.find_video_items(data='\n'.join(urls))
+        for videoitem in itemlist:
+            videoitem.title = item.title + videoitem.title
+            videoitem.fulltitle = item.fulltitle
+            videoitem.thumbnail = item.thumbnail
+            videoitem.show = item.show
+            videoitem.plot = item.plot
+            videoitem.channel = __channel__
 
     return itemlist
 
