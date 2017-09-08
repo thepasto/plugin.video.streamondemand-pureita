@@ -8,9 +8,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>29</version>
+    <version>30</version>
     <adult>false</adult>
-    <date>01/09/2017</date>
+    <date>07/09/2017</date>
     <changes>update</changes>
     <categories>
         <category>movie</category>
@@ -615,13 +615,13 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/fastsubita.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <version>2</version>
     <adult>true</adult>
-    <date>03/06/2017</date>
-    <changes>First Release</changes>
+    <date>07/09/2017</date>
+    <changes>Update</changes>
 	<categories>
-	       <category>serie</category>
-               <category>vos</category>
+           <category>serie</category>
+           <category>vos</category>
     </categories>
 </channel>
 
@@ -906,9 +906,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardaserieonline.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>10/06/2017</date>
+    <date>07/09/2017</date>
     <changes>Update</changes>
     <categories>
         <category>Top Channel</category>

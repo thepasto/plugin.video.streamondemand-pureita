@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per fastsubita
+# streamondemand-pureita- XBMC Plugin
+# Canale  fastsubita
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
 from core.item import Item
@@ -27,15 +27,15 @@ def isGeneric():
     return True
 
 def mainlist(item):
-    logger.info("streamondemand.fastsubita mainlist")
+    logger.info("pureita.fastsubita mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Aggiornamenti[/COLOR]",
+                     title="[COLOR azure]Serie TV -  [COLOR orange]Aggiornate[/COLOR]",
                      action="serietv",
                      extra='serie',
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Tutte le Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV -  [COLOR orange]Lista[/COLOR]",
                      action="all_quick",
                      extra='serie',
                      url="%s/tutte-le-serie-tv/" % host,
@@ -49,17 +49,18 @@ def mainlist(item):
     return itemlist
 
 def serietv(item):
-    logger.info("streamondemand.fastsubita peliculas")
+    logger.info("pureita.fastsubita peliculas")
     itemlist = []
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<h2 class="entry-title"><a href="([^"]+)"[^r]+rel[^>]+>([^<]+)<'
+    patron = '<h2 class="entry-title title-font"><a href="([^"]+)" rel="bookmark">(.*?)</a></h2>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
+        scrapedurl = scrapedurl.replace ("//fastsubita.tk", host)
         scrapedplot = ""
         scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -78,7 +79,7 @@ def serietv(item):
                  folder=True))
 
     # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="(.*?)"><span class="screen-reader-text">'
+    patronvideos = '<a class="next page-numbers" href="([^"]+)">Successivi</a></div>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -101,7 +102,7 @@ def serietv(item):
     return itemlist
 
 def all_quick(item):
-    logger.info("streamondemand.fastsubita peliculas")
+    logger.info("pureita.fastsubita peliculas")
     itemlist = []
 
     # Descarga la pagina

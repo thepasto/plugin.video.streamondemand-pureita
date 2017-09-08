@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand-pureita.- XBMC Plugin
-# Canale per http://www.guardaserie.online/
+# Canale guardaserieonline
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # By MrTruth
 # ------------------------------------------------------------
 
 import re
-
+from core import httptools
 from core import logger
 from core import config
 from core import servertools
@@ -42,21 +42,26 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV - [COLOR orange]Nuove[/COLOR]",
                      url="%s/lista-serie-tv" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
-                Item(channel=__channel__,
+               Item(channel=__channel__,
+                     action="nuoveseriesub",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Inedite ([COLOR azure]Sub Ita[/COLOR])",
+                     url="%s/lista-serie-tv" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_sub_P.png"),
+               Item(channel=__channel__,
                      action="serietvaggiornate",
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
                      url="%s/lista-serie-tv" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
+                     action="categorie",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Categorie[/COLOR]",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),                
+               Item(channel=__channel__,
                      action="lista_serie",
                      title=color("Anime", "azure"),
                      url="%s/category/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
-                Item(channel=__channel__,
-                     action="categorie",
-                     title=color("Categorie", "azure"),
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title=color("Cerca ...", "yellow"),
@@ -73,7 +78,7 @@ def newest(categoria):
     item = Item()
     try:
         if categoria == "series":
-            item.url = "http://www.guardaserie.online/lista-serie-tv"
+            item.url = "%s/lista-serie-tv" % host
             item.action = "serietvaggiornate"
             itemlist = serietvaggiornate(item)
 
@@ -111,7 +116,7 @@ def nuoveserie(item):
     logger.info("[GuardaSerieOnline.py]==> nuoveserie")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
     blocco = scrapertools.get_match(data, '<div\s*class="container container-title-serie-new container-scheda" meta-slug="new">(.*?)</div></div><div')
 
     patron = r'<a\s*href="([^"]+)".*?>\s*<img\s*.*?src="([^"]+)" />[^>]+>[^>]+>[^>]+>[^>]+>'
@@ -137,11 +142,41 @@ def nuoveserie(item):
 # ================================================================================================================
 
 # ----------------------------------------------------------------------------------------------------------------
+def nuoveseriesub(item):
+    logger.info("[GuardaSerieOnline.py]==> nuoveserie")
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+    blocco = scrapertools.get_match(data, '<div\s*class="container container-title-serie-ined container-scheda" meta-slug="ined">(.*?)</div></div><div')
+
+    patron = r'<a\s*href="([^"]+)".*?>\s*<img\s*.*?src="([^"]+)" />[^>]+>[^>]+>[^>]+>[^>]+>'
+    patron += r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</p>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodi",
+                 contentType="tv",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 extra="tv",
+                 show=scrapedtitle,
+                 thumbnail=scrapedthumbnail,
+                 folder=True), tipo="tv"))
+
+    return itemlist
+
+# ======================================================================================================================
+
+# ----------------------------------------------------------------------------------------------------------------------
 def serietvaggiornate(item):
     logger.info("[GuardaSerieOnline.py]==> serietvaggiornate")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
     blocco = scrapertools.get_match(data, r'<div\s*class="container container-title-serie-lastep  container-scheda" meta-slug="lastep">(.*?)</div></div><div')
 
     patron = r'<a\s*rel="nofollow" href="([^"]+)"[^>]+> <img\s*.*?src="([^"]+)"[^>]+>[^>]+>'
@@ -149,11 +184,11 @@ def serietvaggiornate(item):
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedthumbnail, scrapedep, scrapedtitle in matches:
-        if DEBUG: logger.info("Scrapedurl: " + scrapedurl + " | ScrapedThumbnail: " + scrapedthumbnail + " | ScrapedEp: " + scrapedep + " | ScrapedTitle: " + scrapedtitle)
-        episode = re.compile(r'^(\d+)x(\d+)', re.DOTALL).findall(scrapedep) # Prendo stagione ed episodio
+        episode = re.compile(r'^(\d+)x(\d+)', re.DOTALL).findall(scrapedep)  # Prendo stagione ed episodio
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         title = "%s %s" % (scrapedtitle, scrapedep)
-        extra = r'<span\s*.*?meta-stag="%s" meta-ep="%s" meta-embed="([^"]+)">' % (episode[0][0], episode[0][1].lstrip("0"))
+        extra = r'<span\s*.*?meta-stag="%s" meta-ep="%s" meta-embed="([^"]+)">' % (
+            episode[0][0], episode[0][1].lstrip("0"))
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -174,9 +209,9 @@ def categorie(item):
     logger.info("[GuardaSerieOnline.py]==> categorie")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, r'<table\s*class="table table-striped table-condensed"><tbody\s*style="font-size:13px;">(.*?)</tbody></table></div>')
-    patron = r'<a\s*class="link-categories-home" href="([^"]+)"[^>]+>([^<]+)</a>'
+    data = httptools.downloadpage(item.url, headers=headers).data
+    blocco = scrapertools.get_match(data, r'<ul\s*class="dropdown-menu category">(.*?)</ul>')
+    patron = r'<li>\s*<a\s*href="([^"]+)"[^>]+>([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle in matches:
@@ -185,8 +220,8 @@ def categorie(item):
                  action="lista_serie",
                  title=scrapedtitle,
                  contentType="tv",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 url="".join([host, scrapedurl]),
+                 thumbnail='https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png',
                  extra="tv",
                  folder=True))
 
@@ -199,7 +234,7 @@ def lista_serie(item):
     logger.info("[GuardaSerieOnline.py]==> lista_serie")
     itemlist = []
     
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = r'<a\s*href="([^"]+)".*?>\s*<img\s*.*?src="([^"]+)" />[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</p></div>'
     blocco = scrapertools.get_match(data, r'<div\s*class="col-xs-\d+ col-sm-\d+-\d+">(.*?)<div\s*class="container-fluid whitebg" style="">')
@@ -217,6 +252,25 @@ def lista_serie(item):
                  extra=item.extra,
                  show=scrapedtitle,
                  folder=True), tipo="tv"))
+
+
+    patron = '<a\s*class="nextpostslink" rel="next" href="([^"]+)">&raquo;</a>'
+    next_page = scrapertools.find_single_match(data, patron)
+    if len(matches) > 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="lista_serie",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
     return itemlist
 
 # ================================================================================================================
@@ -226,7 +280,7 @@ def episodi(item):
     logger.info("[GuardaSerieOnline.py]==> episodi")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = r'<img\s*.*?[meta-src|data-original]*="([^"]+)"\s*/>[^>]+>([^<]+)<[^>]+>[^>]+>[^>]+>'
     patron += r'[^>]+>[^>]+>([^<]+)*<[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>'
@@ -270,29 +324,22 @@ def episodi(item):
 def findvideos(item):
     logger.info("[GuardaSerieOnline.py]==> findvideos")
 
-    try:
-        if item.url:
-            data = scrapertools.anti_cloudflare(item.url, headers=headers)
-            data = scrapertools.find_single_match(data, item.extra)
-            itemlist = servertools.find_video_items(data=data)
-        else:
-            itemlist = servertools.find_video_items(data=item.extra)
+    if item.url:
+        data = httptools.downloadpage(item.url, headers=headers).data
+        data = scrapertools.find_single_match(data, item.extra)
+        itemlist = servertools.find_video_items(data=data)
+    else:
+        itemlist = servertools.find_video_items(data=item.extra)
 
-        # Non sono riuscito a trovare un modo migliore di questo, se qualcuno ha un metodo migliore di questo
-        # per estrarre il video lo sistemi per favore.
-        if len(itemlist) > 1:
-            itemlist.remove(itemlist[1])
-        server = re.sub(r'[-\[\]\s]+', '', itemlist[0].title)
-        itemlist[0].title = "".join(["[%s] " % color(server, 'orange'), item.title])
-        itemlist[0].fulltitle = item.fulltitle
-        itemlist[0].show = item.show
-        itemlist[0].thumbnail = item.thumbnail
-        itemlist[0].channel = __channel__
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
+    for videoitem in itemlist:
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title).capitalize()
+        videoitem.title = "".join(["[%s] " % color(server, 'orange'), item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
     return itemlist
 
 # ================================================================================================================
