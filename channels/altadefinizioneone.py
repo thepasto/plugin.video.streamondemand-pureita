@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-PureITA - XBMC Plugin
 # Canale altadefinizioneone
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
