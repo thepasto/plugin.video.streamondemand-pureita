@@ -314,7 +314,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]IlGenioDelloStreaming[/COLOR]"      , channel="ilgeniodellostreaming"           , language="IT"    , category="F"   , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]Imovie[/COLOR]"      , channel="imovie"           , language="IT"    , category="f"   , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]IlGiramondo[/COLOR]"      , channel="ilgiramondo"           , language="IT"    , category="D"   , type="generic" ))
-    itemlist.append( Item( title="[COLOR azure]Istreaming[/COLOR]"      , channel="istreaming"           , language="IT"    , category="F"   , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]Istreaming[/COLOR]"      , channel="istreaming"           , language="IT"    , category="F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]ItaFilm.tv[/COLOR]"      , channel="itafilmtv"           , language="IT"    , category="B,F,S,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Italia-Film.co[/COLOR]"      , channel="italiafilm"           , language="IT"    , category="B,F,S,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]ItaliaFilm01[/COLOR]"      , channel="italiafilm01"           , language="IT"    , category="F,A"   , type="generic"))
