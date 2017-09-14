@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-pureita- XBMC Plugin
 # Canale  fastsubita
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -29,14 +29,8 @@ def isGeneric():
 def mainlist(item):
     logger.info("pureita.fastsubita mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV -  [COLOR orange]Aggiornate[/COLOR]",
-                     action="serietv",
-                     extra='serie',
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV -  [COLOR orange]Lista[/COLOR]",
-                     action="all_quick",
+                     title="[COLOR azure]Serie TV -  [COLOR orange]Elenco[/COLOR]",
+                     action="elenco",
                      extra='serie',
                      url="%s/tutte-le-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_sub_P.png"),
@@ -52,10 +46,7 @@ def serietv(item):
     logger.info("pureita.fastsubita peliculas")
     itemlist = []
 
-    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-
-    # Extrae las entradas (carpetas)
     patron = '<h2 class="entry-title title-font"><a href="([^"]+)" rel="bookmark">(.*?)</a></h2>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -78,7 +69,6 @@ def serietv(item):
                  extra=item.extra,
                  folder=True))
 
-    # Extrae el paginador
     patronvideos = '<a class="next page-numbers" href="([^"]+)">Successivi</a></div>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
@@ -101,14 +91,11 @@ def serietv(item):
 
     return itemlist
 
-def all_quick(item):
+def elenco(item):
     logger.info("pureita.fastsubita peliculas")
     itemlist = []
 
-    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-
-    # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)" title=[^>]+>([^>]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -138,7 +125,6 @@ def search(item, texto):
     item.url = "%s/?s=%s" % (host, texto)
     try:
         return serietv(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
