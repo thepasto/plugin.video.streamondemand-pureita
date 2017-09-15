@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
-# Conector for openload.co
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# streamondemand-PureITA - XBMC Plugin
+# sERVER  openload
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
 import re
