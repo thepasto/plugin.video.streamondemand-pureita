@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-PureITA - XBMC Plugin
 # Canale  altadefinizioneclub
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
