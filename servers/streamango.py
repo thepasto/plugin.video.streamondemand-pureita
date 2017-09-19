@@ -9,29 +9,85 @@
 import re
 import urllib
 
-from core import logger
-from core import scrapertools
+
+from core import httptools, logger, scrapertools
 
 
-def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("url=" + page_url)
+def test_video_exists(page_url):
+    logger.info("(page_url='%s')" % page_url)
+
+    data = httptools.downloadpage(page_url).data
+    if "We are unable to find the video" in data:
+        return False, "[streamango] Il file non esiste o è stato cancellato"
+
+    return True, ""
+
+
+def get_video_url(page_url,
+                  premium=False,
+                  user="",
+                  password="",
+                  video_password=""):
+    logger.info("(page_url='%s')" % page_url)
+
+    data = httptools.downloadpage(page_url).data
+
     video_urls = []
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A501 Safari/9537.53'}
+    matches = scrapertools.find_multiple_matches(
+        data,
+        "type:\"video/([^\"]+)\",src:d\('([^']+)',(.*?)\).+?height:(\d+)")
 
-    data = scrapertools.cache_page(page_url, headers=headers)
+    for ext, encoded, code, quality in matches:
 
-    headers['Referer'] = page_url
-    headers = urllib.urlencode(headers)
+        media_url = decode(encoded, int(code))
 
-    matches = scrapertools.find_multiple_matches(data, r'{type:"video/mp4",src:"([^"]+)",height:([^,]+),')
-    for media_url, vtype in matches:
-        if media_url.startswith("//"):
-            media_url = "http:%s" % media_url
-        video_urls.append([vtype + " [streamango]", media_url + '|' + headers])
+        while media_url[-1] == '@':
+            media_url = media_url[:-1]
+
+        if not media_url.startswith("http"):
+            media_url = "http:" + media_url
+        video_urls.append([".%s %sp [streamango]" % (ext, quality), media_url])
+
+    video_urls.reverse()
+    for video_url in video_urls:
+        logger.info("%s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
+
+
+def decode(encoded, code):
+    logger.info("encoded '%s', code '%s'" % (encoded, code))
+
+    _0x59b81a = ""
+    k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+    k = k[::-1]
+
+    count = 0
+    while count < len(encoded):
+        _0x4a2f3a = k.index(encoded[count])
+        count += 1
+        _0x29d5bf = k.index(encoded[count])
+        count += 1
+        _0x3b6833 = k.index(encoded[count])
+        count += 1
+        _0x426d70 = k.index(encoded[count])
+        count += 1
+
+        _0x2e4782 = ((_0x4a2f3a << 2) | (_0x29d5bf >> 4))
+        _0x2c0540 = (((_0x29d5bf & 15) << 4) | (_0x3b6833 >> 2))
+        _0x5a46ef = ((_0x3b6833 & 3) << 6) | _0x426d70
+        _0x2e4782 = _0x2e4782 ^ code
+
+        _0x59b81a = str(_0x59b81a) + chr(_0x2e4782)
+
+        if _0x3b6833 != 64:
+            _0x59b81a = str(_0x59b81a) + chr(_0x2c0540)
+        if _0x3b6833 != 64:
+            _0x59b81a = str(_0x59b81a) + chr(_0x5a46ef)
+
+    return _0x59b81a
+
 
 
 # Encuentra videos de este servidor en el texto pasado
