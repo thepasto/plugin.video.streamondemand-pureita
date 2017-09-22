@@ -193,7 +193,7 @@ def findvideos(item):
 
         patron_res = '<div class="row mobileRes">(.*?)</div>'
         patron_mir = '<div class="row mobileMirrs">(.*?)</div>'
-        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"/>'
+        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)".*?>'
 
         res = scrapertools.find_single_match(data, patron_res)
 
