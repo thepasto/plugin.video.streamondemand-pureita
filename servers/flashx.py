@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+# ------------------------------------------------------------
+# AlfaPureita - XBMC Plugin
+# Conector para flashx
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# ------------------------------------------------------------
 
 import base64
 import os
