@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale per http://filmstreamingita.info/
+# streamondemand-PureITA- XBMC Plugin
+# Canale filmstreamingita
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
-# By MrTruth
 # ------------------------------------------------------------
 
 import re
@@ -21,7 +20,7 @@ __type__ = "generic"
 __title__ = "FilmStreamingIta"
 __language__ = "IT"
 
-host = "http://filmstreamingita.info"
+host = "http://filmstreamingita.xyz/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'],
@@ -60,7 +59,7 @@ def search(item, texto):
     item.url = host + "/?s=" + texto
     try:
         return peliculas(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+
     except:
         import sys
         for line in sys.exc_info():
@@ -75,8 +74,8 @@ def categorie(item):
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, r'<ul class="sub-menu">(.*?)</ul>')
-    patron = r'<a href="([^"]+)">([^<]+)</a></li>'
+    blocco = scrapertools.get_match(data, r'<ul  class="sub-menu">(.*?)</ul>')
+    patron = r'<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle in matches:
@@ -86,6 +85,7 @@ def categorie(item):
                  action="peliculas",
                  title=scrapedtitle,
                  url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
     return itemlist
@@ -115,8 +115,8 @@ def peliculas(item):
                  thumbnail=scrapedthumbnail,
                  folder=True), tipo="movie"))
 
-    # Pagine
-    patron = '<a class="next page-numbers" href="([^"]+)">Successivo'
+
+    patron = '<li><a href="([^"]+)" class="next">&raquo;</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     if len(matches) > 0:
