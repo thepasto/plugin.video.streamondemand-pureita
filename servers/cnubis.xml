@@ -8,6 +8,6 @@
 	<name>cnubis</name>
 	<premium></premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_cnubis.png</thumbnail>
-	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/servers/</update_url>
+	<update_url>https://raw.githubusercontent.com/alfa-addon/addon/master/plugin.video.alfa/servers/</update_url>
 	<version>1</version>
 </server>
