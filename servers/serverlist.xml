@@ -784,6 +784,16 @@
 </server>
 
 <server>
+    <id>playwatch</id>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/playwatch.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>22/09/2017</date>
+    <changes>Prima versione</changes>
+</server>
+
+
+<server>
     <id>powvideo</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/powvideo.py</update_url>
     <active>true</active>
