@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale per http://ffilms.org/italiano/
+# streamondemand-PureITA / XBMC Plugin
+# Canale ffilm
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # By MrTruth
 # ------------------------------------------------------------
@@ -21,7 +21,7 @@ __type__ = "generic"
 __title__ = "FFilms"
 __language__ = "IT"
 
-host = "http://ffilms.org/italiano"
+host = "https://ffilms.org/italiano/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'],
