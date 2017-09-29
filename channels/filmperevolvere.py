@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para filmperevolvere
+# streamondemand-PureITA / XBMC Plugin
+# Canale filmperevolvere
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -42,16 +42,16 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.filmperevolvere mainlist")
+    logger.info("streamondemand-pureita.filmperevolvere mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Ultimi Film Inseriti[/COLOR]",
-                     action="peliculas",
+                     action="peliculas_film",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorie",
-                     url=host,
+                     url="%s/indexes/3651-2/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -66,7 +66,7 @@ def search(item, texto):
     item.url = host + "/?s=" + texto
 
     try:
-        return peliculas(item)
+        return peliculas_film(item)
 
     except:
         import sys
@@ -75,6 +75,7 @@ def search(item, texto):
 
     return []
 
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 def categorie(item):
     itemlist = []
@@ -84,10 +85,10 @@ def categorie(item):
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data, '<nav class="nav-container group desktop-menu " id="nav-header" data-menu-id="header-2">(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<div class="page-title pad group">(.*?)</li> </div>')
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="(.*?)">(.*?)</a>'
+    patron = '<h3 class="ei-item-term"><a\s*href="([^"]+)">(.*?)<\/a><\/h3>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
@@ -110,8 +111,67 @@ def categorie(item):
 
     return itemlist
 
+# ------------------------------------------------------------------------------------------------------------------------------------	
+
 def peliculas(item):
-    logger.info("streamondemand.filmperevolvere peliculas")
+    logger.info("streamondemand-pureita.filmperevolvere peliculas")
+    itemlist = []
+
+    c = get_test_cookie(item.url)
+    if c: headers.append(['Cookie', c])
+
+
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+
+    patron = '<h4 class="ei-item-title"><a href="([^"]+)">(.*?)</a></h4> '
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedtitle = scrapedtitle.title()
+        txt = "Serie Tv"
+        if txt in scrapedtitle: continue
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
+
+
+    patronvideos = '<li class="next right"><a href="([^"]+)"[^>]+>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+    return itemlist
+
+# ------------------------------------------------------------------------------------------------------------------------------------	
+	
+def peliculas_film(item):
+    logger.info("streamondemand-pureita.filmperevolvere peliculas_film")
     itemlist = []
 
     c = get_test_cookie(item.url)
@@ -157,17 +217,18 @@ def peliculas(item):
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
-                 action="peliculas",
+                 action="peliculas_film",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
                  folder=True))
 
     return itemlist
-
+	
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 def findvideos(item):
-    logger.info("streamondemand.filmperevolvere findvideos")
+    logger.info("streamondemand-pureita.filmperevolvere findvideos")
 
     c = get_test_cookie(item.url)
     if c: headers.append(['Cookie', c])
@@ -186,11 +247,13 @@ def findvideos(item):
 
     return itemlist
 
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 def get_test_cookie(url):
     data = scrapertools.cache_page(url, headers=headers)
