@@ -28,7 +28,7 @@ headers = [
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.streamblog.co"
+host = "https://www.streamblog.me/"
 
 
 def isGeneric():
