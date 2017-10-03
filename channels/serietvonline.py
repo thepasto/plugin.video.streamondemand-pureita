@@ -129,7 +129,7 @@ def lista_serie(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     blocco = scrapertools.find_single_match(data, 'id="lcp_instance_0">(.*?)</ul>')
-    patron='<li><a href="(.*?)".*?>(.*?)</a></li>'
+    patron='<li><a href="(.*?)" title=".*?">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
@@ -170,6 +170,18 @@ def lista_novita(item):
                                      fanart=item.fanart if item.fanart != "" else item.scrapedthumbnail,
                                      show=item.fulltitle,
                                      folder=True),tipo='tv'))
+
+
+									 
+    patron = "<a rel='nofollow' class=previouspostslink href='(.*?)'><span class='icon-chevron-right2'>"
+    next_page = scrapertools.find_single_match(data, patron)
+    if next_page != "":
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="lista_novita",
+                 title="[COLOR orange]Precedenti>>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
 
     return itemlist
 
