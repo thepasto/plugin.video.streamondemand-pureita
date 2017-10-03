@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per serietvonline
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# streamondemand-PureITA / XBMC Plugin
+# Canale  serietvonline
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -15,7 +15,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "serietvonline"
-host        = "https://serietvonline.com"
+host        = "https://serietvonline.com/"
 headers     = [['Referer', host]]
 
 # -----------------------------------------------------------------
@@ -23,9 +23,9 @@ def mainlist(item):
     logger.info("streamondemand.serietvonline mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     action="lista_serie",
+                     action="lista_novita",
                      title="[COLOR azure]Lista Novità[/COLOR]",
-                     url=("%s/lista-novita/" % host),
+                     url=(host),
                      thumbnail=thumbnail_novita,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
@@ -145,6 +145,34 @@ def lista_serie(item):
                                      folder=True),tipo='tv'))
 
     return itemlist
+# =================================================================
+
+# -----------------------------------------------------------------
+
+def lista_novita(item):
+    logger.info("streamondemand.serietvonline novità")
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+    blocco = scrapertools.find_single_match(data, '<div id="box_movies">(.*?)</span></div></div>')
+    patron = '<a href="([^"]+)"><span class="player"></span></a>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*<h2>(.*?)</h2>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle in matches:
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(Item(channel=__channel__,
+                                     action="episodios",
+                                     title=scrapedtitle,
+                                     fulltitle=scrapedtitle,
+                                     url=scrapedurl,
+                                     fanart=item.fanart if item.fanart != "" else item.scrapedthumbnail,
+                                     show=item.fulltitle,
+                                     folder=True),tipo='tv'))
+
+    return itemlist
+
 # =================================================================
 
 # -----------------------------------------------------------------
