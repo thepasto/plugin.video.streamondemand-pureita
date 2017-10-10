@@ -21,7 +21,7 @@ __type__ = "generic"
 __title__ = "SerieTVU"
 __language__ = "IT"
 
-host = "http://www.serietvu.com"
+host = "http://www.serietvu.online/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
