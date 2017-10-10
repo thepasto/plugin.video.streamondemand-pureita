@@ -26,7 +26,7 @@ headers = [['Upgrade-Insecure-Requests', '1'],
            ['Accept-Encoding', 'gzip, deflate'],
            ['Accept-Language', 'en-US,en;q=0.8']]
 
-host = "http://www.vediserie.com"
+host = "http://www.vediserie.tv/"
 
 
 def isGeneric():
