@@ -63,7 +63,7 @@ def categorias(item):
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Narrow search by selecting only the combo
-    patron = '<ul class="box-bg right-navi clearfix">([^?]+)</select>'
+    patron = '<ul class="box-bg right-navi clearfix">([^+]+)<li><a href="/film/trailer/">Trailer</a></li>'
     bloque = scrapertools.get_match(data, patron)
 
     # The categories are the options for the combo
