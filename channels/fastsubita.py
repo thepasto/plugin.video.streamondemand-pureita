@@ -30,7 +30,7 @@ def mainlist(item):
     logger.info("pureita.fastsubita mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Serie TV -  [COLOR orange]Elenco[/COLOR]",
-                     action="elenco",
+                     action="serietv",
                      extra='serie',
                      url="%s/tutte-le-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_sub_P.png"),

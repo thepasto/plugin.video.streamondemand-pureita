@@ -58,11 +58,11 @@ def mainlist(item):
                      action="peliculas",
                      url="%s/genere/sub-ita/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),               
-               #Item(channel=__channel__,
-                     #title="[COLOR azure]Serie TV[/COLOR]",
-                     #action="serie",
-                     #url="%s/serietv/" % host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV[/COLOR]",
+                     action="serie",
+                     url="%s/serietv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                Item(channel=__channel__,
                      title="[COLOR azure]Anime[/COLOR]",
                      action="peliculas",
@@ -256,7 +256,7 @@ def episodios(item):
     itemlist = []
 
 
-    patron='<div class="se-a" style="display:block">\s*<ul class="episodios">.*?</ul>'
+    patron='<ul class="episodios">([^+]+)</ul>'
 
     data = scrapertools.anti_cloudflare(item.url, headers)
     matches = re.compile(patron, re.DOTALL).findall(data)
