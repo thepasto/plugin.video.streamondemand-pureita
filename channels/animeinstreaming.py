@@ -24,7 +24,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://animeitahd.org/"
+host = "http://animeinstreaminghd.net/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
@@ -42,34 +42,34 @@ def mainlist(item):
     log("mainlist", "mainlist")
     itemlist = [Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Home[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
                      url=host,
                      thumbnail=AnimeThumbnail,
                      fanart=AnimeFanart),
+                Item(channel=__channel__,
+                     action="lista_anime",
+                     title="[COLOR azure]Anime - [COLOR lightsalmon]Sub ITA[/COLOR]",
+                     url=host + "/category/sub-ita/",
+                     thumbnail=CategoriaThumbnail,
+                     fanart=CategoriaFanart),
+                Item(channel=__channel__,
+                     action="lista_anime",
+                     title="[COLOR azure]Anime - [COLOR lightsalmon]Stagioni Complete[/COLOR]",
+                     url=host + "/category/completato/",
+                     thumbnail=CategoriaThumbnail,
+                     fanart=CategoriaFanart),
                 #Item(channel=__channel__,
-                     #action="lista_anime_genere",
-                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Genere[/COLOR]",
-                     #url=host,
-                     #thumbnail=CategoriaThumbnail,
-                     #fanart=CategoriaFanart),
-                #Item(channel=__channel__,
-                     #action="lista_anime_anno",
-                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Anno[/COLOR]",
+                     #action="lista_top_ten",
+                     #title="[COLOR azure]Anime - [COLOR lightsalmon]Top 10[/COLOR]",
                      #url=host,
                      #thumbnail=CategoriaThumbnail,
                      #fanart=CategoriaFanart),
                 Item(channel=__channel__,
-                     action="lista_anime_tutti",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
-                     url=host + "lista-anime/",
+                     action="lista_anime",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]in Corso[/COLOR]",
+                     url=host + "/category/in-corso/",
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
-                #Item(channel=__channel__,
-                     #action="lista_anime_lettera",
-                     #title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista A-Z[/COLOR]",
-                     #url=host,
-                     #thumbnail=CategoriaThumbnail,
-                     #fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR lime]Cerca...[/COLOR]",
@@ -89,8 +89,9 @@ def lista_anime(item):
 
     data = scrapertools.cache_page(item.url)
 
-    patron = '<article id=.*?<a href="(.*?)" title="(.*?)">.*?<img.*?src="(.*?)".*?<div class="entry-content post-excerpt">(.*?)</div><!-- .entry-content -->'
-
+    patron = '<article id=[^>]+>[^>]+>\s*<a href="(.*?)" title="(.*?)">\s*<img.*?src="(.*?)"[^>]+>\s*[^>]+>[^>]+>[^>]+>[^>]+>\s*<\/a>\s*<\/div>\s*[^>]+>\s*[^>]+>\s*'
+    patron += '[^>]+>\s*[^>]+>\s*[^>]+>[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>\s*[^>]+>[^>]+>\s*'
+    patron += '<div class="entry-content post-excerpt">\s*(.*?)<\/div><!-- .entry-content -->'
     for scrapedurl, scrapedtitle, scrapedthumbnail, scrapedplot in scrapedAll(item.url, patron):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = '[COLOR azure][B]' + scrapedtitle + '[/B][/COLOR]'
@@ -109,7 +110,7 @@ def lista_anime(item):
 
     # Paginazione
     # ===========================================================
-    patron = '<a class="next page-numbers" href="(.*?)">.*? &#8250;</a></div>'
+    patron = '<a class="next page-numbers" href="([^"]+)">Successivo &raquo;</a>'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
@@ -119,7 +120,7 @@ def lista_anime(item):
                  url=next_page,
                  thumbnail=AvantiImg,
                  folder=True))
-        itemlist.append(Item(channel=__channel__, action="HomePage", title=HomeTxt, folder=True))
+        itemlist.append(Item(channel=__channel__, action="HomePage", thumbnail=HomeImg, title=HomeTxt, folder=True))
     # ===========================================================
     return itemlist
 
@@ -157,15 +158,15 @@ def lista_anime_genere(item):
 
 
 # -----------------------------------------------------------------
-def lista_anime_anno(item):
+def lista_top_ten(item):
     log("lista_anime_anno", "lista_anime_anno")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
 
-    bloque = scrapertools.get_match(data, '<option value="-1">Anime per anno</option>(.*?)</select></td>')
+    bloque = scrapertools.get_match(data, '<h3 class="widget-title">Top 10</h3><ul>([^+]+)</a></aside></div>')
 
-    patron = '<option value="(.*?)">(.*?)</option>'
+    patron = '<li><a href="([^"]+)"\s*title=".*?">(.*?)</a>[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
@@ -173,7 +174,7 @@ def lista_anime_anno(item):
         scrapedurl = host + url
         itemlist.append(
             Item(channel=__channel__,
-                 action="lista_anime",
+                 action="episodios",
                  title=scrapedtitle,
                  url=scrapedurl,
                  fulltitle=scrapedtitle,
@@ -246,7 +247,7 @@ def lista_anime_lettera(item):
 # -----------------------------------------------------------------
 def search(item, texto):
     log("lista_anime", "search")
-    item.url = "http://animeitahd.org/?s=" + texto
+    item.url = "http://animeinstreaminghd.net/?s=" + texto
 
     try:
         return lista_anime(item)
@@ -259,6 +260,31 @@ def search(item, texto):
 
 # =================================================================
 
+def stagioni(item):
+    log("stagione", "stagione")
+    itemlist = []
+
+    data = scrapertools.cache_page(item.url)
+
+    bloque = scrapertools.get_match(data, '<h4 style="text-align: center;"></h4>([^+]+)</strong></span></a></p>')
+
+    patron = '<h3 style="text-align: center;"><a href="([^"]+)" target="_blank" rel="noopener"><strong>([^"]+)</strong></a></h3>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url, scrapedtitle in matches:
+        scrapedurl = host + url
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="episodios",
+                 title='[COLOR lightsalmon][B]' + scrapedtitle + '[/B][/COLOR]',
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 thumbnail=item.thumbnail))
+
+    return itemlist
+
 # -----------------------------------------------------------------
 def episodios(item):
     itemlist = []
@@ -266,9 +292,9 @@ def episodios(item):
     encontrados = set()
     data = scrapertools.cache_page(item.url)
 
-    # 1
-    bloque = scrapertools.find_single_match(data, '<h4 style="text-align: center(.*?)</h4>')
-    patron = '<a href="(.*?)" target="_blank">(.*?)</a>'
+    # 1       
+    bloque = scrapertools.find_single_match(data, '<div class="entry-content">([^+]+)</div><!-- .entry-content -->')
+    patron = '<h4 style="text-align: center;"><a href="([^"]+)" target="_blank" rel=".*?"><strong>(.*?)</strong></a></h4>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
@@ -288,8 +314,8 @@ def episodios(item):
                  plot=item.plot,
                  fanart=item.thumbnail,
                  thumbnail=item.thumbnail))
-    # 2
-    patron = '<strong><a href="(.*?)" target="_blank">([^<]+)<.*?a></strong>'
+    # 2       
+    patron = '<h4 style="text-align: center;"><span style=".*?"><a style=".*?" href="([^"]+)" target="_blank" rel=".*?">(.*?)</a></span></h4>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -309,8 +335,8 @@ def episodios(item):
                  plot=item.plot,
                  fanart=item.thumbnail,
                  thumbnail=item.thumbnail))
-    # 3
-    patron = '<a style="color: #ff0000;" href="(.*?)" target="_blank">(.*?)</a>'
+    # 3           
+    patron = '<p style="text-align: center;"><span style=".*?"><a style=".*?" href="([^"]+)" target="_blank" rel=".*?"><strong>(.*?)</strong></a></span></p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -330,8 +356,8 @@ def episodios(item):
                  plot=item.plot,
                  fanart=item.thumbnail,
                  thumbnail=item.thumbnail))
-    # 4
-    patron = '<h4 style="text-align: center;"><a href="(.*?)" target="_blank"><strong>(.*?)</b>'
+    # 4      
+    patron = '<h4 style="text-align: center;"><a href="([^"]+)" target="_blank" rel=".*?"><span style=".*?"><strong>(.*?)<'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -352,8 +378,30 @@ def episodios(item):
                  fanart=item.thumbnail,
                  thumbnail=item.thumbnail))
 
-    # 5 - mob psycho 100
-    patron = '<h4 style="text-align: center;".*?<a href="(.*?)" target="_blank">(.*?)</h4>'
+    # 5          
+    patron = '<h4 style="text-align: center;"><a href="([^"]+)" target="_blank" rel=".*?"><strong>(.*?)</strong></a></h4>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR darkorange][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+
+    # 6 - mob psycho 100
+    patron = '<h4 style="text-align: center;"><a href="([^"]+)" target="_blank" rel=".*?"><span style=".*?"><strong>(.*?)</strong></span></a></h4>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -375,6 +423,126 @@ def episodios(item):
                  fanart=item.thumbnail,
                  thumbnail=item.thumbnail))
 
+    # 7       
+    patron = '<h4 style="text-align: center;"><strong><a href="([^"]+)" target="_blank" rel=".*?">(.*?)</a><br />'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR palevioletred][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 contentType="episode",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+				 
+    # 8      
+    patron = '<h4 style="text-align: center;"><a href="([^"]+)" target="_blank" rel=".*?"><b>(.*?)</b></a></h4>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR lavender][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 contentType="episode",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+				 
+				 
+    # 9
+    patron = '<h4 style="text-align: center;"><strong><a href="([^"]+)" target="_blank" rel=".*?">(.*?)</a><b>.*?</b></strong></h4>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR yellow][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 contentType="episode",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+				 
+				 
+    # 10
+    patron = '<p style="text-align: center;"><a href="([^"]+)" target="_blank" rel="noopener"><strong><span style=".*?">(.*?)</span></strong></a></p>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR khaki][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 contentType="episode",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+
+
+	#11		 	
+    patron = '<p style="text-align: center;"><a href="([^"]+)" target="_blank" rel="noopener"><span style=".*?"><strong>(.*?)</strong></span></a></p>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle in matches:
+        if scrapedurl in encontrados: continue
+        encontrados.add(scrapedurl)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = re.sub(r'<[^>]*?>', '', scrapedtitle)
+        scrapedtitle = '[COLOR red][B]' + scrapedtitle + '[/B][/COLOR]'
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideo",
+                 contentType="episode",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 plot=item.plot,
+                 fanart=item.thumbnail,
+                 thumbnail=item.thumbnail))
+				 
+				 
+				 
     # Comandi di servizio
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
@@ -492,6 +660,7 @@ CategoriaThumbnail = "http://static.europosters.cz/image/750/poster/street-fight
 CategoriaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
 CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
 CercaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
-HomeTxt = "[COLOR yellow]Torna Home[/COLOR]"
+HomeTxt = "[COLOR orange]Torna Home[/COLOR]"
+HomeImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png"
 AvantiTxt = "[COLOR orange]Successivo>>[/COLOR]"
 AvantiImg = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"

@@ -35,12 +35,12 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Serie[/COLOR]",
-                     url="%s/category/serie-anime/" % host,
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Serie Speciali[/COLOR]",
+                     url="%s/category/special-anime/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Programmazione[/COLOR]",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]in Corso[/COLOR]",
                      url="%s/category/serie-anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
@@ -104,7 +104,7 @@ def categorie(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'Cateogrie</span></h4>\s*<ul>(.*?)</ul>')
+    blocco = scrapertools.get_match(data, r'<span class="mh-widget-title-inner">Categorie</span></h4>\s*<ul>(.*?)</ul>')
     patron = r'<li[^>]+><a href="([^"]+)"\s*>([^<]+)</a>\s*</li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -161,7 +161,7 @@ def ultimiep(item):
 
     data = httptools.downloadpage(item.url).data
 
-    blocco = scrapertools.get_match(data, r'<div class="mh-wrapper clearfix">(.*?)<div class="mh-loop-pagination clearfix">')
+    blocco = scrapertools.get_match(data, r'<div class="mh-wrapper mh-home clearfix">([^+]+)</article></div>')
     patron = r'<a class="[^"]+" href="([^"]+)" title="([^"]+)"><img[^s]+src="([^"]+)"[^>]+'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
