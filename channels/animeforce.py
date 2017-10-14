@@ -10,7 +10,7 @@ import urlparse
 
 import xbmc
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -26,7 +26,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://animeforce.org"
+host = "http://www.animeforce.org/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:53.0) Gecko/20100101 Firefox/53.0'],
@@ -37,28 +37,34 @@ headers = [
 
 def isGeneric():
     return True
-
+PERPAGE = 20
 
 # -----------------------------------------------------------------
 def mainlist(item):
     log("mainlist", "mainlist")
     itemlist = [Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR lightsalmon]Lista Completa[/COLOR]",
+                     title="[COLOR azure]Anime -[COLOR orange] Lista Completa[/COLOR]",
                      url=host + "/lista-anime/",
-                     thumbnail=CategoriaThumbnail,
+                     thumbnail=ThumbnailLista,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="animeaggiornati",
-                     title="[COLOR azure]Anime Aggiornati[/COLOR]",
+                     title="[COLOR azure]Anime -[COLOR orange] Episodi Aggiornati[/COLOR]",
                      url=host,
                      thumbnail=CategoriaThumbnail,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="ultimiep",
-                     title="[COLOR azure]Ultimi Episodi[/COLOR]",
+                     title="[COLOR azure]Anime -[COLOR orange] Ultimi Episodi[/COLOR]",
                      url=host,
-                     thumbnail=CategoriaThumbnail,
+                     thumbnail=ThumbnailNew,
+                     fanart=CategoriaFanart),
+                Item(channel=__channel__,
+                     action="ultime_serie",
+                     title="[COLOR azure]Anime -[COLOR orange] Ultime Serie[/COLOR]",
+                     url=host + "/category/anime/articoli-principali/",
+                     thumbnail=ThumbnailNew,
                      fanart=CategoriaFanart),
                 Item(channel=__channel__,
                      action="search",
@@ -141,9 +147,7 @@ def animeaggiornati(item):
     log("animeaggiornati", "animeaggiornati")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url, headers=headers)
-
-    blocco = scrapertools.get_match(data, r'<div class="main-loop-inner">(.*?)<br class="clearer"/>\s*</div>')
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = r'<img.*?src="([^"]+)"[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+><a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -160,12 +164,12 @@ def animeaggiornati(item):
             scrapedurl = re.sub(r'episodio?-?\d+-?(?:\d+-|)[oav]*', '', scrapedurl)
             itemlist.append(infoSod(
                 Item(channel=__channel__,
-                    action="episodios",
-                    title=cleantitle,
-                    url=scrapedurl,
-                    fulltitle=cleantitle,
-                    show=cleantitle,
-                    thumbnail=scrapedthumbnail), tipo="tv"))
+                     action="episodios",
+                     title=cleantitle,
+                     url=scrapedurl,
+                     fulltitle=cleantitle,
+                     show=cleantitle,
+                     thumbnail=scrapedthumbnail), tipo="tv"))
 
     return itemlist
 
@@ -209,35 +213,105 @@ def ultimiep(item):
 
     return itemlist
 
+# =================================================================
+
+# -----------------------------------------------------------------
 
 # =================================================================
 
 # -----------------------------------------------------------------
-def lista_anime(item):
-    log("lista_anime", "lista_anime")
+def ultime_serie(item):
+    log("ultimiep", "ultimiep")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
 
-    patron = '<li>\s*<strong>\s*<a\s*href="([^"]+?)">([^<]+?)</a>\s*</strong>\s*</li>'
+    patron = r'<img.*?src="([^"]+)"[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+><a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle in matches:
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="episodios",
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 thumbnail=item.thumbnail))
+        if 'Streaming' in scrapedtitle:
+            # Pulizia titolo
+            scrapedtitle = scrapedtitle.replace("Streaming", "").replace("&", "")
+            scrapedtitle = scrapedtitle.replace("Download", "")
+            scrapedtitle = scrapedtitle.replace("Sub Ita", "").strip()
+            cleantitle = re.sub(r'Episodio?\s*\d+\s*(?:\(\d+\)|)', '', scrapedtitle).strip()
+            # Creazione URL
+            episodio = scrapertools.find_single_match(scrapedtitle.lower(), r'episodio?\s*(\d+)')
+            scrapedurl = re.sub(r'episodio?-?\d+-?(?:\d+-|)[oav]*', '', scrapedurl).replace('-fine', '')
+            if 'download' not in scrapedurl:
+                scrapedurl = scrapedurl.replace('-streaming', '-download-streaming')
+            extra = "<tr>\s*<td[^>]+><strong>Episodio %s(?:[^>]+>[^>]+>|[^<]*)</strong></td>" % episodio
+            print "EPISODIO: " + episodio + "\nTITLE: " + scrapedtitle + "\nExtra: " + extra + "\nURL: " + scrapedurl
+            itemlist.append(infoSod(
+                Item(channel=__channel__,
+                    action="findvideos",
+                    title=scrapedtitle,
+                    url=scrapedurl,
+                    fulltitle=cleantitle,
+                    extra=extra,
+                    show=re.sub(r'Episodio\s*', '', scrapedtitle),
+                    thumbnail=scrapedthumbnail), tipo="tv"))
 
     return itemlist
 
-
 # =================================================================
+def lista_anime(item):
+    log("lista_anime", "lista_anime")
 
+    itemlist = []
+
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url).data
+
+    # Estrae i contenuti 
+    patron = r'<li>\s*<strong>\s*<a\s*href="([^"]+?)">([^<]+?)</a>\s*</strong>\s*</li>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    scrapedplot = ""
+    scrapedthumbnail = ""
+    for i, (scrapedurl, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="episodios",
+                 title=title,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
+
+    if len(itemlist) > 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="lista_anime",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+    return itemlist
 # -----------------------------------------------------------------
 def episodios(item):
     itemlist = []
@@ -399,6 +473,8 @@ def HomePage(item):
 # -----------------------------------------------------------------
 AnimeThumbnail = "http://img15.deviantart.net/f81c/i/2011/173/7/6/cursed_candies_anime_poster_by_careko-d3jnzg9.jpg"
 AnimeFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
+ThumbnailNew = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"
+ThumbnailLista = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_lista_P.png"
 CategoriaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"
 CategoriaFanart = "https://i.ytimg.com/vi/IAlbvyBdYdY/maxresdefault.jpg"
 CercaThumbnail = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
