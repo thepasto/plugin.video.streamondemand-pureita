@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para novedades
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# StreamOnDemand PureITA / XBMC Plugin
+# Canale Novita
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
 from core import config
@@ -108,6 +108,10 @@ def peliculas_infantiles(item):
     import streaminglove
     item.url = "https://www.streaminglove.tv/genere/animazione/"
     itemlist.extend(streaminglove.peliculas(item))
+	
+    import serietvu
+    item.url = "http://www.serietvu.online/category/animazione-e-bambini/"
+    itemlist.extend(serietvu.latestep(item))
 
     sorted_itemlist = []
 
@@ -129,21 +133,21 @@ def series(item):
 	
 
 
-    import serietvu
-    item.url = "http://www.serietvu.com/ultimi-episodi/"
-    itemlist.extend(serietvu.latestep(item))
+    #import serietvu
+    #item.url = "http://www.serietvu.com/ultimi-episodi/"
+    #itemlist.extend(serietvu.latestep(item))
 
-    #import casacinema
-    #item.url = "http://www.casacinema.video/aggiornamenti-serie-tv"
-    #itemlist.extend(casacinema.peliculas(item))
+    import italiaserie
+    item.url = "http://www.italiaserie.co/"
+    itemlist.extend(italiaserie.peliculas(item))
 	
     import serietvsubita
     item.url = "http://serietvsubita.net"
     itemlist.extend(serietvsubita.episodios(item))
 	
-    import serietvsubita
+    import serietvonline
     item.url = "https://serietvonline.com/"
-    itemlist.extend(serietvsubita.lista_novita(item))
+    itemlist.extend(serietvonline.lista_novita(item))
 
     sorted_itemlist = []
 
