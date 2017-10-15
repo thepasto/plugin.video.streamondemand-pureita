@@ -104,6 +104,10 @@ def peliculas_infantiles(item):
     import guardaserieonline
     item.url = "http://www.guardaserie.online//category/animazione/"
     itemlist.extend(guardaserieonline.lista_serie(item))
+	
+    import streaminglove
+    item.url = "https://www.streaminglove.tv/genere/animazione/"
+    itemlist.extend(streaminglove.peliculas(item))
 
     sorted_itemlist = []
 
@@ -128,13 +132,18 @@ def series(item):
     import serietvu
     item.url = "http://www.serietvu.com/ultimi-episodi/"
     itemlist.extend(serietvu.latestep(item))
-    import casacinema
-    item.url = "http://www.casacinema.video/aggiornamenti-serie-tv"
-    itemlist.extend(casacinema.peliculas(item))
+
+    #import casacinema
+    #item.url = "http://www.casacinema.video/aggiornamenti-serie-tv"
+    #itemlist.extend(casacinema.peliculas(item))
 	
     import serietvsubita
     item.url = "http://serietvsubita.net"
     itemlist.extend(serietvsubita.episodios(item))
+	
+    import serietvsubita
+    item.url = "https://serietvonline.com/"
+    itemlist.extend(serietvsubita.lista_novita(item))
 
     sorted_itemlist = []
 
@@ -154,12 +163,12 @@ def anime(item):
 
     itemlist = []
 
-    #import animesenzalimiti
-    #item.url = "http://www.animesenzalimiti.com/"
-    #itemlist.extend(animesenzalimiti.ultimiep(item))
+    import animesenzalimiti
+    item.url = "http://www.animesenzalimiti.com/"
+    itemlist.extend(animesenzalimiti.ultimiep(item))
 
     import cb01anime
-    item.url = "http://www.cineblog01.cc/anime/"
+    item.url = "http://www.cineblog01.video/anime/"
     itemlist.extend(cb01anime.novita(item))
 
     sorted_itemlist = []

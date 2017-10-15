@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "https://streaminglove.tv"
+host = "http://streaminglove.tv"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -64,9 +64,9 @@ def mainlist(item):
                      url="%s/serietv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                Item(channel=__channel__,
-                     title="[COLOR azure]Anime[/COLOR]",
+                     title="[COLOR azure]Animazione[/COLOR]",
                      action="peliculas",
-                     url="%s/genere/anime/" % host,
+                     url="%s/genere/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -104,7 +104,7 @@ def categorias(item):
 
 def search(item, texto):
     logger.info("[streaminglove.py] " + item.url + " search " + texto)
-    item.url = "https://www.streaminglove.tv/?s=" + texto
+    item.url = "http://www.streaminglove.tv/?s=" + texto
 
     try:
         return peliculas_src(item)
@@ -123,7 +123,7 @@ def peliculas_src(item):
     
     data = scrapertools.anti_cloudflare(item.url, headers)
 
-    patron = '<div class="thumbnail animation-2">\s*<a href="(.*?)">\s*<img src="(.*?)" alt="(.*?)"/>\s*[^>]+>\s*(.*?) </span>'
+    patron = '<div class="thumbnail animation-2">\s*<a href="(.*?)">\s*<img src="(.*?)" alt="(.*?)" />\s*[^>]+>\s*(.*?) </span>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, scrapedtipo in matches:
@@ -181,7 +181,7 @@ def peliculas(item):
                  folder=True), tipo='movie'))
 
     
-    patronvideos = '<link rel="next" href="([^"]+)"/>'
+    patronvideos = '<a href="([^"]+)"><span class="icon-chevron-right"></span></a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -230,7 +230,7 @@ def serie(item):
                  folder=True), tipo='tv'))
 
    
-    patronvideos = '<link rel="next" href="([^"]+)"/>'
+    patronvideos = '<a href="([^"]+)"><span class="icon-chevron-right"></span></a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
