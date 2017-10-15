@@ -44,7 +44,7 @@ def mainlist(item):
                      extra="movie",
                      action="peliculas",
                      url="%s/category/film/" % host,
-                     thumbnail="https://github.com/orione7/Pelis_images/blob/master/channels_icon_pureita/popcorn_cinema_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Per Categoria[/COLOR]",
                      extra="movie",
