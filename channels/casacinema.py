@@ -251,7 +251,7 @@ def categorias(item):
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        patron = '.*?<a href="[^"]+"[^o]+ofollow[^>]+>[^<]+</a><(?:b|/)[^>]+>'
+        patron = '.*?<a\s*href="[^"]+"[^o]+o[^>]+>[^<]+<\/a><(?:b|\/)[^>]+>'
         matches = re.compile(patron).findall(html)
         for data in matches:
             # Extrae las entradas
