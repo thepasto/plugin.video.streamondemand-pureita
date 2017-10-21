@@ -283,7 +283,7 @@ def episodios(item):
 
     lang_titles = []
     starts = []
-    patron = r"Stagione.*?(?:ITA|\d+)"
+    patron = r"<p><strong>.*?(?:ITA|\d+)"
     matches = re.compile(patron, re.IGNORECASE).finditer(data)
     for match in matches:
         season_title = match.group()
