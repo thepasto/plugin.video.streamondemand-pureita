@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canal para altadefinizioneclick
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale altadefinizioneclick
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
+
 import base64
 import re
 import urlparse
@@ -35,28 +36,29 @@ headers = [
 def isGeneric():
     return True
 
+# ==============================================================================================================================================
 
 def mainlist(item):
     logger.info("[altadefinizioneclick.py] mainlist")
 
     itemlist = [
         Item(channel=__channel__,
-             title="[COLOR azure]Novita'[/COLOR]",
+             title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
              action="fichas",
              url=host + "/nuove-uscite/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film per Genere[/COLOR]",
+             title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
              action="genere",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film per Anno[/COLOR]",
+             title="[COLOR azure]Film - [COLOR orange]Per Anno[/COLOR]",
              action="anno",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film Sub-Ita[/COLOR]",
+             title="[COLOR azure]Film - [COLOR orange]Sottotitolati[/COLOR]",
              action="fichas",
              url=host + "/sub-ita/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
@@ -68,6 +70,7 @@ def mainlist(item):
 
     return itemlist
 
+# ==============================================================================================================================================
 
 def search(item, texto):
     logger.info("[altadefinizioneclick.py] " + item.url + " search " + texto)
@@ -84,6 +87,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================
 
 def genere(item):
     logger.info("[altadefinizioneclick.py] genere")
@@ -108,6 +112,7 @@ def genere(item):
 
     return itemlist
 
+# ==============================================================================================================================================
 
 def anno(item):
     logger.info("[altadefinizioneclick.py] genere")
@@ -132,6 +137,9 @@ def anno(item):
 
     return itemlist
 
+# ==============================================================================================================================================
+	
+# ==============================================================================================================================================
 
 def fichas(item):
     logger.info("[altadefinizioneclick.py] fichas")
@@ -162,12 +170,9 @@ def fichas(item):
         patron += 'class="titleFilm">([^<]+)<.*?'
         patron += 'IMDB: ([^<]+)<'
     else:
-        patron = '<div class="wrapperImage"[^<]+'
-        patron += '<[^>]+>([^<]+)<.*?'
-        patron += 'href="([^"]+)".*?'
-        patron += 'src="([^"]+)".*?'
-        patron += 'href[^>]+>([^<]+)</a>.*?'
-        patron += 'IMDB: ([^<]+)<'
+        patron = '<div class="wrapperImage"[^<]+\s*[^>]+>([^<]+).*?\s*<a href="([^"]+)">'
+        patron += '<img width=".*?" height=".*?" src="([^"]+)" class="attachment-loc-film size-loc-film wp-post-image" alt="[^>]+"\s*/>'
+        patron += '</a>\s*<div class="info">\s*<h2 class="titleFilm"><a href[^>]+>([^<]+)</a></h2>\s*[^>]+>[^>]+>\s*IMDB: ([^<]+)<'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -208,6 +213,7 @@ def fichas(item):
 
     return itemlist
 
+# ==============================================================================================================================================
 
 def findvideos(item):
     logger.info("[altadefinizioneclick.py] findvideos")
@@ -229,7 +235,7 @@ def findvideos(item):
 
         patron_res = '<div class="row mobileRes">(.*?)</div>'
         patron_mir = '<div class="row mobileMirrs">(.*?)</div>'
-        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"/>'
+        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)" />'
 
         res = scrapertools.find_single_match(data, patron_res)
 
@@ -258,6 +264,8 @@ def findvideos(item):
 
     return itemlist
 
+# -----------------------------------------------
+# -----------------------------------------------
 
 def url_decode(url_enc):
     lenght = len(url_enc)
@@ -280,3 +288,5 @@ def url_decode(url_enc):
     reverse = url_enc[::-1]
     reverse = reverse + last_car
     return base64.b64decode(reverse)
+
+# ==============================================================================================================================================
