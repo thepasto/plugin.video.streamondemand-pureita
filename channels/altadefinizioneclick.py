@@ -134,7 +134,7 @@ def anno(item):
                  action="fichas",
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  folder=True))
 
     return itemlist
