@@ -58,7 +58,7 @@ def mainlist(item):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, action="search", title="[COLOR azure]Cerca musica, trailers, concerti e spettacoli su [/COLOR]You[COLOR red]Tube[/COLOR] ...", thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/youtube_P.png" ) )
+    itemlist.append( Item( channel=__channel__, action="search", title="Cerca Trailer...", thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/youtube_P.png" ) )
 
     return itemlist
 
