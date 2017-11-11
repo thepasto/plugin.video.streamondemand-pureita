@@ -24,7 +24,7 @@ __language__ = "ES"
 page_url = "https://www.youtube.com/watch?v=%s"
 
 ## key
-key0 = "AIzaSyAd-YEOqZz9nXVzGtn3KWzYLbLaajhqIDA"
+key0 = "AIzaSyCjsmBT0JZy1RT-PLwB-Zkfba87sa2inyI"
 key1 = "AIzaSyDXWo8-scFY-Ugcn2A0vGo8023hpcWtXto"
 
 ## Googleapi search
