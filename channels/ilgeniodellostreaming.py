@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://ilgeniodellostreaming.cc"
+host = "http://ilgeniodellostreaming.org"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -93,7 +93,7 @@ def categorias(item):
 
 def search(item, texto):
     logger.info("[ilgeniodellostreaming.py] " + item.url + " search " + texto)
-    item.url = "http://ilgeniodellostreaming.cc/?s=" + texto
+    item.url = "http://ilgeniodellostreaming.org/?s=" + texto
 
     try:
         return peliculas_src(item)
