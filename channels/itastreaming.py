@@ -1,40 +1,25 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para itastreaming.click 
+# Canale itastreaming.click 
 # by SchisM
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import base64
 import re
 import urlparse
 
-from core import config
-from core import logger
+from core import logger, httptools
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from servers import servertools
 
 __channel__ = "itastreaming"
-__category__ = "F,S,A"
-__type__ = "generic"
-__title__ = "Itastreaming"
-__language__ = "IT"
 
-host = "http://itastreaming.gratis/"
+host = "http://itastreaming.gratis"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
-
-
-def isGeneric():
-    return True
+headers = [['Referer', host]]
 
 
 def mainlist(item):
@@ -65,18 +50,40 @@ def mainlist(item):
              title="[COLOR azure]Film per Qualita'[/COLOR]",
              action="quality",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
-
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/blueray_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film A-Z[/COLOR]",
              action="atoz",
              url=host + "/tag/a/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
-
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
+             extra="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+
+    return itemlist
+
+
+def newest(categoria):
+    logger.info("[itastreaming.py] newest" + categoria)
+    itemlist = []
+    item = Item()
+    try:
+        if categoria == "peliculas":
+            item.url = "http://itastreaming.gratis/nuove-uscite/"
+            item.action = "fichas"
+            itemlist = fichas(item)
+
+            if itemlist[-1].action == "fichas":
+                itemlist.pop()
+
+    # Continua la ricerca in caso di errore 
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("{0}".format(line))
+        return []
 
     return itemlist
 
@@ -89,7 +96,7 @@ def search(item, texto):
     try:
         return searchfilm(item)
 
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    # Continua la ricerca in caso di errore 
     except:
         import sys
         for line in sys.exc_info():
@@ -102,8 +109,8 @@ def searchfilm(item):
 
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
     # fix - calidad
     data = re.sub(
         r'<div class="wrapperImage"[^<]+<a',
@@ -116,17 +123,6 @@ def searchfilm(item):
         '<fix>IMDB: 0.0</fix>',
         data
     )
-    # ------------------------------------------------
-    cookies = ""
-    matches = re.compile('(.itastreaming.click.*?)\n', re.DOTALL).findall(config.get_cookie_data())
-    for cookie in matches:
-        name = cookie.split('\t')[5]
-        value = cookie.split('\t')[6]
-        cookies += name + "=" + value + ";"
-    headers.append(['Cookie', cookies[:-1]])
-    import urllib
-    _headers = urllib.urlencode(dict(headers))
-    # ------------------------------------------------
 
     patron = '<li class="s-item">.*?'
     patron += 'src="([^"]+)".*?'
@@ -139,12 +135,13 @@ def searchfilm(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         # ------------------------------------------------
-        scrapedthumbnail += "|" + _headers
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  title=scrapedtitle,
+                 contentType="movie",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -167,7 +164,7 @@ def genere(item):
     logger.info("[itastreaming.py] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
     patron = '<ul class="sub-menu">(.+?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
@@ -192,7 +189,7 @@ def atoz(item):
     logger.info("[itastreaming.py] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
     patron = '<div class="generos">(.+?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
@@ -219,7 +216,7 @@ def quality(item):
     logger.info("[itastreaming.py] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
     patron = '<a>Qualità</a>(.+?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
@@ -247,8 +244,8 @@ def fichas(item):
 
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
     # fix - calidad
     data = re.sub(
         r'<div class="wrapperImage"[^<]+<a',
@@ -261,17 +258,6 @@ def fichas(item):
         '<fix>IMDB: 0.0</fix>',
         data
     )
-    # ------------------------------------------------
-    cookies = ""
-    matches = re.compile('(.itastreaming.click.*?)\n', re.DOTALL).findall(config.get_cookie_data())
-    for cookie in matches:
-        name = cookie.split('\t')[5]
-        value = cookie.split('\t')[6]
-        cookies += name + "=" + value + ";"
-    headers.append(['Cookie', cookies[:-1]])
-    import urllib
-    _headers = urllib.urlencode(dict(headers))
-    # ------------------------------------------------
 
     patron = '<div class="item">.*?'
     patron += 'href="([^"]+)".*?'
@@ -284,7 +270,7 @@ def fichas(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         # ------------------------------------------------
-        scrapedthumbnail += "|" + _headers
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -313,35 +299,35 @@ def findvideos(item):
 
     itemlist = []
 
-    # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data.replace('\n', '')
 
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)" allowfullscreen frameborder="0">'
     url = scrapertools.find_single_match(data, patron).replace("?ita", "")
 
     if 'hdpass' in url:
-        data = scrapertools.cache_page(url, headers=headers)
+        data = httptools.downloadpage(url, headers=headers).data
 
         start = data.find('<div class="row mobileRes">')
         end = data.find('<div id="playerFront">', start)
         data = data[start:end]
 
-        patron_res = '<div class="row mobileRes">(.*?)</div>'
-        patron_mir = '<div class="row mobileMirrs">(.*?)</div>'
-        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"/>'
+        patron_res = r'<div class="row mobileRes">([\s\S]*)<\/div>'
+        patron_mir = r'<div class="row mobileMirrs">([\s\S]*)<\/div>'
+        patron_media = r'<input type="hidden" name="urlEmbed" data-mirror="([^"]+)" id="urlEmbed" value="([^"]+)"[^>]+>'
 
         res = scrapertools.find_single_match(data, patron_res)
 
         urls = []
         for res_url, res_video in scrapertools.find_multiple_matches(res, '<option.*?value="([^"]+?)">([^<]+?)</option>'):
 
-            data = scrapertools.cache_page(urlparse.urljoin(url, res_url), headers=headers).replace('\n', '')
+            data = httptools.downloadpage(urlparse.urljoin(url, res_url), headers=headers).data.replace('\n', '')
 
             mir = scrapertools.find_single_match(data, patron_mir)
 
             for mir_url in scrapertools.find_multiple_matches(mir, '<option.*?value="([^"]+?)">[^<]+?</value>'):
 
-                data = scrapertools.cache_page(urlparse.urljoin(url, mir_url), headers=headers).replace('\n', '')
+                data = httptools.downloadpage(urlparse.urljoin(url, mir_url), headers=headers).data.replace('\n', '')
 
                 for media_label, media_url in re.compile(patron_media).findall(data):
                     urls.append(url_decode(media_url))
@@ -355,7 +341,7 @@ def findvideos(item):
             videoitem.plot = item.plot
             videoitem.channel = __channel__
 
-        return itemlist
+    return itemlist
 
 
 def url_decode(url_enc):

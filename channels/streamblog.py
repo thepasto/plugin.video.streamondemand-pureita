@@ -8,11 +8,12 @@ import re
 import sys
 import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
-from servers import servertools
+from core.tmdb import infoSod
 
 __channel__ = "streamblog"
 __category__ = "F"
@@ -50,7 +51,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
-                     action="peliculas",
+                     action="peliculas_tv",
                      url="%s/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
@@ -175,36 +176,94 @@ def peliculas(item):
     logger.info("streamondemand.streamblog peliculas")
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url, headers=headers)
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    # Extrae las entradas (carpetas)
-    patron = '<div class="poster"><a href="([^"]+)"><img src="([^"]+)" alt="([^"]+)".*?</div>'
+    # Estrae i contenuti 
+    patron = '<div class="blvideo">\s*<div class="poster"><a href="([^"]+)"[^<]+<img src="([^"]+)" alt="(.*?)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        html = scrapertools.cache_page(scrapedurl, headers=headers)
-        start = html.find("<div class=\"fstory_descr clear decor\">")
-        end = html.find("<div class=\"fstory_treyler decor\">", start)
-        scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
-        # scrapedplot = ""
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedthumbnail = host + scrapedthumbnail
+        scrapedplot = ""
+
+        # Bypass fake links
+        html = httptools.downloadpage(scrapedurl).data
+
+        patron = '<div class="video-player-plugin">([\s\S]*)<div class="wrapper-plugin-video">'
+        matches = re.compile(patron, re.DOTALL).findall(html)
+        for url in matches:
+            if "scrolling" in url:
+                scrapedurl = scrapedurl
+            else:
+                continue
+
+            itemlist.append(infoSod(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     contentType="movie",
+                     fulltitle=scrapedtitle,
+                     show=scrapedtitle,
+                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail=scrapedthumbnail,
+                     plot=scrapedplot,
+                     folder=True), tipo='movie'))
+
+    # Paginazione 
+    patronvideos = '<div class="navigation">[^n]+n>[^<]+<\/span>[^<]+<a href="(.*?)">'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="episodios" if item.extra == "serie" else "findvideos",
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+
+    return itemlist
+
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+
+def peliculas_tv(item):
+    logger.info("streamondemand.streamblog peliculas")
+    itemlist = []
+
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+    # Estrae i contenuti 
+    patron = '<div class="blvideo">\s*<div class="poster"><a href="([^"]+)"[^<]+<img src="([^"]+)" alt="(.*?)"[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = host + scrapedthumbnail
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=host + scrapedthumbnail,
+                 thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
-                 folder=True,
-                 fanart=host + scrapedthumbnail))
+                 folder=True), tipo='tv'))
 
-    # Extrae el paginador
-    patronvideos = '<div class="navigation".*?<span.*?/span>.*?<a href="([^"]+)">'
+    # Paginazione 
+    patronvideos = '<div class="navigation">[^n]+n>[^<]+<\/span>[^<]+<a href="(.*?)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -223,11 +282,8 @@ def peliculas(item):
                  folder=True))
 
     return itemlist
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
+	
+	
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
         for data in scrapertools.decodeHtmlentities(html).split('<br />'):

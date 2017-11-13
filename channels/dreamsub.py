@@ -1,36 +1,22 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
-# Canale  dreamsub
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# streamondemand.- XBMC Plugin
+# Canale  per dreamsub
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
 import urlparse
 
-from core import config
+from core import config, httptools, servertools
 from core import logger
 from core import scrapertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "dreamsub"
-__category__ = "S,A"
-__type__ = "generic"
-__title__ = "dreamsub"
-__language__ = "IT"
-
-DEBUG = config.get_setting("debug")
 
 host = "https://www.dreamsub.tv"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
-
-def isGeneric():
-    return True
 
 def mainlist(item):
     logger.info("streamondemand.dreamsub mainlist")
@@ -54,29 +40,30 @@ def mainlist(item):
 
     return itemlist
 
+
 def newest(categoria):
-    logger.info("streamondemand.altadefinizione01 newest" + categoria)
+    logger.info("streamondemand-pureita.altadefinizione01 newest" + categoria)
     itemlist = []
     item = Item()
     try:
         if categoria == "series":
-            item.url = "https://www.dreamsub.it"
+            item.url = "https://www.dreamsub.tv"
             item.action = "ultimiep"
             item.extra = "serie"
             itemlist = ultimiep(item)
 
             if itemlist[-1].action == "ultimiep":
                 itemlist.pop()
-        
+
         if categoria == "anime":
-            item.url = "https://www.dreamsub.it"
+            item.url = "https://www.dreamsub.tv"
             item.action = "ultimiep"
             item.extra = "anime"
             itemlist = ultimiep(item)
 
             if itemlist[-1].action == "ultimiep":
                 itemlist.pop()
-    # Se captura la excepción, para no interrumpir al canal novedades si un canal falla
+    # Continua la ricerca in caso di errore 
     except:
         import sys
         for line in sys.exc_info():
@@ -85,15 +72,17 @@ def newest(categoria):
 
     return itemlist
 
+
 def serietv(item):
-    logger.info("streamondemand.dreamsub peliculas")
+    logger.info("streamondemand-pureita.dreamsub peliculas")
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url, headers=headers)
-    bloque = scrapertools.get_match(data, '<input type="submit" value="Vai!" class="blueButton">(.*?)<div class="footer">')
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url).data
+    bloque = scrapertools.get_match(data,
+                                    '<input type="submit" value="Vai!" class="blueButton">(.*?)<div class="footer">')
 
-    # Extrae las entradas (carpetas)
+    # Estrae i contenuti 
     patron = 'Lingua[^<]+<br>\s*<a href="([^"]+)" title="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
@@ -103,8 +92,6 @@ def serietv(item):
         scrapedthumbnail = ""
         scrapedtitle = scrapedtitle.replace("Streaming", "")
         scrapedtitle = scrapedtitle.replace("Lista episodi ", "")
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -117,7 +104,7 @@ def serietv(item):
                  extra=item.extra,
                  folder=True), tipo='tv'))
 
-    # Extrae el paginador
+    # Paginazione 
     patronvideos = '<li class="currentPage">[^>]+><li[^<]+<a href="([^"]+)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
@@ -126,7 +113,7 @@ def serietv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 title="[COLOR orange]Torna Home[/COLOR]",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
@@ -140,18 +127,19 @@ def serietv(item):
 
     return itemlist
 
+
 def ultimiep(item):
-    logger.info("streamondemand.dreamsub ultimiep")
+    logger.info("streamondemand-pureita.dreamsub ultimiep")
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url, headers=headers)
+    # Carica la pagina 
+    data = httptools.downloadpage(item.url).data
     if 'anime' in item.extra:
         bloque = scrapertools.get_match(data, '<ul class="last" id="recentAddedEpisodesAnimeDDM">(.*?)</ul>')
     elif 'serie' in item.extra:
         bloque = scrapertools.get_match(data, '<ul class="last" id="recentAddedEpisodesTVDDM">(.*?)</ul>')
 
-    # Extrae las entradas (carpetas)
+    # Estrae i contenuti 
     patron = '<li><a href="([^"]+)"[^>]+>([^<]+)<br>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
@@ -162,12 +150,11 @@ def ultimiep(item):
         scrapedurl = host + scrapedurl
         scrapedplot = ""
         scrapedthumbnail = ""
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=(re.sub(r'\d*-?\d+$', '', scrapedtitle) if 'anime' in item.extra else re.sub(r'\d+x\d+$', '', scrapedtitle)).strip(),
+                 fulltitle=(re.sub(r'\d*-?\d+$', '', scrapedtitle) if 'anime' in item.extra else re.sub(r'\d+x\d+$', '',
+                                                                                                        scrapedtitle)).strip(),
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
@@ -176,6 +163,7 @@ def ultimiep(item):
                  extra=item.extra,
                  folder=True), tipo='tv'))
     return itemlist
+
 
 def HomePage(item):
     import xbmc
@@ -187,7 +175,7 @@ def search(item, texto):
     item.url = "%s/search/%s" % (host, texto)
     try:
         return serietv(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    # Continua la ricerca in caso di errore 
     except:
         import sys
         for line in sys.exc_info():
@@ -196,17 +184,17 @@ def search(item, texto):
 
 
 def episodios(item):
-    logger.info("streamondemand.channels.dreamsub episodios")
+    logger.info("streamondemand-pureita.channels.dreamsub episodios")
 
     itemlist = []
 
-    data = scrapertools.cache_page(item.url, headers=headers)
+    data = httptools.downloadpage(item.url).data
     bloque = scrapertools.get_match(data, '<div class="seasonEp">(.*?)<div class="footer">')
 
     patron = '<li><a href="([^"]+)"[^<]+<b>(.*?)<\/b>[^>]+>([^<]+)<\/i>(.*?)<'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedurl, title1, title2, title3  in matches:
+    for scrapedurl, title1, title2, title3 in matches:
         scrapedurl = host + scrapedurl
         scrapedtitle = title1 + " " + title2 + title3
         scrapedtitle = scrapedtitle.replace("Download", "")
@@ -232,13 +220,28 @@ def episodios(item):
                  action="add_serie_to_library",
                  extra="episodios",
                  show=item.show))
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
-                 show=item.show))
 
     return itemlist
 
+def findvideos(item):
+    logger.info()
+
+    print item.url
+    data = httptools.downloadpage(item.url).data
+
+    itemlist = servertools.find_video_items(data=data)
+    if 'keepem.online' in data:
+        urls = scrapertools.find_multiple_matches(data, r'(https://keepem\.online/f/[^"]+)"')
+        for url in urls:
+            url = httptools.downloadpage(url).url
+            itemlist += servertools.find_video_items(data=url)
+                
+    for videoitem in itemlist:
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(["[[COLOR orange]%s[/COLOR]] " % server.capitalize(), item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
+
+    return itemlist

@@ -12,14 +12,14 @@
     <bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/streamblog.png</bannermenu>
 
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-    <version>3</version>
-    <date>01/10/2017</date>
-    <changes>Fix Host and Update Images</changes>
+    <version>4</version>
+    <date>12/11/2017</date>
+    <changes>Fix</changes>
 
     <categories>
-        <category>movie</category>
-	<category>serie</category>
-	<category>anime</category>
+      <category>movie</category>
+      <category>serie</category>
+      <category>anime</category>
     </categories>
 
     <settings>
