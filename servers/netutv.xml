@@ -2,12 +2,12 @@
 <server>
 	<active>true</active>
 	<changes>Versión incial</changes>
-	<date>25/03/2016</date>
+	<date>12/11/2017</date>
 	<free>true</free>
 	<id>netutv</id>
 	<name>netutv</name>
 	<premium></premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_netutv.png</thumbnail>
 	<update_url>https://raw.githubusercontent.com/streamondemand/plugin.video.streamondemand/master/servers/</update_url>
-	<version>1</version>
+	<version>2</version>
 </server>

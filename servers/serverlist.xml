@@ -670,9 +670,9 @@
     <id>netutv</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/netutv.py</update_url>
     <active>true</active>
-    <version>1</version>
-    <date>10/10/2016</date>
-    <changes>Prima versione</changes>
+    <version>2</version>
+    <date>12/11/2017</date>
+    <changes>Update</changes>
 </server>
 
 <server>
@@ -1052,6 +1052,15 @@
     <version>2</version>
     <date>09/09/2017</date>
     <changes>Update</changes>
+</server>
+
+<server>
+    <id>streamcherry</id>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/streamcherry.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>12/11/2017</date>
+    <changes>First release</changes>
 </server>
 
 <server>
