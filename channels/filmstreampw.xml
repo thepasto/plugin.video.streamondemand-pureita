@@ -3,7 +3,7 @@
 	<id>filmstreampw</id>
 	<name>Filmstreampw</name>
 
-	<active>true</active>
+	<active>false</active>
 	<adult>false</adult>
 	<language>it</language>
 
@@ -30,11 +30,12 @@
 	</settings>
 
 	<settings>
+                <include_in_global_search>false</include_in_global_search>
 		<id>include_in_newest_peliculas</id>
 		<type>bool</type>
 		<label>Includi in novità - film</label>
-		<default>true</default>
-		<enabled>true</enabled>
-		<visible>true</visible>
+		<default>false</default>
+		<enabled>false</enabled>
+		<visible>false</visible>
 	</settings>
 </channel>
