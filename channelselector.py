@@ -126,7 +126,7 @@ def getchanneltypes(preferred_thumb=""):
     itemlist.append( Item( title=config.get_localized_string(30124) , channel="channelselector" , action="listchannels" , category="A"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_anime_blueP2.png")))
     itemlist.append( Item( title="Saghe" , channel="saghe", action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_saghe_blueP2.png") ) )
     itemlist.append( Item( title=config.get_localized_string(30125) , channel="channelselector" , action="listchannels" , category="D"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_documentary_blueP2.png")))
-    itemlist.append( Item( title=".NET Lover", channel="netflixsrc" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"netflixsrc2.png") ) )
+    itemlist.append( Item( title=".NET Lover", channel="netlover" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"netlover.png") ) )
     #itemlist.append( Item( title="Contenuti Vari" , channel="novedades" , action="mainlist", thumbnail = urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_novedades.png") ) )
     itemlist.append( Item( title=config.get_localized_string(30136) , channel="channelselector" , action="listchannels" , category="VOS" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_original_blueP2.png")))
     #itemlist.append( Item( title="Torrent" , channel="channelselector" , action="listchannels" , category="T" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"banner_torrent_blueP.png")))
