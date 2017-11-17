@@ -1,0 +1,162 @@
+# -*- coding: utf-8 -*-
+# ------------------------------------------------------------
+# streamondemand - XBMC Plugin
+# Netlover search
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# ------------------------------------------------------------
+
+import re
+import urllib
+import urlparse
+
+from core import config
+from core import logger
+from core import scrapertools
+from core.item import Item
+from core.tmdb import infoSod
+
+__channel__ = "netlover"
+__category__ = "S"
+__type__ = "generic"
+__title__ = "netlover search (IT)"
+__language__ = "IT"
+
+DEBUG = config.get_setting("debug")
+
+host = "http://www.netflixlovers.it"
+
+TIMEOUT_TOTAL = 45
+
+def isGeneric():
+    return True
+
+def mainlist(item):
+    logger.info("streamondemand.netlover mainlist")
+    itemlist = [Item(channel=__channel__,
+                     title="[COLOR red]Serie TV - .NET Lover[/COLOR]",
+                     url="%s/classifiche/top-10-serie-tv-le-migliori-serie-tv-su-netflix-italia/" % host,
+                     action="serietv",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_series_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR red]Film - .NET Lover[/COLOR]",
+                     action="film",
+                     url="%s/classifiche/top-10-film-i-migliori-film-su-netflix-italia/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR red]Documentari - .NET Lover[/COLOR]",
+                     action="film",
+                     url="%s/classifiche/top-10-documentari-i-migliori-documentari-su-netflix-italia/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_doc_P.png")]
+
+    return itemlist
+
+def serietv(item):
+    logger.info("streamondemand.netlover serietv")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<span class="thumb-info-title">\s*<span class="thumb-info-caption-text">([^<]+)</span>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedtitle in matches:
+        scrapedurl = ""
+        scrapedthumbnail = ""
+        scrapedtv = ".NET Lover Original"
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapedtitle.split("(")[0]
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="do_search",
+                 extra=urllib.quote_plus(scrapedtitle),
+                 title=scrapedtitle + "[COLOR red]   " + scrapedtv + "[/COLOR]",
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 folder=True), tipo="tv"))
+
+    # Extrae el paginador
+    patronvideos = '<a href="([^"]+)" class="btn btn-borders btn-primary mr-xs mb-sm center">Mostra'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="serietv",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+    return itemlist
+
+def film(item):
+    logger.info("streamondemand.netlover film")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<span class="thumb-info-title">\s*<span class="thumb-info-caption-text">([^<]+)</span>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedtitle in matches:
+        scrapedurl = ""
+        scrapedthumbnail = ""
+        scrapedtv = ".NET Lover Original"
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapedtitle.split("(")[0]
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="do_search",
+                 extra=urllib.quote_plus(scrapedtitle),
+                 title=scrapedtitle + "[COLOR red]   " + scrapedtv + "[/COLOR]",
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 folder=True), tipo="movie"))
+
+    # Extrae el paginador
+    patronvideos = '<a href="([^"]+)" class="btn btn-borders btn-primary mr-xs mb-sm center">Mostra'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="film",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 folder=True))
+
+    return itemlist
+
+# Esta es la función que realmente realiza la búsqueda
+
+def do_search(item):
+    from channels import buscador
+    return buscador.do_search(item)
+
+def HomePage(item):
+    import xbmc
+    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+
