@@ -60,7 +60,7 @@
       <font>font10</font>
       <textcolor>FFCCCCCC</textcolor>
       <align>right</align>
-      <label>PureITA  Version: 5.4.5</label>
+      <label>PureITA  Version: 5.4.6</label>
     </control>
 
     <control type="label">
@@ -69,7 +69,7 @@
       <font>font10</font>
       <textcolor>FFCCCCCC</textcolor>
       <align>right</align>
-      <label>29/Giugno/2017</label>
+      <label>16/Novembre/2017</label>
     </control>
 
     <!-- ---------------------------- -->
