@@ -3,7 +3,7 @@
     <id>videotecadiclasse</id>
     <name>VideotecaDiClasse</name>
 
-    <active>true</active>
+    <active>false</active>
     <adult>false</adult>
     <language>it</language>
 
@@ -21,7 +21,7 @@
     </categories>
 
     <settings>
-        <include_in_global_search>true</include_in_global_search>
+        <include_in_global_search>false</include_in_global_search>
         <id>include_in_global_search</id>
         <type>bool</type>
         <label>Includi ricerca globale</label>
