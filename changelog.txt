@@ -1,3 +1,11 @@
+5.4.6
+-Adattamento a Kodi 17.5
+-Nuova interfaccia grafica grafica  --in progress--
+-Aggiornamento canali
+-Aggiornamento server
+-Fix vari
+-Minor bug Fix
+
 5.4.5
 -Fixed TMDB
 -Update Channels

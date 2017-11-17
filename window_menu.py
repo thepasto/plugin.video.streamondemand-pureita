@@ -40,6 +40,9 @@ class MenuWindow(xbmcgui.WindowXML):
 
     def __init__(self, xml_name, fallback_path):
         plugintools.log("MenuWindow.__init__ xml_name="+xml_name+" fallback_path="+fallback_path)
+		
+        if self.getResolution()>0:
+            self.setCoordinateResolution(0)
 
         self.first_time = False
         self.itemlist = []
@@ -85,6 +88,7 @@ class MenuWindow(xbmcgui.WindowXML):
 
         self.getControl(300).setLabel(self.parent_item.channel)
         self.setFocusId(100)
+		
 
     def onAction(self, action):
         plugintools.log("MenuWindow.onAction action.id="+repr(action.getId())+" action.buttonCode="+repr(action.getButtonCode()))
@@ -115,7 +119,7 @@ class MenuWindow(xbmcgui.WindowXML):
             if skin_selector == "1":
 
                 loader_image = os.path.join( plugintools.get_runtime_path(), 'resources', 'skins', 'Default', 'media', 'loader-1.gif')
-            loader = xbmcgui.ControlImage(1200, 19, 40, 40, loader_image)
+            loader = xbmcgui.ControlImage(1830, 26, 64, 64, loader_image)
             self.addControl(loader)
 
             pos = self.control_list.getSelectedPosition()
@@ -142,7 +146,7 @@ class MenuWindow(xbmcgui.WindowXML):
         pass
 
     def onClick( self, control_id ):
-        plugintools.log("ChannelWindow.onClick "+repr(control_id))
+        plugintools.log("MenuWindow.onClick "+repr(control_id))
         pass
 	
     def onControl(self, control):
