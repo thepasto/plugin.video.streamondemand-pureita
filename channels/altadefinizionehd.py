@@ -115,8 +115,8 @@ def peranno(item):
     
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
 
-    patron = '<li><a href="([^"]+)">(\d+)</a></li>'
-    blocco = scrapertools.get_match(data, '<ul class="scrolling">([^+]+)<div class="filtro_y">')
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
+    blocco = scrapertools.get_match(data, '<ul class="scrolling">(.*?)<div class="filtro_y">')
 
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     for scrapedurl, scrapedtitle in matches:
@@ -124,7 +124,7 @@ def peranno(item):
              Item(channel=__channel__,
                  action="film",
                  title=color(scrapedtitle, "azure"),
-                 url=host + scrapedurl,
+                 url=scrapedurl,
                  extra="movie",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  folder=True))
