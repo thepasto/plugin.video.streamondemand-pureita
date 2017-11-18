@@ -8,7 +8,7 @@
 
 import re
 
-from core import logger
+from core import logger, httptools
 from core.httptools import urllib
 from core import servertools
 from core import scrapertools
@@ -115,8 +115,8 @@ def peranno(item):
     
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
 
-    patron = '<li><a class="ito" HREF="([^"]+)">(\d+)</a></li>'
-    blocco = scrapertools.get_match(data, '<ul class="scrolling">(.*?)</ul>')
+    patron = '<li><a href="([^"]+)">(\d+)</a></li>'
+    blocco = scrapertools.get_match(data, '<ul class="scrolling">([^+]+)<div class="filtro_y">')
 
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     for scrapedurl, scrapedtitle in matches:
@@ -164,8 +164,8 @@ def ultimifilm(item):
     itemlist = []
 
     data = scrapertools.cache_page(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, '<div class="items">(.*?)</div>\s*<!-- \*{28} -->')
-    patron = '<div class="item">\s*<a href="([^"]+)">[^>]+>\s*<img src="([^"]+)" alt="([^"]+)".*?/>'
+    blocco = scrapertools.get_match(data, '<div class="item_1 items">([^+]+)<div id="paginador">')
+    patron = '<a href="([^"]+)">[^>]+>\s*<img src="([^"]+)" alt="([^"]+)".*?/>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedimg, scrapedtitle in matches:
@@ -180,7 +180,7 @@ def ultimifilm(item):
                  extra=item.extra,
                  folder=True), tipo=item.extra))
 
-    patron = "<a rel='nofollow' class=previouspostslink' href='([^']+)'>Successiva.*?</a>"
+    patron = '<div class="pag_b"><a href="([^"]+)" >Successivo</a></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     if len(matches) > 0:
@@ -211,7 +211,7 @@ def film(item):
     item.url = urllib.unquote_plus(item.url).replace("\\", "")
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    patron = '<a href="([^"]+)">[^>]+>\s<img src="([^"]+)" alt="([^"]+)" />'
+    patron = '<a href="([^"]+)">[^>]+>\s*<img src="([^"]+)" alt="([^"]+)".*?/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedimg, scrapedtitle in matches:
@@ -226,7 +226,7 @@ def film(item):
                  extra=item.extra,
                  folder=True), tipo=item.extra))
 
-    patron = "<a rel='nofollow' class=previouspostslink' href='([^']+)'>Successiva.*?</a>"
+    patron = '<div class="pag_b"><a href="([^"]+)" >Next</a></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     if len(matches) > 0:
