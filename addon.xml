@@ -31,6 +31,7 @@
     <description lang="it">Browse web pages using Kodi</description>
     <summary lang="en">Browse web pages using Kodi</summary>
     <description lang="en">Browse web pages using Kodi</description>
+    <disclaimer>[COLOR red]The owners and submitters to this addon do not host or distribute any of the content displayed by these addons nor do they have any affiliation with the content providers.[/COLOR]</disclaimer>
     <platform>all</platform>
     <license>GNU GPL v3</license>
   </extension>
