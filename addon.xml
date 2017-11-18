@@ -14,10 +14,10 @@
     <assets>
       <icon>icon.png</icon>
       <fanart>fanart.jpg</fanart>
-      <screenshot>resources/media/themes/ss/1.jpg</screenshot>
-      <screenshot>resources/media/themes/ss/2.jpg</screenshot>
-      <screenshot>resources/media/themes/ss/3.jpg</screenshot>
-      <screenshot>resources/media/themes/ss/4.jpg</screenshot>
+      <screenshot>resources/images/themes/ss/1.jpg</screenshot>
+      <screenshot>resources/images/themes/ss/2.jpg</screenshot>
+      <screenshot>resources/images/themes/ss/3.jpg</screenshot>
+      <screenshot>resources/images/themes/ss/4.jpg</screenshot>
     </assets>
       <news>[B]Novita in questa versione:[/B]
       » Adattamento a Kodi 17.5
