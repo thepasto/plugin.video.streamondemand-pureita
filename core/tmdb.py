@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand 5
+# streamondemand-PureITA
 # Copyright 2015 tvalacarta@gmail.com
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of streamondemand 5.
+# This file is part of streamondemand-PureITA.
 #
-# streamondemand 5 is free software: you can redistribute it and/or modify
+# streamondemand-PureITA is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# streamondemand 5 is distributed in the hope that it will be useful,
+# streamondemand-PureITA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with streamondemand 5.  If not, see <http://www.gnu.org/licenses/>.
+# along with streamondemand-PureITA.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 
 import copy
@@ -516,7 +516,7 @@ class ResultDictDefault(dict):
 
 # ---------------------------------------------------------------------------------------------------------------
 # class Tmdb:
-#   Scraper para streamondemand basado en el Api de https://www.themoviedb.org/
+#   Scraper para streamondemand-PureITA basado en el Api de https://www.themoviedb.org/
 #   version 1.4:
 #       - Documentada limitacion de uso de la API (ver mas abajo).
 #       - Añadido metodo get_temporada()
@@ -720,7 +720,7 @@ class Tmdb(object):
 
         if tipo not in cls.dic_generos[idioma]:
             cls.dic_generos[idioma][tipo] = {}
-            url = ('http://api.themoviedb.org/3/genre/%s/list?api_key=6889f6089877fd092454d00edb44a84d&language=%s'
+            url = ('http://api.themoviedb.org/3/genre/%s/list?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&language=%s'
                    % (tipo, idioma))
             try:
                 logger.info("[Tmdb.py] Rellenando dicionario de generos")
@@ -746,13 +746,13 @@ class Tmdb(object):
                 #   &append_to_response=images,videos,external_ids,credits&include_image_language=es,null
                 # http://api.themoviedb.org/3/tv/1407?api_key=6889f6089877fd092454d00edb44a84d&language=es
                 #   &append_to_response=images,videos,external_ids,credits&include_image_language=es,null
-                url = ('http://api.themoviedb.org/3/%s/%s?api_key=6889f6089877fd092454d00edb44a84d&language=%s'
+                url = ('http://api.themoviedb.org/3/%s/%s?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&language=%s'
                        '&append_to_response=images,videos,external_ids,credits&include_image_language=%s,null' %
                        (self.busqueda_tipo, self.busqueda_id, self.busqueda_idioma, self.busqueda_idioma))
                 buscando = "id_Tmdb: %s" % self.busqueda_id
             else:
                 # http://api.themoviedb.org/3/find/%s?external_source=imdb_id&api_key=f6889f6089877fd092454d00edb44a84d
-                url = ('http://api.themoviedb.org/3/find/%s?external_source=%s&api_key=6889f6089877fd092454d00edb44a84d'
+                url = ('http://api.themoviedb.org/3/find/%s?external_source=%s&api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044'
                        '&language=%s' % (self.busqueda_id, source, self.busqueda_idioma))
                 buscando = "%s: %s" %(source.capitalize(), self.busqueda_id)
 
@@ -791,7 +791,7 @@ class Tmdb(object):
         if self.busqueda_texto:
             # http://api.themoviedb.org/3/search/movie?api_key=f7f51775877e0bb6703520952b3c7840&query=superman&language=es
             # &include_adult=false&page=1
-            url = ('http://api.themoviedb.org/3/search/%s?api_key=6889f6089877fd092454d00edb44a84d&query=%s&language=%s'
+            url = ('http://api.themoviedb.org/3/search/%s?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&query=%s&language=%s'
                    '&include_adult=%s&page=%s' % (self.busqueda_tipo, self.busqueda_texto.replace(' ', '%20'),
                                                   self.busqueda_idioma, self.busqueda_include_adult,page))
 
@@ -861,7 +861,7 @@ class Tmdb(object):
                 if key != "url":
                     params.append(key + "=" + str(value))
             # http://api.themoviedb.org/3/discover/movie?api_key=f7f51775877e0bb6703520952b3c7840&query=superman&language=es
-            url = ('http://api.themoviedb.org/3/%s?api_key=6889f6089877fd092454d00edb44a84d&%s'
+            url = ('http://api.themoviedb.org/3/%s?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&%s'
                   % (type_search, "&".join(params)))
 
             logger.info("[Tmdb.py] Buscando %s:\n%s" % (type_search, url))
@@ -1024,7 +1024,7 @@ class Tmdb(object):
                 else:
                     self.busqueda_idioma = self.result['original_language']
 
-                url = ('http://api.themoviedb.org/3/%s/%s?api_key=6889f6089877fd092454d00edb44a84d&language=%s' %
+                url = ('http://api.themoviedb.org/3/%s/%s?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&language=%s' %
                        (self.busqueda_tipo, self.busqueda_id, self.busqueda_idioma))
                 try:
                     resultado = jsontools.load_json(scrapertools.downloadpageWithoutCookies(url))
@@ -1159,7 +1159,7 @@ class Tmdb(object):
 
             # http://api.themoviedb.org/3/tv/1407/season/1?api_key=f7f51775877e0bb6703520952b3c7840&language=es&
             # append_to_response=credits
-            url = "http://api.themoviedb.org/3/tv/%s/season/%s?api_key=6889f6089877fd092454d00edb44a84d&language=%s" \
+            url = "http://api.themoviedb.org/3/tv/%s/season/%s?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&language=%s" \
                   "&append_to_response=credits" % (self.result["id"], numtemporada, self.busqueda_idioma)
 
             buscando = "id_Tmdb: " + str(self.result["id"]) + " temporada: " + str(numtemporada) + "\nURL: " + url
@@ -1276,7 +1276,7 @@ class Tmdb(object):
                 self.result["videos"] = self.result["videos"]['results']
             else:
                 # Primera búsqueda de videos en el idioma de busqueda
-                url = "http://api.themoviedb.org/3/%s/%s/videos?api_key=6889f6089877fd092454d00edb44a84d&language=%s" \
+                url = "http://api.themoviedb.org/3/%s/%s/videos?api_key=99ceb6cfe8e4ee644dc3b4d2ca2b2044&language=%s" \
                       % (self.busqueda_tipo, self.result['id'], self.busqueda_idioma)
                 try:
                     dict_videos = jsontools.load_json(scrapertools.downloadpageWithoutCookies(url))
@@ -1480,7 +1480,7 @@ class Tmdb(object):
 
 
 ####################################################################################################
-#   for StreamOnDemand by costaplus
+
 # ====================================================================================================
 def infoSod(item, tipo="movie"):
     '''

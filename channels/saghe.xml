@@ -13,9 +13,9 @@
 	<bannermenu>https://ideedaleggere.files.wordpress.com/2015/11/icona2.png?w=300&h=300&crop=1</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>2</version>
-	<date>28/06/2017</date>
-	<changes>update</changes>
+	<version>3</version>
+	<date>18/11/2017</date>
+	<changes>Fix and Update</changes>
 
 	<categories>
 		<category>saghe</category>

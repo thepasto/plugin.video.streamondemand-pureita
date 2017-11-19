@@ -41,7 +41,7 @@ host = "http://www.ibs.it"
 
 DEBUG = config.get_setting("debug")
 
-TMDB_KEY = '6889f6089877fd092454d00edb44a84d'
+TMDB_KEY = '99ceb6cfe8e4ee644dc3b4d2ca2b2044'
 #try:
 #    TMDBaddon = xbmcaddon.Addon('metadata.themoviedb.org')
 #    TMDBpath = TMDBaddon.getAddonInfo('path')
@@ -98,7 +98,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand-pureita-master.biblioteca mainlist")
+    logger.info("streamondemand-pureita.biblioteca mainlist")
     itemlist = [Item(channel="buscador",
                      title="[COLOR lightgreen]Cerca nei Canali...[/COLOR]",
                      action="mainlist",
@@ -216,7 +216,7 @@ def mainlist(item):
 
 
 def list_movie(item):
-    logger.info("streamondemand-pureita-master.channels.database list_movie '%s/%s'" % (item.url, item.plot))
+    logger.info("streamondemand-pureita.channels.database list_movie '%s/%s'" % (item.url, item.plot))
 
     results = [0, 0]
     page = int(item.plot)
@@ -234,7 +234,7 @@ def list_movie(item):
     return itemlist
 
 def list_tvshow(item):
-    logger.info("streamondemand-pureita-master.channels.database list_tvshow '%s/%s'" % (item.url, item.plot))
+    logger.info("streamondemand-pureita.channels.database list_tvshow '%s/%s'" % (item.url, item.plot))
 
     results = [0, 0]
     page = int(item.plot)
@@ -252,7 +252,7 @@ def list_tvshow(item):
     return itemlist
 
 def list_genres(item):
-    logger.info("streamondemand-pureita-master.channels.database list_genres")
+    logger.info("streamondemand-pureita.channels.database list_genres")
 
     tmdb_genre(1)
     itemlist = []
@@ -276,7 +276,7 @@ def search(item, search_terms):
 
 
 def search_tvshow_by_title(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_tvshow_by_title '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_tvshow_by_title '%s'" % (search_terms))
 
     return list_movie(
         Item(channel=item.channel,
@@ -286,7 +286,7 @@ def search_tvshow_by_title(item, search_terms):
 
 
 def search_movie_by_title(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_movie_by_title '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_movie_by_title '%s'" % (search_terms))
 
     return list_movie(
         Item(channel=item.channel,
@@ -296,7 +296,7 @@ def search_movie_by_title(item, search_terms):
 
 
 def search_similar_movie_by_title(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_movie_by_title '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_movie_by_title '%s'" % (search_terms))
 
     return list_movie(
         Item(channel=item.channel,
@@ -306,7 +306,7 @@ def search_similar_movie_by_title(item, search_terms):
 
 
 def search_movie_by_year(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_movie_by_year '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_movie_by_year '%s'" % (search_terms))
 
     year = url_quote_plus(search_terms)
     result = []
@@ -321,7 +321,7 @@ def search_movie_by_year(item, search_terms):
 
 
 def search_person_by_name(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_person_by_name '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_person_by_name '%s'" % (search_terms))
 
     persons = tmdb_get_data("search/person?query=%s&" % url_quote_plus(search_terms))
 
@@ -355,7 +355,7 @@ def search_person_by_name(item, search_terms):
 
 
 def search_movie_by_person(item):
-    logger.info("streamondemand-pureita-master.channels.database search_movie_by_person '%s'" % (item.extra))
+    logger.info("streamondemand-pureita.channels.database search_movie_by_person '%s'" % (item.extra))
 
     # return list_movie(
     #     Item(channel=item.channel,
@@ -376,7 +376,7 @@ def search_movie_by_person(item):
 
 
 def search_collection_by_name(item, search_terms):
-    logger.info("streamondemand-pureita-master.channels.database search_collection_by_name '%s'" % (search_terms))
+    logger.info("streamondemand-pureita.channels.database search_collection_by_name '%s'" % (search_terms))
 
     collections = tmdb_get_data("search/collection?query=%s&" % url_quote_plus(search_terms))
 
@@ -401,7 +401,7 @@ def search_collection_by_name(item, search_terms):
 
 
 def search_movie_by_collection(item):
-    logger.info("streamondemand-pureita-master.channels.database search_movie_by_collection '%s'" % (item.extra))
+    logger.info("streamondemand-pureita.channels.database search_movie_by_collection '%s'" % (item.extra))
 
     collection = tmdb_get_data("collection/%s?" % item.extra)
 
@@ -443,7 +443,7 @@ def build_movie_list(item, movies):
         found = False
         kodi_db_movies = kodi_database_movies(title)
         for kodi_db_movie in kodi_db_movies:
-            logger.info('streamondemand-pureita-master.database set for local playing(%s):\n%s' % (title, str(kodi_db_movie)))
+            logger.info('streamondemand-pureita.database set for local playing(%s):\n%s' % (title, str(kodi_db_movie)))
             if year == str(kodi_db_movie["year"]):
                 found = True
 
@@ -472,7 +472,7 @@ def build_movie_list(item, movies):
                 ))
 
         if not found:
-            logger.info('streamondemand-pureita-master.database set for channels search(%s)' % title)
+            logger.info('streamondemand-pureita.database set for channels search(%s)' % title)
             itemlist.append(Item(
                     channel=item.channel,
                     action='do_channels_search',
@@ -557,9 +557,9 @@ def get_xbmc_jsonrpc_response(json_query=""):
         response = xbmc.executeJSONRPC(json_query)
         response = unicode(response, 'utf-8', errors='ignore')
         response = json.loads(response)
-        logger.info("streamondemand-pureita-master.channels.database jsonrpc %s" % response)
+        logger.info("streamondemand-pureita.channels.database jsonrpc %s" % response)
     except Exception, e:
-        logger.info("streamondemand-pureita-master.channels.database jsonrpc error: %s" % str(e))
+        logger.info("streamondemand-pureita.channels.database jsonrpc error: %s" % str(e))
         response = None
     return response
 
@@ -576,13 +576,13 @@ def get_json_response(url=""):
     try:
         results = json.loads(response)
     except:
-        logger.info("streamondemand-pureita-master.channels.database Exception: Could not get new JSON data from %s" % url)
+        logger.info("streamondemand-pureita.channels.database Exception: Could not get new JSON data from %s" % url)
         results = []
     return results
 
 
 def do_channels_search(item):
-    logger.info("streamondemand-pureita-master.channels.biblioteca do_channels_search")
+    logger.info("streamondemand-pureita.channels.biblioteca do_channels_search")
 
     try:
         title_year = int(item.extra[0:4])
@@ -594,13 +594,13 @@ def do_channels_search(item):
     itemlist = []
 
     channels_path = os.path.join(config.get_runtime_path(), "channels", '*.xml')
-    logger.info("streamondemand-pureita-master.channels.buscador channels_path=" + channels_path)
+    logger.info("streamondemand-pureita.channels.buscador channels_path=" + channels_path)
 
     channel_language = config.get_setting("channel_language")
-    logger.info("streamondemand-pureita-master.channels.buscador channel_language=" + channel_language)
+    logger.info("streamondemand-pureita.channels.buscador channel_language=" + channel_language)
     if channel_language == "":
         channel_language = "all"
-        logger.info("streamondemand-pureita-master.channels.buscador channel_language=" + channel_language)
+        logger.info("streamondemand-pureita.channels.buscador channel_language=" + channel_language)
 
     if config.is_xbmc():
         show_dialog = True
@@ -618,7 +618,7 @@ def do_channels_search(item):
             basename_without_extension = os.path.basename(infile)[:-4]
             # http://docs.python.org/library/imp.html?highlight=imp#module-imp
             obj = imp.load_source(basename_without_extension, infile[:-4]+".py")
-            logger.info("streamondemand-pureita-master.channels.buscador cargado " + basename_without_extension + " de " + infile)
+            logger.info("streamondemand-pureita.channels.buscador cargado " + basename_without_extension + " de " + infile)
             # item.url contains search type: serie, anime, etc...
             channel_result_itemlist.extend(obj.search(Item(extra=item.url), tecleado))
             for local_item in channel_result_itemlist:

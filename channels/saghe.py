@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
+# streamondemand-PureITA  / XBMC Plugin
 # Ricerca "Saghe"
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
 import Queue
@@ -29,7 +29,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-tmdb_key = '6889f6089877fd092454d00edb44a84d'
+tmdb_key = '99ceb6cfe8e4ee644dc3b4d2ca2b2044'
 # tmdb_key = base64.urlsafe_b64decode('NTc5ODNlMzFmYjQzNWRmNGRmNzdhZmI4NTQ3NDBlYTk=')
 dttime = (datetime.datetime.utcnow() - datetime.timedelta(hours=5))
 systime = dttime.strftime('%Y%m%d%H%M%S%f')
@@ -46,7 +46,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.saghe mainlist")
+    logger.info("streamondemand-pureita.saghe mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR yellow]The Marvel Universe[/COLOR]",
                      action="tmdb_saghe",
@@ -139,7 +139,7 @@ def tmdb_saghe(item):
 
 
 def do_search(item):
-    logger.info("streamondemand.channels.saghe do_search")
+    logger.info("streamondemand-pureita.channels.saghe do_search")
 
     tecleado = item.extra
     mostra = item.fulltitle
@@ -147,13 +147,13 @@ def do_search(item):
     itemlist = []
 
     channels_path = os.path.join(config.get_runtime_path(), "channels", '*.xml')
-    logger.info("streamondemand.channels.buscador channels_path=" + channels_path)
+    logger.info("streamondemand-pureita.channels.buscador channels_path=" + channels_path)
 
     channel_language = config.get_setting("channel_language")
-    logger.info("streamondemand.channels.buscador channel_language=" + channel_language)
+    logger.info("streamondemand-pureita.channels.buscador channel_language=" + channel_language)
     if channel_language == "":
         channel_language = "all"
-        logger.info("streamondemand.channels.buscador channel_language=" + channel_language)
+        logger.info("streamondemand-pureita.channels.buscador channel_language=" + channel_language)
 
     if config.is_xbmc():
         show_dialog = True
@@ -171,7 +171,7 @@ def do_search(item):
             basename_without_extension = os.path.basename(infile)[:-4]
             # http://docs.python.org/library/imp.html?highlight=imp#module-imp
             obj = imp.load_source(basename_without_extension, infile[:-4]+".py")
-            logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
+            logger.info("streamondemand-pureita.channels.buscador cargado " + basename_without_extension + " de " + infile)
             channel_result_itemlist.extend(obj.search(Item(), tecleado))
             for item in channel_result_itemlist:
                 item.title = " [COLOR azure] " + item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
@@ -221,7 +221,7 @@ def do_search(item):
     for index, t in enumerate(threads):
         percentage = index * 100 / number_of_channels
         if show_dialog:
-            progreso.update(percentage, ' Sto cercando "' + mostra + '"')
+            progreso.update(percentage, ' Ricerca di "' + mostra + '"')
         t.join()
         itemlist.extend(result.get())
 
