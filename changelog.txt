@@ -1,6 +1,6 @@
 5.4.6
 -Adattamento a Kodi 17.5
--Nuova interfaccia grafica grafica  --in progress--
+-Nuova interfaccia grafica --in progress--
 -Aggiornamento canali
 -Aggiornamento server
 -Fix vari
