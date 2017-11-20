@@ -171,9 +171,9 @@ def anime(item):
     item.url = "http://www.animesenzalimiti.com/"
     itemlist.extend(animesenzalimiti.ultimiep(item))
 
-    import cb01anime
-    item.url = "http://www.cineblog01.video/anime/"
-    itemlist.extend(cb01anime.novita(item))
+    import animeforce
+    item.url = "https://www.animeforce.org/"
+    itemlist.extend(animeforce.ultimiep(item))
 
     sorted_itemlist = []
 
