@@ -24,14 +24,14 @@
 # Service for updating new episodes on library series
 #------------------------------------------------------------
 
-# -- Update channels from repository ------
+# -- Update channels from repository streamondemand-PureITA Alfa------
 try:
     from core import update_channels
 except:
     logger.info("streamondemand-pureita.library_service Error in update_channels")
 # ----------------------------------------------------------------------
 
-# -- Update servertools and servers from repository streamondemand-pureita-ui PureITA Alfa------
+# -- Update servertools and servers from repository streamondemand-PureITA Alfa------
 try:
     from core import update_servers
 except:
