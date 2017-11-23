@@ -31,7 +31,7 @@ except:
     logger.info("streamondemand-pureita.library_service Error in update_channels")
 # ----------------------------------------------------------------------
 
-# -- Update servertools and servers from repository streamondemand-pureita-ui PureITA ------
+# -- Update servertools and servers from repository streamondemand-pureita-ui PureITA Alfa------
 try:
     from core import update_servers
 except:
