@@ -1480,7 +1480,7 @@ class Tmdb(object):
 
 
 ####################################################################################################
-# the following code below was written by costaplus
+# the following code below was offered and written by costaplus
 # ====================================================================================================
 def infoSod(item, tipo="movie"):
     '''
