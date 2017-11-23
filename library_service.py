@@ -24,7 +24,7 @@
 # Service for updating new episodes on library series
 #------------------------------------------------------------
 
-# -- Update channels from repository streamondemand ------
+# -- Update channels from repository ------
 try:
     from core import update_channels
 except:
