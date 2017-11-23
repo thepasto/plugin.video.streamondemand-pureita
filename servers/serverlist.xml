@@ -860,8 +860,8 @@
     <id>rapidvideo</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/rapidvideo.py</update_url>
     <active>true</active>
-    <version>4</version>
-    <date>15/03/2017</date>
+    <version>5</version>
+    <date>22/11/2017</date>
     <changes>Update</changes>
 </server>
 
