@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale  per dreamsub
+# streamondemand-pureita / XBMC Plugin
+# Canale   dreamsub
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -19,7 +19,7 @@ host = "https://www.dreamsub.tv"
 
 
 def mainlist(item):
-    logger.info("streamondemand.dreamsub mainlist")
+    logger.info("streamondemand-pureita.dreamsub mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Anime / Cartoni[/COLOR]",
                      action="serietv",
@@ -42,7 +42,7 @@ def mainlist(item):
 
 
 def newest(categoria):
-    logger.info("streamondemand-pureita.altadefinizione01 newest" + categoria)
+    logger.info("streamondemand-pureita.dreamsub newest" + categoria)
     itemlist = []
     item = Item()
     try:
@@ -79,8 +79,7 @@ def serietv(item):
 
     # Carica la pagina 
     data = httptools.downloadpage(item.url).data
-    bloque = scrapertools.get_match(data,
-                                    '<input type="submit" value="Vai!" class="blueButton">(.*?)<div class="footer">')
+    bloque = scrapertools.get_match(data,'<input type="submit" value="Vai!" class="blueButton">(.*?)<div class="footer">')
 
     # Estrae i contenuti 
     patron = 'Lingua[^<]+<br>\s*<a href="([^"]+)" title="([^"]+)">'
