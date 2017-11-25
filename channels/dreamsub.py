@@ -25,7 +25,7 @@ def mainlist(item):
                      action="serietv",
                      extra='serie',
                      url="%s/anime" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Ultimi episodi Anime[/COLOR]",
                      action="ultimiep",
