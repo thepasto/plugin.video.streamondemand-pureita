@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-pureita / XBMC Plugin
 # Canale   dreamsub
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -25,7 +25,7 @@ def mainlist(item):
                      action="serietv",
                      extra='serie',
                      url="%s/anime" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Ultimi episodi Anime[/COLOR]",
                      action="ultimiep",
