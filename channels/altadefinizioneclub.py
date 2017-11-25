@@ -35,7 +35,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand-pureita.altadefinizione01 mainlist")
+    logger.info("streamondemand-pureita.altadefinizioneclub mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Prime visioni[/COLOR]",
                      action="peliculas",
