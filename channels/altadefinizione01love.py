@@ -41,7 +41,7 @@ def mainlist(item):
                      action="peliculas",
                      url="%s/cinema/" % host,
                      extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                Item(channel=__channel__,
                      title="[COLOR azure]Film [COLOR orange]- Attori consigliati[/COLOR]",
                      action="actors_list",
