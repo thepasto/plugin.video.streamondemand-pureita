@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita / XBMC Plugin
+# StreamOnDemand-PureITA / XBMC Plugin
 # Canale  Filmgratis
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # By MrTruth
 # ------------------------------------------------------------
 
@@ -25,40 +25,34 @@ def mainlist(item):
     logger.info()
     itemlist = [Item(channel=__channel__,
                      action="peliculas",
-                     title=color("Home", "orange"),
+                     title="[COLOR azure]Film [COLOR orange]- Novita[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
-                #Item(channel=__channel__,
-                     #action="annoattuale",
-                     #title=color("Film di quest'anno", "azure"),
-                     #url=host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      action="categorie",
-                     title=color("Categorie", "azure"),
+                     title="[COLOR azure]Film [COLOR orange]- Categoria[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="peranno",
-                     title=color("Per anno", "azure"),
+                     title="[COLOR azure]Film [COLOR orange]- per Anno[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 Item(channel=__channel__,
                      action="perpaese",
-                     title=color("Per paese", "azure"),
+                     title="[COLOR azure]Film [COLOR orange]- per Paese[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca ...", "yellow"),
+                     title="[COLOR orange]Cerca Film...[/COLOR]",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def search(item, texto):
     logger.info("filmgratis.py Search ===> " + texto)
     item.url = "%s/index.php?story=%s&do=search&subaction=search" % (host, texto)
@@ -71,9 +65,8 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def newest(categoria):
     logger.info("filmgratis " + categoria)
     itemlist = []
@@ -96,9 +89,8 @@ def newest(categoria):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def annoattuale(item):
     logger.info()
     itemlist = []
@@ -110,9 +102,8 @@ def annoattuale(item):
     item.url = urlparse.urljoin(host, scrapertools.find_single_match(blocco, patron))
     return peliculas(item)
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
     logger.info()
     itemlist = []
@@ -130,13 +121,13 @@ def categorie(item):
                  action="peliculas",
                  title=scrapedtitle,
                  url=urlparse.urljoin(host, scrapedurl),
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def peranno(item):
     logger.info()
     itemlist = []
@@ -153,13 +144,13 @@ def peranno(item):
                  action="peliculas",
                  title=scrapedtitle,
                  url=urlparse.urljoin(host, scrapedurl),
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  folder=True))
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def perpaese(item):
     logger.info()
     itemlist = []
@@ -176,26 +167,27 @@ def perpaese(item):
                  action="peliculas",
                  title=scrapedtitle,
                  url=urlparse.urljoin(host, scrapedurl),
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country_P.png",
                  folder=True))
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def peliculas(item):
     logger.info()
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    patron = r'<a href="([^"]+)"><img src="([^"]+)" alt="([^"]+)".*?/></a>'
+    patron = r'<div class="main-news-image">\s*<a href="([^"]+)"><img src="([^"]+)" alt="([^"]+)".*?/></a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         year = scrapertools.find_single_match(scrapedtitle, r'\((\d{4})\)')
+        scrapetrailar = " Trailer"
 
-        # Bypass fake links
+        # 
         html = httptools.downloadpage(scrapedurl).data
 
         patron = '<div class="video-player-plugin">([\s\S]*)<div class="wrapper-plugin-video">'
@@ -204,13 +196,13 @@ def peliculas(item):
             if "scrolling" in url:
                 scrapedurl = scrapedurl
             else:
-                continue
+                scrapedtitle = scrapedtitle + scrapetrailar
 
             itemlist.append(infoSod(
                 Item(channel=__channel__,
                      action="findvideos",
                      contentType="movie",
-                     title=scrapedtitle.replace(year, color("%s" % year, "red")),
+                     title=scrapedtitle,
                      fulltitle=scrapedtitle,
                      url=scrapedurl,
                      extra="movie",
@@ -227,6 +219,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -239,9 +232,8 @@ def peliculas(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
     logger.info()
     data = httptools.downloadpage(item.url).data
@@ -250,21 +242,16 @@ def findvideos(item):
 
     for videoitem in itemlist:
         server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(["[%s] " % color(server.capitalize(), 'orange'), item.title])
+        videoitem.title = "".join([item.title, '[COLOR orange][B]' + ' ' + server + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
     return itemlist
 
-# ================================================================================================================
-
-# ----------------------------------------------------------------------------------------------------------------
-def color(text, color):
-    return "[COLOR "+color+"]"+text+"[/COLOR]"
+# ==============================================================================================================================================================================
     
 def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita/)")
 
-# ================================================================================================================

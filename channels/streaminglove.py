@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# PureITA - XBMC Plugin
+# StreamOnDemand-PureITA / XBMC Plugin
 # Canale  streaminglove
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
@@ -161,7 +161,8 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     
-    patron = '<a href="([^"]+)"><div class="see"></div></a>\s*</div>\s*<div class="data">\s*<h3>\s*<a href="(.*?)">([^"]+)</a>'
+    patron = '<a href="([^"]+)"><div class="see"></div></a>\s*</div>\s*<div class="data">\s*<h3>\s*'
+    patron +='[^>]+></span>\s*<a href="(.*?)">([^"]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:

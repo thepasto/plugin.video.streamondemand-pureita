@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para piratestreaming
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale streamiblog
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import sys
@@ -99,7 +99,7 @@ def categorias(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  plot=scrapedplot))
 
     return itemlist
@@ -176,27 +176,29 @@ def peliculas(item):
     logger.info("streamondemand.streamblog peliculas")
     itemlist = []
 
-    # Carica la pagina 
+    # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Estrae i contenuti 
-    patron = '<div class="blvideo">\s*<div class="poster"><a href="([^"]+)"[^<]+<img src="([^"]+)" alt="(.*?)"[^>]+>'
+    patron = '<div class="blvideo">\s*<div class="poster"><a href="([^"]+)"><img src="([^"]+)" alt="(.*?)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedthumbnail = host + scrapedthumbnail
         scrapedplot = ""
+        scrapetrailar = " Trailer"
 
         # Bypass fake links
         html = httptools.downloadpage(scrapedurl).data
 
         patron = '<div class="video-player-plugin">([\s\S]*)<div class="wrapper-plugin-video">'
         matches = re.compile(patron, re.DOTALL).findall(html)
+
         for url in matches:
             if "scrolling" in url:
                 scrapedurl = scrapedurl
             else:
-                continue
+                scrapedtitle = scrapedtitle + scrapetrailar
 
             itemlist.append(infoSod(
                 Item(channel=__channel__,
@@ -220,6 +222,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -272,6 +275,7 @@ def peliculas_tv(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
