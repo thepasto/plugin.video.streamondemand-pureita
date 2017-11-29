@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# StreamOnDemand-PureITA / XBMC Plugin
 # Canal per filmhdstreaming
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 #  By Costaplus
 # ------------------------------------------------------------
 
@@ -203,7 +203,7 @@ def elenco_years(item):
 
 
     data = scrapertools.cache_page(item.url)
-    bloque = scrapertools.get_match(data, '<input type="checkbox" id="drop-2"/>\s*<ul>(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<label for="drop-2" class="toggle">.*?</label>(.*?)</ul>')
 
 
     patron = '<li><a href="(.*?)"><i class="fa fa-caret-right"></i> (.*?)</a></li>'
