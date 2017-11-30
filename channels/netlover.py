@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
-# Netlover search
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale Netlover (search engine)"
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
 import re
@@ -23,7 +23,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.netflixlovers.it"
+host = "https://www.netflixlovers.it"
 
 TIMEOUT_TOTAL = 45
 
@@ -31,27 +31,37 @@ def isGeneric():
     return True
 
 def mainlist(item):
-    logger.info("streamondemand.netlover mainlist")
+    logger.info("streamondemand-pureita.netlover mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR red]Serie TV - .NET Lover[/COLOR]",
-                     url="%s/classifiche/top-10-serie-tv-le-migliori-serie-tv-su-netflix-italia/" % host,
+                     title="[COLOR azure]TOP 7 Days - [COLOR red].NET Lover[/COLOR]",
+                     action="film",
+                     url="%s/classifiche/ultimi-7-giorni" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Best - [COLOR red].NET Lover[/COLOR]",
+                     action="film",
+                     url="%s/classifiche/migliori-originals" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),					 
+               Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV - [COLOR red].NET Lover[/COLOR]",
+                     url="%s/classifiche/migliori-serie-tv" % host,
                      action="serietv",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_series_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR red]Film - .NET Lover[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR red].NET Lover[/COLOR]",
                      action="film",
-                     url="%s/classifiche/top-10-film-i-migliori-film-su-netflix-italia/" % host,
+                     url="%s/classifiche/migliori-film" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR red]Documentari - .NET Lover[/COLOR]",
+                     title="[COLOR azure]Documentari - [COLOR red].NET Lover[/COLOR]",
                      action="film",
-                     url="%s/classifiche/top-10-documentari-i-migliori-documentari-su-netflix-italia/" % host,
+                     url="%s/classifiche/migliori-documentari" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_doc_P.png")]
 
     return itemlist
 
 def serietv(item):
-    logger.info("streamondemand.netlover serietv")
+    logger.info("streamondemand-pureita.netlover serietv")
     itemlist = []
 
     # Descarga la pagina
@@ -64,7 +74,7 @@ def serietv(item):
     for scrapedtitle in matches:
         scrapedurl = ""
         scrapedthumbnail = ""
-        scrapedtv = ".NET Lover Original"
+        scrapedtv = ".NET Lover"
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.split("(")[0]
 
@@ -101,7 +111,7 @@ def serietv(item):
     return itemlist
 
 def film(item):
-    logger.info("streamondemand.netlover film")
+    logger.info("streamondemand-pureita.netlover film")
     itemlist = []
 
     # Descarga la pagina
@@ -114,7 +124,7 @@ def film(item):
     for scrapedtitle in matches:
         scrapedurl = ""
         scrapedthumbnail = ""
-        scrapedtv = ".NET Lover Original"
+        scrapedtv = ".NET Lover"
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.split("(")[0]
 
