@@ -62,7 +62,7 @@ def categorias(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
-        if scrapedtitle.startswith(("Action &#038; Adventure")) or scrapedtitle.startswith(("Richieste")): 
+        if scrapedtitle.startswith("Action &#038; Adventure") or scrapedtitle.startswith("Richieste"): 
             continue
         itemlist.append(
             Item(channel=__channel__,
