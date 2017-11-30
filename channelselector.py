@@ -331,6 +331,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Megafiletube[/COLOR]"        , channel="megafiletube"       , language="IT"    , category="T"       , type="generic"	))
     itemlist.append( Item( title="[COLOR azure]Misterstreaming[/COLOR]"        , channel="misterstreaming"       , language="IT"    , category="F,S"       , type="generic"	))
     itemlist.append( Item(title="[COLOR azure]MondoLunatico[/COLOR]"    , channel="mondolunatico"       , language="IT"    , category="F"     , type="generic" ))
+    itemlist.append( Item(title="[COLOR azure]MondoLunaticoHD[/COLOR]"    , channel="mondolunatico_hd"       , language="IT"    , category="F"     , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]Mondo lunatico New[/COLOR]"        , channel="mondolunatico_new"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Naruto[/COLOR]" , channel="naruto" , language="IT" , category="A" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Pastebin[/COLOR]"   , channel="pastebin"           , language="IT"    , category="F,S,A,VOS"   , type="generic"))
