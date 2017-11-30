@@ -38,7 +38,7 @@ def mainlist(item):
                      url="%s/classifiche/ultimi-7-giorni" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Best - [COLOR red].NET Lover[/COLOR]",
+                     title="[COLOR azure]The Best - [COLOR red].NET Lover[/COLOR]",
                      action="film",
                      url="%s/classifiche/migliori-originals" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_movie_P.png"),					 
