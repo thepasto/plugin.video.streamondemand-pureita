@@ -55,7 +55,7 @@ def categorias(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url).data
-    bloque = scrapertools.get_match(data, "<ul class='sub-menu'>([^+]+)<a href=[^>]+>Mondolunatico</a></li")
+    bloque = scrapertools.get_match(data, "<ul class='sub-menu'>([^+]+)<a href=[^>]+>Mondolunatico</a></li>")
 
     # Extrae las entradas 
     patron = '<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
