@@ -55,13 +55,15 @@ def categorias(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url).data
-    bloque = scrapertools.get_match(data, "<ul class='sub-menu'>([^+]+)<a href=[^>]+>Mondolunatico</a></li>")
+    bloque = scrapertools.get_match(data, "<ul class='sub-menu'>(.*?)<a href=[^>]+>Mondolunatico</a></li>")
 
     # Extrae las entradas 
     patron = '<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
+        if scrapedtitle.startswith(("Action &#038; Adventure")) or scrapedtitle.startswith(("Richieste")): 
+            continue
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
