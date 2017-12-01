@@ -134,6 +134,8 @@ def peliculas(item):
 
     scrapedplot = ""
     for scrapedurl, scrapedthumbnail, scrapedtitle, in matches:
+        if scrapedtitle.startswith("Mondolunatico 2.0"): 
+            continue 
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
