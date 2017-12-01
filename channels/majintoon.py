@@ -154,7 +154,7 @@ def links(item):
 
     data = httptools.downloadpage(item.url).data
 
-    blocchi = scrapertools.find_multiple_matches(data, r'<p><span style="[^"]+">Links?\s*([^<]+)</span>(?:</p>\s*|<br\s*/>)(.*?)</p>')
+    blocchi = scrapertools.find_multiple_matches(data, r'(?:<p>|)<span style="[^"]+">Links?\s*([^<]+)</span>(?:</p>\s*|<br\s*/>)(.*?)</p>')
     for scrapedtitle, blocco in blocchi:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
