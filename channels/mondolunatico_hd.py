@@ -42,7 +42,7 @@ def mainlist(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
