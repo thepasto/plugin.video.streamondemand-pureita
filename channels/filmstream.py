@@ -61,11 +61,11 @@ def mainlist(item):
                      #action="aggiornamenti",
                      #url="%s/serietv/" % host,
                      #thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
-                Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
-                     action="search",
-                     extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+                #Item(channel=__channel__,
+                     #title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
+                     #action="search",
+                     #extra="serie",
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     return itemlist
 
 
