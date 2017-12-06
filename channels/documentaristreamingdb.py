@@ -47,7 +47,7 @@ def mainlist(item):
                      url="http://www.documentari-streaming-db.com/documentari-streaming-database/",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
@@ -277,7 +277,7 @@ def findvideos(item):
         itemlist = servertools.find_video_items(data=data)
 
         for videoitem in itemlist:
-            videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
+            videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
             videoitem.fulltitle = item.fulltitle
             videoitem.show = item.show
             videoitem.thumbnail = item.thumbnail
