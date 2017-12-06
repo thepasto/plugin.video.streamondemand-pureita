@@ -38,7 +38,7 @@ def mainlist(item):
     logger.info("streamondemand-pureita.cineblogrun mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
-                     action="peliculas",
+                     action="novita",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                Item(channel=__channel__,
@@ -62,7 +62,7 @@ def mainlist(item):
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
@@ -141,6 +141,43 @@ def search(item, texto):
         return []
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+
+def novita(item):
+    logger.info("streamondemand-pureita.cineblogrun novita")
+    itemlist = []
+
+    # Download the page
+    data = scrapertools.anti_cloudflare(item.url, headers)
+
+    # Extract the entries (folders)
+    patron = r'<a href="([^"]+)"><div class="Image"><figure class="Objf TpMvPlay AAIco-play_arrow">'
+    patron += r'<img src="[^"]+" alt="[^"]+">\s*</figure></div><h2 class="Title">([^"]+)</h2>'
+    matches = re.compile(patron, re.DOTALL).finditer(data)
+
+    for match in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
+
+
+    return itemlist
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 		
 def peliculas(item):
@@ -240,7 +277,7 @@ def peliculas_list(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 title="[COLOR orange]Torna Home[/COLOR]",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
@@ -263,7 +300,7 @@ def findvideos(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR yellow][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
