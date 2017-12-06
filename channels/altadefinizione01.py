@@ -303,7 +303,7 @@ def findvideos_tv(item):
     itemlist = servertools.find_video_items(data=item.url)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
