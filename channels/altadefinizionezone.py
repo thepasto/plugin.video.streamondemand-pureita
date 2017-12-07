@@ -128,9 +128,9 @@ def search(item, texto):
     item.url = host + "/?do=search&subaction=search&story=" + texto
     try:
         if item.extra == "movie":
-            return peliculas_tv(item)
+            return peliculas_search(item)
         if item.extra == "serie":
-            return peliculas_tv(item)
+            return peliculas_search(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
@@ -256,13 +256,14 @@ def peliculas_tv(item):
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-            Item(channel=__channel__,
-                 action="peliculas_tv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
-                 folder=True))
+            scrapedurl = urlparse.urljoin(item.url, matches[0])
+            itemlist.append(
+                 Item(channel=__channel__,
+                   action="peliculas_tv",
+                   title="[COLOR orange]Successivo >>[/COLOR]",
+                   url=scrapedurl,
+                   thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                   folder=True))
 
     return itemlist
 
