@@ -41,22 +41,26 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="lista_anime",
                      title="[COLOR azure]Anime [/COLOR]- [COLOR orange]in Corso[/COLOR]",
-                     url="%s/category/serie-anime-in-corso/" % host,
+                     url="%s/category/anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
                      action="categorie",
                      title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Categorie[/COLOR]",
-                     url=host,
+                     url="%s/category/anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
+                     action="cat_years",
+                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Archivio[/COLOR]",
+                     url="%s/category/anime-in-corso/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
+                Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca anime ...", "yellow"),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")
-                ]
+                     title=color("Cerca anime ...", "orange"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
-# ================================================================================================================
+# ================================================================================================================category/anime-in-corso/
 '''
 # ----------------------------------------------------------------------------------------------------------------
 def newest(categoria):
@@ -80,9 +84,9 @@ def newest(categoria):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 '''
-# ----------------------------------------------------------------------------------------------------------------
+# ==============================================================================================================================================================================
 def search(item, texto):
     logger.info()
     item.url = host + "/?s=" + texto
@@ -96,16 +100,16 @@ def search(item, texto):
         return []
 
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
     logger.info()
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'<span class="mh-widget-title-inner">Categorie</span></h4>\s*<ul>(.*?)</ul>')
-    patron = r'<li[^>]+><a href="([^"]+)"\s*>([^<]+)</a>\s*</li>'
+    blocco = scrapertools.get_match(data, r'<h2 class="screen-reader-text">Navigazione articoli</h2>([^+]+)</div>.*?</aside>.*?</div>')
+    patron = r'<li class=".*?"><a href="([^"]+)" >([^<]+)</a>'
+
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle in matches:
@@ -121,9 +125,28 @@ def categorie(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
+def cat_years(item):
+    logger.info()
+    itemlist = []
 
-# ----------------------------------------------------------------------------------------------------------------
+    data = httptools.downloadpage(item.url).data
+    blocco = scrapertools.get_match(data, r'<h2 class="screen-reader-text">Navigazione articoli</h2>([^+]+)</div>.*?</aside>.*?</div>')
+    patron = r"<li><a href='([^>]+)'>([^<]+)</a></li>"
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedtitle in matches:
+        itemlist.append(
+                Item(channel=__channel__,
+                     action="lista_anime",
+                     title=scrapedtitle,
+                     url=scrapedurl,
+                     extra="tv",
+                     thumbnail=item.thumbnail,
+                     folder=True))
+
+    return itemlist
+# ==============================================================================================================================================================================
 '''
 # ----------------------------------------------------------------------------------------------------------------
 def animepopolari(item):
@@ -152,17 +175,16 @@ def animepopolari(item):
     return itemlist
 # ----------------------------------------------------------------------------------------------------------------
 '''
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def ultimiep(item):
     logger.info()
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
 
-    blocco = scrapertools.get_match(data, r'<div class="mh-wrapper mh-home clearfix">([^+]+)</article></div>')
-    patron = r'<a class="[^"]+" href="([^"]+)" title="([^"]+)"><img[^s]+src="([^"]+)"[^>]+'
+    blocco = scrapertools.get_match(data, r'<span class="mh-widget-title-inner">Ultimi Anime</span>(.*?)</article></div>')
+    patron = r'<a class="[^>]+" href="([^"]+)" title="([^"]+)"><img width=".*?" height=".*?" src="([^"]+)"[^>]+>.*?</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
@@ -200,15 +222,14 @@ def ultimiep(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def lista_anime(item):
     logger.info()
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    patron = r'<a class="[^"]+" href="([^"]+)" title="([^"]+)"><img[^s]+src="([^"]+)"[^>]+'
+    patron = r'<a class="[^>]+" href="([^"]+)" title="([^"]+)"><img width=".*?" height=".*?" src="([^"]+)".*?'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
@@ -225,17 +246,11 @@ def lista_anime(item):
                  thumbnail=scrapedthumbnail,
                  folder=True), tipo="tv"))
 
-    patronvideos = r'<a class="next page-numbers" href="([^"]+)">&raquo;</a></div>'
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    patron = r'<a class="next page-numbers" href="([^"]+)">&raquo;</a></div>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
     if len(matches) > 0:
         scrapedurl = matches[0]
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="HomePage",
-                 title=color("Torna Home", "yellow"),
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_anime",
@@ -246,9 +261,8 @@ def lista_anime(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def episodi(item):
     logger.info()
     itemlist = []
@@ -284,9 +298,8 @@ def episodi(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
     logger.info()
 
@@ -302,9 +315,8 @@ def findvideos(item):
         videoitem.channel = __channel__
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def removestreaming(text):
     return re.sub("(?:SUB ITA|ITA|)\s*(?:Download|Streaming)\s*(?:e|&)\s*(?:Download|Streaming)\s*(?:SUB ITA|ITA|)", "", text)
 
@@ -315,4 +327,3 @@ def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
-# ================================================================================================================
