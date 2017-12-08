@@ -342,7 +342,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Portale HD[/COLOR]"   , channel="portalehd"           , language="IT"    , category="F,B,3"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Ricette Video[/COLOR]"        , channel="ricettevideo"       , language="IT"    , category="D"       , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]SabWap[/COLOR]"        , channel="sabwap"       , language="IT"    , category="F"       , type="generic" ))
-    itemlist.append( Item( title="[COLOR azure]Corsi Programmazione[/COLOR]"        , channel="programmazione"       , language="IT"    , category="D"       , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]Corsi Programmazione[/COLOR]"        , channel="programmazione"       , language="IT"    , category="D"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Saint Seiya[/COLOR]"     , channel="saintseiya"       , language="IT"    , category="A"        ))
     #itemlist.append( Item( title="[COLOR azure]Scambio Etico - TNT Village[/COLOR]"     , channel="scambioetico"       , language="IT"    , category="T" ))
     #itemlist.append( Item( title="[COLOR azure]Scambiofile[/COLOR]"     , channel="scambiofile"       , language="IT"    , category="T" ))
