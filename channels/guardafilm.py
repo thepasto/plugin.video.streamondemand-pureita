@@ -133,7 +133,7 @@ def film(item):
         scrapedurl = matches[0]
         itemlist.append(
             Item(channel=__channel__,
-                action="ultimifilm",
+                action="film",
                 title=color("Pagina 2 >>", "orange"),
                 url=scrapedurl,
                 thumbnail="",
@@ -145,7 +145,7 @@ def film(item):
         scrapedurl = matches[0]
         itemlist.append(
             Item(channel=__channel__,
-                action="ultimifilm",
+                action="film",
                 title=color("Pagina 3 >>", "orange"),
                 url=scrapedurl,
                 thumbnail="",
