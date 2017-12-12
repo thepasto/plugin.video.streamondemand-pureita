@@ -30,7 +30,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.eurostreaming_video mainlist")
+    logger.info("streamondemand-pureita.eurostreaming_video mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Novita[/COLOR]",
                      action="peliculas_new",
@@ -72,7 +72,7 @@ def mainlist(item):
 # ==============================================================================================================================================================================
 	
 def peliculas(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -119,7 +119,7 @@ def peliculas(item):
 # ==============================================================================================================================================================================
 
 def peliculas_new(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas_new")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_new")
     itemlist = []
 
     # Descarga la pagina
@@ -153,7 +153,7 @@ def peliculas_new(item):
 # ==============================================================================================================================================================================
 	
 def serietv(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -199,7 +199,7 @@ def serietv(item):
 # ==============================================================================================================================================================================
 	
 def serietv_new(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -231,7 +231,7 @@ def serietv_new(item):
 # ==============================================================================================================================================================================
 
 def animation_new(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -279,7 +279,7 @@ def animation_new(item):
 # ==============================================================================================================================================================================	
 	
 def cat_ep(item):
-    logger.info("[streamondemand.eurostreaming_video]peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video]peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -327,7 +327,7 @@ def cat_ep(item):
 # ==============================================================================================================================================================================
 
 def search(item, texto):
-    logger.info("[streamondemand.eurostreaming_video ] " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita.eurostreaming_video ] " + item.url + " search " + texto)
     item.url = host + "/?s=" + texto
     try:
         if item.extra == "serie":
@@ -344,7 +344,7 @@ def search(item, texto):
 # ==============================================================================================================================================================================		
 
 def peliculas_search(item):
-    logger.info("[streamondemand.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -375,7 +375,7 @@ def peliculas_search(item):
 
 
 def findvideos(item):
-    logger.info("[streamondemand.eurostreaming_video] findvideos")
+    logger.info("[streamondemand-pureita.eurostreaming_video] findvideos")
 
     ## Descarga la página
     data = item.url if item.extra == 'serie' else scrapertools.cache_page(item.url)
