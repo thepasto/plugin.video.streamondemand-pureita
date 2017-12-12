@@ -23,7 +23,7 @@ __type__ = "generic"
 __title__ = "CineBlog 01"
 __language__ = "IT"
 
-sito = "https://www.cb01.movie/"
+sito = "https://www.cb01.zone/"
 
 
 headers = [
