@@ -12,14 +12,14 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/cinemalibero.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>11</version>
-	<date>04/11/2017</date>
-	<changes>Fix</changes>
+	<version>13</version>
+	<date>12/12/2017</date>
+	<changes>Fix abd Update</changes>
 
 	<categories>
-		<category>movie</category>
-                <category>serie</category>
-		<category>anime</category>
+        <category>movie</category>
+        <category>serie</category>
+        <category>anime</category>
 	</categories>
 
 	<settings>
