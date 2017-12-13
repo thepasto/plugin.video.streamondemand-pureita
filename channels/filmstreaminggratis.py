@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canale per http://www.filmstreaminggratis.org/
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale FilmStreamingGratis
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # By MrTruth
 # ------------------------------------------------------------
 
@@ -31,32 +31,35 @@ headers = [
 def isGeneric():
     return True
 
-# ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    logger.info("[FilmStreamingGratis.py]==> mainlist")
+    logger.info("streamondemand-pureita.filmstreaminggratis mainlist")
     itemlist = [Item(channel=__channel__,
                      action="ultimifilm",
-                     title=color("Ultimi Film", "azure"),
+                     title="[COLOR azure]Film [COLOR orange]Novità[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="categorie",
-                     title=color("Categorie", "azure"),
+                     title="[COLOR azure]Film [COLOR orange]Categorie[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
+                     action="loadfilms",
+                     title="[COLOR azure]Film [COLOR orange]Lista[/COLOR]",
+                     url="%s/blog/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
+                Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca film ...", "yellow"),
+                     title=color("Cerca film ...", "orange"),
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")
                 ]
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def search(item, texto):
-    logger.info("[FilmStreamingGratis.py]==> search")
+    logger.info("streamondemand-pureita.filmstreaminggratis search")
     item.url = host + "/?s=" + texto
     try:
         return loadfilms(item)
@@ -68,11 +71,10 @@ def search(item, texto):
         return []
 
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def ultimifilm(item):
-    logger.info("[FilmStreamingGratis.py]==> ultimifilm")
+    logger.info("streamondemand-pureita.filmstreaminggratis ultimifilm")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
@@ -94,11 +96,10 @@ def ultimifilm(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
-    logger.info("[FilmStreamingGratis.py]==> categorie")
+    logger.info("streamondemand-pureita.filmstreaminggratis categorie")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
@@ -119,11 +120,10 @@ def categorie(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def loadfilms(item):
-    logger.info("[FilmStreamingGratis.py]==> loadfilms")
+    logger.info("streamondemand-pureita.filmstreaminggratis loadfilms")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
@@ -155,6 +155,7 @@ def loadfilms(item):
             Item(channel=__channel__,
                  action="HomePage",
                  title=color("Torna Home", "yellow"),
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
                  folder=True)),
         itemlist.append(
             Item(channel=__channel__,
@@ -166,26 +167,36 @@ def loadfilms(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
-    logger.info("[FilmStreamingGratis.py]==> findvideos")
+    logger.info("streamondemand-pureita.filmstreaminggratis findvideos")
+    itemlist = []
+	
+    data = scrapertools.anti_cloudflare(item.url, headers)
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    itemlist = servertools.find_video_items(data=data)
+    blocco = scrapertools.get_match(data, r'<br/>(.*?)</div></div>')
+    patron = r'.*?src="([^"]+)"[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl in matches:
+        data = scrapertools.anti_cloudflare(scrapedurl, headers)
+        videos = servertools.find_video_items(data=data)
+        for video in videos:
+            itemlist.append(video)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, color(videoitem.title, "orange")])
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(["[%s] " % color(server, 'orange'), item.title])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
+		
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def color(text, color):
     return "[COLOR "+color+"]"+text+"[/COLOR]"
 
@@ -193,4 +204,4 @@ def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
 
-# ================================================================================================================
+
