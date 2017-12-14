@@ -125,6 +125,7 @@ def elenco(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace(" streaming ita", "")
         scrapedtitle = scrapedtitle.replace(" film streaming", "")
+        scrapedtitle = scrapedtitle.replace(" streaming gratis", "")
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
