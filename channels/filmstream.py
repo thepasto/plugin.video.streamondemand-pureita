@@ -48,7 +48,7 @@ def mainlist(item):
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      extra="movie",
                      action="search",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
                 #Item(channel=__channel__,
                      #title="[COLOR azure]Serie TV[/COLOR]",
                      #extra="serie",
