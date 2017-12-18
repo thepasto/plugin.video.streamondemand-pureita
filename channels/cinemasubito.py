@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para cinemasubito
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale cinemasubito
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import re
@@ -35,7 +35,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.cinemasubito mainlist")
+    logger.info("streamondemand-pureita.cinemasubito mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Aggiornamenti Film[/COLOR]",
                      action="peliculas",
@@ -98,7 +98,7 @@ def categorias(item):
 
 
 def search(item, texto):
-    logger.info("streamondemand.cinemasubito " + item.url + " search " + texto)
+    logger.info("streamondemand-pureita.cinemasubito " + item.url + " search " + texto)
     item.url = host + "/search.php?keywords=" + texto
     try:
         if item.extra == "movie":
@@ -113,7 +113,7 @@ def search(item, texto):
         return []
 
 def peliculas_movie_src(item):
-    logger.info("streamondemand.cinemasubito peliculas")
+    logger.info("streamondemand-pureita.cinemasubito peliculas_movie_src")
     itemlist = []
 
     # Descarga la pagina
@@ -163,7 +163,7 @@ def peliculas_movie_src(item):
     return itemlist
 
 def peliculas(item):
-    logger.info("streamondemand.cinemasubito peliculas")
+    logger.info("streamondemand-pureita.cinemasubito peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -213,7 +213,7 @@ def peliculas(item):
     return itemlist
 
 def peliculas_tv_src(item):
-    logger.info("streamondemand.cinemasubito peliculas")
+    logger.info("streamondemand-pureita.cinemasubito peliculas_tv_src")
     itemlist = []
 
     # Descarga la pagina
@@ -263,7 +263,7 @@ def peliculas_tv_src(item):
     return itemlist
 
 def peliculas_tv(item):
-    logger.info("streamondemand.cinemasubito peliculas")
+    logger.info("streamondemand-pureita.cinemasubito peliculas_tv")
     itemlist = []
 
     # Descarga la pagina
@@ -313,7 +313,7 @@ def peliculas_tv(item):
     return itemlist
 
 def seasons(item):
-    logger.info("streamondemand.channels.cinemasubito episodios")
+    logger.info("streamondemand-pureita.cinemasubito seasons")
 
     itemlist = []
 
@@ -341,7 +341,7 @@ def seasons(item):
     return itemlist
 
 def episodios(item):
-    logger.info("streamondemand.channels.cinemasubito episodios")
+    logger.info("streamondemand-pureita.cinemasubito episodios")
 
     itemlist = []
 
@@ -369,7 +369,7 @@ def episodios(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("streamondemand.cinemasubito findvideos_tv")
+    logger.info("streamondemand-pureita.cinemasubito findvideos")
 
     data = scrapertools.anti_cloudflare(item.url, headers)
 

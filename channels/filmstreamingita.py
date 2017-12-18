@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-PureITA- XBMC Plugin
+# StreamOnDemand-PureITA- XBMC Plugin
 # Canale filmstreamingita
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
@@ -31,9 +31,9 @@ headers = [
 def isGeneric():
     return True
 
-# ----------------------------------------------------------------------------------------------------------------
+
 def mainlist(item):
-    logger.info("[FilmStreamingIta.py]==> mainlist")
+    logger.info("streamondemand-pureita.filmstreamingita mainlist")
     itemlist = [Item(channel=__channel__,
                      action="peliculas",
                      title=color("Nuovi Film", "azure"),
@@ -51,11 +51,10 @@ def mainlist(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def search(item, texto):
-    logger.info("[FilmStreamingIta.py]==> search")
+    logger.info("streamondemand-pureita.filmstreamingita search")
     item.url = host + "/?s=" + texto
     try:
         return peliculas(item)
@@ -66,15 +65,14 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def categorie(item):
-    logger.info("[FilmStreamingIta.py]==> categorie")
+    logger.info("streamondemand-pureita.filmstreamingita categorie")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, r'<ul  class="sub-menu">(.*?)</ul>')
+    blocco = scrapertools.get_match(data, r'Genere Film</a>(.*?)</ul>')
     patron = r'<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -90,19 +88,20 @@ def categorie(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def peliculas(item):
-    logger.info("[FilmStreamingIta.py]==> peliculas")
+    logger.info("streamondemand-pureita.filmstreamingita peliculas")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    patron = r'div class="home_tall_box.*?">\s*'
+
+    patron = r'<div class="home_tall_box">\s*'
     patron += r'<a href="([^"]+)".*?>\s*<img.*?alt="([^"]+)".*?src="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -136,13 +135,31 @@ def peliculas(item):
                  extra=item.extra,
                  folder=True))
 
+    patron = '<a class="next page-numbers" href="([^"]+)">Successivo &raquo;</a></center>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = matches[0]
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="HomePage",
+                 title="[COLOR yellow]Torna Home[/COLOR]",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
+                 folder=True)),
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 extra=item.extra,
+                 folder=True))
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
-    logger.info("[FilmStreamingIta.py]==> findvideos")
+    logger.info("streamondemand-pureita.filmstreamingita findvideos")
     data = scrapertools.anti_cloudflare(item.url, headers)
     
     itemlist = servertools.find_video_items(data=data)
@@ -156,9 +173,8 @@ def findvideos(item):
         videoitem.channel = __channel__
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def color(text, color):
     return "[COLOR "+color+"]"+text+"[/COLOR]"
     
@@ -166,4 +182,4 @@ def HomePage(item):
     import xbmc
     xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
 
-# ================================================================================================================
+
