@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "https://altastreaming.online/"
+host = "https://altastreaming.tv/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'],
@@ -336,7 +336,7 @@ def episodios(item):
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos_tv",
+                 action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
