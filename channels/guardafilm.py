@@ -51,7 +51,7 @@ def mainlist(item):
                      title="Film [COLOR orange] - Alta Definizione [/COLOR]",
                      url=host,
                      extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png",),
         Item(channel=__channel__,
                      action="search",
                      title=color("Cerca", "orange"),
