@@ -8,6 +8,7 @@
 import base64
 import re
 import urlparse
+from servers import adfly
 
 from core import httptools
 from core import logger
@@ -162,9 +163,21 @@ def peliculas(item):
 		    continue
         scrapedtitle = scrapedtitle.replace("/", "")
         scrapedtitle = scrapedtitle.replace("filmstream.biz", "")
+        scrapedtitle = scrapedtitle.replace("film-completo-online", "")
+        scrapedtitle = scrapedtitle.replace("film-completi", "")
+        scrapedtitle = scrapedtitle.replace("-streaming", "")
+        scrapedtitle = scrapedtitle.replace("film-stream-biz", "")
+        scrapedtitle = scrapedtitle.replace("film-altadefinizione", "")
+        scrapedtitle = scrapedtitle.replace("alta-definizione", "")
+        scrapedtitle = scrapedtitle.replace("online", "")
+        scrapedtitle = scrapedtitle.replace("film", "")
+        scrapedtitle = scrapedtitle.replace("gratis", "")
+        scrapedtitle = scrapedtitle.replace("guarda-il", "")
+        scrapedtitle = scrapedtitle.replace("stream", "")
+        scrapedtitle = scrapedtitle.replace("netflix", "")
         scrapedtitle = scrapedtitle.replace("openload", "")
         scrapedtitle = scrapedtitle.replace("gratis-", "")
-        scrapedtitle = scrapedtitle.replace("-hd", "[HD]")
+        scrapedtitle = scrapedtitle.replace("-hd", " [HD]")
         scrapedtitle = scrapedtitle.replace("-", " ")
         scrapedtitle = scrapedtitle.capitalize()
 
@@ -217,9 +230,21 @@ def peliculas_new(item):
 		    continue
         scrapedtitle = scrapedtitle.replace("/", "")
         scrapedtitle = scrapedtitle.replace("filmstream.biz", "")
+        scrapedtitle = scrapedtitle.replace("film-completo-online", "")
+        scrapedtitle = scrapedtitle.replace("film-completi", "")
+        scrapedtitle = scrapedtitle.replace("-streaming", "")
+        scrapedtitle = scrapedtitle.replace("film-stream-biz", "")
+        scrapedtitle = scrapedtitle.replace("film-altadefinizione", "")
+        scrapedtitle = scrapedtitle.replace("alta-definizione", "")
+        scrapedtitle = scrapedtitle.replace("online", "")
+        scrapedtitle = scrapedtitle.replace("film", "")
+        scrapedtitle = scrapedtitle.replace("gratis", "")
+        scrapedtitle = scrapedtitle.replace("guarda-il", "")
+        scrapedtitle = scrapedtitle.replace("stream", "")
+        scrapedtitle = scrapedtitle.replace("netflix", "")
         scrapedtitle = scrapedtitle.replace("openload", "")
         scrapedtitle = scrapedtitle.replace("gratis-", "")
-        scrapedtitle = scrapedtitle.replace("-hd", "[HD]")
+        scrapedtitle = scrapedtitle.replace("-hd", " [HD]")
         scrapedtitle = scrapedtitle.replace("-", " ")
         scrapedtitle = scrapedtitle.capitalize()
 
