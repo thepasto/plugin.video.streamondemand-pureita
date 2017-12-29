@@ -8,7 +8,7 @@
 import base64
 import re
 import urlparse
-from servers import adfly
+
 
 from core import httptools
 from core import logger
