@@ -142,14 +142,16 @@ def peliculas_new(item):
     data = scrapertools.find_single_match(data, patron)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)">([^<]+)</a>'
+    patron = '<img src="([^"]+)[^>]+>\s*[^>]+>[^>]+></span>[^"]+</div>\s*[^>]+>\s*<[^>]+>[^>]+>[^>]+>\s*'
+    patron += '<a href="([^"]+)"><div class="see"></div></a>\s*</div>\s*<div class="data">\s*<h3>\s*'
+    patron += '<span class="flag" style="background-image[^h]+[^>]+[^>]+"></span>\s*<a href="[^"]+">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        scrapedthumbnail = scrapertools.unescape(match.group(1))
+        scrapedtitle = scrapertools.unescape(match.group(3))
+        scrapedurl = urlparse.urljoin(item.url, match.group(2))
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -171,16 +173,10 @@ def peliculas_new(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas_new",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
@@ -237,14 +233,16 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)"><div class="see"><\/div><\/a>\s*<\/div>\s*<div class="data">\s*<h3>\s*<span class="flag" style="background-image[^h]+[^>]+[^>]+"><\/span>\s*<a href="[^"]+">([^<]+)<\/a>'
+    patron = '<img src="([^"]+)[^>]+>\s*[^>]+>[^>]+><\/span>[^"]+<\/div>\s*[^>]+>\s*<[^>]+>[^>]+>[^>]+>\s*'
+    patron += '<a href="([^"]+)"><div class="see"></div></a>\s*</div>\s*<div class="data">\s*<h3>\s*'
+    patron += '<span class="flag" style="background-image[^h]+[^>]+[^>]+"></span>\s*<a href="[^"]+">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        scrapedthumbnail = scrapertools.unescape(match.group(1))
+        scrapedtitle = scrapertools.unescape(match.group(3))
+        scrapedurl = urlparse.urljoin(item.url, match.group(2))
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -258,43 +256,7 @@ def peliculas(item):
                  plot=scrapedplot,
                  folder=True), tipo='movie'))
 
-    # Extrae el paginador
-    patronvideos = "<a href='([^>]+)' class=[^>]+>2<\/a>"
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]pagina 2 >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="",
-                 folder=True))
-				 
-    patronvideos = "<a href='([^>]+)' class=[^>]+>3<\/a>"
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]pagina 3 >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="",
-                 folder=True))
-				 
-    patronvideos = "<a href='([^>]+)' class=[^>]+>4<\/a>"
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]pagina 4 >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="",
-                 folder=True))
-				 
+    # Extrae el paginador				 
     patronvideos = '<a class=[^>]+ href="([^"]+)"><i id=[^>]+></i>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
@@ -305,7 +267,43 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+				 
+    patronvideos = "<a href='([^>]+)' class=[^>]+>2</a>"
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]pagina 2[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="",
+                 folder=True))
+				 
+    patronvideos = "<a href='([^>]+)' class=[^>]+>3</a>"
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]pagina 3[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="",
+                 folder=True))
+				 
+    patronvideos = "<a href='([^>]+)' class=[^>]+>4</a>"
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]pagina 4[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="",
                  folder=True))
     return itemlist
 # ==============================================================================================================================================================================
