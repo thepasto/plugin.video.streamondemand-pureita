@@ -69,10 +69,10 @@ def peliculas_years(item):
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers)
-    bloque = scrapertools.get_match(data, '<h2>Cerca Per Anno</h2>([^+]+)</ul></nav></div></div></div></div></div>')
+    bloque = scrapertools.get_match(data, '<h2>Film Per Anno</h2>(.*?)</ul></nav></div>')
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)">([^<]+)</a></li>'
+    patron = '<a\s*href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).finditer(bloque)
 
     for match in matches:
