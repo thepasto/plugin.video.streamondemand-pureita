@@ -123,7 +123,7 @@ def genere_years(item):
                  action="fichas",
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  folder=True))
 
     return itemlist
@@ -149,7 +149,7 @@ def genere_country(item):
                  action="fichas",
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country2_P.png",
                  folder=True))
 
     return itemlist
@@ -175,7 +175,7 @@ def genere_az(item):
                  action="fichas",
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png",
                  folder=True))
 
     return itemlist
