@@ -12,9 +12,9 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/eurostreaming_video.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>2</version>
+	<version>3</version>
 	<date>03/01/2018</date>
-	<changes>Update First Release</changes>
+	<changes>Extra Update First Release</changes>
 
 	<categories>
                 <category>movie</category>
