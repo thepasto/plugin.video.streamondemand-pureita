@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# PureITA.- XBMC Plugin
+# StreamOnDemand-PureITA / XBMC Plugin
 # Canale  eurostreaming_video
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ============================================================
@@ -15,10 +15,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "eurostreaming_video"
-__category__ = "F,S,A"
-__type__ = "generic"
-__title__ = "eurostreaming_video"
-__language__ = "IT"
+
 
 DEBUG = config.get_setting("debug")
 
@@ -61,6 +58,12 @@ def mainlist(item):
                      extra='serie',
                      url="%s/category/anime-cartoni-animati/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV[COLOR orange] - Richieste[/COLOR]",
+                     action="peliculas_requested",
+                     extra='serie',
+                     url="%s/category/serie/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
@@ -110,7 +113,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
 
@@ -153,15 +156,16 @@ def peliculas_new(item):
 # ==============================================================================================================================================================================
 	
 def serietv(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] serietv")
     itemlist = []
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
+    bloque = scrapertools.get_match(data, '<h2>Archivio SERIE TV</h2>(.*?)<div\s*class="w-sidebar-container">')
 
     # Extrae las entradas (carpetas)
     patron = '<a\s*[^>]+[^>][^>]href="([^"]+)">\s*[^>]+ alt="([^>]+)"\s*src="([^>]+)" />'
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
@@ -190,7 +194,7 @@ def serietv(item):
                  action="serietv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
 
@@ -199,7 +203,7 @@ def serietv(item):
 # ==============================================================================================================================================================================
 	
 def serietv_new(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] serietv_new")
     itemlist = []
 
     # Descarga la pagina
@@ -231,7 +235,7 @@ def serietv_new(item):
 # ==============================================================================================================================================================================
 
 def animation_new(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] animation_new")
     itemlist = []
 
     # Descarga la pagina
@@ -275,11 +279,43 @@ def animation_new(item):
                  folder=True))
 
     return itemlist
+
+# ==============================================================================================================================================================================
+
+def peliculas_requested(item):
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_requested")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+    bloque = scrapertools.get_match(data, 'Le serie più viste di questo mese:</h3>(.*?)<div\s*class="container-fluid wrap-cont-footer">')
+
+    # Extrae las entradas (carpetas)
+    patron = '<a\s*[^>]+[^>][^>]href="([^"]+)">\s*[^>]+ alt="([^>]+)"\s*src="([^>]+)" />'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
+        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="cat_ep",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo='tv'))
+
+    return itemlist
 	
 # ==============================================================================================================================================================================	
 	
 def cat_ep(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video]peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] cat_ep")
     itemlist = []
 
     # Descarga la pagina
@@ -315,7 +351,7 @@ def cat_ep(item):
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
+                 thumbnail=item.thumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
                  folder=True), tipo='tv'))
@@ -344,7 +380,7 @@ def search(item, texto):
 # ==============================================================================================================================================================================		
 
 def peliculas_search(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
+    logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_search")
     itemlist = []
 
     # Descarga la pagina
@@ -372,7 +408,6 @@ def peliculas_search(item):
 
     return itemlist
 # ==============================================================================================================================================================================
-
 
 def findvideos(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] findvideos")
