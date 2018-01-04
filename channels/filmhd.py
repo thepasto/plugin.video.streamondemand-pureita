@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # StreamOnDemand-PureITA / XBMC Plugin
-# Canale filmhd
+# Canale FilmHD
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
@@ -69,9 +69,13 @@ def mainlist(item):
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
         Item(channel=__channel__,
+             title="[COLOR azure]Serie TV[/COLOR]",
+             action="fichas_tv",
+             url=host + "/genere/serie-tv/",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+        Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             extra="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
@@ -191,12 +195,14 @@ def fichas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
 
-    patron = '<a href="([^"]+)">\s*<div class="movie-play">\s*<i class="icon-controller-play"></i>\s*</div>\s*<img src="([^"]+)" alt="([^<]+)">'
+    patron = '<div class=".*?"><i style=".*?">(.*?)</i></div>\s*</div>\s*<a href="([^"]+)">\s*'
+    patron += '<div class="movie-play">\s*<i class="icon-controller-play"></i>\s*'
+    patron += '</div>\s*<img src="([^"]+)".*?>\s*</a>\s*</div>\s*[^>]+>\s*<h2 class="movie-title">([^<]+)</h2>'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedtv, scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
 
@@ -205,12 +211,12 @@ def fichas(item):
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="episodios" if "TV" in scrapedtv else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
+                 show=scrapedtitle), tipo='serie' if "TV" in scrapedtv else "movie"))
 
     # Paginación
     next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" href="([^"]+)">»</a>')
@@ -226,33 +232,17 @@ def fichas(item):
 
 # ==============================================================================================================================================================================
 
-def search(item, texto):
-    logger.info("[pureita filmhd] " + item.url + " search " + texto)
-
-    item.url = host + "/?s=" + texto
-
-    try:
-        return peliculas_search(item)
-
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
-
-# ==============================================================================================================================================================================
-
-def peliculas_search(item):
-    logger.info("[pureita filmhd] peliculas_search")
+def fichas_tv(item):
+    logger.info("[pureita filmhd] fichas")
 
     itemlist = []
 
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
+	
 
-    patron = '<\/div>\s*<a href="([^"]+)">\s*<div class="movie-play">\s*'
-    patron += '<i class="icon-controller-play"></i>\s*</div>\s*<img src="([^"]+)">[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</h2>'
+    patron = '<a href="([^"]+)">\s*<div class="movie-play">\s*<i class="icon-controller-play">'
+    patron += '</i>\s*</div>\s*<img src="([^"]+)" alt="([^<]+)">'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -265,16 +255,76 @@ def peliculas_search(item):
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="episodios",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
+                 show=scrapedtitle), tipo='tv'))
 
-    return itemlist		
+    # Paginación
+    next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" href="([^"]+)">»</a>')
+    if next_page != "":
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="fichas_tv",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
 	
+def episodios(item):
+    logger.info("streamondemand.channels.altadefinizionezone episodios")
 
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+
+    patron = "#openload(.*?) span[^>]+src='[^>]+' frameborder[^>]+><\/iframe><p\s*"
+    patron += "id='buttondownload'><a\s*href='([^<]+)' rel='nofollow' target='_blank'>" 
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedtitle, scrapedurl in matches:
+        scrapedtitle = scrapedtitle.replace("_", " X ")
+
+
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+
+    return itemlist
+
+	
+# ==============================================================================================================================================================================
+
+def search(item, texto):
+    logger.info("[pureita filmhd] " + item.url + " search " + texto)
+
+    item.url = host + "/?s=" + texto
+
+    try:
+        return fichas(item)
+
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
+
+
+	
 
 
 
