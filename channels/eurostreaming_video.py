@@ -407,22 +407,5 @@ def peliculas_search(item):
                  folder=True), tipo='tv'))
 
     return itemlist
-# ==============================================================================================================================================================================
 
-def findvideos(item):
-    logger.info("[streamondemand-pureita.eurostreaming_video] findvideos")
-
-    ## Descarga la página
-    data = item.url if item.extra == 'serie' else scrapertools.cache_page(item.url)
-
-    itemlist = servertools.find_video_items(data=data)
-    for videoitem in itemlist:
-        videoitem.title = item.title + videoitem.title
-        videoitem.fulltitle = item.fulltitle
-        videoitem.thumbnail = item.thumbnail
-        videoitem.show = item.show
-        videoitem.plot = item.plot
-        videoitem.channel = __channel__
-
-    return itemlist
 
