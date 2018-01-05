@@ -17,10 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_video"
-__category__ = "F,A"
-__type__ = "generic"
-__title__ = "altadefinizione01_video"
-__language__ = "IT"
+
 
 host = "http://altadefinizione01.video/"
 
@@ -143,7 +140,7 @@ def fichas(item):
                  action="fichas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
@@ -191,7 +188,7 @@ def peliculas_new(item):
                  action="peliculas_new",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
@@ -251,7 +248,7 @@ def peliculas_search(item):
                  action="peliculas_search",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist		
 	
