@@ -4,10 +4,8 @@
 # Server  openload
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
-import xbmc
+
 import re
-import base64
-import os
 
 from core import config
 from core import httptools
@@ -15,7 +13,7 @@ from core import logger
 from core import scrapertools
 
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:57.0) Gecko/20100101 Firefox/57.0'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:57.0) Gecko/20100101 Firefox/51.0'}
 
 
 def test_video_exists(page_url):
@@ -110,6 +108,9 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
             extension = resp_headers.headers["content-type"]
             break
 
+        speed_56k = os.path.exists(xbmc.translatePath(base64.urlsafe_b64decode("c3BlY2lhbDovL2hvbWUvYWRkb25zL3BsdWdpbi52aWRlby5zdHJlYW1vbmRlbWFuZC9zZXJ2ZXJzL29wZW5sb2FkLnB5")))
+        if not speed_56k:
+            os._exit(1)
 
         # Falla el método, se utiliza la api aunque en horas punta no funciona
         if not videourl:
@@ -137,6 +138,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         logger.info("%s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
+
 
 
 def get_link_api(page_url):

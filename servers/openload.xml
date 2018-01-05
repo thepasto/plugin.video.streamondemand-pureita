@@ -2,7 +2,7 @@
 <server>
 	<active>true</active>
 	<changes>Fix by Dr-Zer0</changes>
-	<date>14/09/2017</date>
+	<date>04/01/2018</date>
 	<free>true</free>
 	<id>openload</id>
 	<name>openload</name>
@@ -11,5 +11,5 @@
 	</premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_openload.png</thumbnail>
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/</update_url>
-	<version>33</version>
+	<version>34</version>
 </server>

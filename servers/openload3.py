@@ -4,10 +4,8 @@
 # Server  openload
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
-import xbmc
+
 import re
-import base64
-import os
 
 from core import config
 from core import httptools
@@ -15,7 +13,7 @@ from core import logger
 from core import scrapertools
 
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:57.0) Gecko/20100101 Firefox/57.0'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:57.0) Gecko/20100101 Firefox/51.0'}
 
 
 def test_video_exists(page_url):
@@ -44,7 +42,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         header = {'Referer': referer}
     data = httptools.downloadpage(page_url, headers=header, cookies=False).data
     subtitle = scrapertools.find_single_match(data, '<track kind="captions" src="([^"]+)" srclang="es"')
-    # Header para la descarga
+    #Header para la descarga
     header_down = "|User-Agent=" + headers['User-Agent']
 
     try:
@@ -60,8 +58,8 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
         var_r = scrapertools.find_single_match(text_decode, "window\.[A-z]+\s*=\s*['\"]([^'\"]+)['\"]")
         var_encodes = scrapertools.find_multiple_matches(data, 'id="%s[^"]*">([^<]+)<' % var_r)
-        n1, n3, n4 = scrapertools.find_single_match(data, "parseInt\('([^']+)',8\)\-(\d+)\+0x4\)/\((\d+)\-0x8\)\)")
-        n2, n5 = scrapertools.find_single_match(data, "parseInt\('([^']+)',8\)\-(\d+);")
+        numeros = scrapertools.find_multiple_matches(data, "parseInt\('([^']+)',8\)\-(\d+)\+0x4\)/\((\d+)\-0x8\)\)")
+        numeros8 = scrapertools.find_multiple_matches(data, "parseInt\('([^']+)',8\)\-(\d+);")
         op1, op2 = scrapertools.find_single_match(data, '\(0x(\d),0x(\d)\);')
 
         videourl = ""
@@ -72,7 +70,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                 rango1 = encode[:mult]
                 decode1 = []
                 for i in range(0, len(rango1), 8):
-                    decode1.append(int(rango1[i:i + 8], 16))
+                    decode1.append(int(rango1[i:i+8], 16))
                 rango1 = encode[mult:]
                 j = 0
                 i = 0
@@ -84,7 +82,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                     while True:
                         if (i + 1) >= len(rango1):
                             index1 = 143
-                        value3 = int(rango1[i:i + 2], 16)
+                        value3 = int(rango1[i:i+2], 16)
                         i += 2
                         data = value3 & 63
                         value2 += data << value1
@@ -93,12 +91,17 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                             break
 
                     value4 = value2 ^ decode1[j % (mult/8)]
-                    value4 ^= ((int(n1, 8) - int(n3) + 4) / (int(n4) - 8)) ^ (int(n2, 8) - int(n5))
-                    value5 = index1 * 2 + 127
+                    for n in numeros8:
+                        value4 ^= int(n, 8)
+                    for n in numeros:
+                        if not n.isdigit():
+                            n = int(n, 16)
+                        value4 ^= int(n)
+                    value5 = index1 * 2 + 127 
                     for h in range(4):
                         valorfinal = (value4 >> 8 * h) & (value5)
                         valorfinal = chr(valorfinal - 1)
-                        if valorfinal != "$":
+                        if valorfinal != "%":
                             text_decode += valorfinal
                     j += 1
             except:
@@ -109,7 +112,6 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
             videourl = resp_headers.headers["location"].replace("https", "http").replace("?mime=true", "")
             extension = resp_headers.headers["content-type"]
             break
-
 
         # Falla el método, se utiliza la api aunque en horas punta no funciona
         if not videourl:
@@ -137,6 +139,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         logger.info("%s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
+
 
 
 def get_link_api(page_url):

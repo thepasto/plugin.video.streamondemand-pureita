@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
-# Conector para megadrive
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# StreamOnDemand-PureITA / XBMC Plugin
+# Connettore  megadrive
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # by DrZ3r0
 # ------------------------------------------------------------
 
@@ -25,7 +25,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         data_unpack = jsunpack.unpack(data_pack)
         data = data_unpack
 
-    video_url = scrapertools.find_single_match(data, 'file"?\s*:\s*"([^"]+)",')
+    video_url = scrapertools.find_single_match(data, 'mp4:"(.*?.mp4)",')
     video_urls.append(["[megadrive]", video_url])
 
     for video_url in video_urls:
