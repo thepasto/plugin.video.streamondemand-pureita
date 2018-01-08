@@ -216,7 +216,7 @@ def fichas(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='serie' if "TV" in scrapedtv else "movie"))
+                 show=scrapedtitle), tipo='tv' if "TV" in scrapedtv else "movie"))
 
     # Paginación
     next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" href="([^"]+)">»</a>')
