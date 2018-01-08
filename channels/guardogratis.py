@@ -1,0 +1,261 @@
+# -*- coding: utf-8 -*-
+# ------------------------------------------------------------
+# StreamOnDemand-PureITA / XBMC Plugin
+# Canale GuardoGratis
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# ------------------------------------------------------------
+
+import re
+import urlparse
+
+from core import httptools
+from core import logger 
+from core import servertools
+from core import scrapertools
+from core.item import Item
+from core.tmdb import infoSod
+
+__channel__ = "guardogratis"
+
+host = "http://guardogratis.com/"
+
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', host]]
+
+def isGeneric():
+    return True
+
+
+def mainlist(item):
+    logger.info("streamondemand-pureita guardogratis.py mainlist")
+    itemlist = [Item(channel=__channel__,
+                     title="Film[COLOR orange]   - Novita[/COLOR]",
+                     action="film_new",
+                     url=host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png",),
+                Item(channel=__channel__,
+                     title="Film[COLOR orange]   - Top IMDB[/COLOR]",
+                     action="film",
+                     url="%s/top-imdb/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png",),
+                Item(channel=__channel__,
+                     title="Film[COLOR orange]   - Categorie[/COLOR]",
+                     action="genere",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png",),
+	            Item(channel=__channel__,
+                     title="Serie TV",
+                     action="film",
+                     url="%s/series/" % host,
+                     extra="serie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png",),
+                Item(channel=__channel__,
+                     title="[COLOR orange]Cerca.....[/COLOR]",
+                     action="search",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png",)]
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+
+def search(item, texto):
+    logger.info("streamondemand-pureita guardogratis.py search")
+    item.url = host + "/?s=" + texto
+    try:
+        return film(item)
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
+
+# ==============================================================================================================================================================================
+
+def genere(item):
+    logger.info("streamondemand-pureita guardogratis.py pergenere")
+    itemlist = []
+    
+    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    blocco = scrapertools.get_match(data, '<a href="[^"]+">Tutti i film</a>([^+]+)<a href="[^"]+">I migliori film!</a>')
+
+    patron = '<li id=".*?" class=".*?"><a href="([^"]+)">([^<]+)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+	
+    for scrapedurl, scrapedtitle in matches:
+         itemlist.append(
+             Item(channel=__channel__,
+                 action="film",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 extra="movie",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+
+def film(item):
+    logger.info("streamondemand-pureita guardogratis.py film")
+    itemlist = []
+
+
+    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    patron = '<div data-movie-id=".*?" class="ml-item">\s*<a href="([^"]+)" data-url="" class="ml-mask jt" data-hasqtip=".*?" oldtitle=".*?" title="">\s*'
+    patron += '<img data-original="([^"]+)" class="lazy thumb mli-thumb" alt="([^<]+)">'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedimg, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        scrapedplot = ""
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios" if "series" in scrapedurl else "findvideos",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedimg,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo="tv" if "series" in scrapedurl else "movie"))
+
+    patron = '<link rel="next" href="([^"]+)" />'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = matches[0]
+        itemlist.append(
+            Item(channel=__channel__,
+                action="film",
+                title="[COLOR orange]Successivo >>[/COLOR]",
+                url=scrapedurl,
+                thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                folder=True))
+
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+"""
+def film_top(item):
+    logger.info("streamondemand-pureita guardogratis.py film")
+    itemlist = []
+
+    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+	
+    patron = '<div data-movie-id=".*?" class="ml-item">\s*<a href="([^"]+)" data-url="" class="ml-mask jt" data-hasqtip=".*?" oldtitle=".*?" title="">\s*'
+    patron += '<img data-original="([^"]+)" class="lazy thumb mli-thumb" alt="([^<]+)">'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedimg, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        if "series" in scrapedurl:
+		    continue
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedimg,
+                 extra=item.extra,
+                 folder=True), tipo="movie"))
+
+    patron = '<link rel="next" href="([^"]+)" />'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+
+    if len(matches) > 0:
+        scrapedurl = matches[0]
+        itemlist.append(
+            Item(channel=__channel__,
+                action="film_top",
+                title="[COLOR orange]Successivo >>[/COLOR]",
+                url=scrapedurl,
+                thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                folder=True))
+
+
+    return itemlist
+"""
+# ==============================================================================================================================================================================
+	
+def film_new(item):
+    logger.info("streamondemand-pureita guardogratis.py film")
+    itemlist = []
+
+    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    blocco = scrapertools.get_match(data, 'Ultimi Film<i class="fa fa-chevron-right ml10">(.*?)Ultime Serie TV <i class="fa fa-chevron-right ml10">')
+	
+    patron = '<div data-movie-id=".*?" class="ml-item">\s*<a href="([^"]+)" data-url="" class="ml-mask jt" data-hasqtip=".*?" oldtitle=".*?" title="">\s*'
+    patron += '<img data-original="([^"]+)" class="lazy thumb mli-thumb" alt="([^<]+)">'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedimg, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        scrapedplot = ""
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedimg,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo="movie"))
+
+    patron = '<link rel="next" href="([^"]+)" />'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = matches[0]
+        itemlist.append(
+            Item(channel=__channel__,
+                action="film_new",
+                title="[COLOR orange]Successivo >>[/COLOR]",
+                url=scrapedurl,
+                thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                folder=True))
+
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+	
+def episodios(item):
+    logger.info("streamondemand.channels.guardogratis episodios")
+
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+    blocco = scrapertools.get_match(data, '</i><span>Comments</span>(.*?)</ul></div></div> </div></div>')
+
+    patron = '<a\s*href="([^<]+)">(.*?)</a> '
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedtitle in matches:			
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+
+    return itemlist
+	
+
+
+
+
