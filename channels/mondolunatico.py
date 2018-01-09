@@ -62,7 +62,7 @@ def mainlist(item):
 
 
 def categorias(item):
-    logger.info("streamondemand.mondolunatico categorias")
+    logger.info("streamondemand-pureita.mondolunatico categorias")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
@@ -104,7 +104,7 @@ def categorias(item):
 
 
 def search(item, texto):
-    logger.info("[mondolunatico.py] " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita.mondolunatico.py] " + item.url + " search " + texto)
     item.url = host + "/?s=" + texto
     try:
         if item.extra == "movie":
@@ -121,7 +121,7 @@ def search(item, texto):
 
 
 def peliculas(item):
-    logger.info("streamondemand.mondolunatico peliculas")
+    logger.info("streamondemand-pureita.mondolunatico peliculas")
 
     itemlist = []
 
@@ -158,24 +158,18 @@ def peliculas(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  extra=item.extra,
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
 
 def serietv(item):
-    logger.info("streamondemand.mondolunatico serietv")
+    logger.info("streamondemand-pureita.mondolunatico serietv")
 
     itemlist = []
 
@@ -210,13 +204,6 @@ def serietv(item):
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
 
-    if len(itemlist) > 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
 
     if len(matches) >= p * PERPAGE:
         scrapedurl = item.url + '{}' + str(p + 1)
@@ -226,14 +213,14 @@ def serietv(item):
                  action="serietv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
 
 def search_serietv(item, texto):
-    logger.info("streamondemand.mondolunatico serietv")
+    logger.info("streamondemand-pureita.mondolunatico serietv")
 
     texto = urllib.unquote_plus(texto).lower()
 
@@ -274,10 +261,6 @@ def search_serietv(item, texto):
     return itemlist
 
 
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
 
 def episodios(item):
     logger.info("streamondemand.mondolunatico episodios")
@@ -290,7 +273,7 @@ def episodios(item):
     html = []
 
     for i in range(2):
-        patron = 'href="(https?://www\.keeplinks\.eu/p92/([^"]+))"'
+        patron = 'href="(https?://www\.keeplinks\.co/p92/([^"]+))"'
         matches = re.compile(patron, re.DOTALL).findall(data)
         for keeplinks, id in matches:
             _headers = [['Cookie', 'flag[' + id + ']=1; defaults=1; nopopatall=' + str(int(time.time()))],
@@ -429,7 +412,7 @@ def findvideos(item):
 
 
 def play(item):
-    logger.info("streamondemand.mondolunatico play")
+    logger.info("streamondemand-pureita.mondolunatico play")
 
     itemlist = []
 
