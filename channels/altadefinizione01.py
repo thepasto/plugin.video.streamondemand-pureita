@@ -15,10 +15,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01"
-__category__ = "F,S"
-__type__ = "generic"
-__title__ = "altadefinizione01 (IT)"
-__language__ = "IT"
+
 
 DEBUG = config.get_setting("debug")
 
@@ -37,26 +34,28 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand-pureita.altadefinizione01 mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film -[COLOR orange] Novita'[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas_new",
                      url=host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                Item(channel=__channel__,
-                     title="[COLOR azure]Film -[COLOR orange] Categorie[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
                      action="categorias",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
-               #Item(channel=__channel__,
-                     #title="[COLOR azure]Film -[COLOR orange] Anno[/COLOR]",
-                     #action="categorias_years",
-                     #url=host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
-               #Item(channel=__channel__,
-                     #title="[COLOR azure]Film -[COLOR orange] Paese[/COLOR]",
-                     #action="categorias_country",
-                     #url=host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - In Vetrina[/COLOR]",
+                     action="peliculas_home",
+                     url=host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+               Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
+                     action="peliculas",
+                     url="%s/streaming/animazione/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Film...[/COLOR]",
                      action="search",
@@ -65,6 +64,7 @@ def mainlist(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def categorias(item):
     itemlist = []
@@ -90,54 +90,8 @@ def categorias(item):
 
     return itemlist
 
-def categorias_years(item):
-    itemlist = []
-
-    # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
-    bloque = scrapertools.get_match(data, '</ul>\s*<ul class="cf">(.*?)<ul class="cf">')
-
-    # Extrae las entradas (carpetas)
-    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedurl = host + scrapedurl
-        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
-                 folder=True))
-
-    return itemlist
+# ==============================================================================================================================================================================
 	
-def categorias_country(item):
-    itemlist = []
-
-    # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
-    bloque = scrapertools.get_match(data, '</a></li>\s*</ul>\s*<ul class="cf">(.*?)</ul>\s*</div>')
-
-    # Extrae las entradas (carpetas)
-    patron = '<li><a href="([^"]+)">([^<]+)</a></li> '
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedurl = host + scrapedurl
-        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_years_P.png",
-                 folder=True))
-
-    return itemlist
-
 def search(item, texto):
     logger.info("pureita.altadefinizione01 " + item.url + " search " + texto)
     item.url = host + "/?do=search&subaction=search&story=" + texto
@@ -153,6 +107,8 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
+		
 def peliculas(item):
     logger.info("pureita.altadefinizione01 peliculas")
     itemlist = []
@@ -161,16 +117,16 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="short_content">\s*<a href="([^"]+)">\s*<img src="[^"]+" alt="[^"]+" class="shortstory-img" \/>\s*<div class="short_header">\s*([^<]+)<\/div>'
+    patron = '<div class="short_content">\s*<a href="([^"]+)">\s*'
+    patron += '<img src="([^"]+)" alt="[^"]+" class="shortstory-img" />\s*<div class="short_header">\s*([^<]+)</div>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
+        scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
-        if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -199,6 +155,8 @@ def peliculas(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def peliculas_new(item):
     logger.info("pureita.altadefinizione01 peliculas")
     itemlist = []
@@ -208,16 +166,16 @@ def peliculas_new(item):
     bloque = scrapertools.get_match(data, 'Ultimi inseriti / Tutte le categorie</div>(.*?)</div>\s*<script>')
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="short_content">\s*<a href="([^"]+)">\s*<img src="[^"]+" alt="[^"]+" class="shortstory-img" \/>\s*<div class="short_header">\s*([^<]+)<\/div>'
+    patron = '<div class="short_content">\s*<a href="([^"]+)">\s*'
+    patron += '<img src="([^"]+)" alt="[^"]+" class="shortstory-img" />\s*<div class="short_header">\s*([^<]+)</div>'
     matches = re.compile(patron, re.DOTALL).finditer(bloque)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
+        scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
-        if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -246,7 +204,42 @@ def peliculas_new(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
+def peliculas_home(item):
+    logger.info("pureita.altadefinizione01 peliculas")
+    itemlist = []
 
+    # Descarga la pagina
+    data = scrapertools.anti_cloudflare(item.url, headers)
+    bloque = scrapertools.get_match(data, '<section class="container">(.*?)Film per genere</div>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<div class="short_content">\s*<a href="([^"]+)">\s*'
+    patron += '<img src="([^"]+)" alt="[^"]+" class="shortstory-img" />\s*<div class="short_header">\s*([^<]+)</div>'
+    matches = re.compile(patron, re.DOTALL).finditer(bloque)
+
+    for match in matches:
+        scrapedplot = ""
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
+        scrapedtitle = scrapertools.unescape(match.group(3))
+        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
+    return itemlist
+
+# ==============================================================================================================================================================================
+	
 def findvideos(item):
 
     data = scrapertools.anti_cloudflare(item.url, headers)
@@ -262,7 +255,63 @@ def findvideos(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+"""	
+
+# ==============================================================================================================================================================================	
 	
+def categorias_years(item):
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.anti_cloudflare(item.url, headers)
+    bloque = scrapertools.get_match(data, '</ul>\s*<ul class="cf">(.*?)<ul class="cf">')
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = host + scrapedurl
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+	
+def categorias_country(item):
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.anti_cloudflare(item.url, headers)
+    bloque = scrapertools.get_match(data, '</a></li>\s*</ul>\s*<ul class="cf">(.*?)</ul>\s*</div>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li> '
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = host + scrapedurl
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_years_P.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+
 def peliculas_tv(item):
     logger.info("pureita.altadefinizione01 peliculas_tv")
     itemlist = []
@@ -374,5 +423,5 @@ def findvideos_tv(item):
         videoitem.channel = __channel__
 
     return itemlist
-
+"""
 
