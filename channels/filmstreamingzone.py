@@ -20,12 +20,10 @@ DEBUG = config.get_setting("debug")
 
 host = "https://www.filmstreaming.click/"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
-    ['Accept-Language', 'en-US,en;q=0.5'],
-    ['Accept-Encoding', 'gzip, deflate']
-]
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'],
+           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+           ['Accept-Language', 'en-US,en;q=0.5'],
+           ['Accept-Encoding', 'gzip, deflate']]
 
 DEBUG = config.get_setting("debug")
 
@@ -34,7 +32,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.istreaming mainlist")
+    logger.info("streamondemand-pureita.filmstreamingzone mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Top[/COLOR]",
                      action="peliculas_top",
@@ -48,8 +46,13 @@ def mainlist(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Categoria[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Categorie[/COLOR]",
                      action="categorias",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film - [COLOR orange]Anno[/COLOR]",
+                     action="categorias_years",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
@@ -86,10 +89,36 @@ def categorias(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================		
+# ==============================================================================================================================================================================
+
+def categorias_years(item):
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+    bloque = scrapertools.get_match(data, '</span>Film per Anno</a>(.*?)</ul>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)">(.*?)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = host + scrapedurl
+        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================	
 
 def search(item, texto):
-    logger.info("[filmstreamingzone.py] " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita.filmstreamingzone] " + item.url + " search " + texto)
     item.url = host + "/?do=search&subaction=search&story=" + texto
     try:
         if item.extra == "movie":
@@ -104,7 +133,7 @@ def search(item, texto):
 # ==============================================================================================================================================================================			
 		
 def peliculas_top(item):
-    logger.info("streamondemand.filmstreamingzone peliculas")
+    logger.info("streamondemand-pureita.filmstreamingzone peliculas_top")
 
     itemlist = []
 
@@ -139,7 +168,7 @@ def peliculas_top(item):
 # ==============================================================================================================================================================================	
 	
 def peliculas(item):
-    logger.info()
+    logger.info("streamondemand-pureita.filmstreamingzone peliculas")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
@@ -158,9 +187,9 @@ def peliculas(item):
         matches = re.compile(patron, re.DOTALL).findall(html)
         for url in matches:
             if "scrolling" in url:
-                scrapedurl = scrapedurl
+                scrapedtitle = scrapedtitle
             else:
-                continue
+                scrapedtitle = scrapedtitle + scrapetrailar
 
             itemlist.append(infoSod(
                 Item(channel=__channel__,

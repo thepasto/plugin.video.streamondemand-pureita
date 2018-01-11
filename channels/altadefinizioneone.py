@@ -7,7 +7,7 @@
 import re
 import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
 from core.item import Item
@@ -64,6 +64,7 @@ def mainlist(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def categorias(item):
     itemlist = []
@@ -97,6 +98,7 @@ def categorias(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def byyear(item):
     itemlist = []
@@ -129,6 +131,7 @@ def byyear(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def nazione(item):
     itemlist = []
@@ -162,6 +165,7 @@ def nazione(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def search(item, texto):
     logger.info("[altadefinizioneone.py] " + item.url + " search " + texto)
@@ -175,58 +179,54 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
 
 def peliculas(item):
-    logger.info("streamondemand.altadefinizioneone peliculas")
+    logger.info("streamondemand-pureita.altadefinizioneone peliculas")
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url, headers=headers)
-
-    # Extrae las entradas (carpetas)
-    patron = '<div class="tcarusel-item-title">\s*<a href="([^"]+)">(.*?)</a>\s*</div>'
+    data = httptools.downloadpage(item.url).data
+    patron = r'<a href="([^"]+)">\s*<img src="([^"]+)" alt="([^"]+)" \/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 folder=True), tipo='movie'))
+      
+        html = httptools.downloadpage(scrapedurl).data
+
+        patron = '<div class="video-player-plugin">([^+]+)<div class="wrapper-plugin-video">'
+        matches = re.compile(patron, re.DOTALL).findall(html)
+        for url in matches:
+            if "scrolling" in url:
+                scrapedurl = scrapedurl
+            else:
+                continue
+
+            itemlist.append(infoSod(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     contentType="movie",
+                     title=scrapedtitle,
+                     fulltitle=scrapedtitle,
+                     url=scrapedurl,
+                     extra="movie",
+                     thumbnail=scrapedthumbnail,
+                     folder=True), tipo="movie"))
 
     # Extrae el paginador
-    patronvideos = '<a href="([^"]+)">Avanti'
+    patronvideos = r'<a href="([^"]+)">Avanti'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 extra=item.extra,
                  folder=True))
 
     return itemlist
-
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+	

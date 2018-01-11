@@ -12,9 +12,9 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/altadefinizioneone.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>7</version>
-	<date>06/12/2017</date>
-	<changes>Temporary Disabled</changes>
+	<version>8</version>
+	<date>10/01/2018</date>
+	<changes>Enabled</changes>
 
 	<categories>
 		<category>movie</category>
