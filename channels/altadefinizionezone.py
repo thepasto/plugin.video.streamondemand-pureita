@@ -214,7 +214,7 @@ def peliculas(item):
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/next_1.png",
                  folder=True))
 
     return itemlist
@@ -262,7 +262,7 @@ def peliculas_tv(item):
                    action="peliculas_tv",
                    title="[COLOR orange]Successivo >>[/COLOR]",
                    url=scrapedurl,
-                   thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                   thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/next_1.png",
                    folder=True))
 
     return itemlist

@@ -202,7 +202,6 @@ def peliculas(item):
                      thumbnail=scrapedthumbnail,
                      folder=True), tipo="movie"))
 
-    # Pagine
     patronvideos = r'<span class="pnext"><a href="(.*?)"><span class="fa fa-angle-double-right"></span>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
