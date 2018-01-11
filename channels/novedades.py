@@ -168,7 +168,7 @@ def anime(item):
     itemlist = []
 
     import animesenzalimiti
-    item.url = "http://www.animesenzalimiti.com/"
+    item.url = "http://www.animesenzalimiti.org/"
     itemlist.extend(animesenzalimiti.ultimiep(item))
 
     import animeforce
