@@ -247,6 +247,7 @@ def channels_list():
         itemlist.append( Item( title=config.get_setting("personalchannelname5") , channel="personal5" , language="" , category="" , type="generic"  ))
     #itemlist.append( Item( title="[COLOR red]SkyStreaming[/COLOR]"        , channel="iptv"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01_video[/COLOR]"      , channel="altadefinizione01_video"           , language="IT"    , category="B,F,A,VOS"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]AltaDefinizione_press[/COLOR]"      , channel="altadefinizione_press"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01[/COLOR]"      , channel="altadefinizione01"           , language="IT"    , category="B,F,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01Love[/COLOR]"      , channel="altadefinizione01love"           , language="IT"    , category="B,F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltadefinizioneHD[/COLOR]" , channel="altadefinizionehd" , language="IT" , category="B,F" , type="generic"))
