@@ -82,7 +82,7 @@ def categorias(item):
     data = httptools.downloadpage(item.url).data
 
     # Narrow search by selecting only the combo
-    patron = '<h3 class="widget-title">Categorie</h3>\s*<ul>.*?</ul>'
+    patron = '<li><a href="[^"]+">ULTIME SERIE TV</a></li>(.*?)</ul>'
     bloque = scrapertools.get_match(data, patron)
 
     # The categories are the options for the combo  
