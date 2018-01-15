@@ -23,43 +23,43 @@ def mainlist(item):
     logger.info("streamondemand-pureita.serietvonline mainlist")
 
     itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] - Novità[/COLOR]",
                      action="lista_novita",
-                     title="[COLOR azure]Lista Novità[/COLOR]",
                      url=(host),
                      thumbnail=thumbnail_novita,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] -  Animazione[/COLOR]",
                      action="lista_serie",
-                     title="[COLOR azure]Lista Cartoni Animati e Anime[/COLOR]",
                      url=("%s/lista-cartoni-animati-e-anime/" % host),
                      thumbnail=thumbnail_animation,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] - Documentari[/COLOR]",
                      action="lista_serie",
-                     title="[COLOR azure]Lista Documentari[/COLOR]",
                      url=("%s/lista-documentari/" % host),
                      thumbnail=thumbnail_doc,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] - Anni 50 60 70 80[/COLOR]",
                      action="lista_serie",
-                     title="[COLOR azure]Lista Serie Tv Anni 50 60 70 80[/COLOR]",
                      url=("%s/lista-serie-tv-anni-60-70-80/" % host),
                      thumbnail=thumbnail_classic,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] - Alta Definizione[/COLOR]",
                      action="lista_serie",
-                     title="[COLOR azure]Lista serie Alta Definizione[/COLOR]",
                      url=("%s/lista-serie-tv-in-altadefinizione/" % host),
                      thumbnail=thumbnail_lista,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Serie tv[COLOR orange] - Italiane[/COLOR]",
                      action="lista_serie",
-                     title="[COLOR azure]Lista Serie Tv Italiane[/COLOR]",
                      url=("%s/lista-serie-tv-italiane/" % host),
                      thumbnail=thumbnail_lista,
                      fanart=thumbnail_lista),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
                      extra='serie',
                      thumbnail=thumbnail_cerca)]
@@ -147,17 +147,19 @@ def lista_novita(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     blocco = scrapertools.find_single_match(data, '<div id="box_movies">(.*?)</span></div></div>')
-    patron = '<a href="([^"]+)"><span class="player"></span></a>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*<h2>(.*?)</h2>'
+    patron = '<img src="([^"]+)" alt[^>]+>\s*<a href="([^"]+)">'
+    patron += '<span class="player"></span></a>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*<h2>(.*?)</h2>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle in matches:
+    for scrapedthumbnail, scrapedurl,scrapedtitle in matches:
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(Item(channel=__channel__,
                                      action="episodios",
                                      title=scrapedtitle,
                                      fulltitle=scrapedtitle,
                                      url=scrapedurl,
+                                     thumbnail=scrapedthumbnail,
                                      fanart=item.fanart if item.fanart != "" else item.scrapedthumbnail,
                                      show=item.fulltitle,
                                      folder=True),tipo='tv'))
