@@ -4,10 +4,11 @@
 # Canale casacinema
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
-import re
 
+import re
 import urlparse
 
+from core import httptools
 from core import config
 from core import logger
 from core import scrapertools
@@ -16,56 +17,47 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "casacinema"
-__category__ = "F,S,A"
-__type__ = "generic"
-__title__ = "casacinema"
-__language__ = "IT"
-
 host = 'http://www.casacinema.video'
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', '%s/genere/serie-tv' % host],
-]
-
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', '%s/genere/serie-tv' % host],]
 
 def isGeneric():
     return True
-
-
+	
 def mainlist(item):
-    logger.info("streamondemand.casacinema mainlist")
+    logger.info("streamondemand-pureita.casacinema mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film - Novita'[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      extra="movie",
                      url="%s/genere/film" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film - HD[/COLOR]",
-                     action="peliculas",
-                     extra="movie",
-                     url="%s/?s=[HD]" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Categorie[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
                      action="categorias",
                      extra="movie",
                      url="%s/genere/film" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film Sub - Ita[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Sub Ita[/COLOR]",
                      action="peliculas",
                      extra="movie",
                      url="%s/genere/sub-ita" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR yellow]Cerca Film ...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Serie TV[COLOR orange] - Aggiornamenti[/COLOR]",
+                     extra="serie",
+                     action="peliculas_update",
+                     url="%s/aggiornamenti-serie-tv" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
@@ -73,15 +65,17 @@ def mainlist(item):
                      url="%s/genere/serie-tv" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
+                     title="[COLOR yellow]Cerca Serie TV ...[/COLOR]",
                      action="search",
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def newest(categoria):
-    logger.info("[casacinema.py] newest" + categoria)
+    logger.info("[streamondemand-pureita.casacinema] newest" + categoria)
     itemlist = []
     item = Item()
     try:
@@ -103,6 +97,8 @@ def newest(categoria):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def search(item, texto):
     logger.info("[casacinema.py] " + item.url + " search " + texto)
 
@@ -120,9 +116,10 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
 
 def peliculas(item):
-    logger.info("streamondemand.casacinema peliculas")
+    logger.info("streamondemand-pureita.casacinema peliculas")
 
     itemlist = []
 
@@ -139,7 +136,7 @@ def peliculas(item):
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if item.extra == "serie" else "findvideos",
+                 action="findvideos",
                  contentType="movie",
                  title=title,
                  url=scrapedurl,
@@ -156,22 +153,66 @@ def peliculas(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png"))
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
+# ==============================================================================================================================================================================
+
+def peliculas_update(item):
+    logger.info("streamondemand-pureita.casacinema peliculas")
+    itemlist = []
+    numpage = 10
+
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)"\s*[^>]+"([^"]+)"><div>\s*<div[^>]+>(.*?)<\/div>\s*[^>]+>(.*?)<\/div>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    scrapedplot = ""
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle, num_ep) in enumerate(matches):
+        if (p - 1) * numpage > i: continue
+        if i >= p * numpage: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="episodios",
+                 title=title + " " + "[COLOR orange]" + num_ep + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+
+    if len(matches) >= p * numpage:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_update",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+	
+# ==============================================================================================================================================================================
 
 def peliculas_tv(item):
-    logger.info("streamondemand.casacinema peliculas")
+    logger.info("streamondemand-pureita.casacinema peliculas_tv")
 
     itemlist = []
 
@@ -188,7 +229,7 @@ def peliculas_tv(item):
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if item.extra == "serie" else "findvideos",
+                 action="episodios",
                  title=title,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -204,35 +245,25 @@ def peliculas_tv(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas_tv",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/next_1.png"))
 
     return itemlist
 
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
-
+# ==============================================================================================================================================================================	
 
 def categorias(item):
-    logger.info("streamondemand.casacinema categorias")
+    logger.info("streamondemand-pureita.casacinema categorias")
 
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, 'Categorie(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<li><a href="[^"]+">ULTIME SERIE TV</a></li>(.*?)</ul>')
 
     # The categories are the options for the combo
     patron = '<a href="(.*?)">(.*?)</a></li>'
@@ -244,14 +275,15 @@ def categorias(item):
                  action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  extra=item.extra,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png",
                  url=urlparse.urljoin(host, scrapedurl)))
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        #patron = '.*?<a\s*href="[^"]+"[^o]+o[^>]+>[^<]+<\/a><(?:b|\/)[^>]+>'
         patron = '((?:.*?<a href="[^"]+"[^>]+[^>]+>[^<]+</a>)+)'
         matches = re.compile(patron).findall(html)
         for data in matches:
@@ -269,12 +301,12 @@ def episodios(item):
                          title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
                          url=data,
                          thumbnail=item.thumbnail,
+                         plot=item.plot,
                          extra=item.extra,
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
 
-    logger.info("[casacinema.py] episodios")
-
+    logger.info("[streamondemand-pureita.casacinema] episodios")
     itemlist = []
 
     # Descarga la página
@@ -306,26 +338,13 @@ def episodios(item):
 
         i += 1
 
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Aggiungi alla libreria",
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios" + "###" + item.extra,
-                 show=item.show))
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios" + "###" + item.extra,
-                 show=item.show))
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def findvideos(item):
-    logger.info("streamondemand.casacinema findvideos")
+    logger.info("streamondemand-pureita.casacinema findvideos")
 
     itemlist = []
 
