@@ -18,9 +18,9 @@ __channel__ = "serietvonline"
 host        = "https://serietvonline.com/"
 headers     = [['Referer', host]]
 
-# -----------------------------------------------------------------
+
 def mainlist(item):
-    logger.info("streamondemand.serietvonline mainlist")
+    logger.info("streamondemand-pureita.serietvonline mainlist")
 
     itemlist = [Item(channel=__channel__,
                      action="lista_novita",
@@ -58,18 +58,17 @@ def mainlist(item):
                      url=("%s/lista-serie-tv-italiane/" % host),
                      thumbnail=thumbnail_lista,
                      fanart=thumbnail_lista),
-
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
                      extra='serie',
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
+                     thumbnail=thumbnail_cerca)]
     return itemlist
-# =================================================================
+	
+# ==============================================================================================================================================================================
 
-# -----------------------------------------------------------------
 def search(item, texto):
-    logger.info("streamondemand.serietvonline search " + texto)
+    logger.info("streamondemand-pureita.serietvonline search " + texto)
 
     itemlist = []
 
@@ -105,25 +104,18 @@ def search(item, texto):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="serietv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail=thumbnail_successivo,
                  extra=item.extra,
                  folder=True))
 
     return itemlist
-# =================================================================
+# ==============================================================================================================================================================================
 
-# -----------------------------------------------------------------
 def lista_serie(item):
-    logger.info("streamondemand.serietvonline novità")
+    logger.info("streamondemand-pureita.serietvonline lista_serie")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -145,12 +137,11 @@ def lista_serie(item):
                                      folder=True),tipo='tv'))
 
     return itemlist
-# =================================================================
-
-# -----------------------------------------------------------------
+	
+# ==============================================================================================================================================================================
 
 def lista_novita(item):
-    logger.info("streamondemand.serietvonline novità")
+    logger.info("streamondemand-pureita.serietvonline lista_novita")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -170,26 +161,23 @@ def lista_novita(item):
                                      fanart=item.fanart if item.fanart != "" else item.scrapedthumbnail,
                                      show=item.fulltitle,
                                      folder=True),tipo='tv'))
-
-
-									 
+								 
     patron = "<a rel='nofollow' class=previouspostslink href='(.*?)'><span class='icon-chevron-right2'>"
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_novita",
-                 title="[COLOR orange]Precedenti>>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail=thumbnail_successivo))
 
     return itemlist
 
-# =================================================================
+# ==============================================================================================================================================================================
 
-# -----------------------------------------------------------------
 def episodios(item):
-    logger.info("streamondemand.serietvonline episodios")
+    logger.info("streamondemand-pureita.serietvonline episodios")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -212,15 +200,15 @@ def episodios(item):
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
-                 thumbnail=item.scrapedthumbnail,
-                 plot=item.scrapedplot,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
                  folder=True))
     return itemlist
-# =================================================================
+	
+# ==============================================================================================================================================================================
 
-# -----------------------------------------------------------------
 def episodios_all(item):
-    logger.info("streamondemand.serietvonline episodios")
+    logger.info("streamondemand-pureita.serietvonline episodios_all")
     itemlist = []
 
     patron = "<a href='(.*?)'[^>]+>[^>]+>(.*?)<\/a>"
@@ -235,14 +223,14 @@ def episodios_all(item):
                  show=item.scrapedtitle,
                  title="[COLOR blue]" + item.title + "[/COLOR][COLOR orange]" + scrapedserver + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=item.scrapedthumbnail,
-                 plot=item.scrapedplot,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
                  folder=True))
 
     return itemlist
-# =================================================================
+	
+# ==============================================================================================================================================================================
 
-# -----------------------------------------------------------------
 def findvideos(item):
     itemlist=[]
 
@@ -263,15 +251,8 @@ def findvideos(item):
         videoitem.channel = __channel__
 
     return itemlist
-# =================================================================
-
-
-# -----------------------------------------------------------------
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-# =================================================================
-
+	
+# ==============================================================================================================================================================================
 
 thumbnail_fanart="https://superrepo.org/static/images/fanart/original/script.artwork.downloader.jpg"
 ThumbnailHome = "https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png"
@@ -282,4 +263,4 @@ thumbnail_classic="https://raw.githubusercontent.com/orione7/Pelis_images/master
 thumbnail_lista="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"
 thumbnail_top="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"
 thumbnail_cerca="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"
-thumbnail_successivo="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"
+thumbnail_successivo="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"
