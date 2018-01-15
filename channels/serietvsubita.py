@@ -33,19 +33,19 @@ def mainlist(item):
 
     itemlist = [Item(channel=__channel__,
                      action="episodios",
-                     title="[COLOR azure]Novità[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Novità[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png",
                      folder=True),
                 Item(channel=__channel__,
                      action="series",
-                     title="[COLOR azure]Indice A-Z[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Indice A-Z[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png",
                      folder=True),
                 Item(channel=__channel__,
                      action="search",
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png",
                      folder=True)]
     return itemlist
@@ -101,11 +101,11 @@ def episodios(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Episodi Precedenti...[/COLOR]",
+                 title="[COLOR orange]Successivi...[/COLOR]",
                  url=next_page,
                  action="episodios",
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
@@ -143,11 +143,11 @@ def series(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Episodi precedenti...[/COLOR]",
+                 title="[COLOR orange]Successivo...[/COLOR]",
                  url=next_page,
                  action="series",
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
@@ -183,10 +183,10 @@ def episodiosearch(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Episodi precedenti...[/COLOR]",
+                 title="[COLOR orange]Successivi...[/COLOR]",
                  url=next_page,
                  action="episodios",
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
