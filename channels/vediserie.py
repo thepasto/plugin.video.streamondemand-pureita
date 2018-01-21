@@ -42,7 +42,7 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="fichas",
-                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Odieni[/COLOR]",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Odierni[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
