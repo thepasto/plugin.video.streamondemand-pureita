@@ -42,14 +42,14 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="fichas",
-                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Odierni[/COLOR]",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
-                Item(channel=__channel__,
-                     action="fichas",
-                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Settimanali[/COLOR]",
-                     url="%s/aggiornamenti-serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),					 
+                #Item(channel=__channel__,
+                     #action="fichas",
+                     #title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti Settimanali[/COLOR]",
+                     #url="%s/aggiornamenti-serie-tv/" % host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),					 
                 #Item(channel=__channel__,
                      #action="list_a_z",
                      #title="[COLOR azure]Serie TV - [COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
@@ -154,7 +154,7 @@ def fichas(item):
                     show=scrapedtitle,
                     thumbnail=scrapedthumbnail))
 
-    patron = '<span class=\'current\'>[^<]+</span><a class="page larger" href="(.*?)">'
+    patron = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
@@ -162,7 +162,7 @@ def fichas(item):
                  action="fichas",
                  title="[COLOR orange]Successivo>>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
@@ -193,23 +193,8 @@ def episodios(item):
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=url,
+                 plot=item.plot,
                  fulltitle=item.fulltitle,
-                 show=item.show))
-
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title=item.title,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios",
                  show=item.show))
 
     return itemlist
