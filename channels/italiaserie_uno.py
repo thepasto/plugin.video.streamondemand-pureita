@@ -90,10 +90,8 @@ def categorie(item):
             Item(channel=__channel__,
                  action="peliculas",
                  title=scrapedtitle,
-                 contentType="tv",
                  url=scrapedurl,
                  thumbnail='https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png',
-                 extra="tv",
                  folder=True))
 
     return itemlist
@@ -110,7 +108,6 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         scrapedplot=""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -151,7 +148,6 @@ def episodes(item):
                  title=scrapedtitle,
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
-                 contentType="episode",
                  plot=item.plot,
                  thumbnail=item.thumbnail,
                  folder=True))
