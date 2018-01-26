@@ -363,7 +363,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]StorieDellArte[/COLOR]"    , channel="storiedellarte"         , language="IT" , category="D"        , type="generic" , extra="Series" ))
     #itemlist.append( Item( title="[COLOR azure]StreamBlog[/COLOR]"    , channel="streamblog"         , language="IT" , category="S,F,A"        , type="generic" , extra="Series"))
     #itemlist.append( Item( title="[COLOR azure]StreamingItaliano[/COLOR]"    , channel="streamingitaliano"         , language="IT" , category="F"        , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]StreamingLove[/COLOR]"    , channel="streaminglove"         , language="IT" , category="F"        , type="generic" ))
+    #itemlist.append( Item( title="[COLOR azure]StreamingLove[/COLOR]"    , channel="streaminglove"         , language="IT" , category="F"        , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]StreamingPopcorn[/COLOR]"    , channel="streamingpopcorn"         , language="IT" , category="F"        , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]SubZero[/COLOR]"    , channel="subzero"         , language="IT" , category="T"        , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]Tantifilm[/COLOR]"        , channel="tantifilm"       , language="IT"    , category="B,F,3"       , type="generic"))
