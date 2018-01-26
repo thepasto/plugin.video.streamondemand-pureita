@@ -396,7 +396,7 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="findvideos",
+                 action="findvideos_tv",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
@@ -425,7 +425,7 @@ def episodios(item):
     return itemlist
 
 
-def findvideos(item):
+def findvideos_tv(item):
     logger.info("streamondemand.mondolunatico findvideos")
 
     itemlist = []
