@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
-# Canal para cineblog01
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# streamondemand-pureita / XBMC Plugin
+# Canale  cineblog01
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
 
-from core import config
+from core import config, httptools
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -18,19 +18,12 @@ import logging
 import os
 
 __channel__ = "cineblog01"
-__category__ = "F,S"
-__type__ = "generic"
-__title__ = "CineBlog 01"
-__language__ = "IT"
-
 sito = "https://www.cb01.zone/"
 
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', sito]
-]
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', sito]]
 
 DEBUG = config.get_setting("debug")
 
@@ -44,54 +37,61 @@ def mainlist(item):
     # Main options
     itemlist = [Item(channel=__channel__,
                      action="peliculas",
-                     title="[COLOR azure]Cinema - Novita'[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Cinema[/COLOR]",
                      url=sito,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="peliculas",
-                     title="[COLOR azure]Alta Definizione [HD][/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - [HD][/COLOR]",
                      url="%s/tag/film-hd-altadefinizione/" % sito,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
                      action="menuhd",
-                     title="[COLOR azure]Menù HD[/COLOR]",
+                     title="[COLOR azure]Menù[COLOR orange] - Qualita'[/COLOR]",
                      url=sito,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/blueray_P.png"),
                 Item(channel=__channel__,
                      action="menugeneros",
-                     title="[COLOR azure]Per Genere[/COLOR]",
+                     title="[COLOR azure]Menù[COLOR orange] - Categorie[/COLOR]",
                      url=sito,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="menuanyos",
-                     title="[COLOR azure]Per Anno[/COLOR]",
+                     title="[COLOR azure]Menù[COLOR orange] - Anno[/COLOR]",
                      url=sito,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 Item(channel=__channel__,
-                     action="search",
-                     title="[COLOR yellow]Cerca Film[/COLOR]",
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                     action="peliculas_update",
+                     title="[COLOR azure]Serie Tv[COLOR orange] - Aggiornamenti Quotidiani[/COLOR]",
+                     url="%s/serietv/aggiornamento-quotidiano-serie-tv/" % sito,
+                     extra="serie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="listserie",
-                     title="[COLOR azure]Serie Tv - Novita'[/COLOR]",
+                     title="[COLOR azure]Serie Tv[COLOR orange] - Novita'[/COLOR]",
                      url="%s/serietv/" % sito,
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     title="[COLOR yellow]Cerca Serie Tv[/COLOR]",
+                     title="[COLOR yellow]Cerca Film ...[/COLOR]",
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                Item(channel=__channel__,
+                     action="search",
+                     title="[COLOR yellow]Cerca Serie Tv ...[/COLOR]",
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
-
+# ==============================================================================================================================================================================
+	
 def peliculas(item):
     logger.info("[cineblog01.py] peliculas")
     itemlist = []
@@ -138,7 +138,7 @@ def peliculas(item):
         scrapertools.printMatches(matches)
 
         if len(matches) > 0:
-            scrapedtitle = "[COLOR orange]Successivo>>[/COLOR]"
+            scrapedtitle = "[COLOR orange]Successivi >>[/COLOR]"
             scrapedurl = matches[0]
             scrapedthumbnail = ""
             scrapedplot = ""
@@ -146,16 +146,10 @@ def peliculas(item):
                 "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
             itemlist.append(
                 Item(channel=__channel__,
-                     action="HomePage",
-                     title="[COLOR yellow]Home[/COLOR]",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                     folder=True)),
-            itemlist.append(
-                Item(channel=__channel__,
                      action="peliculas",
                      title=scrapedtitle,
                      url=scrapedurl,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                      extra=item.extra,
                      plot=scrapedplot))
     except:
@@ -163,6 +157,7 @@ def peliculas(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def menugeneros(item):
     logger.info("[cineblog01.py] menugeneros")
@@ -196,6 +191,7 @@ def menugeneros(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def menuhd(item):
     logger.info("[cineblog01.py] menuhd")
@@ -229,6 +225,7 @@ def menuhd(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def menuanyos(item):
     logger.info("[cineblog01.py] menuvk")
@@ -262,7 +259,8 @@ def menuanyos(item):
 
     return itemlist
 
-
+# ==============================================================================================================================================================================
+	
 # Al llamarse "search" la función, el launcher pide un texto a buscar y lo añade como parámetro
 def search(item, texto):
     logger.info("[cineblog01.py] " + item.url + " search " + texto)
@@ -270,10 +268,10 @@ def search(item, texto):
     try:
 
         if item.extra == "movie":
-            item.url = "https://www.cb01.uno/?s=" + texto
+            item.url = sito + "/?s=" + texto
             return peliculas(item)
         if item.extra == "serie":
-            item.url = "https://www.cb01.uno/serietv/?s=" + texto
+            item.url = sito + "/serietv/?s=" + texto
             return listserie(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -283,10 +281,66 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
 
+def peliculas_update(item):
+    logger.info("streamondemand-pureita.cineblog01 peliculas_aggiornamenti")
+
+    itemlist = []
+    PERPAGE = 14
+
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+
+    # Descarga la pagina
+
+    data = httptools.downloadpage(item.url).data
+
+    # Estrae i contenuti 
+    patron = '<p><em>.*?<a href="([^"]+)" target="_blank">([^<]+)</a></em>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    scrapedthumbnail = ""
+    scrapedplot = ""
+    for i, (scrapedurl, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="season_serietv",
+                 contentType="tv",
+                 title=title,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_update",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+	
 def listserie(item):
     logger.info("[cineblog01.py] listaserie")
     itemlist = []
+
 
     # Descarga la página
     data = scrapertools.anti_cloudflare(item.url, headers)
@@ -298,9 +352,11 @@ def listserie(item):
     for match in matches:
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedurl = match.group(1)
-        scrapedthumbnail = match.group(2)
+        scrapedthumbnail = match.group(2) 
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
+        if not sito in scrapedthumbnail: 
+            scrapedthumbnail=sito+scrapedthumbnail
         if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
             continue
         if (DEBUG): logger.info(
@@ -314,29 +370,26 @@ def listserie(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  extra=item.extra,
-                 plot=scrapedplot), tipo='tv'))
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
 
     # Put the next page mark
     try:
         next_page = scrapertools.get_match(data, "<link rel='next' href='([^']+)'")
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="listserie",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png", ))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png", ))
     except:
         pass
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def season_serietv(item):
     def load_season_serietv(html, item, itemlist, season_title):
         if len(html) > 0 and len(season_title) > 0:
@@ -346,6 +399,8 @@ def season_serietv(item):
                     title="[COLOR azure]%s[/COLOR]" % season_title,
                     contentType="episode",
                     url=html,
+                    thumbnail=item.thumbnail,
+                    plot=item.plot,
                     extra='serie',
                     show=item.show))
         
@@ -384,6 +439,8 @@ def season_serietv(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def episodios(item):
     itemlist = []
 
@@ -408,6 +465,7 @@ def episodios(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def episodios_serie_new(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -429,6 +487,7 @@ def episodios_serie_new(item):
                          title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
                          url=data,
                          thumbnail=item.thumbnail,
+                         plot=item.plot,
                          extra=item.extra,
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
@@ -448,6 +507,7 @@ def episodios_serie_new(item):
     
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def findvideos(item):
     if item.extra == "movie":
@@ -456,6 +516,7 @@ def findvideos(item):
         return findvid_serie(item)
     return []
 
+# ==============================================================================================================================================================================
 
 def findvid_film(item):
     logger.info("[cineblog01.py] findvid_film")
@@ -484,7 +545,7 @@ def findvid_film(item):
     matches = re.compile(patron, re.DOTALL).findall(streaming) + matches
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR orange][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -492,6 +553,7 @@ def findvid_film(item):
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
+                 plot=item.plot,
                  show=item.show,
                  folder=False))
 
@@ -500,7 +562,7 @@ def findvid_film(item):
     matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR yellow][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -508,6 +570,7 @@ def findvid_film(item):
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
+                 plot=item.plot,
                  show=item.show,
                  folder=False))
 
@@ -516,7 +579,7 @@ def findvid_film(item):
     matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR pink][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -524,15 +587,16 @@ def findvid_film(item):
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
+                 plot=item.plot,
                  show=item.show,
                  folder=False))
 
-    download = scrapertools.find_single_match(data, '<strong>Download:</strong>(.*?)<table height="30">')
+    """download = scrapertools.find_single_match(data, '<strong>Download:</strong>(.*?)<table height="30">')
     patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(download)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Download ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR orange][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -548,7 +612,7 @@ def findvid_film(item):
     matches = re.compile(patron, re.DOTALL).findall(download_hd)
     for scrapedurl, scrapedtitle in matches:
         logger.debug("##### findvideos Download HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR orange][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -557,13 +621,13 @@ def findvid_film(item):
                  fulltitle=item.fulltitle,
                  thumbnail=item.thumbnail,
                  show=item.show,
-                 folder=False))
+                 folder=False))"""
 
     if len(itemlist) == 0:
         itemlist = servertools.find_video_items(item=item)
-
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def findvid_serie(item):
     def load_vid_series(html,item,itemlist,blktxt):
@@ -577,13 +641,15 @@ def findvid_serie(item):
         for match in matches:
             scrapedurl = match.group(1)
             scrapedtitle = match.group(2)
-            title = item.title + " [COLOR blue][" + vtype + scrapedtitle +"][/COLOR]"
+            title = item.title + " [COLOR orange][" + vtype + scrapedtitle +"][/COLOR]"
             itemlist.append(
                 Item(channel=__channel__,
                      action="play",
                      title=title,
                      url=scrapedurl,
                      fulltitle=item.fulltitle,
+                     thumbnail=item.thumbnail,
+                     plot=item.plot,
                      show=item.show,
                      folder=False))
     
@@ -626,6 +692,7 @@ def findvid_serie(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def play(item):
     logger.info("[cineblog01.py] play")
@@ -682,7 +749,3 @@ def play(item):
 
     return itemlist
 
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")

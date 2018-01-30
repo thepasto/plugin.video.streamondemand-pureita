@@ -4,6 +4,7 @@
 # Canale Tantifilm
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
+import base64
 import re
 import urlparse
 
@@ -118,7 +119,7 @@ def peliculas(item):
         scrapedtitle=scrapedtitle.replace("streaming", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_film",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -281,6 +282,7 @@ def episodios(item):
                          show=item.show))
 
     logger.info("streamondemand.tantifilm episodios")
+	
 
     itemlist = []
 
@@ -353,14 +355,53 @@ def findvideos_tv(item):
         videoitem.channel = __channel__
 
     # Extrae las entradas
-    patron = r'\{"file":"([^"]+)","type":"[^"]+","label":"([^"]+)"\}'
+    patron = r'<a href="([^"]+)" target="_blank" rel="noopener">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
         title = item.title + " " + scrapedtitle
         itemlist.append(
             Item(channel=__channel__,
-                 action="play",
+                 action="findvideos",
                  title=title,
+                 url=scrapedurl.replace(r'\/', '/').replace('%3B', ';'),
+                 thumbnail=item.thumbnail,
+                 fulltitle=item.title,
+                 show=item.title,
+                 server='',
+                 folder=False))
+
+    return itemlist
+
+	
+def findvideos_film(item):
+    logger.info("streamondemand-pureita [tantifilm findvideos_tv]")
+
+
+    # Descarga la página
+    data = item.extra if item.extra != '' else scrapertools.cache_page(item.url, headers=headers)
+
+    itemlist = servertools.find_video_items(data=data)
+    for videoitem in itemlist:
+        videoitem.title = item.title + videoitem.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    # Extrae las entradas
+    patron = r'<a id="(.*?)" class=".*?" href=".*?" data-links="([^"]+)">([^<]+)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    if 'linkprotect' in data:
+        data = scrapertools.cache_page(data, headers=headers)
+    for id, scrapedurl, scrapedtitle in matches:
+        scrapedtitle=scrapedtitle.replace("Film", "Server")
+        scrapedtitle=scrapedtitle.replace("Download", "")
+        scrapedtitle=scrapedtitle.replace("streaming", "")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title= item.title + "[COLOR orange]" + scrapedtitle + " " + id + "[/COLOR]",
                  url=scrapedurl.replace(r'\/', '/').replace('%3B', ';'),
                  thumbnail=item.thumbnail,
                  fulltitle=item.title,
