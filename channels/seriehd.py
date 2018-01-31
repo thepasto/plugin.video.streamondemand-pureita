@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita- XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # Canale seriehd
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
+
 import base64
 import re
 import urlparse
 
-from core import config, httptools
+from core import config 
+from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -16,33 +18,41 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "seriehd"
-
 host = "http://www.seriehd.me"
-
 headers = [['Referer', host]]
-
 
 def mainlist(item):
     logger.info("[seriehd.py] mainlist")
 
     itemlist = [Item(channel=__channel__,
                      action="fichas",
-                     title="[COLOR azure]Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Lista[/COLOR]",
                      url=host + "/serie-tv-streaming/",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
+                     action="fichas",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Italiane[/COLOR]",
+                     url=host + "/serie-tv-streaming/serie-tv-italiane/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+                Item(channel=__channel__,
+                     action="fichas",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Americane[/COLOR]",
+                     url=host + "/serie-tv-streaming/serie-tv-americane/",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+                Item(channel=__channel__,
                      action="sottomenu",
-                     title="[COLOR orange]Categoria[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange]- Categorie[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      extra="serie",
-                     title="[COLOR green]Cerca...[/COLOR]",
+                     title="[COLOR orange]Cerca...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def search(item, texto):
     logger.info("[seriehd.py] search")
@@ -59,6 +69,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
 
 def sottomenu(item):
     logger.info("[seriehd.py] sottomenu")
@@ -71,6 +82,8 @@ def sottomenu(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
+        if "altadefinizione" in scrapedtitle or "Italiane" in scrapedtitle or "Americane" in scrapedtitle:  
+		    continue
         itemlist.append(
             Item(channel=__channel__,
                  action="fichas",
@@ -83,6 +96,7 @@ def sottomenu(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def fichas(item):
     logger.info("[seriehd.py] fichas")
@@ -114,13 +128,14 @@ def fichas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="fichas",
-                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
-
+# ==============================================================================================================================================================================	
+	
 def episodios(item):
     logger.info("[seriehd.py] episodios")
     itemlist = []
@@ -155,24 +170,18 @@ def episodios(item):
                 Item(channel=__channel__,
                      action="findvideos",
                      contentType="episode",
-                     title=title,
+                     title=title + " - " + item.show,
                      url=episode_url,
-                     fulltitle=title + ' - ' + item.show,
+                     fulltitle=title,
                      show=item.show,
+                     plot=item.plot,
                      thumbnail=item.thumbnail))
 
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Aggiungi alla libreria",
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios",
-                 show=item.show))
 
     return itemlist
 
-
+# ==============================================================================================================================================================================
+	
 def findvideos(item):
     logger.info("[seriehd.py] findvideos")
 
@@ -213,7 +222,7 @@ def findvideos(item):
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
-            videoitem.title = item.title + videoitem.title
+            videoitem.title = item.title + "[COLOR orange]" + videoitem.title + "[/COLOR]"
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
@@ -222,6 +231,7 @@ def findvideos(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
 
 def url_decode(url_enc):
     lenght = len(url_enc)
