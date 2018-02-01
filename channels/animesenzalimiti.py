@@ -25,32 +25,32 @@ def mainlist(item):
     logger.info()
     itemlist = [Item(channel=__channel__,
                      action="ultimiep",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Ultimi Episodi[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Ultimi Episodi[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Film[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Film[/COLOR]",
                      url="%s/category/film-anime/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Serie Speciali[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Serie Speciali[/COLOR]",
                      url="%s/category/special-anime/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]in Corso[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - in Corso[/COLOR]",
                      url="%s/category/anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
                      action="categorie",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Categorie[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Categorie[/COLOR]",
                      url="%s/category/anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
                      action="cat_years",
-                     title="[COLOR azure]Anime [/COLOR]- [COLOR orange]Archivio[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Archivio[/COLOR]",
                      url="%s/category/anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
@@ -107,8 +107,8 @@ def categorie(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'<h2 class="screen-reader-text">Navigazione articoli</h2>([^+]+)</div>.*?</aside>.*?</div>')
-    patron = r'<li class=".*?"><a href="([^"]+)" >([^<]+)</a>'
+    blocco = scrapertools.get_match(data, r'<ul id="menu-menu-categorie" class="menu">(.*?)</ul></div>')
+    patron = r'<li id="menu-item-.*?" class=".*?"><a href="([^"]+)">([^<]+)</a></li>'
 
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -208,16 +208,10 @@ def ultimiep(item):
         scrapedurl = matches[0]
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title=color("Torna Home", "yellow"),
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="lista_anime",
                  title=color("Successivo >>", "orange"),
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
@@ -256,7 +250,7 @@ def lista_anime(item):
                  action="lista_anime",
                  title=color("Successivo >>", "orange"),
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
@@ -323,7 +317,5 @@ def removestreaming(text):
 def color(text, color):
     return "[COLOR "+color+"]"+text+"[/COLOR]"
 
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
+
 
