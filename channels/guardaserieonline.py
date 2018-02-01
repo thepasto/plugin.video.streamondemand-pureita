@@ -7,6 +7,7 @@
 # ------------------------------------------------------------
 
 import re
+
 from core import httptools
 from core import logger
 from core import config
@@ -16,34 +17,25 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardaserieonline"
-__category__ = "S, A"
-__type__ = "generic"
-__title__ = "GuardaSerie.online"
-__language__ = "IT"
-
 host = "http://www.guardaserie.online"
-
 DEBUG = config.get_setting("debug")
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host]
-]
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', host]]
 
 def isGeneric():
     return True
 
-# ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    logger.info("[GuardaSerieOnline.py]==> mainlist")
+    logger.info("streamondemand-pureita [GuardaSerieOnline mainlist]")
     itemlist = [Item(channel=__channel__,
-                     action="nuoveserie",
+                     action="peliculas_new",
                      title="[COLOR azure]Serie TV - [COLOR orange]Nuove[/COLOR]",
                      url="%s/lista-serie-tv" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                Item(channel=__channel__,
-                     action="nuoveseriesub",
+                     action="peliculas_sub",
                      title="[COLOR azure]Serie TV - [COLOR orange]Inedite ([COLOR azure]Sub Ita[/COLOR])",
                      url="%s/lista-serie-tv" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_sub_P.png"),
@@ -59,21 +51,20 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),                
                Item(channel=__channel__,
                      action="lista_serie",
-                     title=color("Anime", "azure"),
+                     title="[COLOR azure]Serie TV - [COLOR orange]Animazione[/COLOR]",
                      url="%s/category/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca ...", "yellow"),
+                     title="[COLOR yellow]Cerca ...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def newest(categoria):
-    logger.info("[GuardaSerieOnline.py]==> newest" + categoria)
+    logger.info("streamondemand-pureita [GuardaSerieOnline newest]" + categoria)
     itemlist = []
     item = Item()
     try:
@@ -94,11 +85,10 @@ def newest(categoria):
 
     return itemlist
 
-# ================================================================================================================
-
-# ----------------------------------------------------------------------------------------------------------------
+# ==============================================================================================================================================================================
+	
 def search(item, texto):
-    logger.info("[GuardaSerieOnline.py]==> search")
+    logger.info("streamondemand-pureita [GuardaSerieOnline search]")
     item.url = host + "/?s=" + texto
     try:
         return lista_serie(item)
@@ -109,71 +99,115 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
-def nuoveserie(item):
-    logger.info("[GuardaSerieOnline.py]==> nuoveserie")
+def peliculas_new(item):
+    logger.info("streamondemand-pureita [GuardaSerieOnline peliculas_new]")
     itemlist = []
+    PERPAGE = 14
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
     blocco = scrapertools.get_match(data, '<div\s*class="container container-title-serie-new container-scheda" meta-slug="new">(.*?)</div></div><div')
 
+    # Estrae i contenuti 
     patron = r'<a\s*href="([^"]+)".*?>\s*<img\s*.*?src="([^"]+)" />[^>]+>[^>]+>[^>]+>[^>]+>'
     patron += r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</p>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+    scrapedplot = ""
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
+                 extra=item.extra,
                  action="episodi",
                  contentType="tv",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
+                 title=title,
                  url=scrapedurl,
-                 extra="tv",
-                 show=scrapedtitle,
                  thumbnail=scrapedthumbnail,
-                 folder=True), tipo="tv"))
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_new",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
 
     return itemlist
+# ==============================================================================================================================================================================
 
-# ================================================================================================================
-
-# ----------------------------------------------------------------------------------------------------------------
-def nuoveseriesub(item):
-    logger.info("[GuardaSerieOnline.py]==> nuoveserie")
+def peliculas_sub(item):
+    logger.info("streamondemand-pureita [GuardaSerieOnline peliculas_sub]")
     itemlist = []
+    PERPAGE = 14
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
     blocco = scrapertools.get_match(data, '<div\s*class="container container-title-serie-ined container-scheda" meta-slug="ined">(.*?)</div></div><div')
 
+    # Estrae i contenuti 
     patron = r'<a\s*href="([^"]+)".*?>\s*<img\s*.*?src="([^"]+)" />[^>]+>[^>]+>[^>]+>[^>]+>'
     patron += r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</p>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+    scrapedplot = ""
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
+                 extra=item.extra,
                  action="episodi",
                  contentType="tv",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
+                 title=title,
                  url=scrapedurl,
-                 extra="tv",
-                 show=scrapedtitle,
                  thumbnail=scrapedthumbnail,
-                 folder=True), tipo="tv"))
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_sub",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
 
-    return itemlist
+    return itemlist	
 
-# ======================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------------
 def serietvaggiornate(item):
-    logger.info("[GuardaSerieOnline.py]==> serietvaggiornate")
+    logger.info("streamondemand-pureita [GuardaSerieOnline  serietvaggiornate]")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -202,15 +236,14 @@ def serietvaggiornate(item):
                  folder=True), tipo="tv"))
     return itemlist
 
-# ================================================================================================================
-
-# ----------------------------------------------------------------------------------------------------------------
+# ==============================================================================================================================================================================
+	
 def categorie(item):
-    logger.info("[GuardaSerieOnline.py]==> categorie")
+    logger.info("streamondemand-pureita [GuardaSerieOnline  categorie]")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    blocco = scrapertools.get_match(data, r'<ul\s*class="dropdown-menu category">(.*?)</ul>')
+    blocco = scrapertools.get_match(data, r'Animazione</a></li>(.*?)</ul>')
     patron = r'<li>\s*<a\s*href="([^"]+)"[^>]+>([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -227,11 +260,10 @@ def categorie(item):
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def lista_serie(item):
-    logger.info("[GuardaSerieOnline.py]==> lista_serie")
+    logger.info("streamondemand-pureita [GuardaSerieOnline lista_serie]")
     itemlist = []
     
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -259,25 +291,18 @@ def lista_serie(item):
     if len(matches) > 0:
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="lista_serie",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def episodi(item):
-    logger.info("[GuardaSerieOnline.py]==> episodi")
+    logger.info("streamondemand-pureita [GuardaSerieOnline  episodi]")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -299,30 +324,15 @@ def episodi(item):
                  contentType="episode",
                  extra=scrapedextra,
                  thumbnail=scrapedthumbnail,
+                 plot=item.plot,
                  folder=True))
     
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Aggiungi alla libreria",
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodi",
-                 show=item.show))
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodi",
-                 show=item.show))
     return itemlist
 
-# ================================================================================================================
+# ==============================================================================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
 def findvideos(item):
-    logger.info("[GuardaSerieOnline.py]==> findvideos")
+    logger.info("streamondemand-pureita [GuardaSerieOnline findvideos]")
 
     if item.url:
         data = httptools.downloadpage(item.url, headers=headers).data
@@ -333,7 +343,7 @@ def findvideos(item):
 
     for videoitem in itemlist:
         server = re.sub(r'[-\[\]\s]+', '', videoitem.title).capitalize()
-        videoitem.title = "".join(["[%s] " % color(server, 'orange'), item.title])
+        videoitem.title = "".join([item.title, ' [[COLOR orange][B]' + server + '[/B][/COLOR]]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
@@ -342,10 +352,4 @@ def findvideos(item):
 
     return itemlist
 
-# ================================================================================================================
 
-# ----------------------------------------------------------------------------------------------------------------
-def color(text, color):
-    return "[COLOR "+color+"]"+text+"[/COLOR]"
-
-# ================================================================================================================

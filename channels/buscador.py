@@ -39,12 +39,12 @@ def mainlist(item, preferred_thumbnail="squares"):
              action="search",
              category="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP2.png",
-             title="[COLOR yellow]Nuova ricerca film...[/COLOR]"),
+             title="[COLOR yellow]Nuova ricerca Film...[/COLOR]"),
         Item(channel=__channel__,
              action="search",
              category="serie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_search_violaP2.png",
-             title="[COLOR yellow]Nuova ricerca serie tv...[/COLOR]"),
+             title="[COLOR yellow]Nuova ricerca Serie TV...[/COLOR]"),
     ]
 
     saved_searches_list = get_saved_searches(item.channel)

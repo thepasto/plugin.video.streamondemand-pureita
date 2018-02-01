@@ -154,7 +154,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
@@ -246,10 +246,10 @@ def peliculas_tv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_tv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/next_1.png"))
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 

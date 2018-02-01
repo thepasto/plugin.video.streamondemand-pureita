@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand.- XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # Canale per http://serietvsubita.net/
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
@@ -14,22 +14,14 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "serietvsubita"
-__category__ = "S"
-__type__ = "generic"
-__title__ = "serietvsubita"
-__language__ = "IT"
-
 DEBUG = config.get_setting("debug")
-
 host = "http://serietvsubita.net"
-
 
 def isGeneric():
     return True
 
-
 def mainlist(item):
-    logger.info("streamondemand.channels.serietvsubita mainlist")
+    logger.info("streamondemand-pureita.channels.serietvsubita mainlist")
 
     itemlist = [Item(channel=__channel__,
                      action="episodios",
@@ -52,7 +44,7 @@ def mainlist(item):
 
 
 def search(item, texto):
-    logger.info("streamondemand.channels.serietvsubita search")
+    logger.info("streamondemand-pureita.channels.serietvsubita search")
     item.url = host + "/?s=" + texto + "&op.x=0&op.y=0"
 
     try:
@@ -66,7 +58,7 @@ def search(item, texto):
 
 
 def episodios(item):
-    logger.info("streamondemand.channels.serietvsubita episodios")
+    logger.info("streamondemand-pureita.channels.serietvsubita episodios")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
@@ -101,7 +93,7 @@ def episodios(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Successivi...[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  action="episodios",
                  extra=item.extra,
@@ -111,7 +103,7 @@ def episodios(item):
 
 
 def series(item):
-    logger.info("streamondemand.channels.serietvsubita series")
+    logger.info("streamondemand-pureita.channels.serietvsubita series")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
@@ -143,7 +135,7 @@ def series(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Successivo...[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  action="series",
                  extra=item.extra,
@@ -153,7 +145,7 @@ def series(item):
 
 
 def episodiosearch(item):
-    logger.info("streamondemand.channels.serietvsubita episodios")
+    logger.info("streamondemand-pureita.channels.serietvsubita episodios")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
@@ -183,7 +175,7 @@ def episodiosearch(item):
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                 title="[COLOR orange]Successivi...[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  action="episodios",
                  extra=item.extra,

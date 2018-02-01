@@ -4,6 +4,7 @@
 # Canale ItaliaFilm
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
+
 import os
 import re
 import time
@@ -18,23 +19,17 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "italiafilm"
-
-
 DEBUG = config.get_setting("debug")
-
 host = "http://www.italia-film.gratis"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
+headers = [['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
+           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', host],
+           ['Cache-Control', 'max-age=0']]
 
 def isGeneric():
     return True
-
 
 def mainlist(item):
     logger.info("[italiafilm.py] mainlist")
@@ -57,29 +52,31 @@ def mainlist(item):
                      url="%s/category/film-hd/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR orange]Cerca Film...[/COLOR]",
+                     title="[COLOR yellow]Cerca Film...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas_tv",
                      extra="serie",
                      url="%s/category/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Aggiornate[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Aggiornamenti[/COLOR]",
                      action="pel_tv",
                      extra="serie",
                      url="%s/ultimi-telefilm-streaming/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR orange]Cerca Serie TV...[/COLOR]",
+                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def categorias(item):
     logger.info("[italiafilm.py] categorias")
     itemlist = []
@@ -112,7 +109,8 @@ def categorias(item):
 
     return itemlist
 
-
+# ==============================================================================================================================================================================
+	
 def search(item, texto):
     logger.info("[italiafilm.py] search " + texto)
     item.url = host + "/?s=" + texto
@@ -129,6 +127,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
+# ==============================================================================================================================================================================
 
 def peliculas(item):
     logger.info("[italiafilm.py] peliculas")
@@ -159,7 +158,7 @@ def peliculas(item):
                  thumbnail=thumbnail,
                  plot=plot,
                  viewmode="movie_with_plot",
-                 folder=True), tipo="serie" if "serie" in url else "movie"))
+                 folder=True), tipo="tv" if "serie" in url else "movie"))
 
     # Siguiente
     try:
@@ -168,7 +167,7 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="peliculas",
                  extra=item.extra,
-                 title="[COLOR orange]Successivo >> [/COLOR]",
+                 title="[COLOR orange]Successivi >> [/COLOR]",
                  url=pagina_siguiente,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
@@ -177,6 +176,8 @@ def peliculas(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def findvid(item):
     logger.info("streamondemand.italiafilm findvid")
 
@@ -215,6 +216,8 @@ def findvid(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================	
+
 def peliculas_tv(item):
     logger.info("[italiafilm.py] peliculas")
     itemlist = []
@@ -237,7 +240,7 @@ def peliculas_tv(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action='episodios' if item.extra == 'serie' else 'findvideos',
+                 action='episodios' if 'serie' in url else 'findvideos',
                  fulltitle=title,
                  show=show_title,
                  title="[COLOR azure]" + title + "[/COLOR]",
@@ -263,7 +266,9 @@ def peliculas_tv(item):
 
     return itemlist
 
-def pel_tv(item):
+# ==============================================================================================================================================================================
+	
+def pel_tvxx(item):
     logger.info("[italiafilm.py] peliculas")
     itemlist = []
 
@@ -299,7 +304,7 @@ def pel_tv(item):
             Item(channel=__channel__,
                  action="pel_tv",
                  extra=item.extra,
-                 title="[COLOR orange]Successivo >> [/COLOR]",
+                 title="[COLOR orange]Successivi >> [/COLOR]",
                  url=pagina_siguiente,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
@@ -307,7 +312,61 @@ def pel_tv(item):
         pass
 
     return itemlist
+def pel_tv(item):
+    logger.info("streamondemand-pureita.mondolunatico_new pel_tv")
 
+    itemlist = []
+    PERPAGE = 8
+
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+
+    # Descarga la pagina
+
+    data = httptools.downloadpage(item.url).data
+
+    # Estrae i contenuti 
+    patron = '<span class="tvseries_name">([^"]+)<\/span>\s*'
+    patron += '<a href="([^"]+)" class="tvseries_episode" title="[^>]+"><i class="icon-link"><\/i>(.*?)\/a>\s*'
+    patron += '<span class="clear"><\/span>\s*<\/li>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    scrapedthumbnail = ""
+    scrapedplot = ""
+    for i, (scrapedtitle, scrapedurl, scraped_ep) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        title = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="episodios",
+                 contentType="tv",
+                 title=title + scraped_ep,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=title,
+                 show=title,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="pel_tv",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+# ==============================================================================================================================================================================
+	
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
         for data in scrapertools.decodeHtmlentities(html).splitlines():
@@ -375,24 +434,11 @@ def episodios(item):
     if len(itemlist) == 0:
         load_episodios(data, item, itemlist, 'ITA')
 
-    if config.get_library_support() and len(itemlist) != 0:
-        itemlist.append(
-            Item(channel=__channel__,
-                 title=item.show,
-                 url=item.url,
-                 action="add_serie_to_library",
-                 extra="episodios###" + item.extra,
-                 show=item.show))
-        itemlist.append(
-            Item(channel=item.channel,
-                 title="Scarica tutti gli episodi della serie",
-                 url=item.url,
-                 action="download_all_episodes",
-                 extra="episodios###" + item.extra,
-                 show=item.show))
 
     return itemlist
 
+# ==============================================================================================================================================================================
+	
 def findvideos(item):
     logger.info("streamondemand.italiafilm findvideos")
 
