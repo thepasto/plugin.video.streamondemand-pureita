@@ -188,6 +188,7 @@ def lista_in_corso(item):
     patron = '<h2 class="title"><a href="(.*?)" rel="bookmark" title="Link.*?>(.*?)</a></h2>.*?'
     patron += '<img.*?src=".*?".*?<td><strong>Trama</strong></td>.*?<td>(.*?)</td>'
     for scrapedurl, scrapedtitle, scrapedplot in scrapedAll(item.url, patron):
+        scrapedplot = scrapedplot.replace('<br />', '')
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         title = title.split("Sub")[0]
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
