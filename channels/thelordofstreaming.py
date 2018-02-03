@@ -32,7 +32,7 @@ def mainlist(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Wrestling[COLOR orange] - Novita[/COLOR]",
+                     title="[COLOR azure]Wrestling[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      url="%s/category/wrestling/" % host,
                      extra="movie",
