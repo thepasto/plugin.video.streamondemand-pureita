@@ -49,7 +49,7 @@ def mainlist(item):
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR orange]Cerca Film...[/COLOR]",
+                     title="[COLOR yellow]Cerca Film...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
@@ -66,7 +66,7 @@ def mainlist(item):
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR orange]Cerca Serie TV...[/COLOR]",
+                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
@@ -184,7 +184,7 @@ def peliculas_tv(item):
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if "serie" in scrapedurl else "findvideos",
+                 action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -243,6 +243,7 @@ def episodios(item):
             scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
             if scrapedtitle != 'Categorie':
                 scrapedtitle = scrapedtitle.replace('&#215;', 'x')
+                scrapedtitle = scrapedtitle.replace(";", "")
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos",
