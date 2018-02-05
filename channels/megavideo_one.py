@@ -15,9 +15,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "megavideo_one"
-
 host = "https://www.megavideo.one/"
-
 headers = [['Referer', host]]
 
 
@@ -27,28 +25,28 @@ def mainlist(item):
     # Main options
     itemlist = [Item(channel=__channel__,
                      action="peliculas_new",
-                     title="[COLOR azure]Film [COLOR orange]- Aggiornati[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
                      url=host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
+                     action="peliculas",
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
+                     url=host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+                Item(channel=__channel__,
                      action="categorias",
-                     title="[COLOR azure]Film [COLOR orange]- Per Categorie[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange]- Per Categorie[/COLOR]",
                      url=host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="categorias_years",
-                     title="[COLOR azure]Film [COLOR orange]- Per Anno[/COLOR]",
+                     title="[COLOR azure]Film [COLOR orange] - Per Anno[/COLOR]",
                      url=host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
-                Item(channel=__channel__,
-                     action="peliculas",
-                     title="[COLOR azure]Film [COLOR orange]- Archivio[/COLOR]",
-                     url=host,
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR orange]Cerca ...[/COLOR]",
@@ -57,55 +55,6 @@ def mainlist(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================
-	
-def peliculas(item):
-    logger.info("streamondemand-pureita.megavideo_one peliculas")
-    itemlist = []
-
-    # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
-
-    # Extrae las entradas (carpetas)
-    patron = '<h1 class="entry-title post-title"><a href="([^"]+)".*?rel="bookmark">([^"]+)</a></h1></td></tr></tbody></table>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 contentType="movie",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail), tipo="movie"))
-
-    # Extrae el paginador
-    patronvideos = '<a class="next page-numbers" href="([^"]+)">Next &#8250;</a></div>'
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
-
-    if len(matches) > 0:
-        scrapedurl = urlparse.urljoin(item.url, matches[0])
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
-                 folder=True))
-
-    return itemlist
-
 # ==============================================================================================================================================================================
 
 def categorias(item):
@@ -138,7 +87,7 @@ def categorias(item):
     return itemlist
  
 # ==============================================================================================================================================================================
-
+	
 def categorias_years(item):
     logger.info("streamondemand.altadefinizione01 categorias")
     itemlist = []
@@ -160,7 +109,7 @@ def categorias_years(item):
         scrapedplot = ""
         itemlist.append(
             Item(channel=__channel__,
-                 action="peliculas_search",
+                 action="peliculas",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
@@ -168,6 +117,51 @@ def categorias_years(item):
 
     return itemlist
  
+# ==============================================================================================================================================================================	``
+
+def peliculas(item):
+    logger.info("streamondemand-pureita.megavideo_one peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<img[^>]+srcset="([^,]+)[^>]+>\s*<\/a>.*?'
+    patron += '<h.*?class="entry-title post-title"><a href="([^"]+)".*?rel="bookmark">([^"]+)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 title=scrapedtitle,
+                 fulltitle=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail), tipo="movie"))
+
+    # Extrae el paginador
+    patronvideos = '<a class="next page-numbers" href="([^"]+)">Next &#8250;</a></div>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+
+# ==============================================================================================================================================================================
+
 def peliculas_new(item):
     logger.info("streamondemand-pureita.megavideo_one peliculas")
     itemlist = []
@@ -176,12 +170,12 @@ def peliculas_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<h3 class="rpwe-title"><a href="([^"]+)" title="[^"]+" rel="bookmark">([^"]+)</a>'
+    patron = '<img class="rpwe-alignleft rpwe-thumb" src="([^"]+)" alt="[^>]+"></a>'
+    patron += '<h3 class="rpwe-title"><a href="([^"]+)" title="[^"]+" rel="bookmark">([^"]+)</a>' 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle in matches:
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
         scrapedplot = ""
-        scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         itemlist.append(infoSod(
@@ -193,47 +187,16 @@ def peliculas_new(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail), tipo="movie"))
     return itemlist
- 
- 
-def peliculas_years(item):
-    logger.info("streamondemand-pureita.megavideo_one peliculas")
-    itemlist = []
 
-    # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
-
-    # Extrae las entradas (carpetas)
-    patron = '<h2 class="entry-title post-title"><a href="([^"]+)" rel="bookmark">([^"]+)</a></h2>	'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 contentType="movie",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail), tipo="movie"))
-    return itemlist
- 
 # ==============================================================================================================================================================================
-	
+
 def search(item, texto):
     logger.info("[streamondemand-pureita.megavideo_one] " + item.url + " search " + texto)
 
-    try:
+    item.url = host + "/?s=" + texto
 
-        if item.extra == "movie":
-            item.url = host + "/?s=" + texto
-            return peliculas_search(item)
-        if item.extra == "serie":
-            item.url = host + "/?s=" + texto
-            return peliculas_search(item)
+    try:
+        return peliculas(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -241,36 +204,7 @@ def search(item, texto):
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
-
-# ==============================================================================================================================================================================
-
-def peliculas_search(item):
-    logger.info("streamondemand-pureita.megavideo_one peliculas_search")
-    itemlist = []
-
-    # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
-
-    # Extrae las entradas (carpetas)
-    patron = '<h2 class="entry-title post-title"><a href="([^"]+)" rel="bookmark">([^<]+)</a></h2>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 contentType="movie",
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail), tipo="movie"))
-
-    return itemlist	
-	
+		
 # ==============================================================================================================================================================================
 
 def findvideos(item):
@@ -289,9 +223,3 @@ def findvideos(item):
         videoitem.channel = __channel__
 
     return itemlist		
-
-# ==============================================================================================================================================================================	
-	
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
