@@ -264,7 +264,7 @@ def fichas_tv(item):
                  show=scrapedtitle), tipo='tv'))
 
     # Paginación
-    next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" href="([^"]+)">»</a>')
+    next_page = scrapertools.find_single_match(data, '<a href="([^"]+)"><span class="fa fa-caret-right"></span>')
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
