@@ -195,14 +195,14 @@ def fichas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
 
-    patron = '<div class=".*?">\s*<a href="([^"]+)">\s*'
-    patron += '<div class=".*?">\s*<div class=".*?">\s*'
-    patron += '<img src="([^"]+)"\s*alt="(.*?)">'
+    patron = '<div class=".*?"><i style=".*?">(.*?)</i></div>\s*</div>\s*<a href="([^"]+)">\s*'
+    patron += '<div class="movie-play">\s*<i class="icon-controller-play"></i>\s*'
+    patron += '</div>\s*<img src="([^"]+)".*?>\s*</a>\s*</div>\s*[^>]+>\s*<h2 class="movie-title">([^<]+)</h2>'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedtv, scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
 
@@ -211,15 +211,15 @@ def fichas(item):
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="episodios" if "TV" in scrapedtv else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
+                 show=scrapedtitle), tipo='tv' if "TV" in scrapedtv else "movie"))
 
     # Paginación
-    next_page = scrapertools.find_single_match(data, '<a class=\'arrow_pag\'\s*href="([^"]+)">')
+    next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" href="([^"]+)">»</a>')
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
@@ -241,9 +241,8 @@ def fichas_tv(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
 
-    patron = '<div class=".*?">\s*<a href="([^"]+)">\s*'
-    patron += '<div class=".*?">\s*<div class=".*?">\s*'
-    patron += '<span class="item-tv">.*?<i></i></span><img src="([^"]+)"\s*alt="(.*?)">'
+    patron = '<a href="([^"]+)">\s*<div class="movie-play">\s*<i class="icon-controller-play">'
+    patron += '</i>\s*</div>\s*<img src="([^"]+)" alt="([^<]+)">'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
