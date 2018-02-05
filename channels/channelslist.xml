@@ -83,9 +83,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizioneone.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>5</version>
+    <version>6</version>
     <adult>false</adult>
-    <date>15/11/2016</date>
+    <date>05/02/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
