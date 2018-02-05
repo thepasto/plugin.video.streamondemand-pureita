@@ -91,7 +91,7 @@ def genere(item):
     patron = '<li class="dropdown genre-filter">(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<a href="([^"]+)">([^<]+)</a></label>'
+    patron = '<li class=".*?"><a href="([^"]+)" title="[^>]+">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -197,12 +197,12 @@ def fichas(item):
 
     patron = '<div class=".*?">\s*<a href="([^"]+)">\s*'
     patron += '<div class=".*?">\s*<div class=".*?">\s*'
-    patron += '<img src="([^"]+)"\s*alt="(.*?)">'
+    patron += '(.*?)<img src="([^"]+)"\s*alt="(.*?)">'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedurl, scrapedtv, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
 
@@ -211,12 +211,12 @@ def fichas(item):
         # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="episodios" if "TV" in scrapedtv else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
+                 show=scrapedtitle), tipo='tv' if "TV" in scrapedtv else "movie"))
 
     # Paginación
     next_page = scrapertools.find_single_match(data, '<a class=\'arrow_pag\'\s*href="([^"]+)">')
