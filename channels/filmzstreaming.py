@@ -53,7 +53,7 @@ def mainlist(item):
                      title="[COLOR azure]Film [COLOR orange]- Anno[/COLOR]",
                      action="peliculas_years",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_directors_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                Item(channel=__channel__,
                      title="[COLOR orange]Cerca Film...[/COLOR]",
                      action="search",
