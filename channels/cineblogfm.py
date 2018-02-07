@@ -161,7 +161,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Successivi >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png", folder=True) )
 
     return itemlist
 
@@ -191,7 +191,7 @@ def serie_tv(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serie_tv", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serie_tv", title="[COLOR orange]Successivi >>[/COLOR]" , url=scrapedurl , thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png", folder=True) )
 
     return itemlist
 
