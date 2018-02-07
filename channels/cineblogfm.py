@@ -22,7 +22,7 @@ __type__ = "generic"
 __title__ = "CineBlog01.FM"
 __language__ = "IT"
 
-sito="https://www.cineblog01.blog/"
+sito="https://www.cineblog01.blue/"
 
 DEBUG = config.get_setting("debug")
 
@@ -123,10 +123,10 @@ def search(item,texto):
     try:
 
         if item.extra == "serie":
-            item.url = "http://www.cineblog01.blog/xfsearch/" + texto
+            item.url = "http://www.cineblog01.blue/xfsearch/" + texto
             return serie_tv(item)
         else:
-            item.url = "http://www.cineblog01.blog/xfsearch/" + texto
+            item.url = "http://www.cineblog01.blue/xfsearch/" + texto
             return peliculas(item)
     # The exception is caught, so as not to interrupt the global searcher if a channel fails
     except:
