@@ -112,6 +112,7 @@ def peliculas(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace("Film Streaming Ita", "")		
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+	if "SoloStreaming," in scrapedtitle: continue
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
