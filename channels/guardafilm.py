@@ -7,68 +7,58 @@
 
 import re
 
-from core import logger, httptools
-from core.httptools import urllib
+from core import logger
+from core import httptools
 from core import servertools
 from core import scrapertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardafilm"
-__category__ = "F"
-__type__ = "generic"
-__title__ = "GuardaFilm"
-__language__ = "IT"
-
 host = "http://www.guardafilm.site/"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host]
-]
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', host]]
 
 def isGeneric():
     return True
 
-# ==============================================================================================================================================================================
 def mainlist(item):
-    logger.info("streamondemand-pureita GuardaFilm.py mainlist")
-    itemlist = [
-        Item(channel=__channel__,
+    logger.info("[StreamOnDemand-PureITA GuardaFilm] mainlist")
+    itemlist = [Item(channel=__channel__,
                      action="film",
                      title="Film [COLOR orange] - Novita [/COLOR]",
                      url="%s/movies/" % host,
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png",),
-        Item(channel=__channel__,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
+                Item(channel=__channel__,
                      action="genere",
                      title="Film [COLOR orange] - Generi [/COLOR]",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png",),
-        Item(channel=__channel__,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+                Item(channel=__channel__,
                      action="film",
                      title="Film [COLOR orange] - Alta Definizione [/COLOR]",
                      url=host,
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png",),
-        Item(channel=__channel__,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+                Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca", "orange"),
+                     title="[COLOR yellow]Cerca ...[/COLOR]",
                      url=host,
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png",)]
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
 # ==============================================================================================================================================================================
 
 def search(item, texto):
-    logger.info("streamondemand-pureita GuardaFilm.py search")
+    logger.info("[StreamOnDemand-PureITA GuardaFilm] search")
+
     item.url = host + "/?s=" + texto
-    item.extra = "movie"
+
     try:
         return film(item)
+
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
@@ -79,84 +69,67 @@ def search(item, texto):
 # ==============================================================================================================================================================================
 
 def genere(item):
-    logger.info("streamondemand-pureita GuardaFilm.py pergenere")
+    logger.info("[StreamOnDemand-PureITA GuardaFilm] genere")
     itemlist = []
-    
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
 
-    patron = '<a href="([^"]+)">([^<]+)<\/a><\/li>'
-    blocco = scrapertools.get_match(data, '<a>Scegli per Genere<\/a>([^+]+)<\/ul><\/div>')
-
+    data = httptools.downloadpage(item.url, headers=headers).data
+    blocco = scrapertools.get_match(data, r'<a>Scegli per Genere</a>(.*?)</ul></div>')
+	
+    patron = r'<a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
+
     for scrapedurl, scrapedtitle in matches:
-         itemlist.append(
-             Item(channel=__channel__,
+        itemlist.append(
+            Item(channel=__channel__,
                  action="film",
-                 title=color(scrapedtitle, "azure"),
+                 title=scrapedtitle,
                  url=scrapedurl,
-                 extra="movie",
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
     return itemlist
-
+	
 # ==============================================================================================================================================================================
 
 def film(item):
-    logger.info("streamondemand-pureita GuardaFilm.py film")
+    logger.info("[StreamOnDemand-PureITA GuardaFilm] film")
+
     itemlist = []
 
-    item.url = urllib.unquote_plus(item.url).replace("\\", "")
+    # Descarga la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    patron = '<div data-movie-id=".*?" class="ml-item">\s*<a href="([^"]+)" data-url="" class="ml-mask jt" data-hasqtip=".*?" oldtitle=".*?" title="">\s*'
+    patron = '<div data-movie-id=".*?" class="ml-item">\s*'
+    patron += '<a href="([^"]+)" data-url="" class="ml-mask jt" data-hasqtip=".*?" oldtitle=".*?" title="">\s*'
     patron += '<img data-original="([^"]+)" class="lazy thumb mli-thumb" alt="([^<]+)">'
     matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedimg, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+	
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  title=scrapedtitle,
-                 fulltitle=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedimg,
-                 extra=item.extra,
-                 folder=True), tipo=item.extra))
-
-    patron = "<li><a rel='nofollow' class='page larger' href='([^<]+)'>2</a></li>"
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-
-    if len(matches) > 0:
-        scrapedurl = matches[0]
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle), tipo="movie"))
+				 
+    next_page = scrapertools.find_single_match(data, "<li class='active'><a class=''>[^>]+</a></li><li><a rel='nofollow'\s*class='page larger'\s*href='(.*?)'>[^>]+</a></li>")
+    if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
-                action="film",
-                title=color("Pagina 2 >>", "orange"),
-                url=scrapedurl,
-                thumbnail="",
-                folder=True))
-    patron = "<li><a rel='nofollow' class='page larger' href='([^<]+)'>3</a></li>"
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    if len(matches) > 0:
-        scrapedurl = matches[0]
-        itemlist.append(
-            Item(channel=__channel__,
-                action="film",
-                title=color("Pagina 3 >>", "orange"),
-                url=scrapedurl,
-                thumbnail="",
-                folder=True))
+                 action="film",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=next_page,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
-# ==============================================================================================================================================================================
 
+# ==============================================================================================================================================================================
+"""
 def findvideos(item):
-    logger.info("streamondemand-pureita GuardaFilm.py findvideos")
+    logger.info("StreamOnDemand-PureITA GuardaFilm findvideos")
     itemlist = []
 	
     data = httptools.downloadpage(item.url, headers=headers).data 
@@ -178,11 +151,8 @@ def findvideos(item):
         itemlist.append(videoitem)
 
     return itemlist
+"""
 
-# ==============================================================================================================================================================================
-
-def color(text, color):
-    return "[COLOR "+color+"]"+text+"[/COLOR]"
 
 
 
