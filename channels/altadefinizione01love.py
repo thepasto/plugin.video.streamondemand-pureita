@@ -162,14 +162,17 @@ def peliculas_list(item):
 
     # Extrae las entradas (carpetas)
     patron = '<img\s*[^>]+src="([^"]+)[^>]+>\s*</a>\s*</td>\s*[^>]+>'
-    patron += '<h2>\s*<a href="([^"]+)"\s*title=".*?">([^<]+)</a>\s*</h2></td>'
+    patron += '<h2>\s*<a href="([^"]+)"\s*title=".*?">([^<]+)</a>\s*</h2></td>.*?'
+    patron += '<td class="mlnh-4">(.*?)</td>.*?<td class="mlnh-6"><span class="label">(.*?)</span>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
+        rating = scrapertools.unescape(match.group(5))
         scrapedtitle = scrapertools.unescape(match.group(3))
-        scrapedurl = urlparse.urljoin(item.url, match.group(2))
+        quality = scrapertools.unescape(match.group(4))
+        scrapedurl = scrapertools.unescape(match.group(2))
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -177,7 +180,7 @@ def peliculas_list(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]"+scrapedtitle+" [[COLOR yellow]"+quality+"[/COLOR]]"+" [[COLOR yellow]"+rating+"[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -203,7 +206,7 @@ def peliculas_list(item):
 # ==============================================================================================================================================================================	
 
 def peliculas_update(item):
-    logger.info("streamondemand-pureita.altadefinizione01love peliculas_list")
+    logger.info("streamondemand-pureita.altadefinizione01love peliculas_update")
     itemlist = []
 
     # Descarga la pagina
@@ -212,22 +215,29 @@ def peliculas_update(item):
     data = scrapertools.find_single_match(data, patron)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)"> <img width=".*?" height=".*?" src="([^"]+)" [^>]+ alt="([^<]+)" title="".*?/>.*?</a>'
+    patron = '<div class="imdb_bg">(.*?)</div>\s*</div>\s*<a href="([^"]+)">\s*' \
+             '<img width=".*?" height=".*?" src="([^"]+)" [^>]+ alt="([^<]+)" title="".*?/>.*?' \
+             '</a>\s*<div class="trdublaj">\s*(.*?)</div>\s*[^>]+>(.*?)\s*</div>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
-        scrapedtitle = scrapertools.unescape(match.group(3))
-        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(3))
+        scrapedtitle = scrapertools.unescape(match.group(4))
+        quality = scrapertools.unescape(match.group(5))
+        sub = scrapertools.unescape(match.group(6))
+        rating = scrapertools.unescape(match.group(1))
+        scrapedurl = scrapertools.unescape(match.group(2))
+
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+          
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]"+scrapedtitle+" [[COLOR yellow]"+quality+"[/COLOR]] "+sub+" [[COLOR yellow]"+rating+"[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -260,14 +270,18 @@ def peliculas(item):
     data = scrapertools.anti_cloudflare(item.url, headers)
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)"> <img width=".*?" height=".*?" src="([^"]+)" [^>]+ alt="([^<]+)" title="".*?/>.*?</a>'
+    patron = '<h2> <a href="([^"]+)">([^"]+)</a>\s*</h2>\s*<div class="imdb_bg">([^<]+)</div>\s*</div>\s*'
+    patron += '<a href[^>]+>[^>]+src="([^"]+)"[^>]+>\s*</a>\s*<div class="trdublaj">\s*(.*?)</div>\s*[^>]+>(.*?)\s*</div>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
-        scrapedtitle = scrapertools.unescape(match.group(3))
-        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(4))
+        scrapedtitle = scrapertools.unescape(match.group(2))
+        rating = scrapertools.unescape(match.group(3))
+        quality = scrapertools.unescape(match.group(5))
+        sub = scrapertools.unescape(match.group(6))
+        scrapedurl = scrapertools.unescape(match.group(1))
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -275,7 +289,7 @@ def peliculas(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]"+scrapedtitle+" [[COLOR yellow]"+quality+"[/COLOR]] "+sub+" [[COLOR yellow]"+rating+"[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -310,6 +324,7 @@ def findvideos(item):
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
         videoitem.channel = __channel__
 
     return itemlist
