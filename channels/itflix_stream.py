@@ -29,23 +29,23 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas_list",
-                     url="%s/film/" % host,
+                     url="%s/film-streaming/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
                      action="genere",
-                     url=host,
+                     url="%s/film-streaming/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Anno[/COLOR]",
                      action="year",
-                     url="%s/film/" % host,
+                     url="%s/film-streaming/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
 	            Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Popolari[/COLOR]",
                      action="peliculas",
-                     url="%s//piu-popolari/" % host,
+                     url="%s/piu-popolari/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
                 Item(channel=__channel__,
@@ -88,8 +88,8 @@ def peliculas_search(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<div class="thumbnail animation-2"><a href="([^"]+)">\s*'
-    patron += '<img src="([^"]+)"\s*alt="([^<]+)">.*?'
+    patron = '<div class="thumbnail animation-2">\s*<a href="([^"]+)">\s*'
+    patron += '<img src="([^"]+)"\s*alt="(.*?)"\s*\/>.*?'
     patron += '<p>(.*?)</p>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -99,8 +99,8 @@ def peliculas_search(item):
             Item(channel=__channel__,
                  action="findvideos",
                  title=scrapedtitle,
-                 url=host+scrapedurl,
-                 thumbnail=host+scrapedthumbnail,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
                  plot=scrapedplot,
                  show=scrapedtitle), tipo='movie'))
@@ -117,8 +117,7 @@ def genere(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<li id="menu-item-.*?" class="menu-item menu-item-type-taxonomy menu-item-object-genres menu-item-.*?">'
-    patron += '<a href="([^"]+)">([^<]+)</a>'
+    patron = 'li class="cat-item cat-item-.*?"><a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -126,7 +125,7 @@ def genere(item):
             Item(channel=__channel__,
                  action="peliculas_list",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=host+scrapedurl,
+                 url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
@@ -143,7 +142,7 @@ def year(item):
     bloque = scrapertools.get_match(data, '<h2>Anno di rilascio</h2>(.*?)</ul>')
 	
     # Extrae las entradas (carpetas)
-    patron = '<li><a href="([^"]+)">([^<]+)</a>'
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
@@ -151,7 +150,7 @@ def year(item):
             Item(channel=__channel__,
                  action="peliculas_list",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=host+scrapedurl,
+                 url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png",
                  folder=True))
 
@@ -166,34 +165,35 @@ def peliculas(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<img src="([^"]+)"\s*alt="[^>]+"><div class="rating">[^>]+><\/span>\s*([^"]+)<\/div>'
-    patron += '<div class="mepo"><span class="quality">[^>]+<\/span><\/div><a href="[^>]+>'
-    patron += '<div class="see"><\/div><\/a><\/div><div class="data"><h3>'
-    patron += '<a href="([^"]+)">([^>]+)<\/a><\/h3>'
+    patron = '<img src="([^"]+)"\s*alt="([^>]+)"><div class="rating">[^>]+></span>([^<]+)</div>'
+    patron += '<div class="mepo">\s*<span class="quality">([^<]+)</span></div>\s*<a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapedplot=""
-    for scrapedthumbnail, rating, scrapedurl, scrapedtitle in matches:
+    for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
         scrapedtitle = scrapedtitle.replace("[", "")
         scrapedtitle = scrapedtitle.replace("]", "")
+        rating = rating.replace(" ", "")
+        rating = rating.replace(",", ".")
+        quality = quality.replace("PROSSIMAMENTE", "NA")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [[COLOR yellow]" + rating + "[/COLOR]]",
-                 url=host+scrapedurl,
-                 thumbnail=host+scrapedthumbnail,
+                 title=scrapedtitle + " [COLOR yellow]["+rating+"] ["+quality+"][/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  fulltitle=scrapedtitle,
                  show=scrapedtitle), tipo='movie'))
 
     # Extrae el paginador
-    paginador = scrapertools.find_single_match(data, '<a href="([^"]+)"><span class="icon-chevron-right">')
+    paginador = scrapertools.find_single_match(data, '<a class=\'arrow_pag\' href="([^"]+)">')
     if paginador != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=host+paginador,
+                 url=paginador,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
@@ -207,34 +207,36 @@ def peliculas_list(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<img src="([^"]+)"\s*alt="[^>]+"><div class="rating">[^>]+><\/span>\s*([^"]+)<\/div><div class="mepo">.*?'
-    patron += '<div class="data"><h3><a href="([^"]+)">[^>]+<\/a><\/h3><span>.*?'
-    patron += '<\/span><\/div><div class=".*?"><div class="title"><h4>([^<]+)<\/h4>.*?'
-    patron += '<div class="texto">([^<]+)<\/div>'
+    patron = '<img src="([^"]+)"\s*alt="([^>]+)"><div class="rating">[^>]+></span>\s*[^"]+</div>'
+    patron += '<div class="mepo">\s*<span class="quality">(.*?)</span></div>\s*<a href="([^"]+)">.*?'
+    patron += '<span class[^>]+>\s*</span></div>[^>]+>[^>]+>([^<]+)</span>.*?'
+    patron += '<div class="texto">([^<]+)</div>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedthumbnail, rating, scrapedurl, scrapedtitle, scrapedplot in matches:
+    for scrapedthumbnail, scrapedtitle, quality, scrapedurl, rating, scrapedplot in matches:
         scrapedtitle = scrapedtitle.replace("[", "")
         scrapedtitle = scrapedtitle.replace("]", "")
+        rating = rating.replace(",", ".")
+        quality = quality.replace("PROSSIMAMENTE", "NA")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [[COLOR yellow]" + rating + "[/COLOR]]",
-                 thumbnail=host+scrapedthumbnail,
-                 url=host+scrapedurl,
+                 title=scrapedtitle+" [COLOR yellow]["+quality+"] ["+rating+"]"+"[/COLOR]",
+                 thumbnail=scrapedthumbnail,
+                 url=scrapedurl,
                  fulltitle=scrapedtitle,
                  plot=scrapedplot,
                  show=scrapedtitle), tipo='movie'))
 
     # Extrae el paginador
-    paginador = scrapertools.find_single_match(data, '<a href="([^"]+)"><span class="icon-chevron-right">')
+    paginador = scrapertools.find_single_match(data, '<a class=\'arrow_pag\' href="([^"]+)"><i id=\'nextpagination\' class=\'icon-caret-right\'>')
     if paginador != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_list",
                  title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=host+paginador,
+                 url=paginador,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
@@ -249,7 +251,7 @@ def findvideos(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR orange]' + videoitem.title + '[/COLOR]'])
+        videoitem.title = "".join([item.fulltitle, '[COLOR orange]' + videoitem.title + '[/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
