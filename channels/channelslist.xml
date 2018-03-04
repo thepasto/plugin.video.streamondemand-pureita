@@ -444,10 +444,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cinemasubito.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</adult>
-    <date>25/02/2017</date>
-    <changes>Fix Host</changes>
+    <date>03/03/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
