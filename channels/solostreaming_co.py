@@ -104,8 +104,8 @@ def peliculas(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<div class="td-module-image">\s*<div class="td-module-thumb"><a\s*href="([^"]+)" rel="bookmark" title=".*?">'
-    patron += '<img width=".*?" height=".*?"\s*class="entry-thumb"[^>]+src="(.*?)"[^>]+alt=".*?" title="([^<]+)"\s*\/>'
+    patron = '<div class="td-module-image">\s*<div class="td-module-thumb">'
+    patron += '<a\s*href="([^"]+)"[^>]+><[^>]+src="(.*?)"[^>]+alt=".*?" title="([^<]+)"\s*\/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl, scrapedthumbnail, scrapedtitle   in matches:
@@ -144,11 +144,11 @@ def peliculas_update(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<div class="td_module_16 td_module_wrap td-animation-stack">\s*<div class="td-module-thumb">'
-    patron += '<a href="([^"]+)" rel="bookmark" title="([^<]+)">[^>]+class="entry-thumb"\s*[^>]+src="([^<]+)" alt[^>]+>'
+    patron = '<div class="td_module_16 td_module_wrap td-animation-stack">\s*'
+    patron += '<div class="td-module-thumb"><a href="([^"]+)"[^>]+>[^>]+src="([^"]+)"[^>]+title="([^<]+)"\s*\/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
-    for scrapedurl, scrapedtitle, scrapedthumbnail  in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace("Film Streaming Ita", "")
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
