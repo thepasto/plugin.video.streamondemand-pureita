@@ -137,17 +137,17 @@ def series(item):
     #item.url = "http://www.serietvu.com/ultimi-episodi/"
     #itemlist.extend(serietvu.latestep(item))
 
-    import italiaserie
-    item.url = "http://www.italiaserie.co/"
-    itemlist.extend(italiaserie.peliculas(item))
+    #import italiaserie
+    #item.url = "http://www.italiaserie.co/"
+    #itemlist.extend(italiaserie.peliculas(item))
 	
     import serietvsubita
     item.url = "http://serietvsubita.net"
     itemlist.extend(serietvsubita.episodios(item))
 	
-    import serietvonline
-    item.url = "https://serietvonline.com/"
-    itemlist.extend(serietvonline.lista_novita(item))
+    import thelordofstreaming
+    item.url = "http://www.thelordofstreaming.it/"
+    itemlist.extend(thelordofstreaming.peliculas_new(item))
 
     sorted_itemlist = []
 
