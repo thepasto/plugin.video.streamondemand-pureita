@@ -83,7 +83,7 @@ def genere(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, '<h2>Genres</h2>(.*?)</ul></nav>')
+    bloque = scrapertools.get_match(data, '<h2>Generi</h2>(.*?)</ul></nav>')
 
     # Extrae las entradas (carpetas)
     patron = '<li class=".*?"><a href="([^"]+)" >(.*?)</a>'
