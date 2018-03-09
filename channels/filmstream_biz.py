@@ -123,7 +123,7 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " " + '[COLOR orange]' + quality + '[/COLOR]',
+                 title=scrapedtitle +'  [COLOR orange][' + quality + '][/COLOR]',
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -199,7 +199,7 @@ def peliculas_update(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " " + '[COLOR orange]' + quality + '[/COLOR]',
+                 title=scrapedtitle + ' [COLOR orange][' + quality + '][/COLOR]',
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
