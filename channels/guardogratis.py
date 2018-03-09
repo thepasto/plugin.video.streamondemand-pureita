@@ -81,9 +81,9 @@ def genere(item):
     itemlist = []
     
     data = scrapertools.anti_cloudflare(item.url, headers=headers)
-    blocco = scrapertools.get_match(data, '<a href="[^"]+">Tutti i film</a>([^+]+)<a href="[^"]+">I migliori film!</a>')
+    blocco = scrapertools.get_match(data, 'Tutti i film</a>(.*?)Top film</a>')
 
-    patron = '<li id=".*?" class=".*?"><a href="([^"]+)">([^<]+)</a>'
+    patron = '<a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 	
     for scrapedurl, scrapedtitle in matches:
