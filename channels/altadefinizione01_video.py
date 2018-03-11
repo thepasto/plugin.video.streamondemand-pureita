@@ -17,17 +17,8 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_video"
-
-
 host = "http://altadefinizione01.video/"
-
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
+headers = [['Referer', host]]
 
 
 def isGeneric():
@@ -100,54 +91,8 @@ def genere(item):
 
 # ==============================================================================================================================================
 
-def fichas(item):
-    logger.info("[pureita altadefinizione01_video] fichas")
-
-    itemlist = []
-
-    # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
-	
-
-    patron = '<a href="([^"]+)" title="[^>]+">\s*<div class="poster">\s*<span class="rating">\s*'
-    patron += '<i class="glyphicon glyphicon-star"></i><span class="rating-number">([^"]+)</span>\s*</span>\s*<div class="poster-image-container">\s*'
-    patron += '<img src="([^"]+)" title="([^<]+)" /> </div>'
-
-
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedpuntuacion, scrapedthumbnail, scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle += " (" + scrapedpuntuacion + ")"
-
-        # ------------------------------------------------
-        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
-
-    # Paginación
-    next_page = scrapertools.find_single_match(data, '<a href="([^"]+)"><i class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i></a></div>')
-    if next_page != "":
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="fichas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
-                 url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
-
-    return itemlist
-
-# ==============================================================================================================================================================================
-
 def peliculas_new(item):
-    logger.info("[pureita altadefinizione01_video] fichas")
+    logger.info("[pureita altadefinizione01_video] peliculas_new")
 
     itemlist = []
 
@@ -166,7 +111,6 @@ def peliculas_new(item):
 
     for scrapedurl, scrapedpuntuacion, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle += " (" + scrapedpuntuacion + ")"
 
         # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
@@ -174,7 +118,7 @@ def peliculas_new(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle,
+                 title=scrapedtitle + " [COLOR orange][TMDb: " + scrapedpuntuacion + "][/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -219,13 +163,13 @@ def peliculas_search(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<div class="row">\s*<a href="([^"]+)" title="[^>]+">\s*'
-    patron += '<img src="([^"]+)" title="([^<]+)" /> </a>'
+    patron = '<div class="list-score">(.*?)</div>\s*<div class="col-xs-2">\s*<div class="row">\s*'
+    patron += '<a href="([^"]+)" title="[^>]+">\s*<img src="([^"]+)" title="([^<]+)" /> </a>'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedpuntuacion, scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         # ------------------------------------------------
@@ -234,7 +178,7 @@ def peliculas_search(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle,
+                 title=scrapedtitle + " [COLOR orange][TMDb: " + scrapedpuntuacion + "][/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -294,7 +238,7 @@ def findvideos(item):
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
-            videoitem.title = item.title + videoitem.title
+            videoitem.title = item.fulltitle + "[COLOR orange]" + videoitem.title + "[/COLOR]"
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
