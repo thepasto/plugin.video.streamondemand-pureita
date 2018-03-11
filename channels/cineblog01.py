@@ -107,7 +107,7 @@ def peliculas(item):
         scrapedplot = scrapertools.unescape("[COLOR orange]" + match.group(4) + "[/COLOR]\n" + match.group(5).strip())
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
 
-        itemlist.append(infoSod(
+        itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
@@ -118,7 +118,7 @@ def peliculas(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
-                 viewmode="movie_with_plot"), tipo='movie'))
+                 viewmode="movie_with_plot"))
 
     # Next page mark
     try:
