@@ -64,7 +64,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
                      extra="serie",
-                     action="novedades_tv",
+                     action="peliculas_update",
                      url="%s/aggiornamenti-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
@@ -74,8 +74,7 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     return itemlist
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================================================
 
 def categorias(item):
     logger.info("[filmsenzalimiti.py] novedades")
@@ -104,8 +103,7 @@ def categorias(item):
 
     return itemlist
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================================================
 
 def search(item, texto):
     logger.info("[filmsenzalimiti.py] " + item.url + " search " + texto)
@@ -122,8 +120,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================================================
 
 def novedades(item):
     logger.info("[filmsenzalimiti.py] novedades")
@@ -155,9 +152,9 @@ def novedades(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="novedades",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
     except:
@@ -165,8 +162,8 @@ def novedades(item):
 
     return itemlist
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================================================
+
 def novedades_tv(item):
     logger.info("[filmsenzalimiti.py] novedades")
     itemlist = []
@@ -196,9 +193,9 @@ def novedades_tv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="novedades_tv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
     except:
@@ -206,17 +203,68 @@ def novedades_tv(item):
 
     return itemlist
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================================================
+
+def peliculas_update(item):
+    logger.info("[filmsenzalimiti.py] novedades")
+    itemlist = []
+    PERPAGE = 14
+	
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+	
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*<div class="title">(.*?)<\/div>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+        scrapedplot = ""
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="episodios",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_update",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+	
+# ==========================================================================================================================================================
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        patron = '((?:.*?<a href="[^"]+" target="_blank" rel="noopener" rel="nofollow">[^<]+<\/a>)+)'
+        patron = '((?:.*?<a href="[^"]+" target="_blank" rel[^>]+>[^<]+<\/a>)+)'
         matches = re.compile(patron).findall(html)
         for data in matches:
             # Extrae las entradas
             scrapedtitle = data.split('<a ')[0]
             scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
+            scrapedtitle = scrapedtitle.replace("Speedvideo", "")
             if scrapedtitle != 'Categorie':
                 itemlist.append(
                     Item(channel=__channel__,
@@ -278,8 +326,7 @@ def episodios(item):
 
     return itemlist
 
-# -----------------------------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------------------------	
+# ==========================================================================================================================================================
 
 def findvideos(item):
     logger.info("[filmsenzalimiti.py] findvideos")
