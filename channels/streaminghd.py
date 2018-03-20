@@ -1,4 +1,4 @@
-# -*-  coding: utf-8  -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # StreamOnDemand-PureITA / XBMC Plugin
 # Canale  streaminghd
