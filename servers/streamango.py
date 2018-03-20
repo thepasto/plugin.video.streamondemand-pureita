@@ -9,12 +9,9 @@
 import re
 import urllib
 
-
-
 from core import httptools
 from core import scrapertools
 from core import logger
-
 
 def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
@@ -24,7 +21,6 @@ def test_video_exists(page_url):
         return False, "[streamango] Il file non esiste o e stato cancellato"
 
     return True, ""
-
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("(page_url='%s')" % page_url)
@@ -83,7 +79,6 @@ def decode(encoded, code):
                 _0x59b81a = str(_0x59b81a) + chr(_0x5a46ef)
 
     return _0x59b81a
-
 
 
 # Encuentra videos de este servidor en el texto pasado
