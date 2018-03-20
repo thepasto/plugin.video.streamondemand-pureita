@@ -1,19 +1,16 @@
 # -*- coding: iso-8859-1 -*-
 # ------------------------------------------------------------
-# StreamOnDemand-PureITA / XBMC Plugin
+# streamondemand - XBMC Plugin
 # Conector para streamango
-# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
-# by ALFA ADDON TEAM for StreamOnDemand-PureITA
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# by DrZ3r0
 # ------------------------------------------------------------
 
 import re
 import urllib
 
 
-
-from core import httptools
-from core import scrapertools
-from core import logger
+from core import httptools, logger, scrapertools
 
 
 def test_video_exists(page_url):
@@ -21,24 +18,33 @@ def test_video_exists(page_url):
 
     data = httptools.downloadpage(page_url).data
     if "We are unable to find the video" in data:
-        return False, "[streamango] Il file non esiste o e stato cancellato"
+        return False, "[streamango] Il file non esiste o è stato cancellato"
 
     return True, ""
 
 
-def get_video_url(page_url, premium=False, user="", password="", video_password=""):
+def get_video_url(page_url,
+                  premium=False,
+                  user="",
+                  password="",
+                  video_password=""):
     logger.info("(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url).data
 
     video_urls = []
 
-    matches = scrapertools.find_multiple_matches(data, "type:\"video/([^\"]+)\",src:d\('([^']+)',(.*?)\).+?height:(\d+)")
+    matches = scrapertools.find_multiple_matches(
+        data,
+        "type:\"video/([^\"]+)\",src:d\('([^']+)',(.*?)\).+?height:(\d+)")
 
     for ext, encoded, code, quality in matches:
 
         media_url = decode(encoded, int(code))
-        media_url = media_url.replace("@","")
+
+        while media_url[-1] == '@':
+            media_url = media_url[:-1]
+
         if not media_url.startswith("http"):
             media_url = "http:" + media_url
         video_urls.append([".%s %sp [streamango]" % (ext, quality), media_url])
@@ -58,29 +64,27 @@ def decode(encoded, code):
     k = k[::-1]
 
     count = 0
+    while count < len(encoded):
+        _0x4a2f3a = k.index(encoded[count])
+        count += 1
+        _0x29d5bf = k.index(encoded[count])
+        count += 1
+        _0x3b6833 = k.index(encoded[count])
+        count += 1
+        _0x426d70 = k.index(encoded[count])
+        count += 1
 
-    for index in range(0, len(encoded) - 1):
-        while count <= len(encoded) - 1:
-            _0x4a2f3a = k.index(encoded[count])
-            count += 1
-            _0x29d5bf = k.index(encoded[count])
-            count += 1
-            _0x3b6833 = k.index(encoded[count])
-            count += 1
-            _0x426d70 = k.index(encoded[count])
-            count += 1
+        _0x2e4782 = ((_0x4a2f3a << 2) | (_0x29d5bf >> 4))
+        _0x2c0540 = (((_0x29d5bf & 15) << 4) | (_0x3b6833 >> 2))
+        _0x5a46ef = ((_0x3b6833 & 3) << 6) | _0x426d70
+        _0x2e4782 = _0x2e4782 ^ code
 
-            _0x2e4782 = ((_0x4a2f3a << 2) | (_0x29d5bf >> 4))
-            _0x2c0540 = (((_0x29d5bf & 15) << 4) | (_0x3b6833 >> 2))
-            _0x5a46ef = ((_0x3b6833 & 3) << 6) | _0x426d70
-            _0x2e4782 = _0x2e4782 ^ code
+        _0x59b81a = str(_0x59b81a) + chr(_0x2e4782)
 
-            _0x59b81a = str(_0x59b81a) + chr(_0x2e4782)
-
-            if _0x3b6833 != 64:
-                _0x59b81a = str(_0x59b81a) + chr(_0x2c0540)
-            if _0x3b6833 != 64:
-                _0x59b81a = str(_0x59b81a) + chr(_0x5a46ef)
+        if _0x3b6833 != 64:
+            _0x59b81a = str(_0x59b81a) + chr(_0x2c0540)
+        if _0x3b6833 != 64:
+            _0x59b81a = str(_0x59b81a) + chr(_0x5a46ef)
 
     return _0x59b81a
 
@@ -91,7 +95,7 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = 'streamango.com/(?:embed|f)/([A-z0-9]+)'
+    patronvideos = '(?://|\.)streamango\.com/(?:f/|embed/)?([0-9a-zA-Z]+)'
     logger.info("find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 

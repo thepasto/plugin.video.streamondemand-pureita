@@ -195,21 +195,24 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)"><img src="([^"]+)"\s*class[^>]+alt="(.*?)"[^>]+><\/a>'
+    patron = '<a href="([^"]+)"><img src="([^"]+)"\s*class[^>]+alt="(.*?)"[^>]+><\/a>.*?<strong>[^>]+</strong>\s*([^<]+)</div>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
         scrapedplot = ""
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
+        rating = scrapertools.unescape(match.group(4))
         scrapedtitle = scrapertools.unescape(match.group(3))
+        scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        if rating==" ":
+          rating="N/A"
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="peliculas_server",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[COLOR yellow] [" + rating + "][/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -224,14 +227,48 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
-# ==============================================================================================================================================================================	
+# ==============================================================================================================================================================================
+
+def peliculas_server(item):
+    logger.info("streamondemand-pureita.altadefinizione_press peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<li><a href="[^>]+" data-target="([^"]+)">(.*?)</a>'
+    matches = re.compile(patron, re.DOTALL).finditer(data)
+
+    for match in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        if scrapedtitle.startswith("Nikmax"):
+            continue
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="movie",
+                 fulltitle=item.title,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + item.title + "[COLOR yellow] [" + scrapedtitle + "][/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True), tipo='movie'))
+
+    return itemlist	
+
+# ==============================================================================================================================================================================
 		
 def findvideos(item):
     logger.info("streamondemand-pureita.altadefinizione_press findvideos")
@@ -240,7 +277,7 @@ def findvideos(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.title = "".join([item.fulltitle, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail

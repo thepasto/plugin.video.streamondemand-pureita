@@ -131,10 +131,14 @@ def peliculas(item):
     data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" data-thumbnail="(.*?)"><div>\s*<div class="title">([^>]+)</div>'
+    patron = '<a href="([^"]+)" data-thumbnail="(.*?)"><div>\s*' \
+	         '<div class="title">([^>]+)</div>\s*[^>]+>([^<]+)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle, rating in matches:
+        rating = "[" + rating + "]"
+        if "HD" in rating: 
+         rating=""
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -142,7 +146,7 @@ def peliculas(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[COLOR yellow] " + rating + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -190,7 +194,7 @@ def peliculas_tv(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
+
                  extra=item.extra,
                  folder=True), tipo='tv'))
 
@@ -235,7 +239,7 @@ def findvideos(item):
 	
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        patron = '((?:.*?<a href="[^"]+" target="_blank"[^>]+>[^<]+<\/a>)+)'
+        patron = '((?:.*?<a\s*href="[^"]+"[^>]+>[^<]+<\/a>)+)'
         matches = re.compile(patron).findall(html)
 
         for data in matches:
