@@ -508,9 +508,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cinemasubito.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <version>5</version>
     <adult>false</adult>
-    <date>03/03/2018</date>
+    <date>23/03/2018</date>
     <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
@@ -1276,10 +1276,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/italiafilmvideohd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>22/04/2017</date>
-    <changes>Update</changes>
+    <date>23/03/2018</date>
+    <changes>Update and Temporary Fix</changes>
     <categories>
         <category>movie</category>
         <category>anime</category>
@@ -1348,10 +1348,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/itastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>16</version>
+    <version>17</version>
     <adult>false</adult>
-    <date>05/03/2017</date>
-    <changes>fix domain and menu</changes>
+    <date>23/03/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
     </categories>

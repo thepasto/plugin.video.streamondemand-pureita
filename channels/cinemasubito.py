@@ -194,7 +194,8 @@ def peliculas_tv(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)">\s*<div class="tut">\s*<img data-test=".*?" src="([^"]+)" class="er" alt=".*?" title="([^<]+)">\s*</div>'
+    patron = '<a href="([^"]+)">\s*<div class="tut">\s*' \
+	         '<img src="([^"]+)" class="er" alt=".*?" title="([^<]+)">\s*</div>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
@@ -217,7 +218,7 @@ def peliculas_tv(item):
     # Extrae el paginador
     url_pagina = scrapertools.find_single_match(data, '</span></li> <li><a href="([^"]+)" data-ci-pagination-page=".*?">')
     if url_pagina != "":
-        pagina = "[COLOR orange]"+"Pagina: "+ scrapertools.find_single_match(url_pagina, "pagina/([0-9]+)")+"[/COLOR]"
+        pagina = "[COLOR orange]"+"Pagina: "+ scrapertools.find_single_match(url_pagina, "pagina/([0-9]+)") + "[/COLOR]"
         itemlist.append(
             Item(channel = item.channel, 
                  action = "peliculas_tv", 
