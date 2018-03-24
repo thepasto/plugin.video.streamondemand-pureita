@@ -127,7 +127,7 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<img[^>]+srcset="([^,]+)[^>]+>\s*<\/a>.*?'
+    patron = '<img[^>]+srcset="([^ ]+)[^>]+>\s*<\/a>.*?'
     patron += '<h.*?class="entry-title post-title"><a href="([^"]+)".*?rel="bookmark">([^"]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
