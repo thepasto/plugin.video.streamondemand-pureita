@@ -30,34 +30,34 @@ def mainlist(item):
     logger.info("pureita solostreaming_co mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Consigliati[/COLOR]",
-                     action="peliculas",
-                     url="%s/featured/" % host,
+                     title="[COLOR azure]Film - [COLOR orange]Aggiornati[/COLOR]",
+                     action="peliculas_update",
+                     url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
                      action="genere",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+                #Item(channel=__channel__,
+                     #title="[COLOR azure]Film - [COLOR orange]Consigliati[/COLOR]",
+                     #action="peliculas",
+                     #url="%s/featured/" % host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
                      action="peliculas",
                      url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Aggiornati[/COLOR]",
-                     action="peliculas_update",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),               
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Animazione[/COLOR]",
                      action="peliculas",
-                     url="%s/animazione/" % host,
+                     url="%s/category/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      action="peliculas_serie",
-                     url="%s/serietv/" % host,
+                     url="%s/category/serietv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR orange]Cerca...[/COLOR]",
@@ -74,13 +74,12 @@ def genere(item):
 
     data = scrapertools.anti_cloudflare(item.url, headers)
 
-    patron = 'Seleziona una categoria</option>(.*?)</select></form>'
+    patron = '<h2 class="widgettitle">Genere</h2>(.*?)</select></form>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<option class=".*?" value=".*?">([^<]+)</option>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
-
     for scrapedtitle in matches:
         if "Anime " in scrapedtitle or "Serie Tv" in scrapedtitle or "Apocalittico" in scrapedtitle:
 		   continue
@@ -88,7 +87,7 @@ def genere(item):
             Item(channel=__channel__,
                  action="peliculas",
                  title=scrapedtitle,
-                 url="".join([host, scrapedtitle.lower()]),                 
+                 url="".join([host, "category/", scrapedtitle.lower()]),                 
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
 
@@ -123,7 +122,7 @@ def peliculas(item):
                  fulltitle=scrapedtitle,
                  show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "movie"))
 				 
-    next_page = scrapertools.find_single_match(data, '<a href="([^"]+)"><i class="td-icon-menu-right"></i>')
+    next_page = scrapertools.find_single_match(data, '<link rel="next" href="([^"]+)" />')
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
