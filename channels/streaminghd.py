@@ -131,7 +131,7 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<img src="([^"]+)" alt="([^<]+)"><div class="mepo"><span class="quality">\s*(.*?)</span>'
+    patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*(.*?)</span>'
     patron += '</div><div class="rating"><span class="icon-star2"></span>\s*(.*?)</div><a href="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
