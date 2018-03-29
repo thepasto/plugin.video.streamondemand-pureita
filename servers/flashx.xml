@@ -2,12 +2,12 @@
 <server>
 	<active>true</active>
 	<changes>Fix</changes>
-	<date>22/09/2017</date>
+	<date>28/03/2018</date>
 	<free>true</free>
 	<id>flashx</id>
 	<name>flashx</name>
 	<premium></premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_flashx.png</thumbnail>
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/</update_url>
-	<version>18</version>
+	<version>19</version>
 </server>

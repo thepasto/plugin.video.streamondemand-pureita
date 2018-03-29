@@ -34,7 +34,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("[italiafilm.py] mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
+                     title="[COLOR azure]Film & Serie TV[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      extra="movie",
                      url="%s/novita-streaming-1/" % host,
@@ -150,7 +150,7 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="episodios" if "serie" in url else "findvid",
+                 action="episodios" if "serie" in match else "findvid",
                  fulltitle=title,
                  show=title,
                  title="[COLOR azure]" + title + "[/COLOR]",
@@ -328,8 +328,8 @@ def pel_tv(item):
     data = httptools.downloadpage(item.url).data
 
     # Estrae i contenuti 
-    patron = '<span class="tvseries_name">([^"]+)<\/span>\s*'
-    patron += '<a href="([^"]+)" class="tvseries_episode" title="[^>]+"><i class="icon-link"><\/i>(.*?)\/a>\s*'
+    patron = '<span class="tvseries_name">([^<]+)<\/span>\s*'
+    patron += '<a href="([^"]+)" class="tvseries_episode" title="[^>]+"><i class="icon-link"><\/i>([^<]+)<\/a>\s*'
     patron += '<span class="clear"><\/span>\s*<\/li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 

@@ -117,7 +117,7 @@ def genere(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = 'Categorie</div>(.+?)</ul></div>'
+    patron = 'Categorie</div> <ul>(.*?)</ul>\s*</div>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<li class="cat-item cat-item-\d+"><a href="([^"]+)">(.*?)</a>'
@@ -188,7 +188,7 @@ def fichas(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = 'a href="([^"]+)"><div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
+    patron = '<a href="([^"]+)">\s*<div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
              '<h2 class="Title">([^<]+)</h2>.*?<p>(.*?)</p>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -226,7 +226,7 @@ def fichas_tv(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = 'a href="([^"]+)"><div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
+    patron = 'a href="([^"]+)">\s*<div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
              '<h2 class="Title">([^<]+)</h2>.*?<p>(.*?)</p>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -265,7 +265,7 @@ def fichas_new(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<a href="([^"]+)"><div class="Image">' \
+    patron = '<a href="([^"]+)">\s*<div class="Image">\s*' \
              '<figure class="[^>]+">\s*' \
              '<img src="([^"]+)" alt="Image\s*([^\d+]+)([^<]+)">'
 
@@ -307,12 +307,12 @@ def episodios(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<img src="([^"]+)"\s*alt="Image\s*([^"]+)"></a></td>' \
-             '<td class="MvTbTtl"><a href="([^"]+)">'
+    patron = '<a href="([^"]+)">\s*<div class="Image">\s*[^>]+>\s*' \
+             '<img src="([^"]+)"\s*alt="Image\s*([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedthumbnail, scrapedtitle, scrapedurl   in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle   in matches:
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -326,7 +326,7 @@ def episodios(item):
                  show=scrapedtitle), tipo='tv'))
 				 
     patron = 'img\s*src=&quot[^h]+([^&]+).*?alt=&quot[^ ]+ ([^<]+)</span></a>' \
-             '</td><td class="MvTbTtl"><a href="([^"]+)">'
+             '</td>\s*<td class="MvTbTtl"><a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -346,6 +346,8 @@ def episodios(item):
                  plot=item.plot,
                  show=scrapedtitle), tipo='tv'))
 
+    return itemlist
+				 
     return itemlist
 
 # ===================================================================================================================================================
