@@ -108,8 +108,6 @@ def series(item):
 
     data = scrapertools.cache_page(item.url)
 
-    patron = '<li id="widget_categories" class="widget png_scale"><h2 class="blocktitle"><span>Serie</span>(.*?)</ul>'
-    data = scrapertools.find_single_match(data, patron)
 
     patron = '<li class="cat-item[^<]+<a href="([^"]+)[^>]+>([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -129,17 +127,6 @@ def series(item):
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
                  folder=True))
 
-    # paginación
-    patron = '<div id="navigation">.*?\d+</a> <a href="([^"]+)"'
-    next_page = scrapertools.find_single_match(data, patron)
-    if next_page != "":
-        itemlist.append(
-            Item(channel=__channel__,
-                 title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=next_page,
-                 action="series",
-                 extra=item.extra,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
