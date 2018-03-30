@@ -17,20 +17,8 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmhd"
-
 host = "http://filmhd.me"
-
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
-]
-
-
-def isGeneric():
-    return True
+headers = [['Referer', host]]
 
 # ==============================================================================================================================================
 
@@ -86,12 +74,12 @@ def genere(item):
     logger.info("[pureita filmhd] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<li class="dropdown genre-filter">(.*?)</ul>'
+    patron = 'Genere<i class="icon-chevron-down"></i></div>(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
-
-    patron = '<li class=".*?"><a href="([^"]+)" title="[^>]+">([^<]+)</a>'
+              
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -112,9 +100,9 @@ def genere_years(item):
     logger.info("[pureita filmhd] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<div class="dropdown-toggle" data-toggle="dropdown">Anno<i class="icon-chevron-down"></i></div>(.*?)</ul>'
+    patron = 'Anno<i class="icon-chevron-down"></i></div>(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
@@ -138,12 +126,12 @@ def genere_country(item):
     logger.info("[pureita filmhd] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<div class="dropdown-toggle" data-toggle="dropdown">Nazione<i class="icon-chevron-down"></i></div>(.*?)</ul>'
+    patron = 'Nazione<i class="icon-chevron-down"></i></div>(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<li><a href="(.*?)\s*">([^<]+)</a></li>'
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -164,9 +152,9 @@ def genere_az(item):
     logger.info("[pureita filmhd] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<li class="dropdown abc-filter">(.*?)</ul>'
+    patron = 'ABC<i class="icon-chevron-down"></i></div>(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<li class="abc"><a href="([^"]+)">([^<]+)</a></li>'
