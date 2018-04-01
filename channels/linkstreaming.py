@@ -346,7 +346,23 @@ def episodios(item):
                  plot=item.plot,
                  show=scrapedtitle), tipo='tv'))
 
-    return itemlist
+    patron = '<td class="MvTbImg B"><a href="([^"]+)" class="MvTbImg">' \
+             '<img src="([^"]+)" alt="Image (.*?)"></a></td>'
+
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle   in matches:
+        scrapedplot = ""
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 contentType="tv",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=scrapedtitle,
+                 plot=item.plot,
+                 show=scrapedtitle), tipo='tv'))
 				 
     return itemlist
 
