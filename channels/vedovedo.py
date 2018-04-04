@@ -314,7 +314,8 @@ def episodios(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<span class="prev-link-episode">([^<]+)</span><a class="blue-link" href="([^"]+)" target="_blank" rel="noopener">[^<]+</a>'
+    patron = '<span class="prev[^\d+]+>([^<]+)</.*?>'
+    patron += '<a class="blue-link" href="([^"]+)" target="_blank" rel="noopener">[^<]+</a>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -331,7 +332,6 @@ def episodios(item):
                  fulltitle=scrapedtitle,
                  plot=item.plot,
                  show=scrapedtitle), tipo='serie'))
-
 
     return itemlist
 

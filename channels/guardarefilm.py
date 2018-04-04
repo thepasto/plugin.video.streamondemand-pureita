@@ -17,11 +17,11 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardarefilm"
-host = "https://www.guardarefilm.life/"
+host = "https://www.guardarefilm.life"
 headers = [['Referer', host]]
 
 def mainlist(item):
-    logger.info("streamondemand.guardarefilm mainlist")
+    logger.info("streamondemand-pureita guardarefilm mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film & Serie Tv [COLOR orange]- Top 100[/COLOR]",
                      action="pelis_top",
@@ -68,7 +68,7 @@ def mainlist(item):
 # ===================================================================================================================================================
 
 def categorias(item):
-    logger.info("streamondemand.guardarefilm categorias")
+    logger.info("streamondemand-pureita guardarefilm categorias")
     itemlist = []
     data = httptools.downloadpage(item.url, headers=headers).data
 
@@ -101,7 +101,7 @@ def categorias(item):
 # ===================================================================================================================================================
 
 def search(item, texto):
-    logger.info("[guardarefilm.py] " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita guardarefilm] " + item.url + " search " + texto)
     item.url = '%s?do=search_advanced&q=%s&section=0&director=&actor=&year_from=&year_to=' % (host, texto)
     try:
         if item.extra == "movie":
@@ -118,21 +118,21 @@ def search(item, texto):
 # ===================================================================================================================================================
 
 def peliculas(item):
-    logger.info("streamondemand.guardarefilm peliculas")
+    logger.info("streamondemand-pureita guardarefilm peliculas")
     itemlist = []
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="poster"><a href="([^"]+)".*?><img src="([^"]+)".*?><span.*?</div>\s*'
-    patron += '<div.*?><a.*?>(.*?)</a></div>'
+    patron = '<div class="poster"><a href="([^"]+)"><img src="([^"]+)"\s*alt=""><span class[^>]+>'
+    patron += '</span></a></div>\s*<div class[^>]+><a href[^>]+>([^<]+)</a></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        scrapedplot = ""
         scrapedthumbnail = urlparse.urljoin(item.url, scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedplot = ""
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -165,15 +165,15 @@ def peliculas(item):
 # ===================================================================================================================================================
 
 def peliculas_tv(item):
-    logger.info("streamondemand.guardarefilm peliculas")
+    logger.info("streamondemand-pureita guardarefilm peliculas")
     itemlist = []
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="poster"><a href="([^"]+)".*?><img src="([^"]+)".*?><span.*?</div>\s*'
-    patron += '<div.*?><a.*?>(.*?)</a></div>'
+    patron = '<div class="poster"><a href="([^"]+)"><img src="([^"]+)"\s*alt=""><span class[^>]+>'
+    patron += '</span></a></div>\s*<div class[^>]+><a href[^>]+>([^<]+)</a></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
@@ -211,7 +211,7 @@ def peliculas_tv(item):
 # ===================================================================================================================================================
 
 def pelis_top(item):
-    logger.info("streamondemand.guardarefilm peliculas")
+    logger.info("streamondemand-pureita guardarefilm peliculas")
     itemlist = []
     PERPAGE = 10
 
@@ -260,21 +260,21 @@ def pelis_top(item):
 # ===================================================================================================================================================
 
 def episodios(item):
-    logger.info("streamondemand.guardarefilm episodios")
+    logger.info("streamondemand-pureita guardarefilm episodios")
     itemlist = []
 
     # Descarga la página
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = r'<li id="serie-[^"]+" data-title="Stai guardando: ([^"]+)">'
-    patron += r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>(.*?)</span>'
+    patron = r'<li id="serie[^"]+"\s*data-title="[^\d+]+\s*([^"]+)">'
+    patron += r'[^>]+>[^>]+>[^>]+>[^>]+>\s*<span class="right">(.*?)</span>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedtitle, scrapedurl in matches:
         scrapedtitle = scrapedtitle.replace("(presto in streaming)", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvid_serie",
+                 action="findvideos_tv",
                  contentType="episode",
                  title=scrapedtitle,
                  url=item.url,
@@ -296,8 +296,8 @@ def episodios(item):
 
 # ===================================================================================================================================================
 	
-def findvid_serie(item):
-    logger.info("streamondemand.guardarefilm findvideos")
+def findvideos_tv(item):
+    logger.info("streamondemand-pureita guardarefilm findvideos")
 
     # Descarga la página
     data = item.extra
