@@ -19,14 +19,9 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "italiafilm"
-DEBUG = config.get_setting("debug")
-host = "http://www.italia-film.gratis"
+host = "http://www.italia-film.online/"
 
-headers = [['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-           ['Accept-Encoding', 'gzip, deflate'],
-           ['Referer', host],
-           ['Cache-Control', 'max-age=0']]
+headers = [['Referer', host]]
 
 def isGeneric():
     return True
@@ -95,8 +90,6 @@ def categorias(item):
         scrapedthumbnail = ""
         if scrapedtitle.startswith((" Porno")):
             continue
-        if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action='peliculas',
@@ -145,7 +138,6 @@ def peliculas(item):
         plot = ""
         thumbnail = scrapertools.find_single_match(match, 'data-echo="([^"]+)"')
 
-        if (DEBUG): logger.info("title=[" + title + "], url=[" + url + "], thumbnail=[" + thumbnail + "]")
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -235,7 +227,6 @@ def peliculas_tv(item):
         plot = ""
         thumbnail = scrapertools.find_single_match(match, 'data-echo="([^"]+)"')
 
-        if (DEBUG): logger.info("title=[" + title + "], url=[" + url + "], thumbnail=[" + thumbnail + "]")
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -281,8 +272,6 @@ def pel_tvxx(item):
         plot = ""
         thumbnail = ""
         url = scrapedurl
-
-        if (DEBUG): logger.info("title=[" + title + "], url=[" + url + "], thumbnail=[" + thumbnail + "]")
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
