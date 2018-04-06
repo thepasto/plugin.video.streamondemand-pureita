@@ -111,11 +111,11 @@
     <name>AltadefinizioneHD</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizionehd.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
     <version>3</version>
     <adult>false</adult>
-    <date>30/01/2018</date>
+    <date>06/04/2018</date>
     <changes>Disabled</changes>
     <categories>
         <category>movie</category>
@@ -182,9 +182,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altastreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>20/03/2018</date>
+    <date>06/04/2018</date>
     <changes>Temporary Fix and Update</changes>
     <categories>
         <category>movie</category>
@@ -435,11 +435,11 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cineblogfm.py</update_url>
     <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>5</version>
+    <include_in_global_search>false</include_in_global_search>
+    <version>06</version>
     <adult>false</adult>
-    <date>11/03/2017</date>
-    <changes>First Release-2017</changes>
+    <date>06/04/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -540,12 +540,12 @@
     <name>CineSuggestions</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cinesuggestions.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>2</version>
     <adult>false</adult>
-    <date>27/02/2017</date>
-    <changes>First Release</changes>
+    <date>06/04/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -556,11 +556,11 @@
     <name>Corsaronero</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/corsaronero.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
     <version>9</version>
     <adult>false</adult>
-    <date>08/04/2017</date>
+    <date>06/04/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -591,11 +591,11 @@
     <name>Darkstream</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/darkstream.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
     <version>15</version>
     <adult>false</adult>
-    <date>08/12/2016</date>
+    <date>06/04/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -625,11 +625,11 @@
     <name>Documentari Streaming DB</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/documentaristreamingdb.py</update_url>
-    <active>false</active>
+    <active>true</active>
     <include_in_global_search>false</include_in_global_search>
     <version>8</version>
     <adult>false</adult>
-    <date>26/05/2017</date>
+    <date>06/04/2018</date>
     <changes>Update</changes>
     <categories>
         <category>Documentaries</category>
@@ -642,10 +642,10 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/dreamsub.py</update_url>
     <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <include_in_global_search>false</include_in_global_search>
+    <version>5</version>
     <adult>false</adult>
-    <date>06/06/2017</date>
+    <date>06/04/2018</date>
     <changes>Update</changes>
     <categories>
         <category>serie</category>
@@ -658,18 +658,35 @@
     <name>Eurostreaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/eurostreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
     <version>17</version>
     <adult>false</adult>
-    <date>04/07/2017</date>
-    <changes>Fix Host</changes>
+    <date>06/04/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>serie</category>
         <category>anime</category>
     </categories>
 </channel>
 
+<channel>
+    <id>eurostreaming_video</id>
+    <name>eurostreaming_video</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/eurostreaming_video.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>06/04/2018</date>
+    <changes>Added to Channelslist</changes>
+    <categories>
+        <category>movie</category>
+        <category>serie</category>
+        <category>anime</category>
+    </categories>
+</channel>
 
 <channel>
     <id>eurostreaminginfo</id>
@@ -711,11 +728,11 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/ffilms.py</update_url>
     <active>falce</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>1</version>
+    <include_in_global_search>false</include_in_global_search>
+    <version>2</version>
     <adult>true</adult>
-    <date>06/05/2017</date>
-    <changes>First Release</changes>
+    <date>06/04/2018</date>
+    <changes>Update</changes>
 	<categories>
 	       <category>movie</category>
     </categories>
@@ -726,11 +743,11 @@
     <name>Filmbelli.net</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmbelli.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>4</version>
     <adult>false</adult>
-    <date>15/11/2016</date>
+    <date>06/04/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -762,8 +779,8 @@
     <include_in_global_search>false</include_in_global_search>
     <version>3</version>
     <adult>false</adult>
-    <date>04/02/2018</date>
-    <changes>Temporary Fix</changes>
+    <date>04/06/2018</date>
+    <changes>Temporary Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -791,12 +808,12 @@
     <name>Filmissimi</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmissimi.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>4</version>
     <adult>false</adult>
-    <date>26/11/2016</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Temporary Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -895,8 +912,8 @@
     <name>FilmStream.org</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmstream.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
     <version>21</version>
     <adult>false</adult>
     <date>04/07/2017</date>
@@ -928,12 +945,12 @@
     <name>FilmStream.to</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmstreampw.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>18</version>
+    <version>19</version>
     <adult>false</adult>
-    <date>13/03/2017</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -977,12 +994,12 @@
     <name>FilmStreamingZone</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmstreamingzone.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>02</version>
     <adult>false</adult>
-    <date>24/12/2016</date>
-    <changes>First Release</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -995,12 +1012,12 @@
     <name>FilmSubito</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmsubitotv.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>16</version>
     <adult>false</adult>
-    <date>09/04/2017</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1030,12 +1047,12 @@
     <name>GuardaFilm</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardafilm.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>02</version>
     <adult>false</adult>
-    <date>09/02/2018</date>
-    <changes>Update and Fix</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1082,12 +1099,12 @@
     <name>Guardaserie</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardaserie.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>18</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>19</version>
     <adult>false</adult>
-    <date>11/03/2017</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>serie</category>
         <category>anime</category>
@@ -1168,12 +1185,12 @@
     <name>Hokuto no Ken</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/hokutonoken.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
     <version>3</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
-    <changes>New Channel</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>serie</category>
         <category>anime</category>
@@ -1235,8 +1252,8 @@
     <name>ItaFilm.t</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/itafilmtv.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
     <version>17</version>
     <adult>false</adult>
     <date>05/03/2017</date>
@@ -1273,7 +1290,7 @@
     <name>ItaliaFilm01</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/italiafilm01.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>true</include_in_global_search>
     <version>01</version>
     <adult>false</adult>
@@ -1329,28 +1346,43 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/italiaserie.py</update_url>
     <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <include_in_global_search>false</include_in_global_search>
+    <version>16</version>
     <adult>false</adult>
-    <date>20/02/2018</date>
+    <date>06/04/2018</date>
     <changes>Update Host</changes>
     <categories>
         <category>serie</category>
     </categories>
 </channel>
 
+<channel>
+    <id>italiaserie_uno</id>
+    <name>italiaserie_uno</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/italiaserie_uno.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>06/04/2018</date>
+    <changes>Added to Channelslist</changes>
+    <categories>
+        <category>serie</category>
+    </categories>
+</channel>
 
 <channel>
     <id>italiaserienews</id>
     <name>italiaserienews</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/italiaserienews.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>6</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>7</version>
     <adult>false</adult>
-    <date>26/12/2016</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>serie</category>
     </categories>
@@ -1470,12 +1502,12 @@
     <name>Megafiletube</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/megafiletube.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>4</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
-    <changes>1st versin by Costaplus + fix magnet</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1502,12 +1534,12 @@
     <name>Misterstreaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/misterstreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>4</version>
     <adult>false</adult>
-    <date>26/01/2017</date>
-    <changes>Partial Fix</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1585,12 +1617,12 @@
     <name>Naruto</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/naruto.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>27/02/2017</date>
-    <changes>First Release</changes>
+    <date>04/06/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>anime</category>
     </categories>
@@ -1615,12 +1647,12 @@
     <name>Pastebin</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/pastebin.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>3</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
-    <changes>Prima versione di Pastebin</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1636,12 +1668,12 @@
     <name>Pianeta Streaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/pianetastreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>9</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>10</version>
     <adult>false</adult>
-    <date>22/02/2017</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1689,7 +1721,7 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/portalehd.py</update_url>
     <active>false</active>
-    <include_in_global_search>true</include_in_global_search>
+    <include_in_global_search>false</include_in_global_search>
     <version>19</version>
     <adult>false</adult>
     <date>24/02/2017</date>
@@ -1707,10 +1739,10 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/programmazione.py</update_url>
     <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <include_in_global_search>false</include_in_global_search>
+    <version>4</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
+    <date>06/04/2018</date>
     <changes>Update programmazione</changes>
     <categories>
         <category>Didattica</category>
@@ -1782,12 +1814,12 @@
     <name>Saint Seiya</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/saintseiya.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
     <version>5</version>
     <adult>false</adult>
-    <date>08/08/2016</date>
-    <changes>Canale dedicato ai Cavalieri dello Zodiaco</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled/changes>
     <categories>
         <category>anime</category>
     </categories>
@@ -1815,12 +1847,12 @@
     <name>Scambiofile</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/scambiofile.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>4</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>5</version>
     <adult>false</adult>
-    <date>06/11/2016</date>
-    <changes>Fixed host</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1928,34 +1960,18 @@
     </categories>
 </channel>
 
-<channel>
-    <id>solostreaming_co</id>
-    <name>solostreaming_co</name>
-    <language>it</language>
-    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/solostreaming_co.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
-    <adult>false</adult>
-    <date>26/03/2018</date>
-    <changes>added to the channelslist</changes>
-    <categories>
-        <category>movie</category>
-        <category>serie</category>
-    </categories>
-</channel>
 
 <channel>
     <id>solostreaming</id>
     <name>Solo-Streaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/solostreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>11</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>12</version>
     <adult>false</adult>
-    <date>04/04/2017</date>
-    <changes>update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1970,11 +1986,11 @@
     <name>soloserie</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/soloserie.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>7</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>8</version>
     <adult>false</adult>
-    <date>04/04/2017</date>
+    <date>06/04/2018</date>
     <changes>update</changes>
     <categories>
         <category>serie</category>
@@ -2006,12 +2022,12 @@
     <name>StreamBlog</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/streamblog.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>9</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>10</version>
     <adult>false</adult>
-    <date>08/01/2017</date>
-    <changes>Update</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled from channelslist</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -2041,12 +2057,12 @@
     <name>StreamingItaliano</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/streamingitaliano.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>02</version>
     <adult>false</adult>
-    <date>06/05/2017</date>
-    <changes>First Release</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled from channelslist</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -2164,7 +2180,7 @@
     <version>6</version>
     <adult>false</adult>
     <date>24/02/2017</date>
-    <changes>Switched to openload</changes>
+    <changes>Disabled</changes>
     <categories>
         <category>Serie</category>
     </categories>
@@ -2230,11 +2246,11 @@
     <name>VediSerie</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/vediserie.py</update_url>
-    <active>false</active>
+    <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>14</version>
+    <version>15</version>
     <adult>false</adult>
-    <date>10/03/2017</date>
+    <date>06/04/2018</date>
     <changes>Enabled</changes>
     <categories>
         <category>serie</category>
@@ -2280,12 +2296,12 @@
     <name>Wstreaminge</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/wstreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>02</version>
     <adult>false</adult>
-    <date>25/02/2017</date>
-    <changes>First Release</changes>
+    <date>06/04/2018</date>
+    <changes>Disabled from channelslist</changes>
     <categories>
         <category>movie</category>
     </categories>
