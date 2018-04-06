@@ -98,20 +98,24 @@ def peliculas(item):
 
     # Extrae las entradas (carpetas)
     patron = '<h1 class="entry-title"><a href="([^"]+)"\s*rel="bookmark">([^<]+)<\/a><\/h1>.*?'
-    patron += '<img class=".*?"\s*src="([^"]+)"[^>]+>([^"]+)>'
+    patron += '<img class=".*?"\s*src="([^"]+)" alt[^>]+>(.*?)>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
-
         scrapedplot = scrapertools.unescape(match.group(4))
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(3))
+        scrapedthumbnail = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
+        scrapedthumbnail = scrapedthumbnail.replace("-–-", "-%E2%80%93-")
+        scrapedthumbnail = scrapedthumbnail.replace("’", "%E2%80%99")
+        scrapedthumbnail = scrapedthumbnail.replace("à", "%C3%A0")
+        scrapedtitle = scrapedtitle.replace("’", "")
         scrapedplot = scrapedplot.replace("/", "")
         scrapedplot = scrapedplot.replace("<em>", "")
         scrapedplot = scrapedplot.replace("<h1>", "")
         scrapedplot = scrapedplot.replace("<a>", "")
         scrapedplot = scrapedplot.replace("<p>", "")
+
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -133,7 +137,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
@@ -163,9 +167,7 @@ def peliculas_new(item):
         scrapedep = scrapedep.replace('SUBITA', 'SUB')
         scrapedplot = ""
         scrapedthumbnail = ""
-        if "Girada" in scrapedtitle:
-		    continue
-        if "WWE" in scrapedtitle:
+        if "Girada" in scrapedtitle or "WWE" in scrapedtitle:
 		    continue
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -188,7 +190,7 @@ def peliculas_new(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_new",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
