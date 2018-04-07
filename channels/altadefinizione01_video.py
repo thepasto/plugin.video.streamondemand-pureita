@@ -118,7 +118,7 @@ def peliculas_new(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [COLOR orange][TMDb: " + scrapedpuntuacion + "][/COLOR]",
+                 title=scrapedtitle + "  [[COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -178,7 +178,7 @@ def peliculas_search(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [COLOR orange][TMDb: " + scrapedpuntuacion + "][/COLOR]",
+                 title=scrapedtitle + "  [[COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
