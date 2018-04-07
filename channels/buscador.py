@@ -24,7 +24,7 @@ logger.info("streamondemand-pureita-master.channels.buscador init")
 
 DEBUG = config.get_setting("debug")
 
-TIMEOUT_TOTAL = 45
+TIMEOUT_TOTAL = 40
 
 
 def isGeneric():
