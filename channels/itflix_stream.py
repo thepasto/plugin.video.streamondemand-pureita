@@ -29,7 +29,7 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas_list",
-                     url="%s/film-streaming/" % host,
+                     url="%s/film/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
@@ -40,7 +40,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Anno[/COLOR]",
                      action="year",
-                     url="%s/film-streaming/" % host,
+                     url="%s/film/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
 	            Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Popolari[/COLOR]",
@@ -95,6 +95,8 @@ def peliculas_search(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, scrapedplot  in matches:
+        scrapedtitle =scrapedtitle.replace("[", "")
+        scrapedtitle =scrapedtitle.replace("]", "") 
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",

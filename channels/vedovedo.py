@@ -95,7 +95,7 @@ def peliculas_search(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
-                 title='[COLOR yellow]' + scrapedtitle + '[/COLOR]',
+                 title='[COLOR azure]' + scrapedtitle + '[/COLOR]',
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
