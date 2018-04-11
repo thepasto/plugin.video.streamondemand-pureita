@@ -1,5 +1,6 @@
 5.4.7
 -Aggiornamento Ricerca
+-Configurazioni Aggiornate
 -interfaccia grafica Aggiornata --in progress--
 -Aggiornamento canali
 -Aggiornamento server
