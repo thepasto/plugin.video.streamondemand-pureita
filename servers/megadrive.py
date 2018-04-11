@@ -39,7 +39,7 @@ def find_videos(data):
     encontrados = set()
     devuelve = []
 
-    patronvideos = r"""(?://|\.)megadrive\.co/(?:embed(?:-|/))?([a-z0-9A-Z]+)"""
+    patronvideos = r"(?://|\.)megadrive\.co/(?:embed)(?:-|/)?([a-z0-9A-Z]+)"
     logger.info("[megadrive.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 

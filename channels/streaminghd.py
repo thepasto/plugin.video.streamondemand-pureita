@@ -131,7 +131,7 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*(.*?)</span>'
+    patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*([^<]+) .*?'
     patron += '</div><div class="rating"><span class="icon-star2"></span>\s*(.*?)</div><a href="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
@@ -142,20 +142,20 @@ def peliculas(item):
         quality = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-        votes="[" + votes + "]"
-        if "0" in votes:
-         votes = "[N/A]"
-        quality="[" + quality + "]"
-        if quality=="[]":
-         quality = ""
+        votes=" [[COLOR yellow]" + votes + "[/COLOR]]"
 
+        if "0" in votes:
+         votes ="  [[COLOR yellow]" + "N/A" + "[/COLOR]]"
+        quality ="  [[COLOR yellow]" + quality + "[/COLOR]]"
+        if  "  [[COLOR yellow]" + " " + "[/COLOR]]" in quality:
+         quality = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + "[COLOR orange] " + quality + " " +  votes  + "[/COLOR]",
+                 title=scrapedtitle + quality + votes,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -187,7 +187,7 @@ def peliculas_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<img src="([^"]+)">\s*<div class="mepo">\s*[^>]+>\s*([^<]+)</span></div>\s*'
+    patron = '<img src="([^"]+)">\s*<div class="mepo">\s*[^>]+>([^<]+)</span></div>\s*'
     patron += '<a href="([^"]+)"><div class="see"></div></a>\s*</div><div class[^>]+><h3><a href="[^"]+">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
@@ -204,7 +204,7 @@ def peliculas_new(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + "[COLOR orange] [" + date  + "][/COLOR]",
+                 title=scrapedtitle + "  [[COLOR yellow]" + date + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -243,16 +243,16 @@ def peliculas_update(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedthumbnail, scrapedtitle, votes, scrapedurl in matches:
-        votes="[" + votes + "]"
+        votes=" [[COLOR yellow]" + votes + "[/COLOR]]"
         if "0" in votes:
-         votes = "[N/A]"
+         votes ="  [[COLOR yellow]" + "N/A" + "[/COLOR]]"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + '[COLOR orange] ' + votes + '[/COLOR]',
+                 title=scrapedtitle + votes,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  folder=True), tipo='movie'))
@@ -320,9 +320,11 @@ def peliculas_tv(item):
         scrapedurl = urlparse.urljoin(item.url, match.group(3))
         votes = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-        votes=" - " + votes 
+        votes = votes.replace("[", "")
+        votes = votes.replace("]", "")
+        votes=" - [[COLOR yellow]" + votes + "[/COLOR]]"
         if "0" in votes:
-         votes = "[N/A]"
+         votes ="  [[COLOR yellow]" + "N/A" + "[/COLOR]]"
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -330,7 +332,7 @@ def peliculas_tv(item):
                  contentType="tvshow",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + "[COLOR orange] " + votes  + "[/COLOR]",
+                 title=scrapedtitle + votes,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,

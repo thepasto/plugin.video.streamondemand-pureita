@@ -4,10 +4,7 @@
 # Canale cb01_wiki
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
-import os
 import re
-import time
-import urllib
 import urlparse
 
 from core import httptools
@@ -20,14 +17,17 @@ from core.tmdb import infoSod
 
 __channel__ = "cb01_wiki"
 host = "https://www.cb01.wiki"
+
 headers = [['Referer', host]]
 
 def mainlist(item):
     logger.info("streamondemand-pureita cb01_wiki mainlist")
+	
+	
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Aggiornati[/COLOR]",
                      action="peliculas",
-                     url=host,
+                     url="%s/page/2/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
@@ -38,7 +38,7 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
-                     action="peliculas_top",
+                     action="peliculas",
                      url="%s/animazione/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
@@ -55,6 +55,7 @@ def mainlist(item):
 
     return itemlist
 
+	
 # ==============================================================================================================================================================================
 	
 def categorias(item):
@@ -83,6 +84,7 @@ def categorias(item):
 
     return itemlist
 
+	
 # ==============================================================================================================================================================================
 
 def search(item, texto):
@@ -100,45 +102,54 @@ def search(item, texto):
 # ==============================================================================================================================================================================
 	
 def peliculas(item):
-    logger.info("streamondemand-pureita cb01_wiki peliculas")
-
+    logger.info()
     itemlist = []
 
-    # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
-
+    data = httptools.downloadpage(item.url).data
     patron = '<div class="movie-cols clearfix">\s*<div class="[^>]+" data-link="([^"]+)">\s*'
     patron += '<img src="([^"]+)"\s*alt="([^<]+)"\s*\/>'
-
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        if "(2018)" in scrapedtitle:
-            continue
-        scrapedtitle = scrapedtitle.replace(":", " - ")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace(" Streaming", "")
 
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo="movie"))
+		
+        html = httptools.downloadpage(scrapedurl).data
+
+        patron = '<div class="video-player-plugin">([^+]+)<div class="wrapper-plugin-video">'
+        matches = re.compile(patron, re.DOTALL).findall(html)
+        for url in matches:
+            if not "scrolling" in url:
+                continue
+            itemlist.append(infoSod(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     contentType="movie",
+                     title=scrapedtitle,
+                     fulltitle=scrapedtitle,
+                     url=scrapedurl,
+                     extra="movie",
+                     thumbnail=scrapedthumbnail,
+                     show=scrapedtitle,
+                     folder=True), tipo="movie"))
 
     # Paginación
-    next_page = scrapertools.find_single_match(data, '<span class="pnext"><a href="([^"]+)">')
-    if next_page != "":
+    patronvideos = r'<span>\d+</span> <a href="([^"]+)">\d+</a>'
+    next_page = scrapertools.find_single_match(data, patronvideos)
+
+    if next_page:
+        scrapedurl = urlparse.urljoin(item.url, next_page)
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=next_page,
+                 url=scrapedurl,
+                 extra=item.extra,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
-    return itemlist
+    return itemlist	
 	
 # ==============================================================================================================================================================================
 	
@@ -150,7 +161,7 @@ def peliculas_top(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<\/div>\s*<div class="skoro-img img-box pseudo-link" data-link="([^"]+)">\s*'
+    patron = '<div class="skoro-img img-box pseudo-link" data-link="([^"]+)">\s*'
     patron += '<img src="([^"]+)" alt="(.*?)"\s*\/>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -169,5 +180,48 @@ def peliculas_top(item):
                  show=scrapedtitle), tipo="movie"))
 
     return itemlist
-	
 
+	
+# ==============================================================================================================================================================================
+	
+def peliculas_top2(item):
+    logger.info()
+    itemlist = []
+
+    data = httptools.downloadpage(item.url).data
+    patron = '<div class="skoro-img img-box pseudo-link" data-link="([^"]+)">\s*'
+    patron += '<img src="([^"]+)" alt="(.*?)"\s*\/>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace(":", " - ")
+        scrapedtitle = scrapedtitle.replace(" Streaming", "")
+
+        date = scrapertools.find_single_match(scrapedtitle, r'\((\d+)\)')
+        scrapedtitle = scrapedtitle.replace(date, "")
+        scrapedtitle = scrapedtitle.replace("(", "")
+        scrapedtitle = scrapedtitle.replace(")", "")
+
+		
+        html = httptools.downloadpage(scrapedurl).data
+
+        patron = '<div class="video-player-plugin">([^+]+)<div class="wrapper-plugin-video">'
+        matches = re.compile(patron, re.DOTALL).findall(html)
+        for url in matches:
+            if not "scrolling" in url:
+                scrapedtitle = scrapedtitle + " [[COLOR yellow]" + "Trailer" + "[/COLOR]] "
+            itemlist.append(infoSod(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     contentType="movie",
+                     title=scrapedtitle + " [[COLOR yellow]" + date + "[/COLOR]]",
+                     fulltitle=scrapedtitle,
+                     url=scrapedurl,
+                     extra="movie",
+                     thumbnail=scrapedthumbnail,
+                     show=scrapedtitle,
+                     folder=True), tipo="movie"))
+
+    return itemlist	
