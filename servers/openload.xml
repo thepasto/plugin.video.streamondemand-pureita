@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <server>
 	<active>true</active>
-	<changes>Fix</changes>
+	<changes>Fix - interchange v3 with the v5</changes>
 	<date>11/04/2018</date>
 	<free>true</free>
 	<id>openload</id>
@@ -11,5 +11,5 @@
 	</premium>
 	<thumbnail>http://media.tvalacarta.info/servers/server_openload.png</thumbnail>
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/</update_url>
-	<version>36</version>
+	<version>37</version>
 </server>
