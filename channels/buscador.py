@@ -24,7 +24,7 @@ logger.info("streamondemand-pureita-master.channels.buscador init")
 
 DEBUG = config.get_setting("debug")
 
-TIMEOUT_TOTAL = 20
+TIMEOUT_TOTAL = 30
 
 
 def isGeneric():
@@ -166,7 +166,7 @@ def do_search(item):
 
         delta_time = int(time.time()) - start_time
         if len(itemlist) <= 0:
-            timeout = None  # No result so far,lets the thread to continue working until a result is returned
+            timeout = TIMEOUT_TOTAL  # No result so far,lets the thread to continue working until a result is returned
         elif delta_time >= TIMEOUT_TOTAL:
             break  # At least a result matching the searched title has been found, lets stop the search
         else:
