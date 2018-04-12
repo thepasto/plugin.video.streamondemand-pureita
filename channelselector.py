@@ -253,7 +253,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione_due[/COLOR]"      , channel="altadefinizione_due"           , language="IT"    , category="B,F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]AltadefinizioneHD/COLOR]" , channel="altadefinizionehd" , language="IT" , category="F" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Altadefinizione.club[/COLOR]" , channel="altadefinizioneclub" , language="IT" , category="F,S" , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Altadefinizione_bid[/COLOR]" , channel="altadefinizione_bid" , language="IT" , category="F,S" , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Altadefinizione_bid[/COLOR]" , channel="altadefinizione_bid" , language="IT" , category="B,F,S" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Altadefinizione.one[/COLOR]" , channel="altadefinizioneone" , language="IT" , category="F" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione01_wiki[/COLOR]" , channel="altadefinizione01_wiki" , language="IT" , category="F" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]AltadefinizioneZone[/COLOR]" , channel="altadefinizionezone" , language="IT" , category="F" , type="generic"))
