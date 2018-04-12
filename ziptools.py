@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 #------------------------------------------------------------
-# streamondemand-pureita - XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # Zip Tools
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand-pureita/
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 #------------------------------------------------------------
 import base64, re, urllib, string, sys, zipfile, os, os.path
 import config
