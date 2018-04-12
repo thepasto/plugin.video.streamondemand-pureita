@@ -760,8 +760,8 @@
     <id>openload</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/openload.py</update_url>
     <active>true</active>
-    <version>39</version>
-    <date>06/04/2018</date>
+    <version>40</version>
+    <date>11/04/2018</date>
     <changes>Update</changes>
 </server>
 
