@@ -197,7 +197,7 @@ def find_videos(text):
     referer = ""
     if "|Referer=" in text:
         referer = "|" + text.split("|Referer=", 1)[1]
-    patronvideos = '(?:openload|oload).*?/(?:embed|f)/([0-9a-zA-Z-_]+)'
+    patronvideos = '(?:openload|oload).*?/(?:embed|e)/([0-9a-zA-Z-_]+)'
     logger.info("#" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
