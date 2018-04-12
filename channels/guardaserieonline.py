@@ -309,7 +309,7 @@ def episodi(item):
 
     patron = r'<img\s*.*?[meta-src|data-original]*="([^"]+)"\s*/>[^>]+>([^<]+)<[^>]+>[^>]+>[^>]+>'
     patron += r'[^>]+>[^>]+>([^<]+)*<[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>'
-    patron += r'[^>]+>[^>]+>[^>]+>\s*<span\s*.*?(meta-embed="[^"]+">)'
+    patron += r'[^>]+>[^>]+>[^>]+>\s*<span\s*.*?(meta-embed="[^"]+"\s*meta-embed2="[^"]+")'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedthumbnail, scrapedep, scrapedeptitle, scrapedextra in matches:
         scrapedeptitle = scrapertools.decodeHtmlentities(scrapedeptitle).strip()
