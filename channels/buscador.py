@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808.
 # ------------------------------------------------------------
 
@@ -24,7 +24,7 @@ logger.info("streamondemand-pureita-master.channels.buscador init")
 
 DEBUG = config.get_setting("debug")
 
-TIMEOUT_TOTAL = 30
+TIMEOUT_TOTAL = 40
 
 
 def isGeneric():
