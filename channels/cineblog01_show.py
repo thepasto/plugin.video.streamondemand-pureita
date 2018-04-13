@@ -24,9 +24,9 @@ def mainlist(item):
     logger.info("streamondemand-pureita cineblog01.show mainlist")
 		
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Aggiornati[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
                      action="peliculas",
-                     url=host+"/page/4/",
+                     url=host+"/page/2/",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
@@ -207,7 +207,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  extra=item.extra,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))

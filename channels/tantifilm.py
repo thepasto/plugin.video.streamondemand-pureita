@@ -52,6 +52,7 @@ def mainlist(item):
                Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Film ...[/COLOR]",
                      action="search",
+                     extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Lista[/COLOR]",
@@ -111,15 +112,18 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
 
-    patron = '<div class="mediaWrap mediaWrapAlt"><a href="([^"]+)"><img[^>]+src="([^"]+)"\s*class[^>]+[^>]+></a><div[^>]+>[^>]+><p>([^<]+)</p>'
+    patron = '<div class="mediaWrap mediaWrapAlt"><a href="([^"]+)">'
+    patron += '<img[^>]+src="([^"]+)"\s*class[^>]+[^>]+></a><div[^>]+>[^>]+><p>([^<]+)</p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        if not "https:" in scrapedthumbnail:
+          scrapedthumbnail = "https:" + scrapedthumbnail
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle=scrapedtitle.replace("streaming", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos_film",
+                 action="findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -149,12 +153,16 @@ def peliculas_tv(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
 
-    patron = '<div class="mediaWrap mediaWrapAlt"><a href="([^"]+)"><img[^>]+src="([^"]+)"\s*class[^>]+[^>]+></a><div[^>]+>[^>]+><p>([^<]+)</p>'
+    patron = '<div class="mediaWrap mediaWrapAlt"><a href="([^"]+)">'
+    patron += '<img[^>]+src="([^"]+)"\s*class[^>]+[^>]+></a><div[^>]+>[^>]+><p>([^<]+)</p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        if not "https:" in scrapedthumbnail:
+          scrapedthumbnail = "https:" + scrapedthumbnail
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle=scrapedtitle.replace("streaming", "")
+        scrapedtitle=scrapedtitle.replace("-)", ")")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -181,13 +189,13 @@ def peliculas_tv(item):
 
 def search(item, texto):
     logger.info("[streamondemand-pureita tantifilm.py] " + item.url + " search " + texto)
-    item.url = "%s/?s=%s" % (host, texto)
+    item.url = host + "/?s=" + texto
 
     try:
-        if item.extra == "serie":
-            return search_peliculas_tv(item)
+        if item.extra == "movie":
+            return peliculas_search(item)
         else:
-            return search_peliculas(item)
+            return peliculas_searchtv(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -197,7 +205,7 @@ def search(item, texto):
         return []
 # ==============================================================================================================================================================================
 
-def search_peliculas(item):
+def peliculas_search(item):
     logger.info("streamondemand-pureita [tantifilm search_peliculas]")
     itemlist = []
 
@@ -210,6 +218,8 @@ def search_peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        if not "http:" in scrapedthumbnail:
+         scrapedthumbnail = "http:" + scrapedthumbnail
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle=scrapedtitle.replace("streaming", "")
         scrapedtitle=scrapedtitle.replace("Permalink to", "")
@@ -226,7 +236,7 @@ def search_peliculas(item):
 
 # ==============================================================================================================================================================================
 
-def search_peliculas_tv(item):
+def peliculas_searchtv(item):
     logger.info("streamondemand-pureita [tantifilm search_peliculas_tv]")
     itemlist = []
 
@@ -239,6 +249,8 @@ def search_peliculas_tv(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        if not "https:" in scrapedthumbnail:
+          scrapedthumbnail = "https:" + scrapedthumbnail
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle=scrapedtitle.replace("streaming", "")
         scrapedtitle=scrapedtitle.replace("Permalink to", "")
@@ -338,6 +350,7 @@ def episodios(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================	
 
 def findvideos_tv(item):
     logger.info("streamondemand-pureita [tantifilm findvideos_tv]")
@@ -372,15 +385,25 @@ def findvideos_tv(item):
 
     return itemlist
 
+# ==============================================================================================================================================================================	
 	
-def findvideos_film(item):
-    logger.info("streamondemand-pureita [tantifilm findvideos_tv]")
-
+def findvideos(item):
+    logger.info("streamondemand-pureita [tantifilm findvideos]")
 
     # Descarga la página
-    data = item.extra if item.extra != '' else scrapertools.cache_page(item.url, headers=headers)
+    data = item.extra if item.extra != '' else httptools.downloadpage(item.url, headers=headers).data
+
+    if 'protectlink.stream' in data:
+        urls = scrapertools.find_multiple_matches(data, r'<iframe src=".*?//.*?=([^"]+)"')
+        for url in urls:
+            url = url.decode('base64')
+            data += '\t' + url
+			
+            url = httptools.downloadpage(url, only_headers=True, follow_redirects=False).headers.get("location", "")
+            data += '\t' + url
 
     itemlist = servertools.find_video_items(data=data)
+
     for videoitem in itemlist:
         videoitem.title = item.title + videoitem.title
         videoitem.fulltitle = item.fulltitle
@@ -388,20 +411,15 @@ def findvideos_film(item):
         videoitem.show = item.show
         videoitem.plot = item.plot
         videoitem.channel = __channel__
-
-    # Extrae las entradas
-    patron = r'<a id="(.*?)" class=".*?" href=".*?" data-links="([^"]+)">([^<]+)</a>'
+		
+    patron = r'\{"file":"([^"]+)","type":"[^"]+","label":"([^"]+)"\}'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    if 'linkprotect' in data:
-        data = scrapertools.cache_page(data, headers=headers)
-    for id, scrapedurl, scrapedtitle in matches:
-        scrapedtitle=scrapedtitle.replace("Film", "Server")
-        scrapedtitle=scrapedtitle.replace("Download", "")
-        scrapedtitle=scrapedtitle.replace("streaming", "")
+    for scrapedurl, scrapedtitle in matches:
+        title = item.title + " " + scrapedtitle + " quality"
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
-                 title= item.title + "[COLOR orange]" + scrapedtitle + " " + id + "[/COLOR]",
+                 action="play",
+                 title=title,
                  url=scrapedurl.replace(r'\/', '/').replace('%3B', ';'),
                  thumbnail=item.thumbnail,
                  fulltitle=item.title,
