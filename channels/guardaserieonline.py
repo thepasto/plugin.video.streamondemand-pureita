@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # Canale guardaserieonline
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
-# By MrTruth
 # ------------------------------------------------------------
 
 import re
@@ -18,14 +17,10 @@ from core.tmdb import infoSod
 
 __channel__ = "guardaserieonline"
 host = "http://www.guardaserie.online"
-DEBUG = config.get_setting("debug")
 
-headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
-           ['Accept-Encoding', 'gzip, deflate'],
-           ['Referer', host]]
 
-def isGeneric():
-    return True
+headers = [['Referer', host]]
+
 
 def mainlist(item):
     logger.info("streamondemand-pureita [GuardaSerieOnline mainlist]")
@@ -309,7 +304,7 @@ def episodi(item):
 
     patron = r'<img\s*.*?[meta-src|data-original]*="([^"]+)"\s*/>[^>]+>([^<]+)<[^>]+>[^>]+>[^>]+>'
     patron += r'[^>]+>[^>]+>([^<]+)*<[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>'
-    patron += r'[^>]+>[^>]+>[^>]+>\s*<span\s*.*?(meta-embed="[^"]+"\s*meta-embed2="[^"]+")'
+    patron += r'[^>]+>[^>]+>[^>]+>\s*<span\s*.*?(meta-embed="[^"]+"\s*|meta-embed2="[^"]+")'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedthumbnail, scrapedep, scrapedeptitle, scrapedextra in matches:
         scrapedeptitle = scrapertools.decodeHtmlentities(scrapedeptitle).strip()

@@ -60,15 +60,15 @@ def peliculas(item):
     itemlist = []
 
     from channels import cineblog01
-    item.url = "https://www.cb01.uno/"
+    item.url = "https://www.cb01.zone/"
     itemlist.extend(cineblog01.peliculas(item))
 
     from channels import casacinema
-    item.url = "http://www.casacinema.video/?s=%5BHD%5D"
+    item.url = "https://www.casacinema.video/?s=%5BHD%5D"
     itemlist.extend(casacinema.peliculas(item))	
 	
     from channels import italiafilm
-    item.url = "http://www.italia-film.gratis/novita-streaming/"
+    item.url = "http://www.italia-film.online/novita-streaming-1/"
     itemlist.extend(italiafilm.peliculas(item))
 
     #from channels import piratestreaming
@@ -105,13 +105,13 @@ def peliculas_infantiles(item):
     item.url = "http://www.guardaserie.online//category/animazione/"
     itemlist.extend(guardaserieonline.lista_serie(item))
 	
-    import streaminglove
-    item.url = "https://www.streaminglove.tv/genere/animazione/"
-    itemlist.extend(streaminglove.peliculas(item))
+    #import streaminglove
+    #item.url = "https://www.streaminglove.tv/genere/animazione/"
+    #itemlist.extend(streaminglove.peliculas(item))
 	
     import serietvu
     item.url = "http://www.serietvu.online/category/animazione-e-bambini/"
-    itemlist.extend(serietvu.latestep(item))
+    itemlist.extend(serietvu.lista_serie(item))
 
     sorted_itemlist = []
 
@@ -142,8 +142,8 @@ def series(item):
     #itemlist.extend(italiaserie.peliculas(item))
 	
     import serietvsubita
-    item.url = "http://serietvsubita.net"
-    itemlist.extend(serietvsubita.episodios(item))
+    item.url = "http://serietvsubita.net/"
+    itemlist.extend(serietvsubita.peliculas_tv(item))
 	
     import thelordofstreaming
     item.url = "http://www.thelordofstreaming.it/"

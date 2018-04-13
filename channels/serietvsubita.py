@@ -102,16 +102,18 @@ def peliculas_tv(item):
                  folder=True), tipo='tv'))
 				 
     # Extrae la marca de la siguiente página
-    next_page = scrapertools.find_single_match(data, '<strong class=\'on\'>\d+</strong>\s*<a href="([^<]+)">\d+</a>')
-    if next_page:
+    patron = '<strong class=\'on\'>\d+</strong>\s*<a href="([^<]+)">\d+</a>'
+    next_page = scrapertools.find_single_match(data, patron)
+    if next_page != "":
         if item.extra == "search_tv":
-           next_page = next_page.replace('&#038;', '&')
+          next_page = next_page.replace('&#038;', '&')
         itemlist.append(
-           item.clone(
-           action="peliculas_tv", 
-           title="[COLOR orange]Successivi >>[/COLOR]", 
-           url=next_page, 
-           thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
+            Item(channel=__channel__,
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=next_page,
+                 action="episodes",
+                 extra=item.extra,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
 
