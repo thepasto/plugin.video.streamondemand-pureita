@@ -1,3 +1,10 @@
+5.4.8
+-Configurazioni Aggiornate
+-Aggiornamento canali
+-Aggiornamento server
+-Fix vari
+
+
 5.4.7
 -Aggiornamento Ricerca
 -Configurazioni Aggiornate
