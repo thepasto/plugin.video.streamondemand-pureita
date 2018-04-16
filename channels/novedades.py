@@ -30,7 +30,7 @@ def mainlist(item, preferred_thumbnail="squares"):
                      title="Film",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_movie_blueP2.png",
                      viewmode="movie"),
-					 Item(channel=__channel__,
+                Item(channel=__channel__,
                      action="series",
                      title="Serie TV",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_tvshow_blueP2.png",
@@ -102,7 +102,7 @@ def peliculas_infantiles(item):
     itemlist = []
 
     import guardaserieonline
-    item.url = "http://www.guardaserie.online//category/animazione/"
+    item.url = "http://www.guardaserie.online/category/animazione/"
     itemlist.extend(guardaserieonline.lista_serie(item))
 	
     #import streaminglove
