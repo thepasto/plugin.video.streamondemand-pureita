@@ -8,6 +8,7 @@ import re
 import urlparse
 
 from core import config
+from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -15,15 +16,8 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "eurostreaming_video"
-
-
-DEBUG = config.get_setting("debug")
-
 host = "http://www.eurostreaming.video"
-
-
-def isGeneric():
-    return True
+headers = [['Referer', host]]
 
 
 def mainlist(item):
@@ -72,30 +66,31 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def peliculas(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] peliculas")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a\s*[^>]+ href="([^"]+)">\s*<img\s*class="img-responsive " title="([^"]+)" alt=".*?" src="([^<]+)" /><div\s*class="boxinfolocand"><h2>[^<]+</h2>'
+    patron = '<a\s*[^>]+ href="([^"]+)">\s*<img\s*class="img-responsive " title="([^"]+)" alt=".*?" src="([^<]+)" />'
+    patron += '<div\s*class="boxinfolocand"><h2>[^<]+</h2>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        scrapedtitle = scrapedtitle.replace("locandina film", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina film", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -119,33 +114,35 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_new(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_new")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
 	
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<h2>Ultimi Film inseriti</h2>([^+]+)<div\s*class="w-sidebar-container">')
 
     # Extrae las entradas (carpetas)
-    patron = '<a\s*[^>]+ href="([^"]+)">\s*<img\s*class="img-responsive " title="([^"]+)" alt=".*?" src="([^<]+)" /><div\s*class="boxinfolocand"><h2>[^<]+</h2>'
+    patron = '<a\s*[^>]+ href="([^"]+)">\s*<img\s*class="img-responsive " title="([^"]+)" alt=".*?" src="([^<]+)" />'
+    patron += '<div\s*class="boxinfolocand"><h2>[^<]+</h2>'
 
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina film", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina film", "")
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -153,14 +150,14 @@ def peliculas_new(item):
                  folder=True), tipo='tv'))
 
     return itemlist
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def serietv(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] serietv")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, '<h2>Archivio SERIE TV</h2>(.*?)<div\s*class="w-sidebar-container">')
 
     # Extrae las entradas (carpetas)
@@ -169,14 +166,16 @@ def serietv(item):
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina", "")
+        scrapedtitle = scrapedtitle.replace("serie tv", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="cat_ep",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -192,7 +191,7 @@ def serietv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="serietv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
@@ -200,14 +199,14 @@ def serietv(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def serietv_new(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] serietv_new")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, 'Ultimi aggiornamenti Serie TV([^+]+)<a\s*href="[^"]+"> Tutte le Serie TV >> </a>')
 
     # Extrae las entradas (carpetas)
@@ -216,14 +215,16 @@ def serietv_new(item):
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina", "")
+        scrapedtitle = scrapedtitle.replace("serie tv", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="cat_ep",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -232,14 +233,14 @@ def serietv_new(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def animation_new(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] animation_new")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     bloque = scrapertools.get_match(data, '<h2>Archivio ANIME E CARTONI<\/h2>([^+]+)')
 
@@ -249,14 +250,16 @@ def animation_new(item):
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina", "")
+        scrapedtitle = scrapedtitle.replace("serie tv", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="cat_ep",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -272,7 +275,7 @@ def animation_new(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="animation_new",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
@@ -280,14 +283,14 @@ def animation_new(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_requested(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_requested")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, 'Le serie più viste di questo mese:</h3>(.*?)<div\s*class="container-fluid wrap-cont-footer">')
 
     # Extrae las entradas (carpetas)
@@ -296,14 +299,16 @@ def peliculas_requested(item):
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina", "")
+        scrapedtitle = scrapedtitle.replace("serie tv", "")
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="cat_ep",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -312,55 +317,69 @@ def peliculas_requested(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================	
+# ==================================================================================================================================================	
 	
 def cat_ep(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] cat_ep")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a\s*[^>]+  href="[^>]+" newlink="([^"]+)" class="green-link">([^<]+)([^<]+)\s*<\/a><\/div>'
+    patron = '<div\s*class="su-link-ep">\s*<a\s*rel="nofo[^>]+\s*'
+    patron += 'href="[^>]+" newlink="([^"]+)" class="green-link">\s*([^<]+)</a>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedurl, scrapedtitle in matches:
+        scrapedthumbnail = ""
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina film", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("          ", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("<strong>", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("</strong>", ""))
-    # Extrae las entradas (carpetas)
-    patron = '<a\s*[^>]+  href="[^>]+" newlink="([^"]+)" class="green-link">([^"]+)[^-]+([^<]+)<\/a><\/div>'
-
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
-        scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina film", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("          ", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("<strong>", ""))
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("</strong>", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(infoSod(
+        scrapedtitle = scrapedtitle.replace("locandina film", "")
+        scrapedtitle = scrapedtitle.replace("          ", "")
+        scrapedtitle = scrapedtitle.replace("<strong>", "")
+        scrapedtitle = scrapedtitle.replace("</strong>", "")		
+        itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
-                 plot=scrapedplot,
+                 plot=item.plot,
                  extra=item.extra,
-                 folder=True), tipo='tv'))
+                 folder=True))
 
+    patron = '<div\s*class="su-link-ep">\s*<a\s*rel[^>]+  href="[^>]+" newlink="([^"]+)" class="green-link">\s*'
+    patron += '<strong>\s*([^<]+)</strong>([^<]+)</a> '
 
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedep, scrapedepi in matches:
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        scrapedtitle = scrapedep + scrapedepi
+        scrapedtitle = scrapedtitle.replace("locandina film", "")
+        scrapedtitle = scrapedtitle.replace("          ", "")
+        scrapedtitle = scrapedtitle.replace("<strong>", "")
+        scrapedtitle = scrapedtitle.replace("</strong>", "")		
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 extra=item.extra,
+                 folder=True))
+				 
+				 
     return itemlist
 
-	
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita.eurostreaming_video ] " + item.url + " search " + texto)
@@ -377,7 +396,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 		
-# ==============================================================================================================================================================================		
+# ==================================================================================================================================================		
 
 def peliculas_search(item):
     logger.info("[streamondemand-pureita.eurostreaming_video] peliculas_search")
@@ -387,24 +406,26 @@ def peliculas_search(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<a\s*href="([^>]+)"> <img\s*class="img-responsive "\s*title="([^>]+)"\s*alt="[^>]+" src="([^"]+)" />'
+    patron = '<a\s*href="([^>]+)"> <img\s*class="img-responsive "\s*'
+    patron += 'title="([^>]+)"\s*alt="[^>]+" src="([^"]+)" />'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("locandina", ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        scrapedtitle = scrapedtitle.replace("locandina", "")
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="cat_ep" if "serie tv" in scrapedtitle else "findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
-                 folder=True), tipo='tv'))
+                 folder=True), tipo='tv' if "serie tv" in scrapedtitle else "movie"))
 
     return itemlist
 

@@ -27,32 +27,32 @@ def mainlist(item):
 
     itemlist = [
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
              action="fichas",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - Per Genere[/COLOR]",
              action="genere",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]Per anno[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - Per anno[/COLOR]",
              action="genere_years",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]Per Paese[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - Per Paese[/COLOR]",
              action="genere_country",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_country2_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]3D[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - 3D[/COLOR]",
              action="fichas",
              url="%s/genere/3d/" % host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/blueray_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]A-Z[/COLOR]",
+             title="[COLOR azure]Film[COLOR orange] - Lista A/Z[/COLOR]",
              action="genere_az",
              url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
@@ -67,6 +67,23 @@ def mainlist(item):
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
+
+# ==============================================================================================================================================
+
+def search(item, texto):
+    logger.info("[pureita filmhd] " + item.url + " search " + texto)
+
+    item.url = host + "/?s=" + texto
+
+    try:
+        return fichas(item)
+
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
 
 # ==============================================================================================================================================
 
@@ -192,11 +209,7 @@ def fichas(item):
 
     for scrapedurl, scrapedtv, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-
-        # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios" if "TV" in scrapedtv else "findvideos",
@@ -238,10 +251,7 @@ def fichas_tv(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -279,8 +289,6 @@ def episodios(item):
 
     for scrapedtitle, scrapedurl in matches:
         scrapedtitle = scrapedtitle.replace("_", " X ")
-
-
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -296,21 +304,6 @@ def episodios(item):
 
 	
 # ==============================================================================================================================================================================
-
-def search(item, texto):
-    logger.info("[pureita filmhd] " + item.url + " search " + texto)
-
-    item.url = host + "/?s=" + texto
-
-    try:
-        return fichas(item)
-
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
 
 
 	
