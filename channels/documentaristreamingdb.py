@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-pureita.- XBMC Plugin
+# streamondemand-pureita / XBMC Plugin
 # Canale  documentaristreamingdb
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
@@ -35,7 +35,7 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("streamondemand.documentaristreamingdb mainlist")
+    logger.info("[streamondemand-pureita documentaristreamingdb] mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Aggiornamenti[/COLOR]",
                      action="peliculas",
@@ -55,7 +55,7 @@ def mainlist(item):
 
 
 def newest(categoria):
-    logger.info("streamondemand.documentaristreamingdb newest" + categoria)
+    logger.info("[streamondemand-pureita documentaristreamingdb] newest" + categoria)
     itemlist = []
     item = Item()
     try:
@@ -112,7 +112,7 @@ def categorias(item):
 
 
 def search(item, texto):
-    logger.info("streamondemand.documentaristreamingdb " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita documentaristreamingdb] " + item.url + " search " + texto)
     item.url = host + "/?searchtype=movie&post_type=movie&s=" + texto
     try:
         return peliculas(item)
@@ -124,7 +124,7 @@ def search(item, texto):
         return []
 
 def peliculas(item):
-    logger.info("streamondemand.documentaristreamingdb peliculas")
+    logger.info("[streamondemand-pureita documentaristreamingdb]peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -171,22 +171,16 @@ def peliculas(item):
         scrapedurl = scrapedurl.replace("&#038;", "&")
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
 def findvideos(item):
-    logger.info("streamondemand.documentaristreamingdb findvideos")
+    logger.info("[streamondemand-pureita documentaristreamingdb] findvideos")
 
     data = scrapertools.cache_page(item.url, headers=headers)
     
@@ -285,6 +279,3 @@ def findvideos(item):
         
     return itemlist
 
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
