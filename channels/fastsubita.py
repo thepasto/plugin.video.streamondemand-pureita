@@ -15,19 +15,19 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "fastsubita"
-host = "http://fastsubita.ga/"
+host = "http://fastsubita.gq/"
 headers = [['Referer', host]]
 
 
 
 def mainlist(item):
     logger.info("[streamondemand-pureita fastsubita] mainlist")
-    itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV [COLOR orange] - In Evidenza[/COLOR]",
-                     action="peliculas_home",
-                     extra="serie",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+    itemlist = [#Item(channel=__channel__,
+                     #title="[COLOR azure]Serie TV [COLOR orange] - In Evidenza[/COLOR]",
+                     #action="peliculas_home",
+                     #extra="serie",
+                     #url=host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi[/COLOR]",
                      action="peliculas_episodios",
@@ -77,8 +77,7 @@ def peliculas_home(item):
     for scrapedurl, scrapedtitle, scrapedep in matches:
         scrapedthumbnail = ""
         scrapedplot = ""
-        scrapedtitle = scrapedtitle.lower()
-        scrapedtitle = scrapedtitle.capitalize()
+        scrapedtitle = scrapedtitle.title()
         scrapedep = scrapedep.lower()
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -91,6 +90,7 @@ def peliculas_home(item):
                  plot=scrapedplot,
                  extra=item.extra,
                  folder=True), tipo='tv'))
+			 
 
     return itemlist
 	
@@ -245,8 +245,7 @@ def peliculas_episodios(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
         scrapedthumbnail = ""
-        scrapedtitle = scrapedtitle.lower()
-        scrapedtitle = scrapedtitle.capitalize()
+        scrapedtitle = scrapedtitle.title()
         scrapedtitle = scrapedtitle.replace("’", "")
         scrapedtitle = scrapedtitle.replace("&#", "")
         scrapedep = scrapedep.replace("8211;", "")
