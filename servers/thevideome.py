@@ -29,7 +29,8 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
     data = httptools.downloadpage(page_url).data
 
-    mpri_Key = scrapertools.find_single_match(data, "lets_play_a_game='([^']+)'")
+    var = scrapertools.find_single_match(data, 'vsign.player.*?\+ (\w+)')
+    mpri_Key = scrapertools.find_single_match(data, "%s='([^']+)'" %var)
     data_vt = httptools.downloadpage("https://thevideo.me/vsign/player/%s" % mpri_Key).data
     vt = scrapertools.find_single_match(data_vt, 'function\|([^\|]+)\|')
     if "fallback" in vt:

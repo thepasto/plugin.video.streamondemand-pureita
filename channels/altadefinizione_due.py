@@ -120,8 +120,9 @@ def peliculas(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace(":", " - ")
+        scrapedtitle = scrapedtitle.replace("streaming hd", "")
+        scrapedtitle = scrapedtitle.replace("[sub-ita]", " [[COLOR yellow]Sub-ITA[/COLOR]]")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -155,7 +156,7 @@ def find_movie(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<span>.*?</span>\s*<a href="([^"]+)"><span>([^<]+)<\/span>'
+    patron = '<span>HD.*?<a\s*href="([^"]+)">.*?<span>([^<]+)<\/span>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 

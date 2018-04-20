@@ -129,14 +129,17 @@ def peliculas(item):
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(4))
         scrapedurl = urlparse.urljoin(item.url, match.group(3))
         lang = scrapertools.unescape(match.group(2))
+        lang =lang.replace("Italiano", "ITA")
         quality = scrapertools.unescape(match.group(1))
+        quality =" [[COLOR yellow]" + quality +"[/COLOR]]"
+        lang =" [[COLOR yellow]" + lang +"[/COLOR]]"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + " [COLOR orange] [" + quality + "] [" + lang + "][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + quality + lang,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
