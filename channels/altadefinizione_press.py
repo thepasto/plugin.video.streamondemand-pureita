@@ -258,7 +258,7 @@ def peliculas_server(item):
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
-                 fulltitle="item.show",
+                 fulltitle=item.show,
                  show=scrapedtitle,
                  title="[COLOR azure]" + item.title + "[COLOR yellow] [" + scrapedtitle + "][/COLOR]",
                  url=scrapedurl,
