@@ -20,8 +20,6 @@ __channel__ = "altadefinizione_press"
 host = "http://altadefinizione.press/"
 headers = [['Referer', host]]
 
-def isGeneric():
-    return True
 
 def mainlist(item):
     logger.info("streamondemand-pureita.altadefinizione_press mainlist")
@@ -208,11 +206,11 @@ def peliculas(item):
           rating="N/A"
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="peliculas_server",
+                 action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[COLOR yellow] [" + rating + "][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + " [[COLOR yellow]" + rating + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -236,7 +234,7 @@ def peliculas(item):
 
 # ==============================================================================================================================================================================
 
-def peliculas_server(item):
+def findvideos(item):
     logger.info("streamondemand-pureita.altadefinizione_press peliculas")
     itemlist = []
 
@@ -256,11 +254,11 @@ def peliculas_server(item):
             continue
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="play",
                  contentType="movie",
                  fulltitle=item.show,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + item.title + "[COLOR yellow] [" + scrapedtitle + "][/COLOR]",
+                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -270,7 +268,7 @@ def peliculas_server(item):
 
 # ==============================================================================================================================================================================
 		
-def findvideos(item):
+def play(item):
     logger.info("streamondemand-pureita.altadefinizione_press findvideos")
     data = httptools.downloadpage(item.url, headers=headers).data
 
