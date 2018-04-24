@@ -145,15 +145,16 @@ def fichas_archive(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = 'lazy-src="([^"]+)" class="[^>]+"[^>]+>.*?' \
+    patron = '<img.*?src="([^"]+)" class="[^>]+"[^>]+>.*?' \
              '<td class="MvTbTtl">\s*<a href="([^"]+)"[^>]+>\s*' \
-             '<strong>(.*?)<\/strong>.*?<td>(.*?)<\/td>.*?' \
+             '<strong>(.*?)<\/strong>.*?' \
+             '<td>(.*?)<\/td>.*?' \
              '<a href="[^>]+rel="category">(.*?)</a>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedthumbnail, scrapedurl, scrapedtitle, year, genre in matches:
-        info_date=' [COLOR orange][' + year + "] [" + genre + '][/COLOR]'
+        info_date='  [COLOR orange][' + year + " - " + genre + '][/COLOR]'
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -188,8 +189,9 @@ def fichas(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<a href="([^"]+)">\s*<div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
-             '<h2 class="Title">([^<]+)</h2>.*?<p>(.*?)</p>'
+    patron = '<a href="([^"]+)">\s*<div class="Image">[^>]+>.*?src="([^"]+)".*?>[^>]+>[^>]+>\s*' \
+             '<h2 class="Title">([^<]+)<\/h2>.*?' \
+             '<p>(.*?)<\/p>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -226,7 +228,7 @@ def fichas_tv(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = 'a href="([^"]+)">\s*<div class="Image">[^>]+>.*?data-lazy-src="([^"]+)".*?' \
+    patron = '<a href="([^"]+)">\s*<div class="Image">[^>]+><img.*?src="([^"]+)".*?' \
              '<h2 class="Title">([^<]+)</h2>.*?<p>(.*?)</p>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -267,7 +269,7 @@ def fichas_new(item):
 
     patron = '<a href="([^"]+)">\s*<div class="Image">\s*' \
              '<figure class="[^>]+">\s*' \
-             '<img src="([^"]+)" alt="Image\s*([^\d+]+)([^<]+)">'
+             '<img.*?src="([^"]+)" alt="Image\s*([^\d+]+)([^<]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -308,7 +310,7 @@ def episodios(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<a href="([^"]+)">\s*<div class="Image">\s*[^>]+>\s*' \
-             '<img src="([^"]+)"\s*alt="Image\s*([^"]+)">'
+             '<img.*?src="([^"]+)"\s*alt="Image\s*([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -325,7 +327,7 @@ def episodios(item):
                  plot=item.plot,
                  show=scrapedtitle), tipo='tv'))
 				 
-    patron = 'img\s*src=&quot[^h]+([^&]+).*?alt=&quot[^ ]+ ([^<]+)</span></a>' \
+    patron = 'img.*?src=&quot[^h]+([^&]+).*?alt=&quot[^ ]+ ([^<]+)</span></a>' \
              '</td>\s*<td class="MvTbTtl"><a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -347,7 +349,7 @@ def episodios(item):
                  show=scrapedtitle), tipo='tv'))
 
     patron = '<td class="MvTbImg B"><a href="([^"]+)" class="MvTbImg">' \
-             '<img src="([^"]+)" alt="Image (.*?)"></a></td>'
+             '<img.*?src="([^"]+)" alt="Image (.*?)"></a></td>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 

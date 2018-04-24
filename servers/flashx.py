@@ -174,7 +174,7 @@ def find_videos(data):
 
     # http://flashx.tv/z3nnqbspjyne
     # http://www.flashx.tv/embed-li5ydvxhg514.html
-    patronvideos = 'flashx.(?:tv|pw|to|ws|sx)/(?:embed.php\\?c=|embed-|playvid-|)([A-z0-9]+)'
+    patronvideos = 'flashx.(?:tv|pw|to|ws|sx|bz)/(?:embed.php\\?c=|embed-|playvid-|)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
