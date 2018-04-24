@@ -271,11 +271,14 @@ def findvideos_tv(item):
     # Descarga la página
     data = httptools.downloadpage(item.url, headers=headers).data.replace('\n', '')
 
-    patron = r'<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
+    patron = r'<iframe id="iframeVid" width=".*?" height=".*?" src="([^"]+)" allowfullscreen=""></iframe>'
     url = scrapertools.find_single_match(data, patron)
+    if not url.startswith("https:"):
+      url = "https:" + url
 
     if 'hdpass' in url:
         data = httptools.downloadpage(url, headers=headers).data
+
 
         start = data.find('<div class="row mobileRes">')
         end = data.find('<div id="playerFront">', start)

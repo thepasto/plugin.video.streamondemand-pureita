@@ -101,9 +101,9 @@ def peliculas_infantiles(item):
 
     itemlist = []
 
-    import guardaserieonline
-    item.url = "http://www.guardaserie.online/category/animazione/"
-    itemlist.extend(guardaserieonline.lista_serie(item))
+    import filmsenzalimiti_info
+    item.url = "https://www.filmsenzalimiti.info/watch-genre/cartoni-animati"
+    itemlist.extend(filmsenzalimiti_info.peliculas(item))
 	
     #import streaminglove
     #item.url = "https://www.streaminglove.tv/genere/animazione/"

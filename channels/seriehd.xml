@@ -13,9 +13,9 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/seriehd.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>10</version>
-	<date>31/01/2018</date>
-	<changes>Update</changes>
+	<version>11</version>
+	<date>23/04/2018</date>
+	<changes>Update and Temporary Fix</changes>
 
 	<categories>
 		<category>serie</category>

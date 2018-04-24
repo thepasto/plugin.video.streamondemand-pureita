@@ -192,6 +192,8 @@ def findvideos(item):
 
     patron = r'<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
     url = scrapertools.find_single_match(data, patron)
+    if not url.startswith("https:"):
+      url = "https:" + url
 
     if 'hdpass' in url:
         data = httptools.downloadpage(url, headers=headers).data

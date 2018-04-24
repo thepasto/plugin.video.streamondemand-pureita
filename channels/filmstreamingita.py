@@ -8,6 +8,7 @@
 import re
 
 from core import logger
+from core import httptools
 from core import config
 from core import servertools
 from core import scrapertools
@@ -15,38 +16,31 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmstreamingita"
-__category__ = "F"
-__type__ = "generic"
-__title__ = "FilmStreamingIta"
-__language__ = "IT"
-
 host = "http://filmstreamingita.xyz/"
+headers = [['Referer', host]]
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host]
-]
-
-def isGeneric():
-    return True
 
 
 def mainlist(item):
     logger.info("streamondemand-pureita.filmstreamingita mainlist")
     itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
-                     title=color("Nuovi Film", "azure"),
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
+                     action="peliculas",
+                     url="%s/category/animazione/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
                      action="categorie",
-                     title=color("Categorie", "azure"),
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     title=color("Cerca ...", "yellow"),
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
@@ -71,7 +65,7 @@ def categorie(item):
     logger.info("streamondemand-pureita.filmstreamingita categorie")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data 
     blocco = scrapertools.get_match(data, r'Genere Film</a>(.*?)</ul>')
     patron = r'<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
@@ -94,23 +88,27 @@ def peliculas(item):
     logger.info("streamondemand-pureita.filmstreamingita peliculas")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers=headers)
+    data = httptools.downloadpage(item.url, headers=headers).data 
 
     patron = r'<div class="home_tall_box">\s*'
     patron += r'<a href="([^"]+)".*?>\s*<img.*?alt="([^"]+)".*?src="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
-
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  extra="movie",
+                 plot=scrapedplot,
+                 show=scrapedtitle,
                  thumbnail=scrapedthumbnail,
                  folder=True), tipo="movie"))
 
@@ -122,16 +120,10 @@ def peliculas(item):
         scrapedurl = matches[0]
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
 
@@ -142,16 +134,10 @@ def peliculas(item):
         scrapedurl = matches[0]
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
     return itemlist
@@ -160,26 +146,23 @@ def peliculas(item):
 
 def findvideos(item):
     logger.info("streamondemand-pureita.filmstreamingita findvideos")
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = httptools.downloadpage(item.url, headers=headers).data 
     
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
         server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(["[%s] " % color(server, 'orange'), item.title])
+        videoitem.title = "".join(['[COLOR orange][B]' + server + ' [/COLOR][/B]-' + item.show])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
         videoitem.channel = __channel__
     return itemlist
 
 # ==============================================================================================================================================================================
 
-def color(text, color):
-    return "[COLOR "+color+"]"+text+"[/COLOR]"
     
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master/)")
+
 
 

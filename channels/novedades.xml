@@ -12,11 +12,11 @@
 	<thumbnail></thumbnail>
 	
 	<update_url></update_url>
-	<version>14</version>
+	<version>15</version>
 	
 	<changes>
 		<change> 
-			<date>16/04/2018</date>
+			<date>23/04/2018</date>
 			<autor>PureITA</autor>
 			<description>Possibility to include other channels, through configuration</description>
 		</change>
