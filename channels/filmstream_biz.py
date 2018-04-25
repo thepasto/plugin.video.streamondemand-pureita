@@ -20,8 +20,6 @@ __channel__ = "filmstream_biz"
 host = "http://streamfilm.club/"
 headers = [['Referer', host]]
 
-def isGeneric():
-    return True
 
 def mainlist(item):
     logger.info("[pureita filmstream_biz] mainlist")
@@ -114,20 +112,31 @@ def peliculas(item):
     bloque = scrapertools.get_match(data, '<h1>.*?</h1>(.*?)Cerca il tuo film</h2>')	
 	
     patron = '<div class="poster">\s*<img\s*src="([^"]+)"\s*alt="([^"]+)">\s*'
-    patron += '<div class="rating"><span class=".*?"><\/span>.*?<\/div>\s*'
+    patron += '<div class="rating"><span class=".*?"><\/span>\s*(.*?)<\/div>\s*'
     patron += '<div class="mepo">\s*<span class="quality">(.*?)<\/span>\s*<\/div>\s*<a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedthumbnail, scrapedtitle, quality, scrapedurl in matches:
+    for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
+        rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if rating == " [[COLOR yellow]" + "0" + "[/COLOR]]":
+          rating = ""
+        quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        scrapedtitle = scrapedtitle.replace(" Streaming HD", "")
+        scrapedtitle = scrapedtitle.replace(" Streaming", "")
+
+        scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle +'  [COLOR orange][' + quality + '][/COLOR]',
+                 contentType="movie",
+                 show=scrapedtitle,
+                 title=scrapedtitle + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='movie'))
+                 plot=scrapedplot,
+                 folder=True), tipo='movie'))
 
     # Paginación
     next_page = scrapertools.find_single_match(data, '<a href="([^"]+)" ><span class="icon-chevron-right">')
