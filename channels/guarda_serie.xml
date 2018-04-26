@@ -11,9 +11,9 @@
     <bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/guarda_serie.png</bannermenu>
 
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-    <version>01</version>
-    <date>23/04/2018</date>
-    <changes>First Release</changes>
+    <version>02</version>
+    <date>26/04/2018</date>
+    <changes>Update and Fix</changes>
 
     <categories>
         <category>serie</category>
