@@ -161,7 +161,7 @@ def get_next_items( item ):
                     itemlist = servertools.find_video_items(item)
 
                 if len(itemlist)==0:
-                    itemlist = [ Item(title="No se han encontrado vídeos", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
+                    itemlist = [ Item(title="Nessun video trovato", thumbnail=os.path.join( plugintools.get_runtime_path() , "resources" , "images" , "thumb_error.png" )) ]
             # ---------------add_serie_to_library-----------
             elif item.action=="add_serie_to_library":
                 plugintools.log("navigation.get_next_items add_serie_to_library")
