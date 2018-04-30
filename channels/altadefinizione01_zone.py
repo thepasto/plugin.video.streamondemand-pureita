@@ -164,7 +164,10 @@ def peliculas_list(item):
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedurl = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-        info_video = " [[COLOR yellow]" + quality + "[/COLOR]]" + " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if quality:
+         quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        if rating:
+         rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
 		
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -172,7 +175,7 @@ def peliculas_list(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + info_video,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -188,7 +191,7 @@ def peliculas_list(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_list",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
@@ -221,7 +224,12 @@ def peliculas_update(item):
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(3))
         scrapedurl = scrapertools.unescape(match.group(2))
         rating = scrapertools.unescape(match.group(1))
-        info_video = "[[COLOR yellow]" + quality + "[/COLOR]] " + sub + " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if sub:
+         sub = " [[COLOR yellow]" + sub + "[/COLOR]]"
+        if quality:
+         quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        if rating:
+         rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
          
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -229,7 +237,7 @@ def peliculas_update(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + info_video,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -244,7 +252,7 @@ def peliculas_update(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_update",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
@@ -274,7 +282,12 @@ def peliculas(item):
         rating = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = scrapertools.unescape(match.group(1))
-        info_video = "[[COLOR yellow]" + quality + "[/COLOR]] " + sub + " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if sub:
+         sub = " [[COLOR yellow]" + sub + "[/COLOR]]"
+        if quality:
+         quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        if rating:
+         rating = " [[COLOR yellow]" + rating + "[/COLOR]]"  
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -282,7 +295,7 @@ def peliculas(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + info_video,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -297,7 +310,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))

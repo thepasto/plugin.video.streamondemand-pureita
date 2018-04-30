@@ -58,7 +58,6 @@ def mainlist(item):
         Item(channel=__channel__,
              title="[COLOR orange]Cerca ...[/COLOR]",
              action="search",
-             url=host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
@@ -92,10 +91,7 @@ def genere_az(item):
     data = scrapertools.find_single_match(data, patron)
 
     patron = '<li><a href="([^"]+)">(.*?)</a>'
-
-
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
@@ -110,7 +106,6 @@ def genere_az(item):
 
 # ===================================================================================================================================================
 
-
 def genere(item):
     logger.info("[streamondemand-pureita linkstreaming] genere")
     itemlist = []
@@ -122,9 +117,7 @@ def genere(item):
 
     patron = '<li class="cat-item cat-item-\d+"><a href="([^"]+)">(.*?)</a>'
 
-
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
@@ -181,7 +174,6 @@ def fichas_archive(item):
     return itemlist
 
 # ===================================================================================================================================================
-
 
 def fichas(item):
     logger.info("[streamondemand-pureita linkstreaming] fichas")
@@ -258,7 +250,6 @@ def fichas_tv(item):
 
     return itemlist
 
-
 # ===================================================================================================================================================
 
 def fichas_new(item):
@@ -309,8 +300,10 @@ def episodios(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<a href="([^"]+)">\s*<div class="Image">\s*[^>]+>\s*' \
-             '<img.*?src="([^"]+)"\s*alt="Image\s*([^"]+)">'
+    #patron = '<a href="([^"]+)">\s*<div class="Image">\s*[^>]+>\s*' \
+             #'<img.*?src="([^"]+)"\s*alt="Image\s*([^"]+)">'
+    patron = '<td class[^>]+><a href="([^"]+)" class="MvTbImg">' \
+             '<img src="([^"]+)" alt="Image\s*(.*?)"><\/a><\/td>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -347,27 +340,43 @@ def episodios(item):
                  fulltitle=scrapedtitle,
                  plot=item.plot,
                  show=scrapedtitle), tipo='tv'))
-
-    patron = '<td class="MvTbImg B"><a href="([^"]+)" class="MvTbImg">' \
-             '<img.*?src="([^"]+)" alt="Image (.*?)"></a></td>'
-
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedthumbnail, scrapedtitle   in matches:
-        scrapedplot = ""
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 contentType="tv",
-                 title=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 fulltitle=scrapedtitle,
-                 plot=item.plot,
-                 show=scrapedtitle), tipo='tv'))
 				 
     return itemlist
 
 # ===================================================================================================================================================
 
+def fichas_search(item):
+    logger.info("[streamondemand-pureita linkstreaming] fichas")
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+	
+    patron = '<h1>Latest Movies</h1>(.*?)</section>'
+    data = scrapertools.find_single_match(data, patron)
+
+    patron = '<li class="[^>]+">\s*<article id[^>]+>.*?'
+    patron += '<a href="([^"]+)">.*?'
+    patron += '<h2 class="[^>]+">([^<]+)</h2>\s*<span class="Year">(.*?)</span>.*?'
+    patron += '.*?<p>(.*?)</p>\s*'
+    patron += '.*?[^>]+><span>Genere:[^>]+>\s*(.*?)\s*<'
+	
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl,  scrapedtitle, year, scrapedplot, genre in matches:
+        info_date='  [COLOR orange][' + year + " - " + genre + '][/COLOR]'
+        scrapedthumbnail =""
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos" if not "Serie" in genre else "episodios",
+                 contentType="movie",
+                 title='[COLOR azure]' + scrapedtitle + '[/COLOR]' + info_date,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=scrapedtitle,
+                 plot=scrapedplot,
+                 show=scrapedtitle), tipo='movie' if not "Serie" in genre else "tv"))
+
+
+    return itemlist
+# ===================================================================================================================================================
 

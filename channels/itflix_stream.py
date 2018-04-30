@@ -35,7 +35,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
                      action="genere",
-                     url="%s/film-streaming/" % host,
+                     url="%s/film/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Anno[/COLOR]",
@@ -54,6 +54,12 @@ def mainlist(item):
                      url="%s/i-piu-votati/" %host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Sub ITA[/COLOR]",
+                     action="peliculas",
+                     url="%s/genere/sub-ita/" %host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_sub_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
@@ -119,7 +125,7 @@ def genere(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = 'li class="cat-item cat-item-.*?"><a href="([^"]+)">([^<]+)</a>'
+    patron = 'li class="cat-item cat-item-\d+"><a href="([^"]+)"\s*[^>]+>([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -171,17 +177,24 @@ def peliculas(item):
     patron += '<div class="mepo">\s*<span class="quality">([^<]+)</span></div>\s*<a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapedplot=""
+
     for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
+        scrapedplot=""
         scrapedtitle = scrapedtitle.replace("[", "")
         scrapedtitle = scrapedtitle.replace("]", "")
         rating = rating.replace(" ", "")
         rating = rating.replace(",", ".")
         quality = quality.replace("PROSSIMAMENTE", "NA")
+        if quality:
+         quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        if rating:
+         rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if "Sub ITA"in quality:
+          quality=quality.replace("Sub ITA", "[COLOR azure]] [[/COLOR]Sub ITA")	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [COLOR yellow]["+rating+"] ["+quality+"][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" +quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -221,10 +234,16 @@ def peliculas_list(item):
         scrapedtitle = scrapedtitle.replace("]", "")
         rating = rating.replace(",", ".")
         quality = quality.replace("PROSSIMAMENTE", "NA")
+        if quality:
+         quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        if rating:
+         rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if "Sub ITA"in quality:
+         quality=quality.replace("Sub ITA", "[COLOR azure]] [[/COLOR]Sub ITA")		
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle+" [COLOR yellow]["+quality+"] ["+rating+"]"+"[/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" +quality + rating,
                  thumbnail=scrapedthumbnail,
                  url=scrapedurl,
                  fulltitle=scrapedtitle,

@@ -21,7 +21,7 @@ headers     = [['Referer', host]]
 
 
 def mainlist(item):
-    logger.info("streamondemand-pureita altadefinizione_bid mainlist")
+    logger.info("[streamondemand-pureita altadefinizione_bid] mainlist")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Prime visioni[/COLOR]",
                      action="peliculas",
@@ -74,13 +74,13 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def categorias(item):
-    logger.info("streamondemand-pureita altadefinizione_bid categorias")
+    logger.info("[streamondemand-pureita altadefinizione_bid] categorias")
     itemlist = []
 
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Narrow search by selecting only the combo
     patron = '<li><a href="[^"]+">ULTIME SERIE TV</a></li>(.*?)</ul>'
@@ -92,6 +92,8 @@ def categorias(item):
 
     for scrapedurl, scrapedtitle in matches:
         scrapedurl = urlparse.urljoin(item.url, scrapedurl)
+        if "Anime" in scrapedtitle:
+         continue
         scrapedthumbnail = ""
         scrapedplot = ""
         itemlist.append(
@@ -105,10 +107,10 @@ def categorias(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
-    logger.info("streamondemand-pureita altadefinizione_bid " + item.url + " search " + texto)
+    logger.info("[streamondemand-pureita altadefinizione_bid] " + item.url + " search " + texto)
     item.url = host + "/?s=" + texto
     try:
         if item.extra == "movie":
@@ -122,14 +124,14 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def peliculas(item):
-    logger.info("streamondemand-pureita altadefinizione_bid peliculas")
+    logger.info("[streamondemand-pureita altadefinizione_bid] peliculas")
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*' \
@@ -138,18 +140,22 @@ def peliculas(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, rating in matches:
         if "test yb " in scrapedtitle or "test by" in scrapedtitle:
-		   continue
-        rating = "[" + rating + "]"
-        if "HD" in rating: 
-         rating=""
+		   continue	
+        if rating:
+          rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+        if "HD" in rating:
+          rating=""
+        if "HD" in scrapedtitle:
+          scrapedtitle = scrapedtitle.replace("HD", "[COLOR yellow]HD[/COLOR]")
+		
         scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_movies",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[COLOR yellow] " + rating + "[/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -173,14 +179,14 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_tv(item):
-    logger.info("streamondemand-pureita altadefinizione_bid peliculas_tv")
+    logger.info("[streamondemand-pureita altadefinizione_bid] peliculas_tv")
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*<div class="title">([^<]+)</div>'
@@ -209,7 +215,7 @@ def peliculas_tv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_tv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
@@ -217,10 +223,10 @@ def peliculas_tv(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def peliculas_tv_new(item):
-    logger.info("streamondemand-pureita altadefinizione_bid peliculas_tv_new")
+    logger.info("[streamondemand-pureita altadefinizione_bid] peliculas_tv_new")
     itemlist = []
     PERPAGE = 14
 
@@ -265,34 +271,14 @@ def peliculas_tv_new(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================
-
-def findvideos(item):
-    logger.info("streamondemand-pureita altadefinizione_bid findvideos")
-	
-    # Descarga la pagina 
-    data = item.url if item.extra == 'serie' else httptools.downloadpage(item.url).data
-
-    itemlist = servertools.find_video_items(data=data)
-
-    for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
-        videoitem.fulltitle = item.fulltitle
-        videoitem.thumbnail = item.thumbnail
-        videoitem.show = item.show
-        videoitem.plot = item.plot
-        videoitem.channel = __channel__
-
-    return itemlist
-
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_ep(item):
-    logger.info("streamondemand-pureita altadefinizione_bid peliculas_tv")
+    logger.info("[streamondemand-pureita altadefinizione_bid] peliculas_ep")
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
     patron = '<li><a href="([^"]+)">([^<]+)<small>([^<]+)</small>\s*(.*?)</a>'
@@ -319,7 +305,7 @@ def peliculas_ep(item):
 				 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -334,7 +320,7 @@ def episodios(item):
                 scrapedtitle = scrapedtitle.replace(";", "")
                 itemlist.append(
                     Item(channel=__channel__,
-                         action="findvideos",
+                         action="findvideos_tv",
                          contentType="episode",
                          title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " (" + lang_title + ")"),
                          url=data,
@@ -344,7 +330,7 @@ def episodios(item):
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
                          show=item.show))
 
-    logger.info("streamondemand-pureita altadefinizione_bid episodios")
+    logger.info("[streamondemand-pureita altadefinizione_bid] episodios")
     itemlist = []
 
     # Descarga la pagina 
@@ -353,7 +339,7 @@ def episodios(item):
 
     lang_titles = []
     starts = []
-    patron = r"Stagione.*?ITA"
+    patron = r"Stagione|Edizione|.*?"
     matches = re.compile(patron, re.IGNORECASE).finditer(data)
     for match in matches:
         season_title = match.group()
@@ -378,4 +364,122 @@ def episodios(item):
 
     return itemlist
 
+# ==================================================================================================================================================
+	
+def findvideos_tv(item):
+    logger.info("[streamondemand-pureita altadefinizione_bid] findvideos_tv")
+    itemlist = []
+
+    patron = '<a href="([^"]+)" target="_blank" rel="nofollow">([^<]+)</a>'
+
+    matches = re.compile(patron, re.DOTALL).findall(item.url)
+
+    for scrapedurl, scrapedserver in matches:
+        itemlist.append(
+            Item(
+                channel=__channel__,
+                action="play",
+                fulltitle=item.scrapedtitle,
+                show=item.scrapedtitle,
+                title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedserver + "[/COLOR]]",
+                url=scrapedurl,
+                thumbnail=item.thumbnail,
+                plot=item.plot,
+                folder=True))
+
+    return itemlist
+
+# ==================================================================================================================================================
+
+def findvideos_movies(item):
+    logger.info("[streamondemand-pureita altadefinizione_bid] findvideos_movies")
+    itemlist = []
+
+    data = httptools.downloadpage(item.url).data
+    # The categories are the options for the combo
+    patron = '<iframe class="embed-responsive-item" SRC="(([^.]+)[^"]+)"[^>]+></iframe>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = urlparse.urljoin(item.url, scrapedurl)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("https://", "")
+        scrapedtitle = scrapedtitle.capitalize()
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+	
+    patron = '<li><a href="([^"]+)" target="__blank" rel="nofollow">([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedurl = urlparse.urljoin(item.url, scrapedurl)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+				 
+    return itemlist
+
+# ==================================================================================================================================================
+	
+def play(item):
+    itemlist=[]
+
+    data = item.url
+
+    if "rapidcrypt" in item.url:
+       data = httptools.downloadpage(item.url).data
+	  
+    while 'vcrypt' in item.url:
+        item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
+        data = item.url
+		
+    #logger.debug(data)
+
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = item.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+
+# ==================================================================================================================================================
+"""
+def findvideos(item):
+    logger.info("streamondemand-pureita altadefinizione_bid findvideos")
+	
+    # Descarga la pagina 
+    data = item.url if item.extra == 'serie' else httptools.downloadpage(item.url).data
+
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = "".join([item.title, '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+"""
+# ==================================================================================================================================================
 	
