@@ -42,73 +42,57 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.filmontv mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]In Onda Adesso[/COLOR]",
+                     title="[COLOR red]IN ONDA ADESSO[/COLOR]",
                      action="tvoggi",
-                     url="%s/filmtv/oggi/in-onda/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/on_air7_P.png"),
+                     url="%s/filmtv/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/inondaadesso_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Mattina[/COLOR]",
                      action="tvoggi",
-                     url="%s/filmtv/oggi/mattina/" % host,
+                     url="%s/filmtv/?range=mt" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/mattino_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Pomeriggio[/COLOR]",
                      action="tvoggi",
-                     url="%s/filmtv/oggi/pomeriggio/" % host,
+                     url="%s/filmtv/?range=pm" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/pomeriggio_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR azure]Preserale[/COLOR]",
-                     #action="tvoggi",
-                     #url="%s/filmtv/?range=pr" % host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/preserale_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Preserale[/COLOR]",
+                     action="tvoggi",
+                     url="%s/filmtv/?range=pr" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/preserale_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Prima serata[/COLOR]",
                      action="tvoggi",
-                     url="%s/filmtv/oggi/sera/" % host,
+                     url="%s/filmtv/?range=ps" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/primaserata_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR azure]Seconda serata[/COLOR]",
-                     #action="tvoggi",
-                     #url="%s/filmtv/?range=ss" % host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/secondaserata_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Seconda serata[/COLOR]",
+                     action="tvoggi",
+                     url="%s/filmtv/?range=ss" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/secondaserata_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Notte[/COLOR]",
                      action="tvoggi",
-                     url="%s/filmtv/oggi/notte/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/notte_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure] In Settimana[/COLOR]",
-                     action="tvweek",
-                     url="%s/filmtv/oggi/in-onda/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/calendar1_P.png")]
+                     url="%s/filmtv/?range=nt" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/notte_P.png")]
 
     return itemlist
 
-# ==================================================================================================================================================
 
 def tvoggi(item):
     logger.info("streamondemand.filmontv tvoggi")
     itemlist = []
-    PERPAGE = 18
-	
-    p = 1
-    if '{}' in item.url:
-        item.url, p = item.url.split('{}')
-        p = int(p)
-	
+
     # Pagina di Download
     data = scrapertools.cache_page(item.url)
 
     # Estrazioni voci (Cartelle)
-    patron = '<div class="col-xs-5 box-immagine">\s*<img src="([^"]+)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*'
-    patron += '[^>]+>\s*[^>]+>([^<]+)</div>\s*[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</div>' 
+    patron = '<div class="col-xs-5 box-immagine">\s*<img src="([^"]+)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*[^>]+>\s*[^>]+>(.*?)</div>\s*[^>]+>[^>]+>[^>]+>[^>]+>(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for i, (scrapedthumbnail, scrapedtitle, scrapedtv) in enumerate(matches):
-        if (p - 1) * PERPAGE > i: continue
-        if i >= p * PERPAGE: break
+    for scrapedthumbnail, scrapedtitle, scrapedtv in matches:
         scrapedurl = ""
-
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         titolo = urllib.quote_plus(scrapedtitle)
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
@@ -123,82 +107,9 @@ def tvoggi(item):
                  thumbnail=scrapedthumbnail,
                  folder=True), tipo="movie"))
 
-    # Extrae el paginador
-    if len(matches) >= p * PERPAGE:
-        scrapedurl = item.url + '{}' + str(p + 1)
-        itemlist.append(
-            Item(channel=__channel__,
-                 extra=item.extra,
-                 action="tvoggi",
-                 title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
-                 folder=True))
-
     return itemlist
 
-# ==================================================================================================================================================
-	
-def tvweek(item):
-    logger.info("streamondemand.filmontv tvweek")
-    itemlist = []
 
-	
-    # Pagina di Download
-    data = scrapertools.cache_page(item.url)
-
-    # Estrazioni voci (Cartelle)
-    patron = "<a href='(\/[^\/]+\/[^\/]+\/)[^']+' title='.*?'><div class='nome-giorno'>([^<]+)<\/div>"
-    patron += "<div class='numero-giorno'><span>([^<]+)<\/span><span class='mese-giorno'>([^<]+)<\/span>"
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedurl, scrapedtitle, scrapenum, scrapemonth in matches:
-        if "Oggi" in scrapedtitle:
-         continue
-        scrapemonth = scrapemonth.capitalize()
-        dayweek = " [COLOR yellow]" + scrapenum + "  " + scrapemonth + "[/COLOR]"
-        scrapedthumbnail=""
-        scrapedplot =""
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="mainlist_week",
-                 title=scrapedtitle.capitalize() + " " + dayweek,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/calendar1_P.png",
-                 folder=True))
-
-    return itemlist
-
-# ==================================================================================================================================================
-	
-def mainlist_week(item):
-    logger.info("streamondemand.filmontv mainlist_week")
-    itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]" + "Mattina" + "  -[COLOR yellow] " + item.title + "[/COLOR]",
-                     action="tvoggi",
-                     url="%s%s/mattina/" % (host, item.url),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/mattino_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]" + "Pomeriggio" + " -[COLOR yellow] " + item.title + "[/COLOR]",
-                     action="tvoggi",
-                     url="%s%s/pomeriggio/" % (host, item.url),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/pomeriggio_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]" + "Prima serata" + " -[COLOR yellow] " + item.title + "[/COLOR]",
-                     action="tvoggi",
-                     url="%s%s/sera/" % (host, item.url),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/primaserata_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]" + "Notte" + " -[COLOR yellow] " + item.title + "[/COLOR]",
-                     action="tvoggi",
-                     url="%s%s/notte/" % (host, item.url),
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/Menu/Menu_ricerca_pureita/notte_P.png")]
-					 
-    return itemlist
-
-# ==================================================================================================================================================
-	
 # Questa e la funzione che esegue effettivamete la ricerca
 
 def do_search(item):
