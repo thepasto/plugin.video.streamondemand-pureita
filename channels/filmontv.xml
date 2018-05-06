@@ -12,9 +12,9 @@
 	<bannermenu></bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>5</version>
-	<date>10/01/2017</date>
-	<changes>Fix Global Search</changes>
+	<version>06</version>
+	<date>06/05/2017</date>
+	<changes>Fix Global Search - Update and Fix</changes>
 
 	<categories>
 		<category></category>
