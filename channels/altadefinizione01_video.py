@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_video"
-host = "http://altadefinizione01.video/"
+host = "http://altadefinizione01.video"
 headers = [['Referer', host]]
 
 
@@ -110,11 +110,11 @@ def peliculas_new(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedpuntuacion, scrapedthumbnail, scrapedtitle in matches:
+        scrapedtitle = scrapedtitle.replace(",", " ").replace(":", " ").replace("–", " - ")
+        scrapedtitle = scrapedtitle.replace("&#8211;", " - ").replace("&#8217;", "'")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
+
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -170,11 +170,11 @@ def peliculas_search(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedpuntuacion, scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        scrapedtitle = scrapedtitle.replace(",", " ").replace(":", " ").replace("–", " - ")
+        scrapedtitle = scrapedtitle.replace("&#8211;", " - ").replace("&#8217;", "'")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
-        # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
+
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",

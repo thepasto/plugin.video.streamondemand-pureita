@@ -12,9 +12,9 @@
 	<bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/altadefinizione01_video.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-	<version>04</version>
-	<date>06/04/2018</date>
-	<changes>Update TMDb</changes>
+	<version>05</version>
+	<date>06/05/2018</date>
+	<changes>Update and Fix</changes>
 
 	<categories>
 		<category>movie</category>
