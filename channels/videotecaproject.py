@@ -370,7 +370,7 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a\s*href="(([^"]+))".*?>\s*<img\s*src="([^"]+)"\s*style[^>]+><\/a>'
+    patron = '<a\s*href="((http[^"]+))".*?>\s*<img\s*src="([^"]+)"\s*style[^>]+><\/a>'
 
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
