@@ -148,7 +148,7 @@ def peliculas_new(item):
                  action="peliculas_date",
                  title="[COLOR yellow]" + scrapetitle + "[/COLOR]",
                  url=item.url,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
                  folder=True))
 
     itemlist.sort(key=lambda x: x.title)
