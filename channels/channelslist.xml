@@ -847,9 +847,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/ffilms.py</update_url>
     <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>2</version>
+    <version>03</version>
     <adult>true</adult>
-    <date>06/04/2018</date>
+    <date>08/05/2018</date>
     <changes>Update</changes>
 	<categories>
 	       <category>movie</category>
@@ -2455,10 +2455,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/videotecaproject.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>04/05/2018</date>
-    <changes>First Release</changes>
+    <date>08/05/2018</date>
+    <changes>First Release - Update</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
