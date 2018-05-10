@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# streamondemand-PureITA.- XBMC Plugin
+# streamondemand-PureITA / XBMC Plugin
 # Canale  animesenzalimiti
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
-# By MrTruth
 # ------------------------------------------------------------
 
 import re
@@ -18,11 +17,10 @@ from core.tmdb import infoSod
 
 __channel__ = "animesenzalimiti"
 
-host = "https://animesenzalimiti.org/"
+host = "https://animesenzalimiti.net/"
 
-# ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] mainlist")
     itemlist = [Item(channel=__channel__,
                      action="ultimiep",
                      title="[COLOR azure]Anime[COLOR orange] - Ultimi Episodi[/COLOR]",
@@ -46,7 +44,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="categorie",
                      title="[COLOR azure]Anime[COLOR orange] - Categorie[/COLOR]",
-                     url="%s/category/anime-in-corso/" % host,
+                     url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
                      action="cat_years",
@@ -55,40 +53,15 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     title=color("Cerca anime ...", "orange"),
+                     title="[COLOR orange]Cerca ...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
 
-# ================================================================================================================category/anime-in-corso/
-'''
-# ----------------------------------------------------------------------------------------------------------------
-def newest(categoria):
-    logger.info()
-    itemlist = []
-    item = Item()
-    try:
-        if categoria == "anime":
-            item.url = "http://www.animesenzalimiti.com"
-            item.action = "ultimiep"
-            itemlist = ultimiep(item)
+# ==================================================================================================================================================
 
-            if itemlist[-1].action == "ultimiep":
-                itemlist.pop()
-    # Se captura la excepción, para no interrumpir al canal novedades si un canal falla
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("{0}".format(line))
-        return []
-
-    return itemlist
-
-# ==============================================================================================================================================================================
-'''
-# ==============================================================================================================================================================================
 def search(item, texto):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] search")
     item.url = host + "/?s=" + texto
     try:
         return lista_anime(item)
@@ -100,15 +73,15 @@ def search(item, texto):
         return []
 
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def categorie(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] categorie")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'<ul id="menu-menu-categorie" class="menu">(.*?)</ul></div>')
-    patron = r'<li id="menu-item-.*?" class=".*?"><a href="([^"]+)">([^<]+)</a></li>'
+    blocco = scrapertools.get_match(data, r'Calendario Uscite Anime</a></li>(.*?)</ul></div>\s*</nav>')
+    patron = r'<li id[^>]+><a href="([^"]+)">Anime ([^<]+)</a></li>'
 
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -125,9 +98,10 @@ def categorie(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
+
 def cat_years(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] cat_years")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
@@ -139,7 +113,7 @@ def cat_years(item):
         itemlist.append(
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title=scrapedtitle,
+                     title=scrapedtitle.capitalize(),
                      url=scrapedurl,
                      extra="tv",
                      thumbnail=item.thumbnail,
@@ -150,7 +124,7 @@ def cat_years(item):
 '''
 # ----------------------------------------------------------------------------------------------------------------
 def animepopolari(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] mainlist")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
@@ -175,21 +149,23 @@ def animepopolari(item):
     return itemlist
 # ----------------------------------------------------------------------------------------------------------------
 '''
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def ultimiep(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] ultimiep")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
 
-    blocco = scrapertools.get_match(data, r'<span class="mh-widget-title-inner">Ultimi Anime</span>(.*?)</article></div>')
-    patron = r'<a class="[^>]+" href="([^"]+)" title="([^"]+)"><img width=".*?" height=".*?" src="([^"]+)"[^>]+>.*?</a>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    blocco = scrapertools.get_match(data, r'Ultimi Anime</span></h4>(.*?)Seleziona una categoria</option>')
+    patron = r'<a class[^>]+\s*href="([^"]+)"\s*title="([^<]+)"><img[^>]+src="([^"]+)"[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.strip())
-        scrapedtitle = removestreaming(scrapedtitle)
+        scrapedtitle = scrapedtitle.replace("(Streaming & Download)","").replace("/", "")
+        scrapedtitle= scrapedtitle.replace("SUB ITA"," [[COLOR yellow]Sub Ita[/COLOR]]")
+        scrapedtitle= scrapedtitle.replace("ITA"," [[COLOR yellow]Ita[/COLOR]]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodi",
@@ -209,26 +185,28 @@ def ultimiep(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_anime",
-                 title=color("Successivo >>", "orange"),
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def lista_anime(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] lista_anime")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    patron = r'<a class="[^>]+" href="([^"]+)" title="([^"]+)"><img width=".*?" height=".*?" src="([^"]+)".*?'
+    patron = r'<a class[^>]+\s*href="([^"]+)"\s*title="([^<]+)"><img[^>]+src="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.strip())
-        scrapedtitle = removestreaming(scrapedtitle)
+        scrapedtitle = scrapedtitle.replace("(Streaming & Download)","").replace("/", "")
+        scrapedtitle= scrapedtitle.replace("SUB ITA"," [[COLOR yellow]Sub Ita[/COLOR]]")
+        scrapedtitle= scrapedtitle.replace("ITA"," [[COLOR yellow]Ita[/COLOR]]")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodi",
@@ -248,29 +226,28 @@ def lista_anime(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="lista_anime",
-                 title=color("Successivo >>", "orange"),
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def episodi(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] episodi")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
     blocco = scrapertools.find_single_match(data, r'(?:<p style="text-align: left;">|<div class="pagination clearfix">\s*)(.*?)</span></a></div>')
 
-    # Il primo episodio è la pagina stessa
     itemlist.append(
         Item(channel=__channel__,
              action="findvideos",
              contentType="tv",
              title="Episodio: 1",
-             fulltitle="%s %s %s " % (color(item.title, "deepskyblue"), color("|", "azure"), color("1", "orange")),
+             fulltitle=item.title + "| [COLOR orange]1[/COLOR]",
              url=item.url,
              extra="tv",
              thumbnail=item.thumbnail,
@@ -284,7 +261,7 @@ def episodi(item):
                      action="findvideos",
                      contentType="tv",
                      title="Episodio: %s" % scrapednumber,
-                     fulltitle="%s %s %s " % (color(item.title, "deepskyblue"), color("|", "azure"), color(scrapednumber, "orange")),
+                     fulltitle=item.title + "|" + "[COLOR orange]" + scrapednumber + "[/COLOR]",
                      url=scrapedurl,
                      extra="tv",
                      thumbnail=item.thumbnail,
@@ -292,30 +269,24 @@ def episodi(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def findvideos(item):
-    logger.info()
+    logger.info("[streamondemand-pureita animesenzalimiti] findvideos")
 
     data = httptools.downloadpage(item.url).data
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(["[%s] " % color(server, 'orange'), item.title])
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(["[COLOR azure]"+item.title, ' [[COLOR orange]'+servername.capitalize()+'[/COLOR]]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
     return itemlist
 
-# ==============================================================================================================================================================================
 
-def removestreaming(text):
-    return re.sub("(?:SUB ITA|ITA|)\s*(?:Download|Streaming)\s*(?:e|&)\s*(?:Download|Streaming)\s*(?:SUB ITA|ITA|)", "", text)
-
-def color(text, color):
-    return "[COLOR "+color+"]"+text+"[/COLOR]"
 
 
 
