@@ -652,7 +652,7 @@ def episodios(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    blocco = scrapertools.get_match(data, 'Stagione.*?</span>(.*?)<footer class="widget-footer">')
+    blocco = scrapertools.get_match(data, '(?:Stagione.*?|)(?:Miniserie ITA.*?|)</span>(.*?)<footer class="widget-footer">')
 	
     patron = '<p>(.*?)</span></span>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
@@ -688,7 +688,7 @@ def episodios(item):
                  plot=item.plot,
                  folder=True))
 	
-    patron = '<div>(.*?)</span></'
+    patron = 'div>(.*?)</span></'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
