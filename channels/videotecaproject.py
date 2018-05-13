@@ -615,7 +615,7 @@ def peliculas_date(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, '%s(.*?)<p style="text-align: center;">&nbsp;</p>' % item.fulltitle)
+    bloque = scrapertools.get_match(data, '%s(.*?)&nbsp;</p>' % item.fulltitle)
 				 
     patron = '<a\s*href="([^"]+)".*?img alt=""\s*src="([^"]+)" [^>]+.*?'
     patron += '<\/a>.*?\s.*?'
