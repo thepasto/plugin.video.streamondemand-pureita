@@ -33,7 +33,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
                      action="peliculas",
-                     url="%s/page/2/" % host,
+                     url="%s/page/3/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
