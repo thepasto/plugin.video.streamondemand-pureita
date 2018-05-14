@@ -202,7 +202,7 @@ def peliculas_srctv(item):
     # Estrae i contenuti 
     patron = '<h1 class="entry-title"><a href="([^"]+)" rel="bookmark">(.*?)</a></h1>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    for scrapedurl, scrapedtitle, category in matches:
+    for scrapedurl, scrapedtitle in matches:
         if not "Serie TV" in scrapedtitle:
           continue
         scrapedplot=""
