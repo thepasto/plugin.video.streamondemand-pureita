@@ -18,24 +18,25 @@ from core.tmdb import infoSod
 
 __channel__ = "solostreaming_co"
 host = "https://www.solostreaming.co/"
-
 headers = [['Referer', host]]
 
-
-def isGeneric():
-    return True
 
 
 def mainlist(item):
     logger.info("pureita solostreaming_co mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Aggiornati[/COLOR]",
+                     title="[COLOR azure]Film & Serie TV[COLOR orange] - Aggiornati[/COLOR]",
                      action="peliculas_update",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
+                     title="[COLOR azure]Film & Serie TV[COLOR orange] - Novita'[/COLOR]",
+                     action="peliculas",
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Per Genere[/COLOR]",
                      action="genere",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
@@ -43,17 +44,17 @@ def mainlist(item):
                      #title="[COLOR azure]Film - [COLOR orange]Consigliati[/COLOR]",
                      #action="peliculas",
                      #url="%s/featured/" % host,
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),              
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
-                     action="peliculas",
-                     url=host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),               
-                Item(channel=__channel__,
-                     title="[COLOR azure]Film - [COLOR orange]Animazione[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
                      action="peliculas",
                      url="%s/category/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Anime[/COLOR]",
+                     action="peliculas",
+                     url="%s/category/anime/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      action="peliculas_serie",
@@ -104,30 +105,33 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<div class="td-module-image">\s*<div class="td-module-thumb">'
-    patron += '<a\s*href="([^"]+)"[^>]+><[^>]+src="(.*?)"[^>]+alt=".*?" title="([^<]+)"\s*\/>'
+    patron += '<a\s*href="([^"]+)"[^>]+><[^>]+src="(.*?)"[^>]+alt=".*?" title="([^"]+)"\s*/>.*?'
+    patron += ' class="td-post-category">([^<]+)</'
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
-    for scrapedurl, scrapedthumbnail, scrapedtitle   in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("Film Streaming Ita", "")		
-        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-	if "SoloStreaming," in scrapedtitle: continue
+    for scrapedurl, scrapedthumbnail, scrapedtitle, category   in matches:
+        scrapedtitle = scrapedtitle.replace("Film", "").replace("Streaming", "")
+        scrapedtitle = scrapedtitle.replace("&#038;", "e")
+		
+	if "SoloStreaming" in scrapedtitle: continue
 
+		
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "findvideos",
+                 action="episodios" if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in category else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "movie"))
+                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in category else "movie"))
 				 
     next_page = scrapertools.find_single_match(data, '<link rel="next" href="([^"]+)" />')
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
@@ -144,29 +148,34 @@ def peliculas_update(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
     patron = '<div class="td_module_16 td_module_wrap td-animation-stack">\s*'
-    patron += '<div class="td-module-thumb"><a href="([^"]+)"[^>]+>[^>]+src="([^"]+)"[^>]+title="([^<]+)"\s*\/>'
+    patron += '<div class="td-module-thumb"><a href="([^"]+)"[^>]+>[^>]+src="([^"]+)"[^>]+title="([^"]+)"\s*/>.*?'
+    patron += ' class="td-post-category">([^<]+)</'
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
-    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("Film Streaming Ita", "")
+    for scrapedurl, scrapedthumbnail, scrapedtitle, category  in matches:
+        scrapedtitle = scrapedtitle.replace("Film", "").replace("Streaming", "")
+        scrapedtitle = scrapedtitle.replace("&#038;", "e")
+	
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+    
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "findvideos",
+                 action="episodios" if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in category else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "movie"))
+                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in category else "movie"))
 
     next_page = scrapertools.find_single_match(data, '<a href="([^"]+)"><i class="td-icon-menu-right"></i>')
     if next_page != "":
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=next_page,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
@@ -185,19 +194,21 @@ def peliculas_serie(item):
     patron = '<a\s*href="([^"]+)"[^>]+title="([^"]+)"><img[^>]+src="([^"]+)" alt[^>]+/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
-    for scrapedurl, scrapedtitle, scrapedthumbnail,    in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("Film Streaming Ita", "")		
+    for scrapedurl, scrapedtitle, scrapedthumbnail  in matches:
+        scrapedtitle = scrapedtitle.replace("&#038;", "e").replace("Streaming", "")
+
+		
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios" if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "findvideos",
+                 action="episodios" if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in scrapedtitle else "findvideos",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
-                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagioni" in scrapedurl or "Anime" in scrapedtitle else "movie"))
+                 show=scrapedtitle), tipo='tv' if "serie" in scrapedurl or "stagion" in scrapedurl or "Anime" in scrapedtitle else "movie"))
 				 
     next_page = scrapertools.find_single_match(data, '<a href="([^"]+)"><i class="td-icon-menu-right"></i>')
     if next_page != "":
@@ -219,11 +230,11 @@ def episodios(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<a\s*href="([^"]+)"><strong>(.*?)<\/strong>'
+    patron = '<a\s*href="([^"]+)">(.*?)<\/.*?strong>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
-        if "Fonte" in scrapedtitle or "Forum" in scrapedtitle:
+        if "Fonte" in scrapedtitle or "Forum" in scrapedtitle or "i class" in scrapedtitle:
 		    continue
         scrapedtitle = scrapedtitle.replace("/", "")
         scrapedtitle = scrapedtitle.replace(">", "")
