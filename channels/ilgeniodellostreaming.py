@@ -389,35 +389,30 @@ def episodios(item):
 # ==================================================================================================================================================
 
 def episodios_new(item):
-    logger.info("[streamondemand-pureita ilgeniodellostreaming] episodios_new")
+    logger.info("[streamondemand-pureita ilgeniodellostreaming] categorias")
     itemlist = []
 
-
-    patron='</script></div><div class="sbox"><h2>(.*?)</div></div><script>'
-
+    # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    bloque = scrapertools.get_match(data, '</script></div><div class="sbox"><h2>(.*?)</div></div><script>')
 
-    for match in matches:
+    # Extrae las entradas (carpetas)
+    patron = '<img src="([^"]+)"><\/a><\/div><div\s*class="numerando">([^<]+)<\/div>'
+    patron += '<div class[^>]+><a\s*href="([^"]+)">([^<]+)<\/a>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-        patron = '<img src="([^"]+)"><\/a><\/div><div\s*class="numerando">([^<]+)<\/div>'
-        patron += '<div class[^>]+><a\s*href="([^"]+)">([^<]+)<\/a>'
-
-        episodi = re.compile(patron, re.DOTALL).findall(match)
-
-        for scrapededthumbnail, scrapedep, scrapedurl, scrapedtitle in episodi:
-            scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-            itemlist.append(
-                 Item(channel=__channel__,
-                      action="findvideos",
-                      fulltitle=scrapedep + " " + scrapedtitle,
-                      show=scrapedep + " " + scrapedtitle,
-                      title= "[COLOR azure]"+scrapedep+"  [COLOR orange]"+scrapedtitle+"[/COLOR]",
-                      url=scrapedurl,
-                      thumbnail=item.thumbnail,
-                      plot=item.plot,
-                      folder=True))
-
+    for scrapededthumbnail, scrapedep, scrapedurl, scrapedtitle in matches:
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedep + " " + scrapedtitle,
+                 show=scrapedep + " " + scrapedtitle,
+                 title="[COLOR azure]" +scrapedep + "  [COLOR orange]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+				 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,

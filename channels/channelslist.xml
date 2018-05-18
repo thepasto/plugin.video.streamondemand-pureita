@@ -1291,10 +1291,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardogratis.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>09/03/2017</date>
-    <changes>Enabled and update</changes>
+    <date>18/05/2018</date>
+    <changes>Enabled and update - Fix</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1377,9 +1377,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/ilgeniodellostreaming.py</update_url>
     <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>8</version>
+    <version>09</version>
     <adult>false</adult>
-    <date>15/04/2018</date>
+    <date>18/05/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -1742,10 +1742,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>03</version>
+    <version>04</version>
     <adult>false</adult>
-    <date>11/06/2017</date>
-    <changes>Update</changes>
+    <date>18/05/2018</date>
+    <changes>Update and Temporary Fix</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -2332,11 +2332,12 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/thelordofstreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>05</version>
+    <version>06</version>
     <adult>false</adult>
-    <date>13/05/2018</date>
+    <date>18/05/2018</date>
     <changes>Update and Fix</changes>
     <categories>
+        <category>Top Channels</category>
         <category>movie</category>
         <category>serie</category>
     </categories>

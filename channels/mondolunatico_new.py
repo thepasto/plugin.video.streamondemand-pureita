@@ -70,7 +70,7 @@ def mainlist(item):
     return itemlist
 
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def categorias(item):
     itemlist = []
@@ -97,7 +97,7 @@ def categorias(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def years(item):
     itemlist = []
@@ -122,7 +122,7 @@ def years(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita.mondolunatico_new] " + item.url + " search " + texto)
@@ -137,7 +137,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 		
 def pelis_src(item):
     logger.info("streamondemand-pureita.mondolunatico_new peliculas")
@@ -167,7 +167,7 @@ def pelis_src(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("streamondemand-pureita.mondolunatico_new peliculas")
@@ -184,7 +184,7 @@ def peliculas(item):
 
     # Extrae las entradas
     patron = '<div class="poster">\s*<img src="([^"]+)" \s*alt="([^"]+)">\s*'
-    patron += '<div[^>]+>[^>]+></span>(.*?)<\/div>\s*[^>]+>\s*[^>]+>.*?'
+    patron += '<div[^>]+>[^>]+></span>\s*([^<]+)<\/div>\s*[^>]+>\s*[^>]+>.*?'
     patron += '<a href="([^"]+)">[^>]+></div></a>.*?'
     patron += '<div class="texto">(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -193,13 +193,14 @@ def peliculas(item):
     for i, (scrapedthumbnail, scrapedtitle, rating, scrapedurl, scrapedplot ) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
+        scrapedtitle = scrapedtitle.replace("+", "piu").replace("&#038;", "e")
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="episodios" if "tvshows" in scrapedurl else "findvideos",
                  contentType="serie" if "tvshows" in scrapedurl else "movie",
-                 title=title + "[COLOR orange]" + rating + "[/COLOR]",
+                 title=title + "  [[COLOR yellow]" + rating + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -223,7 +224,7 @@ def peliculas(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================	
+# ==================================================================================================================================================	
 
 def peliculas_list(item):
     logger.info("streamondemand-pureita.mondolunatico_new peliculas")
@@ -276,7 +277,7 @@ def peliculas_list(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================	
+# ==================================================================================================================================================	
 
 def peliculas_tv(item):
     logger.info("streamondemand-pureita.mondolunatico_new peliculas_tv")
@@ -293,7 +294,7 @@ def peliculas_tv(item):
 
     # Extrae las entradas
     patron = '<div class="poster">\s*<img src="([^"]+)" \s*'
-    patron += 'alt="([^"]+)">\s*<div[^>]+>[^>]+><\/span>(.*?)<\/div>\s*'
+    patron += 'alt="([^"]+)">\s*<div[^>]+>[^>]+><\/span>\s*([^<]+)<\/div>\s*'
     patron += '[^>]+>\s*<\/div>\s*<a href="([^"]+)">.*?'
     patron += '<div class="texto">(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -308,7 +309,7 @@ def peliculas_tv(item):
                  extra=item.extra,
                  action="episodios",
                  contentType="serie",
-                 title=title + "[COLOR orange]" + rating + "[/COLOR]",
+                 title=title + "  [[COLOR yellow]" + rating + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -332,7 +333,7 @@ def peliculas_tv(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================	
+# ==================================================================================================================================================	
 	
 def episodios(item):
     logger.info("streamondemand.mondolunatico episodios")
@@ -393,6 +394,13 @@ def episodios(item):
         if not scrapedtitle or scrapedtitle in encontrados: continue
         encontrados.add(scrapedtitle)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapedtitle.replace("ITALIAN", "Ita").replace("ITALiAN", "Ita")
+        scrapedtitle = scrapedtitle.replace("iTA", "Ita").replace("ITA", "Ita")
+        scrapedtitle = scrapedtitle.replace("Subbed", "Sub").replace("SUBBED", "Sub")
+        scrapedtitle = scrapedtitle.replace(".mp4", "").replace(".avi", "").replace("E0", "x")
+        scrapedtitle = scrapedtitle.replace("S0", "0").replace("_", " ").replace("E0", "x")
+
+
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
@@ -411,6 +419,11 @@ def episodios(item):
         if not scrapedtitle or scrapedtitle in encontrados: continue
         encontrados.add(scrapedtitle)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapedtitle.replace("ITALIAN", "Ita").replace("ITALiAN", "Ita")
+        scrapedtitle = scrapedtitle.replace("iTA", "Ita").replace("ITA", "Ita")
+        scrapedtitle = scrapedtitle.replace("Subbed", "Sub").replace("SUBBED", "Sub")
+        scrapedtitle = scrapedtitle.replace(".mp4", "").replace(".avi", "").replace("E0", "x")
+        scrapedtitle = scrapedtitle.replace("S0", "0").replace("_", " ").replace("E0", "x")
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
@@ -422,9 +435,11 @@ def episodios(item):
                  fulltitle=item.fulltitle,
                  show=item.show))
 
+
     return itemlist
 
-
+# ==================================================================================================================================================
+	
 def findvideos_tv(item):
     logger.info("streamondemand.mondolunatico findvideos")
 
@@ -484,7 +499,8 @@ def findvideos_tv(item):
 
     return itemlist
 
-
+# ==================================================================================================================================================
+	
 def play(item):
     logger.info("streamondemand-pureita.mondolunatico play")
 
@@ -532,7 +548,7 @@ def play(item):
 
     return itemlist
 
-# =============================================================================================================================================================================	
+# ==================================================================================================================================================	
 	
 def findvideos_x(item):
     logger.info("streamondemand-pureita.mondolunatico_new findvideos")

@@ -292,8 +292,13 @@ def peliculas_new(item):
 
 def peliculas_list(item):
     logger.info("[streamondemand-pureita TheLordOfStreaming] peliculas_list")
-
-    itemlist = []
+    itemlist = []	
+    PERPAGE = 300
+	
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
 
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -302,9 +307,10 @@ def peliculas_list(item):
     # Estrae i contenuti 
     patron = '<[^<]+href="([^>]+)">([^<]+)<\/a><\/li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    for scrapedurl, scrapedtitle in matches: 
-        scrapedplot=""
-        scrapedthumbnail=""
+    for i, (scrapedurl, scrapedtitle) in enumerate(matches):
+        if (p - 1) * PERPAGE > i: continue
+        if i >= p * PERPAGE: break
+
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
             Item(channel=__channel__,
@@ -313,9 +319,20 @@ def peliculas_list(item):
                  title=title,
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
-                 plot="",
                  fulltitle=title,
                  show=title,
+                 folder=True))
+
+    # Extrae el paginador
+    if len(matches) >= p * PERPAGE:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_list",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
