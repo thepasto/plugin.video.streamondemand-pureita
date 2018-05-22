@@ -364,8 +364,8 @@
     <id>flashx</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/flashx.py</update_url>
     <active>true</active>
-    <version>22</version>
-    <date>25/04/2018</date>
+    <version>23</version>
+    <date>22/05/2018</date>
     <changes>Update and Fix</changes>
 </server>
 
