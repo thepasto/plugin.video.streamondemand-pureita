@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_biz"
-host = "http://www.altadefinizione01.biz/"
+host = "http://altadefinizione01.gratis/"
 headers = [['Referer', host]]
 
 def isGeneric():
