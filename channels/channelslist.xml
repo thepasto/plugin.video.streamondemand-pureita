@@ -42,9 +42,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01_biz.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>02</version>
+    <version>03</version>
     <adult>false</adult>
-    <date>20/04/2018</date>
+    <date>23/05/2018</date>
     <changes>First Release - Update</changes>
     <categories>
         <category>movie</category>
