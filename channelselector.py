@@ -315,7 +315,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Filmsenzalimiti[/COLOR]"   , channel="filmsenzalimiti_blue"       , language="IT"    , category="F,B"        , type="generic"     ))
     itemlist.append( Item( title="[COLOR azure]Filmsenzalimiti_info[/COLOR]"   , channel="filmsenzalimiti_info"       , language="IT"    , category="F,S,B"        , type="generic"     ))
     #itemlist.append( Item( title="[COLOR azure]FilmZStreaming[/COLOR]"          , channel="FilmZStreaming"           , language="IT"    , category="F"   , type="generic"))
-    #itemlist.append( Item( title="[COLOR azure]Foxycinema[/COLOR]"          , channel="foxycinema"           , language="IT"    , category="F"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]filmserietv[/COLOR]"          , channel="filmserietv"           , language="IT"    , category="F,S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]FuturamaITA Streaming[/COLOR]"      , channel="futuramaita"           , language="IT"    , category="S"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Guardaserie.net[/COLOR]"     , channel="guardaserie"       , language="IT"    , category="S,B"        , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Guarda_Serie[/COLOR]"         , channel="guarda_serie"           , language="IT"    , category="S"    , type="generic"))
