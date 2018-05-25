@@ -15,7 +15,7 @@ from core.tmdb import infoSod
 
 __channel__ = "dreamsub"
 
-host = "https://www.dreamsub.tv"
+host = "https://www.dreamsub.net/"
 
 
 def mainlist(item):
