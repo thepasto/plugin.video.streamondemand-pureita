@@ -7,7 +7,9 @@
 import re
 import urlparse
 
-from core import config, httptools, servertools
+from core import config
+from core import httptools
+from core import servertools
 from core import logger
 from core import scrapertools
 from core.item import Item
@@ -21,14 +23,26 @@ host = "https://www.dreamsub.net/"
 def mainlist(item):
     logger.info("streamondemand-pureita.dreamsub mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Anime / Cartoni[/COLOR]",
-                     action="serietv",
+                     title="[COLOR azure]Anime[COLOR orange] - Anime / Cartoni[/COLOR]",
+                     action="peliculas_new",
                      extra='serie',
                      url="%s/anime" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Ultimi episodi Anime[/COLOR]",
+                     title="[COLOR azure]Anime[COLOR orange] - Ultimi Episodi[/COLOR]",
                      action="ultimiep",
+                     extra='anime',
+                     url=host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Anime[COLOR orange] - Novita'[/COLOR]",
+                     action="peliculas_new",
+                     extra='anime',
+                     url=host + "/recenti",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Anime[COLOR orange] - Categorie[/COLOR]",
+                     action="categorias",
                      extra='anime',
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
@@ -40,6 +54,7 @@ def mainlist(item):
 
     return itemlist
 
+# ==================================================================================================================================================
 
 def newest(categoria):
     logger.info("streamondemand-pureita.dreamsub newest" + categoria)
@@ -63,7 +78,7 @@ def newest(categoria):
 
             if itemlist[-1].action == "ultimiep":
                 itemlist.pop()
-    # Continua la ricerca in caso di errore 
+
     except:
         import sys
         for line in sys.exc_info():
@@ -72,16 +87,101 @@ def newest(categoria):
 
     return itemlist
 
+# ==================================================================================================================================================
+
+def peliculas_new(item):
+    logger.info("streamondemand-pureita.dreamsub peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<b>([^<]+)<\/b><br>\s*([^<]+)<br>\s*[^>]+>\s*'
+    patron += 'Lingua:\s*([^<]+)<br>\s*<a href="([^"]+)" title[^>]+>[^>]+>[^>]+><br>.*?'
+    patron += '<div class="cover" style="background[^(]+\(([^)]+)[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedtitle, state, lang, scrapedurl,  scrapedthumbnail in matches:
+        scrapedthumbnail = host + scrapedthumbnail
+        scrapedurl = host + scrapedurl
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("Streaming", "")
+        scrapedtitle = scrapedtitle.replace("Lista episodi ", "")
+        if "offline" in state:
+          state = " ([COLOR yellow]Trailer[/COLOR])"
+        else:
+         state =""        
+        lang=(" ([COLOR yellow]" + lang + "[/COLOR])").replace("JAP SUB ITA", "Sub-Ita").replace("ITA/", "Ita / ")
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios" if not "movie" in scrapedurl else "findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title=scrapedtitle + lang + state,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo='tv'))
+
+    # Extrae el paginador
+    patronvideos = '<li class="currentPage">[^>]+><li[^<]+<a href="([^"]+)">'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas_new",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 extra=item.extra,
+                 folder=True))
+
+    return itemlist
+
+# ==================================================================================================================================================
+
+def categorias(item):
+    logger.info("streamondemand-pureita.dreamsub categorias")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url).data
+    bloque = scrapertools.get_match(data,'<b>Filtra per:</b>(.*?)</select></span>')
+
+    # Extrae las entradas (carpetas)
+    patron = '<option value="[^"]+">([^<]+)</option>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedtitle in matches:
+        scrapedurl= host + ("filter?genere=%s&conclusi=tutti&ordina=recenti&show=responsive" % scrapedtitle)
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas_new",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
+
+    return itemlist
+# ==================================================================================================================================================	
 
 def serietv(item):
     logger.info("streamondemand-pureita.dreamsub peliculas")
     itemlist = []
 
-    # Carica la pagina 
+    # Descarga la pagina
     data = httptools.downloadpage(item.url).data
     bloque = scrapertools.get_match(data,'<input type="submit" value="Vai!" class="blueButton">(.*?)<div class="footer">')
 
-    # Estrae i contenuti 
+    # Extrae las entradas (carpetas)
     patron = 'Lingua[^<]+<br>\s*<a href="([^"]+)" title="([^"]+)">'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
@@ -103,7 +203,7 @@ def serietv(item):
                  extra=item.extra,
                  folder=True), tipo='tv'))
 
-    # Paginazione 
+    # Extrae el paginador
     patronvideos = '<li class="currentPage">[^>]+><li[^<]+<a href="([^"]+)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
@@ -111,34 +211,29 @@ def serietv(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR orange]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/return_home_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="serietv",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]SuccessivI >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  extra=item.extra,
                  folder=True))
 
     return itemlist
 
+# ==================================================================================================================================================
 
 def ultimiep(item):
     logger.info("streamondemand-pureita.dreamsub ultimiep")
     itemlist = []
 
-    # Carica la pagina 
+    # Descarga la pagina
     data = httptools.downloadpage(item.url).data
     if 'anime' in item.extra:
         bloque = scrapertools.get_match(data, '<ul class="last" id="recentAddedEpisodesAnimeDDM">(.*?)</ul>')
     elif 'serie' in item.extra:
         bloque = scrapertools.get_match(data, '<ul class="last" id="recentAddedEpisodesTVDDM">(.*?)</ul>')
 
-    # Estrae i contenuti 
+    # Extrae las entradas (carpetas)
     patron = '<li><a href="([^"]+)"[^>]+>([^<]+)<br>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
@@ -152,8 +247,7 @@ def ultimiep(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=(re.sub(r'\d*-?\d+$', '', scrapedtitle) if 'anime' in item.extra else re.sub(r'\d+x\d+$', '',
-                                                                                                        scrapedtitle)).strip(),
+                 fulltitle=(re.sub(r'\d*-?\d+$', '', scrapedtitle) if 'anime' in item.extra else re.sub(r'\d+x\d+$', '', scrapedtitle)).strip(),
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
@@ -163,24 +257,21 @@ def ultimiep(item):
                  folder=True), tipo='tv'))
     return itemlist
 
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[dreamsub.py] " + item.url + " search " + texto)
     item.url = "%s/search/%s" % (host, texto)
     try:
-        return serietv(item)
-    # Continua la ricerca in caso di errore 
+        return peliculas_new(item)
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
 
+# ==================================================================================================================================================
 
 def episodios(item):
     logger.info("streamondemand-pureita.channels.dreamsub episodios")
@@ -222,6 +313,8 @@ def episodios(item):
 
     return itemlist
 
+# ==================================================================================================================================================
+	
 def findvideos(item):
     logger.info()
 
