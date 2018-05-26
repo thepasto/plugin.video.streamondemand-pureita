@@ -276,33 +276,52 @@ def peliculas_tv_new(item):
 def peliculas_ep(item):
     logger.info("[streamondemand-pureita altadefinizione_bid] peliculas_ep")
     itemlist = []
-
+    minpage = 14
+	
+    p = 1
+    if '{}' in item.url:
+       item.url, p = item.url.split('{}')
+       p = int(p)
+		
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<li><a href="([^"]+)">([^<]+)<small>([^<]+)</small>\s*(.*?)</a>'
+    patron = '<li><a href="([^"]+)"\s*data-thumbnail="([^"]+)"><div>\s*'
+    patron += '<div class="title">([^<]+)</div>\s*<div class[^>]+>([^<]+)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedtitle, scrapedep, scrapedepi in matches:
-        scrapedurl = urlparse.urljoin(host, scrapedurl)
-        scrapedepi = scrapedepi.replace("/", "")
-        scrapedepi = scrapedepi.replace("<small>", "")
-        scrapepisodes = " [COLOR orange]" + scrapedep + "  " + scrapedepi + "[/COLOR]"
+
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle, scrapedep) in enumerate(matches):
+        if (p - 1) * minpage > i: continue
+        if i >= p * minpage: break
+        scrapedep = "  ([COLOR orange]" + scrapedep + "[/COLOR])"
         scrapedplot = ""
-        scrapedthumbnail = ""
+
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + scrapepisodes,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + scrapedep,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
                  folder=True), tipo='tv'))
 				 
+    # Extrae el paginador
+    if len(matches) >= p * minpage:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="peliculas_ep",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
     return itemlist
 
 # ==================================================================================================================================================
@@ -339,7 +358,7 @@ def episodios(item):
 
     lang_titles = []
     starts = []
-    patron = r"Stagione|Edizione|.*?"
+    patron = r"(?:tagione[^>]+.*?</strong>|)(?:Edizione|).*?"
     matches = re.compile(patron, re.IGNORECASE).finditer(data)
     for match in matches:
         season_title = match.group()
@@ -370,7 +389,7 @@ def findvideos_tv(item):
     logger.info("[streamondemand-pureita altadefinizione_bid] findvideos_tv")
     itemlist = []
 
-    patron = '<a href="([^"]+)" target="_blank" rel="nofollow">([^<]+)</a>'
+    patron = '<a\s*href="([^"]+)"[^>]+>([^<]+)</a>'
 
     matches = re.compile(patron, re.DOTALL).findall(item.url)
 
