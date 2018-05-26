@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione_bid"
-host = "http://altadefinizione.bid"
+host = "https://altadefinizione.pics"
 headers     = [['Referer', host]]
 
 
