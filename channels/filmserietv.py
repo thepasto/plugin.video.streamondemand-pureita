@@ -157,7 +157,7 @@ def categorias_year(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, '<h2>Anno</h2>(.*?)</li></ul></nav>')	
+    bloque = scrapertools.get_match(data, 'Anno</a>(.*?)</li></ul></li>')	
 
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)">([^<]+)</a>'
