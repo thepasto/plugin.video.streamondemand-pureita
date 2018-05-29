@@ -23,12 +23,12 @@ headers = [['Referer', host]]
 def mainlist(item):
     logger.info("streamondemand-pureita cineblog01.show mainlist")
 		
-    itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
-                     action="peliculas",
-                     url=host+"/page/6/",
-                     extra="movie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
+    itemlist = [#Item(channel=__channel__,
+                     #title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
+                     #action="peliculas",
+                     #url=host+"/page/6/",
+                     #extra="movie",
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
                      action="peliculas",
