@@ -78,7 +78,7 @@ def genres(item):
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
             Item(channel=__channel__,
-                 action="peliculas_new",
+                 action="peliculas_new" if not "SERIE" in scrapedtitle else "peliculas_tv",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
