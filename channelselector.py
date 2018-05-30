@@ -384,6 +384,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Toonitalia[/COLOR]"        , channel="toonitalia"       , language="IT"    , category="A"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]UMSFunSub[/COLOR]"      , channel="umsfunsub"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="B,S"       , type="generic" ))
+    itemlist.append( Item( title="[COLOR azure]VedoHD[/COLOR]"        , channel="vedoHD"       , language="IT"    , category="B,F"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]VedoVedo[/COLOR]"        , channel="vedovedo"       , language="IT"    , category="B,S"       , type="generic" ))
     itemlist.append( Item( title="[COLOR azure]VideotecaProject[/COLOR]"        , channel="videotecaproject"       , language="IT"    , category="B,F,S"       , type="generic" ))
     #itemlist.append( Item( title="[COLOR azure]Wstreaming[/COLOR]"        , channel="wstreaming"       , language="IT"    , category="F"       , type="generic"))
