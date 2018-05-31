@@ -119,16 +119,16 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        scrapedtitle = scrapedtitle.replace(":", " - ")
-        scrapedtitle = scrapedtitle.replace("streaming hd", "")
+        scrapedtitle = scrapedtitle.replace(":", " - ").replace(" Streaming", "")
+        scrapedtitle = scrapedtitle.replace("streaming hd", "").replace("&#038;", "e")
         scrapedtitle = scrapedtitle.replace("[sub-ita]", " [[COLOR yellow]Sub-ITA[/COLOR]]")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="find_movie",
+                 action="findvideos",
                  title=scrapedtitle,
-                 url=scrapedurl,
+                 url=scrapedurl + "2",
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
                  show=scrapedtitle), tipo="movie"))
@@ -206,7 +206,7 @@ def findvideos(item):
 	
 # ===================================================================================================================================================
 
-def play(item):
+def findvideos(item):
     logger.info("[streamondemand-pureita altadefinizione_due ] play")
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -218,8 +218,8 @@ def play(item):
     itemlist = servertools.find_video_items(data=location)
 
     for videoitem in itemlist:
-        videoitem.title = item.show
-        videoitem.fulltitle = item.fulltitle
+        videoitem.title = item.title + "  [COLOR orange]" + videoitem.title + "[/COLOR]"
+        videoitem.fulltitle = item.fulltitle + videoitem.title
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
