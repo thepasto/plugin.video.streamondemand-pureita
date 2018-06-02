@@ -6,11 +6,13 @@
 # ------------------------------------------------------------
 import re
 import urlparse
+import xbmc
 
 from core import config
 from core import httptools
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
@@ -31,7 +33,6 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi[/COLOR]",
                      action="peliculas_episodios",
-                     extra="serie",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
@@ -43,7 +44,6 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
-                     extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
@@ -68,7 +68,7 @@ def peliculas_home(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)">\s*<div class="slide-title">([^-]+)([^<]+)</div>\s*</a>'
@@ -156,24 +156,30 @@ def peliculas_tv(item):
         p = int(p)
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url).data
+    data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<li class="cat-item cat-item-\d+"><a href="([^"]+)" >([^<]+)</a>'
+    patron = '<li class="cat-item cat-item-\d+"><a href="(.*?\/\/[^\/]+\/[^\/]+\/([^\/]+)[^"]+)" >([^<]+)<\/a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for i, (scrapedurl, scrapedtitle ) in enumerate(matches):
+    for i, (scrapedurl, scrapetitle, scrapedtitle ) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
         scrapedplot = ""
         scrapedthumbnail = ""
+        scrapetitle = scrapetitle.replace("-percento", "%") 
+        scrapetitle = scrapetitle.replace("-", " ").capitalize()
+        if not "http:" in scrapedurl:
+          scrapedurl = "http:" + scrapedurl
+        if "Stagione" in scrapedtitle:
+          scrapedtitle = scrapetitle + "  ([COLOR orange]" + scrapedtitle + "[/COLOR])"
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="peliculas_episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -235,10 +241,9 @@ def peliculas_episodios(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url).data
-
+    data = httptools.downloadpage(item.url, headers=headers).data
     # Extrae las entradas (carpetas)
-    patron = '<h3 class=".*?title-font"><a href="([^"]+)" rel="bookmark">(.*?[^\d+]+)([^<]+)<\/a>'
+    patron = '<h3 class=".*?title-font"><a href="([^"]+)" rel="bookmark">(.*?[^\s]+[^\d+]+)([^<]+)<\/a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle, scrapedep in matches:
@@ -246,13 +251,15 @@ def peliculas_episodios(item):
         scrapedplot = ""
         scrapedthumbnail = ""
         scrapedtitle = scrapedtitle.title()
-        scrapedtitle = scrapedtitle.replace("’", "")
+        scrapedtitle = scrapedtitle.replace("’", "'")
         scrapedtitle = scrapedtitle.replace("&#", "")
-        scrapedep = scrapedep.replace("8211;", "")
+        scrapedep = scrapedep.replace("8211;", "").replace("8217;", "")
+        scrapedep = scrapedep.replace("&#8220;", "").replace("&#8221;", "")
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos" if "serie" in item.extra else "findvideos_tv",
+                 contentSerieName=scrapedtitle,
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[COLOR orange] " + scrapedep + "[/COLOR]",
@@ -278,5 +285,69 @@ def peliculas_episodios(item):
                  extra=item.extra,
                  folder=True))
 
+    return itemlist
+
+# ==============================================================================================================================================
+
+
+def findvideos_tv(item):
+    logger.info()
+    itemlist = []
+
+    data = httptools.downloadpage(item.url).data
+    blocco = scrapertools.get_match(data, r'Streaming:<(.*?)<footer class="entry-footer">')
+    patron = r'<a href="([^"]+)">([^<]+)<\/a>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        if "http" in scrapedtitle or "Seriespedia" in scrapedtitle:
+          continue
+       
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[[COLOR yellow]" + scrapedtitle + "[COLOR]] " + item.title,
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+				 
+    patron = r'<a href="([^"]+)">http[^\/]+\/\/([^\/]+).*?<\/a>'
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapedtitle.replace("www.", "").replace(".me", "")
+        scrapedtitle = scrapedtitle.replace(".co", "").replace(".net", "")
+        scrapedtitle = scrapedtitle.replace(".li", "").replace(".tv", "")
+        scrapedtitle = scrapedtitle.capitalize()
+        if "Seriespedia" in scrapedtitle:
+          continue
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[[COLOR yellow]" + scrapedtitle + "[/COLOR]] " + item.title,
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+    return itemlist
+
+
+
+def play(item):
+    logger.info()
+    data = httptools.downloadpage(item.url).data
+    
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join([item.title, '[COLOR orange][B]' + ' ' + server + '[/B][/COLOR]'])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
     return itemlist
 
