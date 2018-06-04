@@ -65,7 +65,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def categorias(item):
     itemlist = []
@@ -95,7 +95,7 @@ def categorias(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita cinemalibero] " + item.url + " search " + texto)
@@ -112,7 +112,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("streamondemand-pureita.cinemalibero peliculas")
@@ -131,11 +131,11 @@ def peliculas(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="findvideos" if not "serie" in scrapedurl else "episodios",
+                 action="findvideos_movie" if not "serie" in scrapedurl else "episodios",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + " [COLOR yellow][" + voto + "][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + voto + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -158,7 +158,7 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_tv(item):
     logger.info("streamondemand-pureita cinemalibero peliculas_tv")
@@ -177,10 +177,10 @@ def peliculas_tv(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="episodios" if not "film" in scrapedtitle else "findvideos",
+                 action="episodios" if not "film" in scrapedtitle else "findvideos_movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + " [COLOR yellow][" + voto + "][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + voto + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -203,7 +203,7 @@ def peliculas_tv(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_update(item):
     logger.info("streamondemand-pureita cinemalibero peliculas_update")
@@ -231,10 +231,10 @@ def peliculas_update(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="episodios" if not "film" in scrapedtitle else "findvideos",
+                 action="episodios" if not "film" in scrapedtitle else "findvideos_movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + " [COLOR yellow][" + episodio + "][/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + episodio + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -254,7 +254,7 @@ def peliculas_update(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def episodios(item):
     logger.info("streamondemand-pureita cinemalibero episodios")
@@ -279,7 +279,7 @@ def episodios(item):
 		 continue
 
         scrapedtitle = scrapedtitle.replace("p>", "")
-        scrapedtitle = scrapedtitle.replace("-", "")
+        scrapedtitle = scrapedtitle.replace("-", "").replace("–", "")
         scrapedtitle = scrapedtitle.replace("/strong>", "")
         itemlist.append(
             Item(channel=__channel__,
@@ -293,7 +293,7 @@ def episodios(item):
                  folder=True))
 				 		 
     return itemlist
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def episodios_all(item):
     logger.info("streamondemand-pureita cinemalibero episodios_all")
@@ -305,10 +305,10 @@ def episodios_all(item):
     for scrapedurl,scrapedserver in matches:
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="play",
                  fulltitle=item.scrapedtitle,
                  show=item.scrapedtitle,
-                 title="[COLOR azure]" + item.title + " [COLOR orange]" + scrapedserver + "[/COLOR]",
+                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedserver + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -316,21 +316,57 @@ def episodios_all(item):
 
     return itemlist
 	
-# ==============================================================================================================================================================================
-
-def findvideos(item):
-    logger.info("streamondemand-pureita cinemalibero findvideos")
+# ==================================================================================================================================================
+	
+def findvideos_movie(item):
+    logger.info("[streamondemand-pureita altadefinizione_bid] findvideos_movies")
+    itemlist = []
 
     data = item.url if item.extra == "serie" else httptools.downloadpage(item.url, headers=headers).data
+    # The categories are the options for the combo
+    patron = '<a href="([^"]+)\s*" target="_blank" [^>]+>([^<]+)</a><br />'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+				 
+    return itemlist
+
+# ==================================================================================================================================================
+	
+def play(item):
+    itemlist=[]
+
+    data = item.url
+
+    if "rapidcrypt" in item.url:
+       data = httptools.downloadpage(item.url).data
+	  
+    while 'vcrypt' in item.url:
+        item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
+        data = item.url
+		
+    #logger.debug(data)
 
     itemlist = servertools.find_video_items(data=data)
+
     for videoitem in itemlist:
-        videoitem.title = item.title + videoitem.title
+        videoitem.title = item.title
         videoitem.fulltitle = item.fulltitle
-        videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
         videoitem.plot = item.plot
         videoitem.channel = __channel__
 
-    return itemlist
-
+    return itemlist	
+	
+# ==================================================================================================================================================
