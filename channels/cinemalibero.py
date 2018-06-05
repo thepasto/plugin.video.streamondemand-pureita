@@ -68,6 +68,7 @@ def mainlist(item):
 # ==================================================================================================================================================
 	
 def categorias(item):
+    logger.info("[streamondemand-pureita.cinemalibero] categorias")
     itemlist = []
 
     # Descarga la pagina
@@ -115,7 +116,7 @@ def search(item, texto):
 # ==================================================================================================================================================
 
 def peliculas(item):
-    logger.info("streamondemand-pureita.cinemalibero peliculas")
+    logger.info("[streamondemand-pureita.cinemalibero] peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -161,7 +162,7 @@ def peliculas(item):
 # ==================================================================================================================================================
 
 def peliculas_tv(item):
-    logger.info("streamondemand-pureita cinemalibero peliculas_tv")
+    logger.info("[streamondemand-pureita cinemalibero] peliculas_tv")
     itemlist = []
 
     # Descarga la pagina
@@ -206,7 +207,7 @@ def peliculas_tv(item):
 # ==================================================================================================================================================
 
 def peliculas_update(item):
-    logger.info("streamondemand-pureita cinemalibero peliculas_update")
+    logger.info("[streamondemand-pureita cinemalibero] peliculas_update")
     itemlist = []
     PERPAGE = 14
 	
@@ -257,7 +258,7 @@ def peliculas_update(item):
 # ==================================================================================================================================================
 
 def episodios(item):
-    logger.info("streamondemand-pureita cinemalibero episodios")
+    logger.info("[streamondemand-pureita cinemalibero] episodios")
     itemlist = []
 				 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -296,7 +297,7 @@ def episodios(item):
 # ==================================================================================================================================================
 
 def episodios_all(item):
-    logger.info("streamondemand-pureita cinemalibero episodios_all")
+    logger.info("[streamondemand-pureita cinemalibero] episodios_all")
     itemlist = []
 
     patron = '<a href="([^"]+)".*?>([^<]+)</a>'
@@ -319,7 +320,7 @@ def episodios_all(item):
 # ==================================================================================================================================================
 	
 def findvideos_movie(item):
-    logger.info("[streamondemand-pureita altadefinizione_bid] findvideos_movies")
+    logger.info("[streamondemand-pureita cinemalibero] findvideos_movies")
     itemlist = []
 
     data = item.url if item.extra == "serie" else httptools.downloadpage(item.url, headers=headers).data
