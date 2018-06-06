@@ -19,7 +19,6 @@ __channel__ = "cb01anime"
 host        = "http://www.cineblog01.video/"
 headers     = [['Referer', host]]
 
-
 # ========================================================================================================================================================
 def mainlist(item):
     logger.info("[cb01anime.py] mainlist")
@@ -55,7 +54,6 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
-
 
 # ========================================================================================================================================================
 
@@ -111,6 +109,7 @@ def peliculas_new(item):
                  folder=True))
 
     return itemlist
+
 # ========================================================================================================================================================
 
 def genere(item):
@@ -142,7 +141,6 @@ def genere(item):
 
     return itemlist
 
-
 # ========================================================================================================================================================
 
 def year(item):
@@ -171,11 +169,10 @@ def year(item):
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_year_P.png",
                  folder=True))
 
     return itemlist
-
 
 # ========================================================================================================================================================
 
@@ -205,7 +202,6 @@ def alfabetico(item):
                  folder=True))
 
     return itemlist
-
 
 # ========================================================================================================================================================
 
@@ -237,7 +233,6 @@ def listacompleta(item):
 
     return itemlist
 
-
 # ========================================================================================================================================================
 
 def search(item, texto):
@@ -246,7 +241,6 @@ def search(item, texto):
     item.url = host + "/anime/?s=" + texto
 
     return novita(item)
-
 
 # ========================================================================================================================================================
 
@@ -306,8 +300,9 @@ def episodios(item):
                  extra="episodios",
                  show=item.show))
 
+    itemlist.sort(key=lambda x: x.title)
+    itemlist.reverse()
     return itemlist
-
 
 # ========================================================================================================================================================
 
@@ -334,7 +329,6 @@ def findvideos(item):
                      folder=False))
 
     return itemlist
-
 
 # ========================================================================================================================================================
 
@@ -391,4 +385,3 @@ def play(item):
         videoitem.channel = __channel__
 
     return itemlist
-
