@@ -118,6 +118,15 @@
 </server>
 
 <server>
+    <id>clipwatching</id>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/clipwatching.py</update_url>
+    <active>true</active>
+    <version>1</version>
+    <date>06/06/2018</date>
+    <changes>First Release</changes>
+</server>
+
+<server>
     <id>cloudifer</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/cloudifer.py</update_url>
     <active>true</active>
