@@ -228,8 +228,6 @@ def peliculas_update(item):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
         scrapedplot = ""
-        episodio = episodio.replace("(", "").replace(")", "").replace("iTA", "- ITA")
-        scrapedtitle =scrapedtitle.replace("(SubITA)", "").strip()
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -262,7 +260,7 @@ def peliculas_update(item):
 def episodios(item):
     logger.info("[streamondemand-pureita cinemalibero] episodios")
     itemlist = []
-
+				 
     data = httptools.downloadpage(item.url, headers=headers).data
     blocco = scrapertools.get_match(data, '<section id="content">(.*?)<div class="wprc-form">')
 
@@ -278,13 +276,6 @@ def episodios(item):
 		 scrapedtitle=scrapertools.find_single_match(puntata, '([^<]+)<i>[^>]+><a\s*href="[^"]+"')
         if "Giapponese" in blocco:
 		 scrapedtitle=scrapertools.find_single_match(puntata, 'href="[^"]+"\s*[^>]+>([^<]+)<\/a>')
-        if "by_" in blocco:
-          scrapedtitle=scrapertools.find_single_match(puntata, '<a href="[^"]+" target="_blank" class="external">([^<]+)')
-        if "By_" in puntata:
-          scrapedtitle=scrapertools.find_single_match(puntata, '<a href="[^"]+" target="_blank" rel="noopener" class="external">([^<]+)')
-        if scrapedtitle=="":
-           continue
-                                                             
         if "Cartella" in puntata or "Cartelle" in puntata:
 		 continue
 
@@ -293,7 +284,7 @@ def episodios(item):
         scrapedtitle = scrapedtitle.replace("/strong>", "")
         itemlist.append(
             Item(channel=__channel__,
-                 action="episodios_all" if not "clipwatching" in puntata else "play",
+                 action="episodios_all",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
