@@ -167,12 +167,12 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
-        rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
-        if rating == " [[COLOR yellow]" + "10" + "[/COLOR]]":
+        rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        if rating == " ([COLOR yellow]" + "10" + "[/COLOR])":
           rating = ""
-        quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
+        quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         scrapedtitle = scrapedtitle.replace(" Streaming HD", "").replace(" streaming", "")
-        scrapedtitle = scrapedtitle.replace("-)", ")").replace("’", "'")
+        scrapedtitle = scrapedtitle.replace("-)", ")").replace("’", "'").replace("&#8217;", "'")
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
@@ -211,18 +211,18 @@ def peliculas_update(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, '<h2>Aggiornamenti Serie Tv</h2><(.*?)Vedi tutte</a></span>')	
 	
-    patron = '<img src="([^"]+)" alt="([^(]+)\s*[^(]+.*?><div class="rating">[^>]+>'
+    patron = '<img src="([^"]+)" alt="([^"]+)"><div class="rating">[^>]+>'
     patron += '</span>\s*([^<]+)</div><div class="featu">.*?</div>'
     patron += '<a href="([^"]+)">[^>]+></div>'
 
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedthumbnail, scrapedtitle, rating, scrapedurl in matches:
-        rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
-        if rating == " [[COLOR yellow]" + "10" + "[/COLOR]]":
+        rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        if rating == " ([COLOR yellow]" + "10" + "[/COLOR])":
           rating = ""
         scrapedtitle = scrapedtitle.replace(" Streaming HD", "").replace(" streaming", "")
-        scrapedtitle = scrapedtitle.replace("-)", ")").replace("’", "'")
+        scrapedtitle = scrapedtitle.replace("-)", ")").replace("’", "'").replace("&#8217;", "'")
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
@@ -277,15 +277,15 @@ def episodios(item):
         for scrapedepurl, scrapedepisode in episodes:
             episode_url = urlparse.urljoin(url, scrapedepurl)
 
-            title = scrapedseason + "x" + scrapedepisode + "[COLOR  yellow]" + " -- " + "[/COLOR]"
+            title = scrapedseason + "x" + scrapedepisode
 
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
                      contentType="episode",
-                     title=title + item.show,
+                     title=title + "[COLOR  yellow]" + " -- " + "[/COLOR]" + item.show,
                      url=episode_url, 
-                     fulltitle=title,
+                     fulltitle=title + " - " + item.show,
                      show=item.show,
                      plot=item.plot,
                      thumbnail=item.thumbnail))
