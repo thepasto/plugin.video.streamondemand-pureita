@@ -172,54 +172,41 @@ def peliculas(item):
 # ==================================================================================================================================================
 
 def findvideos_movie(item):
-    logger.info("[streamondemand-pureita italiafilm] categorias")
+    logger.info("[streamondemand-pureita italiafilm] findvideos_movie")
     itemlist = []
 
+    # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    data = scrapertools.find_single_match(data, '</em></span></h2>(.*?)</span></strong></p>')
+    bloque = scrapertools.get_match(data, '</p>\s*<p>(.*?)</strong></p>')
 
-    patron = '<a href="([^"]+)" [^>]+>([^<]+)</a><br/>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
+    # Extrae las entradas (carpetas)
+    patron = '<a href="([^"]+)" [^>]+>([^<]+)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for url, title in matches:
-        scrapedurl = urlparse.urljoin(item.url, url)
-        scrapedtitle = title
-        scrapedplot = ""
-        scrapedthumbnail = ""
-
+    for scrapedurl, scrapedtitle in matches:
         itemlist.append(
             Item(channel=__channel__,
-                 action='play',
-                 extra=item.extra,
+                 action="play",
+                 title=item.title + "  [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 url=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+
+    patron = '<iframe style="border: 0;" src="([^.]+\.([^.]+)[^"]+)" width="100%" height="100%" allowfullscreen="allowfullscreen"><\/iframe><\/div>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
                  title=item.title + "  [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
                  folder=True))
 				 
-    patron = '<iframe style="border: 0;" src="([^.]+\.([^.]+)[^"]+)" width="100%" height="100%" allowfullscreen="allowfullscreen"></iframe></div>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for url, title in matches:
-        scrapedurl = urlparse.urljoin(item.url, url)
-        scrapedtitle = title.capitalize()
-        scrapedplot = ""
-        scrapedthumbnail = ""
-
-        itemlist.append(
-            Item(channel=__channel__,
-                 action='play',
-                 extra=item.extra,
-                 title=item.title + "  [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
-                 url=scrapedurl,
-                 thumbnail=item.thumbnail,
-                 plot=item.plot,
-                 folder=True))
-
     return itemlist
-
 # ==================================================================================================================================================
 	
 def findvid_old(item):
