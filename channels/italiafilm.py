@@ -491,7 +491,7 @@ def findvideos_tv(item):
     itemlist = []
 	
     data = httptools.downloadpage(item.url, headers=headers).data	
-    patron = '<a href="([^"]+)"[^>]+>([^<]+)</a>'
+    patron = 'href="([^"]+)"[^>]+>([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(item.url)
 
     for scrapedurl, scrapedserver in matches:
