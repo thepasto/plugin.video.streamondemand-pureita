@@ -2473,10 +2473,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/vedohd.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>29/05/2017</date>
-    <changes>First Release</changes>
+    <date>12/06/2018</date>
+    <changes>First Release - Fix</changes>
     <categories>
         <category>movie</category>
         <category>Top Channels</category>
