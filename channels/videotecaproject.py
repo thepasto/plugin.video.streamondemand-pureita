@@ -627,7 +627,7 @@ def peliculas_new(item):
           continue
         if scrapedtitle=="":
           continue
-        scrapedtitle = scrapedtitle.zfill(9)
+
         scrapetitle=scrapedtitle.replace("°", "")
         #scrapedtitle = scrapedtitle.title()
         itemlist.append(
@@ -650,7 +650,7 @@ def peliculas_new(item):
         if scrapedtitle=="":
           continue
         scrapetitle=scrapedtitle.replace("-", " / ")
-        scrapedtitle = scrapedtitle.zfill(9)
+
         scrapetitle=scrapedtitle.replace("°", "")
         #scrapedtitle = scrapedtitle.title()
         itemlist.append(
