@@ -372,13 +372,13 @@ def categorias_serie(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    patron = 'Serie Tv</span></div>(.*?)</p>'
-    data = scrapertools.find_single_match(data, patron)
+    bloque = scrapertools.get_match(data, 'Serie Tv</span></div>(.*?)</p>')
+
 
     # Extrae las entradas (carpetas)
     # patron = '<a\s*href="([^"]+)" target="_blank"><img alt="" src=".*?[^A-Z]+([^.]+)[^<]+"><\/a>'
     patron = '<a\s*href="([^"]+)".*?<img alt="" src=".*?\/\/+[^\/]+[^.]+\/([^"]+)"[^>]+><\/a>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
         if "ANIMAZIONE" in scrapedtitle:
@@ -714,12 +714,12 @@ def peliculas_date(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
-        scrapedtitle = scrapedtitle.replace("’", "'")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "")
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -798,10 +798,10 @@ def episodios(item):
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=item.fulltitle.replace("x ITA", "") + " [[COLOR orange]" +scrapedtitle + "[/COLOR]]",
+                 title=item.fulltitle + " [[COLOR orange]" +scrapedtitle + "[/COLOR]]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle.replace("x ITA", "")  + "[/COLOR]  " + item.plot,
+                 plot="[COLOR orange]" + item.fulltitle  + "[/COLOR]  " + item.plot,
                  folder=True))
 			 
     return itemlist
