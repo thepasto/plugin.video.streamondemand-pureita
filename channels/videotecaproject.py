@@ -372,11 +372,12 @@ def categorias_serie(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-
+    patron = 'Serie Tv</span></div>(.*?)</p>'
+    data = scrapertools.find_single_match(data, patron)
 
     # Extrae las entradas (carpetas)
     # patron = '<a\s*href="([^"]+)" target="_blank"><img alt="" src=".*?[^A-Z]+([^.]+)[^<]+"><\/a>'
-    patron = '<a\s*href="([^"]+)" target="_blank"><img alt="" src=".*?\/\/+[^\/]+[^.]+\/([^"]+)"[^>]+><\/a>'
+    patron = '<a\s*href="([^"]+)".*?<img alt="" src=".*?\/\/+[^\/]+[^.]+\/([^"]+)"[^>]+><\/a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
@@ -626,6 +627,7 @@ def peliculas_new(item):
           continue
         if scrapedtitle=="":
           continue
+        scrapedtitle = scrapedtitle.zfill(9)
         scrapetitle=scrapedtitle.replace("°", "")
         #scrapedtitle = scrapedtitle.title()
         itemlist.append(
@@ -647,6 +649,8 @@ def peliculas_new(item):
           continue
         if scrapedtitle=="":
           continue
+        scrapetitle=scrapedtitle.replace("-", " / ")
+        scrapedtitle = scrapedtitle.zfill(9)
         scrapetitle=scrapedtitle.replace("°", "")
         #scrapedtitle = scrapedtitle.title()
         itemlist.append(
@@ -679,6 +683,7 @@ def serie_az(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
+
         scrapedthumbnail=""
         scrapedplot =""
         #scrapedtitle = scrapedtitle.title()
@@ -703,7 +708,7 @@ def peliculas_date(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
 				 				 
-    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>'
+    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
     patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
