@@ -703,7 +703,7 @@ def peliculas_date(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
 				 				 
-    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>'
+    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
     patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
