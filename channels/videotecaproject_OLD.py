@@ -617,15 +617,11 @@ def peliculas_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<span style=[^>]+><span style[^>]+>'
-    patron += '<span style="font-family[^>]+><strong>([^<]+)<'
+    patron = '<span style="font-family:tahoma,geneva,sans-serif;".*?'
+    patron += '<span style="color:#ff0000;">[^>]+>([^<]+)<[^>]+><\/span>[^>]+>[^>]+><\/p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle in matches:
-        if "x" in scrapedtitle or "ITA" in scrapedtitle:
-          continue
-        if scrapedtitle=="":
-          continue
         scrapetitle=scrapedtitle.replace("°", "")
         #scrapedtitle = scrapedtitle.title()
         itemlist.append(
@@ -637,28 +633,6 @@ def peliculas_new(item):
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
                  folder=True))
 
-				     # Extrae las entradas (carpetas)
-    patron = '<span[^>]+><span style[^>]+>'
-    patron += '<span style[^>]+>([^<]+)<\/span><\/span><\/span>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedtitle in matches:
-        if "x" in scrapedtitle or "ITA" in scrapedtitle:
-          continue
-        if scrapedtitle=="":
-          continue
-        scrapetitle=scrapedtitle.replace("°", "")
-        #scrapedtitle = scrapedtitle.title()
-        itemlist.append(
-            Item(channel=__channel__,
-                 fulltitle=scrapedtitle,
-                 action="peliculas_date",
-                 title="[COLOR yellow]" + scrapetitle + "[/COLOR]",
-                 url=item.url,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png",
-                 folder=True))
-
-				 
     itemlist.sort(key=lambda x: x.title)
     itemlist.reverse()
     return itemlist
@@ -701,10 +675,11 @@ def peliculas_date(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
-				 				 
-    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>'
-    patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
+    bloque = scrapertools.get_match(data, '%s(.*?)<p style="text-align: center;">&nbsp;</p>' % item.fulltitle)
+				 
+    patron = '<a\s*href="([^"]+)".*?img alt=""\s*src="([^"]+)" [^>]+.*?'
+    patron += '<\/a>.*?\s.*?'
+    patron += '<a\s*href="[^"]+".*?>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
@@ -726,6 +701,7 @@ def peliculas_date(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
+				 
 
     return itemlist	
 	
@@ -769,7 +745,7 @@ def episodios(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle.replace("x ITA", "") + "[/COLOR]  " + item.plot,
+                 plot=item.plot,
                  folder=True))
 	
     patron = 'div>(.*?)</span></'
@@ -781,10 +757,8 @@ def episodios(item):
         scrapedtitle=scrapedtitle.replace("E", "x")
         if not "x" in scrapedtitle:
           scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
-        if "Stagione" in puntata:
-          scrapedtitle=scrapertools.find_single_match(puntata, '<strong>([^<]+)<\/strong>')
-        if "Stagione" in scrapedtitle:
-           scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
+        #if "Stagione" in puntata:
+          #scrapedtitle=scrapertools.find_single_match(puntata, '<strong>([^<]+)<\/strong>')
         if scrapedtitle=="":
           continue
 
@@ -796,7 +770,7 @@ def episodios(item):
                  title=item.fulltitle.replace("x ITA", "") + " [[COLOR orange]" +scrapedtitle + "[/COLOR]]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle.replace("x ITA", "")  + "[/COLOR]  " + item.plot,
+                 plot=item.plot,
                  folder=True))
 			 
     return itemlist
