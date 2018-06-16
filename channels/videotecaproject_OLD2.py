@@ -419,7 +419,7 @@ def peliculas_srcseries(item):
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("<strong>", "").replace("</strong>", "")
 
-        if not "ITA" in scrapedtitle and not  "serie" in scrapedurl:
+        if not "ITA" in scrapedtitle or "serie" in scrapedurl:
          continue
 
         scrapedplot = ""
@@ -429,7 +429,7 @@ def peliculas_srcseries(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios",
+                 action="episodios" if not "serie" in scrapedurl else "peliculas_serie",
                  fulltitle=scrapetitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapetitle + "[/COLOR]",
@@ -524,7 +524,7 @@ def peliculas_srcserie(item):
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("<strong>", "").replace("</strong>", "")
         scrapetitle = scrapedtitle.replace(" ITA", "")
-        if not "ITA" in scrapedtitle and not "serie" in scrapedurl:
+        if not "ITA" in scrapedtitle or "serie" in scrapedurl:
          continue
 
         scrapedplot = ""
@@ -533,7 +533,7 @@ def peliculas_srcserie(item):
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios",
+                 action="episodios" if not "serie" in scrapedurl else "peliculas_serie",
                  fulltitle=scrapetitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapetitle + "[/COLOR]",
@@ -714,7 +714,7 @@ def peliculas_date(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -743,7 +743,7 @@ def episodios(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     blocco = scrapertools.get_match(data, '(?:Stagione.*?|)(?:Miniserie ITA.*?|)</span>(.*?)<footer class="widget-footer">')
 	
-    patron = '<p(.*?)</span>(?:</strong>|)</span>'
+    patron = '<p>(.*?)</span></span>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
@@ -762,12 +762,10 @@ def episodios(item):
         if "Stagione" in puntata:
           scrapedtitle=scrapertools.find_single_match(puntata, '<span style="font-weight: 700;">([^<]+)<')
           if not "Stagione" in scrapedtitle:
-            scrapedtitle=scrapertools.find_single_match(puntata, '<span style="font-family:\s*tahoma,\s*geneva,\s*sans-serif;">([^<]+)')
+            scrapedtitle=scrapertools.find_single_match(puntata, '<span style="font-family: tahoma, geneva, sans-serif;">([^<]+)')
           	  
         if "Stagione" in scrapedtitle:
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
-        if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
-          continue
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -776,9 +774,9 @@ def episodios(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]  " + item.plot,
+                 plot="[COLOR orange]" + item.fulltitle.replace("x ITA", "") + "[/COLOR]  " + item.plot,
                  folder=True))
-
+	
     patron = 'div>(.*?)</span></'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
@@ -787,15 +785,12 @@ def episodios(item):
         scrapedtitle=scrapertools.find_single_match(puntata, '<a\s*href="http.*?:\/\/.*?\/[^.]+[^\d+]+([^\.]+)[^>]+>')
         scrapedtitle=scrapedtitle.replace("E", "x")
         if not "x" in scrapedtitle:
+          scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
+        if "Stagione" in puntata:
           scrapedtitle=scrapertools.find_single_match(puntata, '<strong>([^<]+)<\/strong>')
-
-        if scrapedtitle=="":
-          scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
-        if "/" in scrapedtitle:
-          scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
         if "Stagione" in scrapedtitle:
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
-        if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
+        if scrapedtitle=="":
           continue
 
         itemlist.append(
@@ -803,10 +798,10 @@ def episodios(item):
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=item.fulltitle + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title=item.fulltitle + " [[COLOR orange]" +scrapedtitle + "[/COLOR]]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]  " + item.plot,
+                 plot="[COLOR orange]" + item.fulltitle  + "[/COLOR]  " + item.plot,
                  folder=True))
 			 
     return itemlist
