@@ -1894,10 +1894,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/piratestreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <version>16</version>
     <adult>false</adult>
-    <date>08/12/2017</date>
-    <changes>Update</changes>
+    <date>16/06/2018</date>
+    <changes>Partial Fix</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
