@@ -77,9 +77,9 @@ def peliculas_new(item):
         scrapedplot = scrapedplot.replace("<p><img s", "").replace("<br />", "")
         scrapedplot = scrapedplot.replace("<p><img a", "").replace("<br>", "")		
         scrapedplot = scrapedplot.strip()
-        scrapedtitle = scrapedtitle.replace("[", "(").replace("]", ")")
-        scrapedtitle = scrapedtitle.replace("Sub Ita", "[COLOR yellow]Sub Ita[/COLOR]")
-        scrapedtitle = scrapedtitle.replace("FULL Ita", "[COLOR yellow]Ita[/COLOR]")
+        title = scrapedtitle.replace("[", "(").replace("]", ")")
+        title = scrapedtitle.replace("Sub Ita", "[COLOR yellow]Sub Ita[/COLOR]")
+        title = scrapedtitle.replace("FULL Ita", "[COLOR yellow]Ita[/COLOR]")
 
 	
         itemlist.append(infoSod(
@@ -87,7 +87,7 @@ def peliculas_new(item):
                  action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]" + title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot + "....",
@@ -271,7 +271,7 @@ def episodios(item):
                 if titulo is not None:
                     title =  "[COLOR orange]" + titulo + "[/COLOR]"
                     if "Easybytez" in title or "Katfile" in title:
-                       continue
+                       title= title.replace("Easybytez", "[B]Extra[/B]")
 
                     itemlist.append(
                         Item(channel=__channel__,
