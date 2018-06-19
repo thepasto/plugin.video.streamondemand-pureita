@@ -244,7 +244,7 @@ def episodios(item):
 
     data = httptools.downloadpage(item.url).data
 
-    patron = r'<span\s*class="prev-link-episode">(.*?)</span>\s*<a[^h]+href="([^"]+)"[^>]+>'
+    patron = r'<span\s*class="prev-link-episode">(.*?)<\/span>\s*<a[^h]+href="[^=]+="([^"]+)".*?>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle, scrapedurl in matches:
