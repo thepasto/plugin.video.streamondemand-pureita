@@ -128,7 +128,7 @@ def peliculas_list(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_film",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
@@ -186,7 +186,7 @@ def peliculas_old(item):
         #scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_film",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
@@ -233,7 +233,7 @@ def peliculas(item):
         scrapedtitle = scrapedtitle.replace("Sub Ita", "(Sub Ita)")       
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_film",
                  contentType="movie",
                  title=scrapedtitle,
                  fulltitle=scrapedtitle,
@@ -281,10 +281,9 @@ def peliculas_srcmovie(item):
         scrapedplot = ""
         scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos" if not "film" in scrapedurl else "peliculas_list",
+                 action="findvideos_film" if not "film" in scrapedurl else "peliculas_list",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -1024,29 +1023,63 @@ def peliculas_listmovie(item):
 # ==================================================================================================================================================
 
 def findvideos_film(item):
-    logger.info("[streamondemand-pureita videotecaproject] findvideos_film")
+    logger.info("[streamondemand-pureita videotecaproject] categorias")
     itemlist = []
 
-    patron = '<a href="(([^.]+).*?)"\s*target="_blank">'
-    matches = re.compile(patron, re.DOTALL).findall(item.url)
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
 
-    for scrapedurl,scrapedtitle in matches:
-        scrapedtitle = scrapedtitle.replace("https://", "")
-        scrapedtitle = scrapedtitle.title()
 
+    # Extrae las entradas (carpetas)
+    patron = '<a href="([^\/]+\/\/([^.]+)[^"]+)" target="_blank"><img alt=""\s*src="([^"]+)"[^>]+>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        if "www" in scrapedtitle:
+          continue
+        quality=" ([COLOR yellow]SD[/COLOR])"
+        if "1080p" in scrapedurl or  "full hd " in scrapedthumbnail:
+           quality=" ([COLOR yellow]Full HD[/COLOR])"
+        if "720p" in scrapedurl or "hd." in scrapedthumbnail:
+           quality=" ([COLOR yellow]HD[/COLOR])"
+           
+        scrapedplot =""
+        scrapedtitle = scrapedtitle.strip()
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 fulltitle=item.scrapedtitle,
-                 show=item.title,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
-                 url=scrapedurl,
+                 fulltitle=scrapedtitle,
+                 title="[COLOR azure]" + item.title + quality + " [[COLOR orange]" + scrapedtitle.capitalize() + "[/COLOR]]",
+                 url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
                  folder=True))
 
-				 
-    return itemlist	
+    patron = '<p style="text-align: center;"><iframe allowfullscreen="true" frameborder[^>]+ src="([^\/]+\/\/([^.]+)[^"]+)" [^>]+></iframe></p>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        if "www" in scrapedtitle:
+          continue
+        quality=" ([COLOR yellow]SD[/COLOR])" 
+        if "1080p" in scrapedurl:
+           quality=" ([COLOR yellow]Full HD[/COLOR])"
+        if "720p" in scrapedurl:
+           quality=" ([COLOR yellow]HD[/COLOR])"
+                    
+        scrapedplot =""
+        scrapedtitle = scrapedtitle.strip()
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 fulltitle=scrapedtitle,
+                 title="[COLOR azure]" + item.title + quality + " [[COLOR orange]" + scrapedtitle.capitalize() + "[/COLOR]]",
+                 url=scrapedurl.strip(),
+                 thumbnail=item.thumbnail,
+                 plot=item.plot,
+                 folder=True))
+				 			 
+    return itemlist
 	
 # ==================================================================================================================================================
 # ==================================================================================================================================================
