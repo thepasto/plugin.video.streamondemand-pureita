@@ -718,13 +718,13 @@ def peliculas_date(item):
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "")
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="serie",
                  fulltitle=stitle,
-                 show=scrapedtitle,
+                 show=stitle,
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -765,7 +765,14 @@ def episodios(item):
           	  
         if "Stagione" in scrapedtitle:
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
-        if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
+        #if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
+          #continue
+		  
+        if "Trama:" in scrapedtitle:
+          continue
+        if scrapedtitle.startswith(item.show):
+          continue
+        if scrapedtitle=="":
           continue
         itemlist.append(
             Item(channel=__channel__,
@@ -794,9 +801,15 @@ def episodios(item):
           scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
         if "Stagione" in scrapedtitle:
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
-        if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
+        #if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
+          #continue
+		  
+        if "Trama:" in scrapedtitle:
           continue
-
+        if scrapedtitle.startswith(item.show):
+          continue
+        if scrapedtitle=="":
+          continue
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
