@@ -151,6 +151,13 @@ def list_az(item):
 def actors_list(item):
     logger.info("[streamondemand-pureita altadefinizione01_zone] actors_list")
     itemlist = []
+    numpage = 999
+	
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+	
     data = httptools.downloadpage(item.url, headers=headers).data
     patron = '<h2>Attori consigliati su Altadefinizione01:</h2>(.*?)</div></div>'
 	
@@ -159,13 +166,28 @@ def actors_list(item):
     patron = '<a href="([^"]+)" title="[^>]+">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
-    for scrapedurl, scrapedtitle in matches:
+
+    for i, (scrapedurl, scrapedtitle) in enumerate(matches):
+        if (p - 1) * numpage > i: continue
+        if i >= p * numpage: break
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_actors_P.png",
+                 folder=True))
+
+    # Extrae el paginador
+    if len(matches) >= p * numpage:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="actors_list",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
