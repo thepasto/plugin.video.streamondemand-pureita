@@ -73,18 +73,24 @@ def mainlist(item):
 	
 def search(item, texto):
     logger.info("[streamondemand-pureita TheLordOfStreaming] " + item.url + " search " + texto)
-    item.url = host + "/?s=" + texto + "&submit=Cerca"
+			
     try:
+        if item.extra == "movie":
+          item.url = host + "/?s=" + texto + "&submit=Cerca"
+          return peliculas_srcmovie(item)
+	  
         if item.extra == "serie":
-            return peliculas_srctv(item)
-        else:
-            return peliculas_srcmovie(item)
+          item.url = host + "/?s=" + texto + "+serie+tv&submit=Cerca"
+          return peliculas_srctv(item)
+		
+		
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
+
 
 # ==================================================================================================================================================		
 		
@@ -204,6 +210,8 @@ def peliculas_srctv(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
         if not "Serie TV" in scrapedtitle:
+          continue
+        if scrapedtitle=="Serie TV":
           continue
         scrapedplot=""
         scrapedthumbnail=""
@@ -410,6 +418,7 @@ def episodios(item):
                          thumbnail=item.thumbnail,
                          extra=item.extra,
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' &#8212;' + item.show,
+                         plot="[COLOR orange][B]" + item.title + "[/B][/COLOR] " + item.plot,
                          show=item.show))
 
     logger.info("[streamondemand-pureita TheLordOfStreaming] episodios")
