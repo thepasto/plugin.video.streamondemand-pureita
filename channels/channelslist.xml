@@ -77,7 +77,7 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01_zone.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>04</version>
+    <version>05</version>
     <adult>false</adult>
     <date>20/06/2018</date>
     <changes>Update and Fix</changes>
