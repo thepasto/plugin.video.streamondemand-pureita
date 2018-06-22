@@ -317,7 +317,7 @@ def peliculas_list(item):
 def peliculas_az(item):
     logger.info("[streamondemand-pureita altadefinizione_pink] peliculas_az")
     itemlist = []
-    minpage = 300
+    minpage = 600
 
     p = 1
     if '{}' in item.url:
