@@ -149,6 +149,7 @@ def peliculas(item):
         quality ="  [[COLOR yellow]" + quality + "[/COLOR]]"
         if  "  [[COLOR yellow]" + " " + "[/COLOR]]" in quality:
          quality = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace("&#8217;", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -197,7 +198,7 @@ def peliculas_new(item):
         scrapedurl = urlparse.urljoin(item.url, match.group(3))
         date = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace("&#8217;", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -246,6 +247,7 @@ def peliculas_update(item):
         votes=" [[COLOR yellow]" + votes + "[/COLOR]]"
         if "0" in votes:
          votes ="  [[COLOR yellow]" + "N/A" + "[/COLOR]]"
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace("&#8217;", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -286,6 +288,7 @@ def peliculas_search(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, date, scrapedplot  in matches:
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace("&#8217;", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos" if item.extra == "movie" else "episodios",
@@ -320,16 +323,19 @@ def peliculas_tv(item):
         scrapedurl = urlparse.urljoin(item.url, match.group(3))
         votes = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
+
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         votes = votes.replace("[", "")
         votes = votes.replace("]", "")
         votes=" - [[COLOR yellow]" + votes + "[/COLOR]]"
         if "0" in votes:
          votes ="  [[COLOR yellow]" + "N/A" + "[/COLOR]]"
-
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace("&#8217;", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
-                 contentType="tvshow",
+                 contentType="serie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title=scrapedtitle + votes,
@@ -353,7 +359,7 @@ def peliculas_tv(item):
                  folder=True))
 
     return itemlist
-
+				 
 # ==============================================================================================================================================================================
 	
 def episodios(item):

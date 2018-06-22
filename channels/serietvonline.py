@@ -142,7 +142,7 @@ def lista_serie(item):
                  title=scrapedtitle,
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
-                 show=item.fulltitle,
+                 show=scrapedtitle,
                  folder=True),tipo='tv'))
 
     # Extrae el paginador
@@ -182,7 +182,7 @@ def lista_novita(item):
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
-                 show=item.fulltitle,
+                 show=scrapedtitle,
                  folder=True),tipo='tv'))
 								 
     patron = "<a rel='nofollow' class=previouspostslink href='(.*?)'><span class='icon-chevron-right2'>"
@@ -290,8 +290,8 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 fulltitle=item.scrapedtitle,
-                 show=item.scrapedtitle,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  title="[COLOR azure]" + item.title + "[COLOR orange]" + scrapedserver + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
