@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmstream_biz"
-host = "http://streamfilm.club/"
+host = "https://streamfilm.club/"
 headers = [['Referer', host]]
 
 
@@ -38,9 +38,21 @@ def mainlist(item):
              extra="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
         Item(channel=__channel__,
+             title="[COLOR azure]Film[COLOR orange] - 3D[/COLOR]",
+             action="peliculas",
+             url="%s/genre/3d/" % host,
+             extra="movie",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+        Item(channel=__channel__,
+             title="[COLOR azure]Film[COLOR orange] - Richiesti[/COLOR]",
+             action="top_richieste",
+             url="%s/lista-film-richiesti-articolo-in-continuo-aggiorna" % host,
+             extra="movie",
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+        Item(channel=__channel__,
              title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
              action="genere",
-             url=host,
+             url="%s/movies/descendants-2/" % host,
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         #Item(channel=__channel__,
              #title="[COLOR azure]Serie TV[/COLOR]",
@@ -56,7 +68,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def search(item, texto):
     logger.info("[pureita filmstream_biz] " + item.url + " search " + texto)
@@ -73,7 +85,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================		
+# ========================================================================================================================================================		
 
 def genere(item):
     logger.info("[pureita filmstream_biz] genere")
@@ -100,7 +112,7 @@ def genere(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def peliculas(item):
     logger.info("[pureita filmstream_biz] peliculas")
@@ -118,12 +130,14 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
-        rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
-        if rating == " [[COLOR yellow]" + "0" + "[/COLOR]]":
-          rating = ""
-        quality = " [[COLOR yellow]" + quality + "[/COLOR]]"
-        scrapedtitle = scrapedtitle.replace(" Streaming HD", "")
+        if rating =="0" or rating =="10" or rating =="1":
+          rating =""
+        else:
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        quality = " ([COLOR yellow]" + quality + "[/COLOR])"
+        scrapedtitle = scrapedtitle.replace(" Streaming HD", "").replace("[HD]", "")
         scrapedtitle = scrapedtitle.replace(" Streaming", "")
+        quality=quality.replace("PROSSIMAMENTE", "Pross.")
 
         scrapedplot = ""
         itemlist.append(infoSod(
@@ -150,7 +164,7 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def peliculas_search(item):
     logger.info("[pureita filmstream_biz] peliculas_search")
@@ -187,7 +201,7 @@ def peliculas_search(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def peliculas_update(item):
     logger.info("[pureita filmstream_biz] peliculas_last")
@@ -200,15 +214,19 @@ def peliculas_update(item):
 	
     patron = '<div class="poster">\s*<img\s*src="([^"]+)"\s*alt="([^"]+)">\s*'
     patron += '<div class="rating"><span class=".*?"></span>.*?</div>\s*'
-    patron += '<div class=".*?">(.*?)</div><a href="([^"]+)">'
+    patron += '<div class=".*?">.*?</div><a href="([^"]+)">'
 
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedthumbnail, scrapedtitle, quality, scrapedurl in matches:
+    for scrapedthumbnail, scrapedtitle, scrapedurl in matches:
+        if "HD" in scrapedtitle:
+          quality = " ([COLOR yellow]HD[/COLOR])"
+        scrapedtitle = scrapedtitle.replace(" Streaming HD", "").replace("[HD]", "")
+        scrapedtitle = scrapedtitle.replace(" Streaming", "").replace("HD", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + ' [COLOR orange][' + quality + '][/COLOR]',
+                 title=scrapedtitle.strip() + quality,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -226,7 +244,41 @@ def peliculas_update(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
+
+def top_richieste(item):
+    logger.info("[pureita filmstream_biz] top_10")
+
+    itemlist = []
+	
+    # Descarga la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
+		
+    patron = '<p><a href="([^"]+)".*?>([^<]+)</a></p>'
+
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle  in matches:
+        if "HD" in scrapedtitle:
+          quality = " ([COLOR yellow]HD[/COLOR])"
+        scrapedtitle=scrapedtitle.replace("HD", "").replace("Streaming", "").replace("[]", "")
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        scrapedtitle=scrapedtitle.strip()
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title=scrapedtitle + quality,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle), tipo='movie'))
+				 
+    return itemlist
+
+# ========================================================================================================================================================
+
 
 def top_10(item):
     logger.info("[pureita filmstream_biz] top_10")
@@ -256,7 +308,7 @@ def top_10(item):
 				 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def peliculas_serie(item):
     logger.info("[pureita filmstream_biz] peliculas_last")
@@ -295,7 +347,7 @@ def peliculas_serie(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def peliculas_new(item):
     logger.info("[pureita filmstream_biz] peliculas_new")
@@ -351,7 +403,7 @@ def peliculas_new(item):
 
     return itemlist	
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 
 def findvideos_tv(item):
     logger.info("pureita filmstream_biz findvideos")
@@ -376,7 +428,7 @@ def findvideos_tv(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ========================================================================================================================================================
 	
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
