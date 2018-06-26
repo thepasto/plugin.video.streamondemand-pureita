@@ -23,7 +23,7 @@ headers = [['Referer', host]]
 def mainlist(item):
     logger.info("streamondemand-pureita.videotecaproject mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Categorie / Menu[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Menu[/COLOR]",
                      action="menu_movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
                 Item(channel=__channel__,
@@ -33,7 +33,7 @@ def mainlist(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Categorie / Menu[/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Menu[/COLOR]",
                      action="menu_serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
@@ -718,7 +718,7 @@ def peliculas_date(item):
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").strip()
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "").strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -797,6 +797,9 @@ def episodios(item):
 
         if scrapedtitle=="":
           scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
+          if scrapedtitle=="":
+            scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank"><strong><span style="font-size:14px;"><span style="font-family:tahoma,geneva,sans-serif;">([^<]+)')
+
         if "/" in scrapedtitle:
           scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
         if "Stagione" in scrapedtitle:
