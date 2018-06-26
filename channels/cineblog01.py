@@ -281,7 +281,7 @@ def peliculas(item):
         scrapedthumbnail = scrapedthumbnail.replace(" ", "%20")
         scrapedplot = scrapertools.unescape("[COLOR orange]" + match.group(4) + "[/COLOR]\n" + match.group(5).strip())
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
-        scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "").replace("[Sub-ITA]", "(Sub Ita)")
+        scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "x").replace("[Sub-ITA]", "(Sub Ita)")
         scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
         itemlist.append(
             Item(channel=__channel__,
@@ -349,7 +349,7 @@ def peliculas_lastupdate(item):
         scrapedthumbnail = ""
         scrapedplot = ""
 
-        scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "").replace("[Sub-ITA]", "(Sub Ita)")
+        scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "x").replace("[Sub-ITA]", "(Sub Ita)")
         scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
         scrapedtitle=scrapedtitle.strip()
         title = scrapertools.decodeHtmlentities(scrapedtitle)
