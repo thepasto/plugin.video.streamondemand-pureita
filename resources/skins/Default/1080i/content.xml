@@ -64,7 +64,7 @@
     <!-- title -->
     <control type="textbox" id="302">
       <posx>45</posx><posy>610</posy>
-      <width>442</width><height>92</height>
+      <width>442</width><height>82</height>
       <font>font14</font>
       <textcolor>FFDDDDDD</textcolor>
       <aligny>bottom</aligny>
