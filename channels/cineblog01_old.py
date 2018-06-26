@@ -282,7 +282,7 @@ def peliculas(item):
         scrapedplot = scrapertools.unescape("[COLOR orange]" + match.group(4) + "[/COLOR]\n" + match.group(5).strip())
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "").replace("[Sub-ITA]", "(Sub Ita)")
-        scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
+        scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("#", "# ")
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -350,7 +350,7 @@ def peliculas_lastupdate(item):
         scrapedplot = ""
 
         scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "").replace("[Sub-ITA]", "(Sub Ita)")
-        scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
+        scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("#", "# ")
         scrapedtitle=scrapedtitle.strip()
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
@@ -835,11 +835,30 @@ def findvideos(item):
 # ==================================================================================================================================================
 
 def findvid_film(item):
-    logger.info("[cineblog01.py] findvid_film")
+    def load_links(itemlist,re_txt,color,desc_txt):
+        streaming = scrapertools.find_single_match(data, re_txt)
+        patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
+        matches = re.compile(patron, re.DOTALL).findall(streaming)
+        for scrapedurl, scrapedtitle in matches:
+            logger.debug("##### findvideos %s ## %s ## %s ##" % (desc_txt,scrapedurl, scrapedtitle))
+            title = "[COLOR orange]" + scrapedtitle + "[/COLOR] " + "[COLOR " + color + "]" + desc_txt + ":[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="play",
+                     title=title,
+                     url=scrapedurl,
+                     server=scrapedtitle,
+                     fulltitle=item.fulltitle,
+                     thumbnail=item.thumbnail,
+                     show=item.show,
+                     plot=item.plot,
+                     folder=False))
+    
+    logger.info("[streamondemand-pureita cineblog01] findvid_film")
 
     itemlist = []
 
-    # Descarga la página
+    # Descarga la página 
     data = httptools.downloadpage(item.url, headers=headers).data
     data = scrapertools.decodeHtmlentities(data)
 
@@ -850,98 +869,15 @@ def findvid_film(item):
     for match in matches:
         QualityStr = scrapertools.unescape(match.group(1))[6:]
 
-    # STREAMANGO
-    matches = []
-    u = scrapertools.find_single_match(data, '(?://|\.)streamango\.com/(?:f/|embed/)?[0-9a-zA-Z]+')
-    if u: matches.append((u, 'Streamango'))
-
-    # Extrae las entradas
-	
-    streaming_hd = scrapertools.find_single_match(data, '<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">')
-    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
-    matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
-    for scrapedurl, scrapedtitle in matches:
-        logger.debug("##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR yellow]" + scrapedtitle +  " HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
-                 thumbnail=item.thumbnail,
-                 plot=item.plot,
-                 show=item.show,
-                 folder=False))
-
-    streaming_3D = scrapertools.find_single_match(data, '<strong>Streaming 3D[^<]+</strong>(.*?)<table height="30">')
-    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
-    matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
-    for scrapedurl, scrapedtitle in matches:
-        logger.debug("##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR pink]" + scrapedtitle + " 3D:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
-                 thumbnail=item.thumbnail,
-                 plot=item.plot,
-                 show=item.show,
-                 folder=False))
-	
-    streaming = scrapertools.find_single_match(data, '<strong>Streaming:</strong>(.*?)<table height="30">')
-    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
-    matches = re.compile(patron, re.DOTALL).findall(streaming) + matches
-    for scrapedurl, scrapedtitle in matches:
-        logger.debug("##### findvideos Streaming ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR orange]" + scrapedtitle + " SD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
-                 thumbnail=item.thumbnail,
-                 plot=item.plot,
-                 show=item.show,
-                 folder=False))
-
-    download = scrapertools.find_single_match(data, '<strong>Download:</strong>(.*?)<table height="30">')
-    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
-    matches = re.compile(patron, re.DOTALL).findall(download)
-    for scrapedurl, scrapedtitle in matches:
-        logger.debug("##### findvideos Download ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR orange]" + scrapedtitle + "[/COLOR] " + "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
-                 thumbnail=item.thumbnail,
-                 show=item.show,
-                 folder=False))
-
-    download_hd = scrapertools.find_single_match(data, '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">')
-    patron = '<td><a[^h]href="([^"]+)"[^>]+>([^<]+)<'
-    matches = re.compile(patron, re.DOTALL).findall(download_hd)
-    for scrapedurl, scrapedtitle in matches:
-        logger.debug("##### findvideos Download HD ## %s ## %s ##" % (scrapedurl, scrapedtitle))
-        title = "[COLOR orange]" + scrapedtitle + "[/COLOR] " + "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR]"
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 title=title,
-                 url=scrapedurl,
-                 fulltitle=item.fulltitle,
-                 thumbnail=item.thumbnail,
-                 show=item.show,
-                 folder=False))
+    load_links(itemlist,'<strong>Streaming:</strong>(.*?)<table height="30">',"orange","SD")
+    load_links(itemlist,'<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">',"yellow","HD")
+    load_links(itemlist,'<strong>Streaming 3D[^<]+</strong>(.*?)<table height="30">',"pink","3D")
+    load_links(itemlist,'<strong>Download:</strong>(.*?)<table height="30">',"aqua","Download") 
+    load_links(itemlist,'<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">',"azure","Download HD") 
 
     if len(itemlist) == 0:
         itemlist = servertools.find_video_items(item=item)
+
     return itemlist
 
 # ==================================================================================================================================================
