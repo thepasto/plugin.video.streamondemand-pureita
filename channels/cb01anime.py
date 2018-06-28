@@ -82,7 +82,7 @@ def peliculas_new(item):
         title = scrapedtitle.replace("FULL Ita", "[COLOR yellow]Ita[/COLOR]")
 
 	
-        itemlist.append(infoSod(
+        itemlist.append(
             Item(channel=__channel__,
                  action="episodios",
                  fulltitle=scrapedtitle,
@@ -91,7 +91,7 @@ def peliculas_new(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot + "....",
-                 folder=True), tipo='tv'))
+                 folder=True))
 
     # Extrae el paginador 
     patronvideos = "<link rel='next' href='([^']+)'"
