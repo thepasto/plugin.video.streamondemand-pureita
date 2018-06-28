@@ -3,20 +3,22 @@
 # streamondemand-pureita - XBMC Plugin
 # Conectore per clipwatching
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# by Alfa
 #------------------------------------------------------------
 
 import re
 import urllib
-from core import httptools
-from core import logger
-from core import scrapertools
 
+from core import httptools
+from core import scrapertools
+from core import logger
+from lib import jsunpack
 
 
 def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
     data = httptools.downloadpage(page_url).data
-    if "File Not Found" in data:
+    if "File Not Found" in data or "File was deleted" in data:
         return False, "[clipwatching] Il video e stato cancellato"
     return True, ""
 
@@ -24,8 +26,10 @@ def test_video_exists(page_url):
 def get_video_url(page_url, user="", password="", video_password=""):
     logger.info("(page_url='%s')" % page_url)
     data = httptools.downloadpage(page_url).data
+    packed = scrapertools.find_single_match(data, "text/javascript'>(.*?)\s*</script>")
+    unpacked = jsunpack.unpack(packed)
     video_urls = []
-    videos = scrapertools.find_multiple_matches(data, 'file:"([^"]+).*?label:"([^"]+)')
+    videos = scrapertools.find_multiple_matches(unpacked, 'file:"([^"]+).*?label:"([^"]+)')
     for video, label in videos:
         video_urls.append([label + " [clipwatching]", video])
     logger.info("Url: %s" %videos)
