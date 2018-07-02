@@ -7,7 +7,8 @@
 import re
 import urlparse
 
-from core import config, httptools
+from core import config
+from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -22,7 +23,7 @@ DEBUG = config.get_setting("debug")
 def mainlist(item):
     logger.info()
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Archivio[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      url="%s/category/films/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),

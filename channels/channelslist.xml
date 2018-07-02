@@ -1894,9 +1894,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/piratestreaming.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>16</version>
+    <version>18</version>
     <adult>false</adult>
-    <date>16/06/2018</date>
+    <date>02/07/2018</date>
     <changes>Partial Fix</changes>
     <categories>
         <category>movie</category>
