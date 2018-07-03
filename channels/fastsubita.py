@@ -291,11 +291,11 @@ def peliculas_episodios(item):
 
 
 def findvideos_tv(item):
-    logger.info()
+    logger.info("[streamondemand-pureita.fast] findvideos_tv")
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'Streaming:<(.*?)<footer class="entry-footer">')
+    blocco = scrapertools.get_match(data, r'<h2>Streaming(.*?)<footer class="entry-footer">')
     patron = r'<a href="([^"]+)">([^<]+)<\/a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
@@ -337,7 +337,7 @@ def findvideos_tv(item):
 
 
 def play(item):
-    logger.info()
+    logger.info("[streamondemand-pureita.fastsubita] play")
     data = httptools.downloadpage(item.url).data
     
     itemlist = servertools.find_video_items(data=data)
