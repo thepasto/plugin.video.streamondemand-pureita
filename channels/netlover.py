@@ -172,7 +172,7 @@ def film(item):
 
     # Extrae las entradas (carpetas)
     patron = 'alt="([^"]+)">\s*[^>]+>\s*[^>]+>\s*[^>]+>[^<]+[^>]+>(.*?)<\/span>\s*[^>]+>[^>]+>\s*[^>]+>\s*[^>]+>.*?'
-    patron += '<p>(.*?)</p>\s*[^>]+>\s*[^>]+>\s*[^>]+>\s*[^>]+>[^>]+>([^<]+)<\/a>'
+    patron += '<p>(.*?)</p>\s*[^>]+>\s*[^>]+>\s*[^>]+>\s*[^>]+>([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle, position, scrapedplot, info in matches:
