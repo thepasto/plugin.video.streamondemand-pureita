@@ -176,7 +176,7 @@ def film(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedtitle, position, scrapedplot, info in matches:
-        scrapedtitle = scrapedtitle.replace(":", " - ")
+        scrapedtitle = scrapedtitle.replace(":", " - ").replace("&#x27;", " ")
         scrapedtitle = scrapedtitle.replace("&#39;", " ")
         scrapedtitle=scrapedtitle.strip()
         scrapedthumbnail = ""
