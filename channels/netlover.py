@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # StreamOnDemand-PureITA / XBMC Plugin
-# Canale .NetLover (search engine)"
+# Canale NetLover (search engine)"
 # http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 
