@@ -95,7 +95,7 @@ def peliculas(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
-                 folder=True), tipo='tv'))
+                 folder=True), tipo='movie'))
 
     # Extrae el paginador
     patronvideos = '<a\s*class="nextpostslink" rel="next" href="([^"]+)">Avanti »</a>'
@@ -147,7 +147,7 @@ def peliculas_new(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
-                 folder=True), tipo='tv'))
+                 folder=True), tipo='movie'))
 
     return itemlist
 # ==================================================================================================================================================
@@ -347,7 +347,7 @@ def cat_ep(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
-                 plot=item.plot,
+                 plot="[COLOR orange][B]" + item.fulltitle + "[/B][/COLOR] " + item.plot,
                  extra=item.extra,
                  folder=True))
 
@@ -372,7 +372,7 @@ def cat_ep(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
-                 plot=item.plot,
+                 plot="[COLOR orange][B]" + item.fulltitle + "[/B][/COLOR] " + item.plot,
                  extra=item.extra,
                  folder=True))
 				 
