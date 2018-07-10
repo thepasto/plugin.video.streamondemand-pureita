@@ -17,7 +17,7 @@ from core.tmdb import infoSod
 
 __channel__ = "animesenzalimiti"
 
-host = "https://animesenzalimiti.net/"
+host = "https://animesenzalimiti.co/"
 
 def mainlist(item):
     logger.info("[streamondemand-pureita animesenzalimiti] mainlist")
