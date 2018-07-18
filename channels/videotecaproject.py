@@ -565,7 +565,7 @@ def peliculas_tv(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, '</table>([^+]+)<div class="widget-footer"></div>')
+    bloque = scrapertools.get_match(data, '</table>(.*?)<div class="widget-footer"></div>')
 	
     # Extrae las entradas (carpetas)
     patron = '<a href="(http.*?[^.]+[^\/]+\/[^\/]+\/([^"]+))".*?src="([^"]+)" style="[^>]+>'
