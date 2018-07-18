@@ -285,7 +285,7 @@ def peliculas(item):
         scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvid_film",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
@@ -356,7 +356,7 @@ def peliculas_lastupdate(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="findvideos",
+                 action="findvid_film",
                  contentType="movie",
                  title=title,
                  url=scrapedurl,

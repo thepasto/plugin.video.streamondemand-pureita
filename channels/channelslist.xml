@@ -464,9 +464,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/casacinema.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>29</version>
+    <version>30</version>
     <adult>false</adult>
-    <date>01/02/2018</date>
+    <date>18/07/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -501,9 +501,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>58</version>
+    <version>59</version>
     <adult>false</adult>
-    <date>25/06/2018</date>
+    <date>18/07/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -1842,9 +1842,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/novedades.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>07</version>
+    <version>08</version>
     <adult>false</adult>
-    <date>09/07/2018</date>
+    <date>18/07/2018</date>
     <changes>Update</changes>
 </channel>
 

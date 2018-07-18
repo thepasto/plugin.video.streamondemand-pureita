@@ -23,10 +23,10 @@ def isGeneric():
 
 
 def mainlist(item, preferred_thumbnail="squares"):
-    logger.info("streamondemand.channels.novedades mainlist")
+    logger.info("[streamondemand-pureita novedades] mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     action="peliculas",
+                     action="peliculas_movie",
                      title="Film",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/banner_movie_blueP2.png",
                      viewmode="movie"),
@@ -54,8 +54,8 @@ def mainlist(item, preferred_thumbnail="squares"):
     return itemlist
 
 
-def peliculas(item):
-    logger.info("streamondemand.channels.novedades peliculas")
+def peliculas_movie(item):
+    logger.info("[streamondemand-pureita novedades] peliculas_movie")
 
     itemlist = []
 
@@ -64,7 +64,7 @@ def peliculas(item):
     itemlist.extend(cineblog01.peliculas(item))
 
     from channels import casacinema
-    item.url = "https://www.casacinema.video/?s=%5BHD%5D"
+    item.url = "https://www.casacinema.video/genere/film"
     itemlist.extend(casacinema.peliculas(item))	
 	
     from channels import italiafilm
@@ -97,7 +97,7 @@ def peliculas(item):
 
 
 def peliculas_infantiles(item):
-    logger.info("streamondemand.channels.novedades peliculas_infantiles")
+    logger.info("[streamondemand-pureita novedades] peliculas_infantiles")
 
     itemlist = []
 
@@ -127,7 +127,7 @@ def peliculas_infantiles(item):
 
 
 def series(item):
-    logger.info("streamondemand.channels.novedades series")
+    logger.info("[streamondemand-pureita novedades] series")
 
     itemlist = []
 	
@@ -163,7 +163,7 @@ def series(item):
 
 
 def anime(item):
-    logger.info("streamondemand.channels.novedades anime")
+    logger.info("[streamondemand-pureita novedades] anime")
 
     itemlist = []
 
@@ -189,7 +189,7 @@ def anime(item):
 
 
 def documentales(item):
-    logger.info("streamondemand.channels.novedades documentales")
+    logger.info("[streamondemand-pureita novedades] documentales")
 
     itemlist = []
 
