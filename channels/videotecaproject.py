@@ -80,17 +80,29 @@ def menu_movie(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
+                     title="[COLOR azure]Film [COLOR orange]- Genere[/COLOR]",
+                     action="categorias",
+                     url=host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film [COLOR orange]- HD[/COLOR]",
+                     action="peliculas_srcmovie",
+                     url=host + "/tags/Film%20HD/",
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film [COLOR orange]- 3D[/COLOR]",
+                     action="peliculas_srcmovie",
+                     url=host + "/tags/Film%203D/",
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_3D_P.png"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Film [COLOR orange]- Lista A/Z[/COLOR]",
                      action="peliculas_list",
                      url="%s/film/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR azure]Film [COLOR orange]- Genere[/COLOR]",
-                     #action="categorias",
-                     #url=host,
-                     #extra="movie",
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Film...[/COLOR]",
                      action="search",
@@ -100,6 +112,44 @@ def menu_movie(item):
 
     return itemlist
 
+# ==================================================================================================================================================
+
+def categorias(item):
+    logger.info("[streamondemand-pureita videotecaproject] serie_az")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
+    bloque = scrapertools.get_match(data, 'GENERE.png"[^>]+>(.*?)</p>')
+
+
+    # Extrae las entradas (carpetas)
+    # patron = '<a\s*href="([^"]+)" target="_blank"><img alt="" src=".*?[^A-Z]+([^.]+)[^<]+"><\/a>'
+    patron = '<a\s*href="([^"]+)".*?<img alt="" src=".*?\/\/+[^\/]+[^.]+\/([^"]+)"[^>]+><\/a>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        #if "ANIMAZIONE" in scrapedtitle:
+          #continue
+
+        scrapedtitle = scrapedtitle.replace("STORICOBIOGRAFICO", "Storico - Biografico")
+        scrapedtitle = scrapedtitle.replace(".png", "")
+        scrapedtitle = scrapedtitle.replace("FILMHD", "Film HD").replace("FILM3D", "Film 3D")
+        scrapedtitle = scrapedtitle.replace("FILMSD", "Film SD")
+        scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail=""
+        scrapedplot =""
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculas_srcmovie",
+                 fulltitle=scrapedtitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
+                 folder=True))
+
+    return itemlist
+	
 # ==================================================================================================================================================
 
 def peliculas_list(item):
@@ -371,7 +421,7 @@ def categorias_serie(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, 'Serie Tv</span></div>(.*?)</p>')
+    bloque = scrapertools.get_match(data, 'GENERE.png"[^>]+>(.*?)</p>')
 
 
     # Extrae las entradas (carpetas)
@@ -914,7 +964,7 @@ def play(item):
 # ==================================================================================================================================================
 
 
-def categorias(item):
+def categorias_old(item):
     logger.info("[streamondemand-pureita videotecaproject] categorias")
     itemlist = []
 
@@ -941,7 +991,7 @@ def categorias(item):
                  folder=True))
 
     return itemlist
-	
+
 # ==================================================================================================================================================
 
 def listmovie(item):
@@ -1024,7 +1074,7 @@ def peliculas_listmovie(item):
         scrapedtitle =scrapedtitle.strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvideos_film",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
@@ -1058,7 +1108,8 @@ def findvideos_film(item):
            quality=" ([COLOR yellow]Full HD[/COLOR])"
         if "720p" in scrapedurl or "hd." in scrapedthumbnail:
            quality=" ([COLOR yellow]HD[/COLOR])"
-           
+        if "3D" in scrapedurl or "3D.png" in scrapedthumbnail:
+           quality=" ([COLOR yellow]3D[/COLOR])"          
         scrapedplot =""
         scrapedtitle = scrapedtitle.strip()
         itemlist.append(
