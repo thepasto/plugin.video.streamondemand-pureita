@@ -69,7 +69,7 @@ def genres(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, "Categorie Film</a>(.*?)DMCA</a>")
+    bloque = scrapertools.get_match(data, "Categorie FILM</a>(.*?)DMCA</a>")
 
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)">([^<]+)</a>'
