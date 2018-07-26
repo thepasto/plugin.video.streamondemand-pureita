@@ -12,6 +12,8 @@ import urllib
 import xbmc
 
 from core import httptools
+from lib import jsunpack
+from core import config
 from core import logger
 from core import scrapertools
 
@@ -29,10 +31,9 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     patronsources='sources\:\s*\[["\']\s*(https?:\/\/[^>]+?wstream.*?)\s*["\']\]'
     video_url = scrapertools.find_single_match(data, patronsources)
     if not video_url:
-        data_pack = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+        data_pack = scrapertools.find_single_match(data, "<\/div>\s*[^>]+>(eval.function.p,a,c,k,e,.*?)\s*<\/script>")
 
         if data_pack != "":
-            from lib import jsunpack
             data_pack = jsunpack.unpack(data_pack)
         video_url = scrapertools.find_single_match(data_pack, patronsources)
 
