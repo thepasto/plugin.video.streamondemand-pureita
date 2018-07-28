@@ -124,10 +124,13 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl, scrapedtitle, rating, scrapedthumbnail  in matches:	
+
+        if rating=="":
+          rating="N/A"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [[COLOR yellow]" + rating + "[/COLOR]]",
+                 title=scrapedtitle + " ([COLOR yellow]" + rating + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -215,11 +218,13 @@ def peliculas_search(item):
    
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
-    for rating, scrapedurl, scrapedtitle, scrapedthumbnail, scrapedplot  in matches:	
+    for rating, scrapedurl, scrapedtitle, scrapedthumbnail, scrapedplot  in matches:
+        if rating=="":
+          rating="N/A"	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + " [[COLOR yellow]" + rating + "[/COLOR]]",
+                 title=scrapedtitle + " ([COLOR yellow]" + rating + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
