@@ -1382,8 +1382,8 @@
     <id>vidoza</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/vidoza.py</update_url>
     <active>true</active>
-    <version>03</version>
-    <date>22/09/2017</date>
+    <version>04</version>
+    <date>30/07/2018</date>
     <changes>Update</changes>
 </server>
 

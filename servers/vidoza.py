@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # --------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# Conector para vidoza
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# StreamOnDemand-PuraITA - XBMC Plugin
+# Connettore  vidoza
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # --------------------------------------------------------
 
 import re
@@ -30,7 +30,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     data = httptools.downloadpage(page_url).data
 
     video_urls = []
-    matches = scrapertools.find_multiple_matches(data, 'src\s*:\s*"([^"]+)".*?label:\'([^\']+)\'')
+    matches = scrapertools.find_multiple_matches(data, 'src\s*:\s*"([^"]+)".*?label:"(.*?)"')
     for media_url, calidad in matches:
         ext = media_url[-4:]
         video_urls.append(["%s %s [vidoza]" % (ext, calidad), media_url])
