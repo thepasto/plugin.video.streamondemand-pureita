@@ -328,7 +328,7 @@ def findvideos(item):
         matches = re.compile(patron, re.DOTALL).findall(data)
         headers.append(['Referer', url])
         for video in matches:
-            itemlist.append(Item(channel=__channel__, action="play", title=item.title,
+            itemlist.append(Item(channel=__channel__, action="play", title=item.title, thumbnail=item.thumbnail,
                                  url=video + '|' + urllib.urlencode(dict(headers)), folder=False))
     else:
         itemlist.extend(servertools.find_video_items(data=url))
