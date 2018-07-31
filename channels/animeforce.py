@@ -198,7 +198,7 @@ def ultimiep(item):
             extra = "<tr>\s*<td[^>]+><strong>(?:[^>]+>|)%s(?:[^>]+>[^>]+>|[^<]*|[^>]+>)</strong>" % eptype
             itemlist.append(infoSod(
                 Item(channel=__channel__,
-                     action="findvideos",
+                     action="episodios",
                      title=scrapedtitle,
                      url=scrapedurl,
                      fulltitle=cleantitle,
