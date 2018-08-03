@@ -214,7 +214,7 @@ def fichas(item):
     else:
         patron = '<div class="wrapperImage"[^<]+\s*[^>]+>([^<]+).*?\s*<a href="([^"]+)">'
         patron += '<img width=".*?" height=".*?" src="([^"]+)" class="attachment[^>]+>'
-        patron += '</a>\s*<div class="info">\s*<h2 class="titleFilm"><a href[^>]+>([^<]+)</a></h2>\s*[^>]+>[^>]+>\s*IMDB: ([^<]+)<'
+        patron += '</a>\s*<div class="info">\s*<h2 class="titleFilm"><a href[^>]+>([^<]+)</a></h2>\s*[^>]+>[^>]+>\s*(.*?)<'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -225,7 +225,8 @@ def fichas(item):
         if "/?s=" in item.url:
             scrapedurl = scraped_1
             scrapedcalidad = scraped_2
-
+        if scrapedpuntuacion=="":
+           scrapedpuntuacion="N/A"
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         title_f = scrapertools.decodeHtmlentities(scrapedtitle)
         title += " (" + scrapedcalidad + ") (" + scrapedpuntuacion + ")"
