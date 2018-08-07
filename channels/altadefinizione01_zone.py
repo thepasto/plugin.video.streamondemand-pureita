@@ -19,8 +19,6 @@ __channel__ = "altadefinizione01_zone"
 host = "http://www.altadefinizione01.zone/"
 headers = [['Referer', host]]
 
-def isGeneric():
-    return True
 
 
 def mainlist(item):
@@ -264,12 +262,14 @@ def peliculas_update(item):
     patron = '</div>\s*<a href="([^"]+)">\s*' \
              '<img width=".*?"\s*height=".*?" src="([^"]+)" [^>]+ alt="([^<]+)"\s*title="".*?/>.*?' \
              '</a>\s*<div class="trdublaj">\s*(.*?)</div>\s*[^>]+>(.*?)\s*<' \
-             '.*?<li><span class="ml-label">([^<]+)</span></li>.*?<p>(.*?)</p>'
+             '.*?<li>\s*<span class="ml[^"]+">(.*?)<\/.*?span>\s*<\/li>\s*' \
+             '<li><span class="ml-label">([^<]+)</span></li>.*?<p>(.*?)</p>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
-        scrapedplot = scrapertools.unescape(match.group(7))
-        year = scrapertools.unescape(match.group(6))
+        scrapedplot = scrapertools.unescape(match.group(8))
+        year = scrapertools.unescape(match.group(7))
+        rating = scrapertools.unescape(match.group(6))
         sub = scrapertools.unescape(match.group(5))
         quality = scrapertools.unescape(match.group(4))
         scrapedtitle = scrapertools.unescape(match.group(3))
@@ -282,6 +282,9 @@ def peliculas_update(item):
          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         if year:
          year = " ([COLOR yellow]" + year + "[/COLOR])"
+        if rating:
+         rating=rating.replace("<b>", "")
+         rating = " ([COLOR yellow]" + rating + "[/COLOR])"
 
          
         itemlist.append(infoSod(
@@ -290,7 +293,7 @@ def peliculas_update(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -325,12 +328,14 @@ def peliculas(item):
     patron = '<h2>\s*<a href="([^"]+)">([^"]+)<\/a>\s*<\/h2>\s*[^>]+>[^>]+.*?\s*'
     patron += '</div>\s*<a href[^>]+>[^>]+src="([^"]+)"[^>]+>\s*</a>\s*'
     patron += '<div class="trdublaj">\s*(.*?)</div>\s*[^>]+>(.*?)\s*<'
-    patron += '.*?<li><span class="ml-label">([^<]+)</span></li>.*?<p>(.*?)</p>'
+    patron += '.*?<li>\s*<span class="ml[^"]+">(.*?)<\/.*?span>\s*<\/li>\s*' 
+    patron += '<li><span class="ml-label">([^<]+)</span></li>.*?<p>(.*?)</p>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
-        scrapedplot = scrapertools.unescape(match.group(7))
-        year = scrapertools.unescape(match.group(6))
+        scrapedplot = scrapertools.unescape(match.group(8))
+        year = scrapertools.unescape(match.group(7))
+        rating = scrapertools.unescape(match.group(6))
         sub = scrapertools.unescape(match.group(5))
         quality = scrapertools.unescape(match.group(4))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(3))
@@ -344,14 +349,16 @@ def peliculas(item):
          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         if year:
          year = " ([COLOR yellow]" + year + "[/COLOR])"
-
+        if rating:
+         rating=rating.replace("<b>", "")
+         rating = " ([COLOR yellow]" + rating + "[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -386,7 +393,7 @@ def findvideos(item):
     patron = '</a>\s*<a href="[^>]+" data-link="([^"]+)">\s*<li class="part">'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl in matches:
-        if not "http:" in scrapedurl:
+        if not "http" in scrapedurl:
           scrapedurl = "http:" + scrapedurl
         data += httptools.downloadpage(scrapedurl).data
     for videoitem in servertools.find_video_items(data=data):
