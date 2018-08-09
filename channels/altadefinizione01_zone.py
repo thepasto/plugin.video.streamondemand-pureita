@@ -212,17 +212,23 @@ def peliculas_list(item):
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedurl = scrapertools.unescape(match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
+
+        if year:
+          scrapetitle=scrapedtitle.strip() + " (" + year + ")"
+        else:
+          scrapetitle=scrapedtitle			
         if quality:
          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         if year:
          year = " ([COLOR yellow]" + year + "[/COLOR])"
+
 		
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=scrapetitle,
+                 show=scrapetitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + year + quality,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -275,13 +281,17 @@ def peliculas_update(item):
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(2))
         scrapedurl = scrapertools.unescape(match.group(1))
-
+        if year:
+          scrapetitle=scrapedtitle.strip() + " (" + year + ")"
+        else:
+          scrapetitle=scrapedtitle	
         if sub:
          sub = " ([COLOR yellow]" + sub + "[/COLOR])"
         if quality:
          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         if year:
          year = " ([COLOR yellow]" + year + "[/COLOR])"
+         scrapetitle=scrapedtitle + " (" + year + ")"
         if rating:
          rating=rating.replace("<b>", "")
          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
@@ -291,8 +301,8 @@ def peliculas_update(item):
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=scrapetitle,
+                 show=scrapetitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -342,13 +352,17 @@ def peliculas(item):
         #rating = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = scrapertools.unescape(match.group(1))
-		
+        if year:
+          scrapetitle=scrapedtitle.strip() + " (" + year + ")"
+        else:
+          scrapetitle=scrapedtitle		
         if sub:
          sub = " ([COLOR yellow]" + sub + "[/COLOR])"
         if quality:
          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         if year:
          year = " ([COLOR yellow]" + year + "[/COLOR])"
+
         if rating:
          rating=rating.replace("<b>", "")
          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
@@ -356,8 +370,8 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=scrapetitle,
+                 show=scrapetitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + sub + year + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
