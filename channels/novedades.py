@@ -101,13 +101,13 @@ def peliculas_infantiles(item):
 
     itemlist = []
 
-    import filmsenzalimiti_info
-    item.url = "https://www.filmsenzalimiti.info/watch-genre/cartoni-animati"
-    itemlist.extend(filmsenzalimiti_info.peliculas(item))
+    import filmsenzalimiti_blue
+    item.url = "https://filmsenzalimiti.blue/category/film/animazione"
+    itemlist.extend(filmsenzalimiti_blue.peliculas(item))
 	
-    #import streaminglove
-    #item.url = "https://www.streaminglove.tv/genere/animazione/"
-    #itemlist.extend(streaminglove.peliculas(item))
+    import cinemalibero
+    item.url = "https://www.cinemalibero.club/category/film-in-streaming/animazione/"
+    itemlist.extend(cinemalibero.peliculas(item))
 	
     import serietvu
     item.url = "http://www.serietvu.online/category/animazione-e-bambini/"
@@ -168,7 +168,7 @@ def anime(item):
     itemlist = []
 
     import animesenzalimiti
-    item.url = "https://animesenzalimiti.co/"
+    item.url = "https://animeleggendari.com/"
     itemlist.extend(animesenzalimiti.ultimiep(item))
 
     import animeforce

@@ -11,9 +11,9 @@
     <bannermenu>https://raw.githubusercontent.com/orione7/Pelis_images/master/bannermenu/animesenzalimiti.png</bannermenu>
 
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/</update_url>
-    <version>13</version>
-    <date>09/07/2018</date>
-    <changes>Update Host/changes>
+    <version>14</version>
+    <date>10/08/2018</date>
+    <changes>Update and Fix</changes>
 
     <categories>
         <category>anime</category>
