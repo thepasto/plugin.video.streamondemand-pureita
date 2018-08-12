@@ -712,7 +712,7 @@ def peliculas_new(item):
                  folder=True))
 
 				 
-    itemlist.sort(key=lambda x: x.title)
+    itemlist.sort(key=lambda x: x.fulltitle.zfill(20))
     itemlist.reverse()
     return itemlist
 	
