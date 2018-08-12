@@ -159,7 +159,7 @@ def fichas(item):
         scrapedthumbnail += "|" + _headers
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos" if not "serie" in scrapedurl else "episodios",
+                 action="findvideos_all" if not "serie" in scrapedurl else "episodios",
                  title=title,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -390,3 +390,30 @@ def url_decode(url_enc):
     reverse = reverse + last_car
     return base64.b64decode(reverse)
 
+# ===================================================================================================================================================
+	
+def findvideos_all(item):
+    logger.info("[streamondemand-pureita italiafilmvideohd] findvideos_all")
+    itemlist = []
+
+    # Descarga la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+
+    patron = '<iframe width=".*?" height=".*?" src="([^"]+)" width=".*?" height=".*?" frameborder=".*?" scrolling=".*?" allowfullscreen /></iframe></div>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+	
+    for scrapedurl in matches:
+        data = httptools.downloadpage(scrapedurl).data
+        videos = servertools.find_video_items(data=data)
+        for video in videos:
+            itemlist.append(video)
+			
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "[[COLOR orange]" + servername.capitalize() + "[/COLOR]] " + item.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
+    return itemlist

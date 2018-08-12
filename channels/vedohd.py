@@ -9,6 +9,7 @@ import base64
 import re
 import urlparse
 
+from core import config
 from core import httptools
 from core import logger
 from core import scrapertools
@@ -186,21 +187,23 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
     patron = '<div class="poster"><img\s*src="([^"]+)" alt="([^"]+)"><div class="rating">'
-    patron += '<span class="icon-star2"><\/span>\s*([^<]+)<\/div><div class="mepo">'
-    patron += '<span class="quality">[^<]+<\/span><\/div><a href="([^"]+)">.*?'
+    patron += '<span class="icon-star2"><\/span>\s*([^<]+)<\/div><div class="mepo">\s*'
+    patron += '<span class="quality">([^<]+)<\/span><\/div><a href="([^"]+)">.*?'
     #patron += '<div class="texto">([^<]+)</div>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedthumbnail, scrapedtitle, rating, scrapedurl in matches:
+    for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
         if rating:
-         rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        if quality:
+          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         scrapedtitle = scrapedtitle.replace("&#8217;", "'").replace("&#8211;", "-")		
         scrapedplot=""	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + rating,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + quality + rating,
                  thumbnail=scrapedthumbnail,
                  url=scrapedurl,
                  fulltitle=scrapedtitle,
@@ -277,11 +280,8 @@ def findvideos(item):
     logger.info("[streamondemand-pureita vedohd] findvideos")
     itemlist = []
 
-	
-	
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-
 	
     # Extrae las entradas (carpetas)
     patron = '<a class="options" href="#option-(\d+)"><b class="icon-play_arrow"></b>\s*(.*?)\s*</a>'
@@ -292,7 +292,9 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title=item.title +  "  [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] " + item.title,
+                 fulltitle=item.title,
+                 show=item.show,
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=option,
@@ -313,14 +315,14 @@ def play(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl in matches:
-        data = scrapertools.anti_cloudflare(scrapedurl, headers)
+        data = scrapertools.anti_cloudflare(scrapedurl.strip(), headers)
         videos = servertools.find_video_items(data=data)
         for video in videos:
             itemlist.append(video)
 			
     for videoitem in itemlist:
         servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = item.title + " [[COLOR orange]" + servername.capitalize() + "[/COLOR]]" 
+        videoitem.title = "[[COLOR orange]" + servername.capitalize() + "[/COLOR]] " + item.fulltitle
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
