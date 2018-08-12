@@ -128,14 +128,14 @@ def lista_serie(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     blocco = scrapertools.find_single_match(data, 'id="lcp_instance_0">(.*?)</ul>')
-    patron='<li><a href="(.*?)" title=".*?">(.*?)</a></li>'
+    patron='<a href="([^"]+)" title="([^<]+)">[^<]+</a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
     for i, (scrapedurl,scrapedtitle) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle).strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -174,7 +174,7 @@ def lista_novita(item):
     scrapertools.printMatches(matches)
 
     for scrapedthumbnail, scrapedurl,scrapedtitle in matches:
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle).strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -217,7 +217,8 @@ def episodios(item):
         puntata = "<td class=\"title\">"+puntata
 
         scrapedtitle=scrapertools.find_single_match(puntata, '<td class="title">(.*?)</td>')
-        scrapedtitle=scrapedtitle.replace(item.title,"")
+        scrapedtitle=scrapedtitle.replace("avi","")
+        scrapedtitle=scrapedtitle.replace(item.title,"").strip()
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -226,7 +227,7 @@ def episodios(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot=item.plot,
+                 plot="[COLOR orange]" + item.title + "[/COLOR] " + item.plot,
                  folder=True))
 				 
     return itemlist	
@@ -270,7 +271,7 @@ def episodios_all(item):
                      url=episode_url, 
                      fulltitle=title,
                      show=item.show,
-                     plot=item.plot,
+                     plot="[COLOR orange]" + item.title + "[/COLOR] " + item.plot,
                      thumbnail=item.thumbnail))
 
 
@@ -292,7 +293,7 @@ def findvideos(item):
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[COLOR azure]" + item.title + "[COLOR orange]" + scrapedserver + "[/COLOR]",
+                 title="[COLOR orange][" + scrapedserver.strip() + "][COLOR azure] " + item.title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -317,7 +318,7 @@ def findvideos_all(item):
 	      itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = item.title + videoitem.title
+        videoitem.title = videoitem.title + item.title
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
