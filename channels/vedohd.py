@@ -186,9 +186,9 @@ def peliculas(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<div class="poster"><img\s*src="([^"]+)" alt="([^"]+)"><div class="rating">'
-    patron += '<span class="icon-star2"><\/span>\s*([^<]+)<\/div><div class="mepo">\s*'
-    patron += '<span class="quality">([^<]+)<\/span><\/div><a href="([^"]+)">.*?'
+    patron = '<div class="poster">\s*<img\s*src="([^"]+)"\s*alt="([^"]+)">\s*<div class="rating">'
+    patron += '<span class="icon-star2"><\/span>\s*([^<]+)<\/div>\s*<div class="mepo">\s*'
+    patron += '<span class="quality">([^<]+)<\/span>\s*<\/div>\s*<a href="([^"]+)">'
     #patron += '<div class="texto">([^<]+)</div>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -284,7 +284,7 @@ def findvideos(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
     # Extrae las entradas (carpetas)
-    patron = '<a class="options" href="#option-(\d+)"><b class="icon-play_arrow"></b>\s*(.*?)\s*</a>'
+    patron = '<a class="options" href="#option-(\d+)">\s*<b class="icon-play_arrow"></b>\s*(.*?)\s*</a></li>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -310,8 +310,8 @@ def play(item):
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, headers)
-
-    patron = ('"option-%s" class="play-box-iframe fixidtab"><iframe class="metaframe rptss" src="([^"]+)" [^>]+><\/iframe>' % item.extra)
+          
+    patron = ('<div id="option-%s" class="play-box-iframe fixidtab">\s*<iframe class="metaframe rptss" src="([^"]+)" [^>]+></iframe>' % item.extra)
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl in matches:

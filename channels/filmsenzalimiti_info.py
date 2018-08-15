@@ -189,7 +189,7 @@ def peliculas_tv(item):
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="episodios",
+                 action="episodios_all",
                  contentType="tv",
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
@@ -237,19 +237,19 @@ def peliculas_movie(item):
         scrapedtitle = scrapedtitle.replace(" sub-ITA", "").replace(" sub-ITA]", "")
         scrapedtitle = scrapedtitle.replace("-)", ")").replace("’", "'").replace("–", "-")
         scrapedtitle = scrapedtitle.replace("Streaming", "").replace(":", "")
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
-                 action="findvideos_movie" if not "series" in genre else "episodios",
-                 contentType="movie",
+                 action="findvideos_movie" if not "serie" in genre else "episodios_all",
+                 contentType="movie" if not "serie" in genre else "tvshow",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot.replace(" streaming", "").replace("-)", ")"),
-                 folder=True), tipo='movie' if not "series" in genre else "tv"))
+                 folder=True), tipo='movie' if not "serie" in genre else "tv"))
 
     # Paginación
     next_page = scrapertools.find_single_match(data, '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>')
@@ -289,7 +289,7 @@ def episodios(item):
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvideos_tv",
-                         title=item.title + " - [COLOR orange]" + title + "[/COLOR]",
+                         title=item.title + " [COLOR orange]" + title + "[/COLOR]",
                          url=item.url,
                          thumbnail=item.thumbnail,
                          extra=data,
@@ -346,7 +346,7 @@ def episodios(item):
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos_tv",
-                     title=scrapedtitle + " - " + item.title,
+                     title=scrapedtitle + " " + item.title,
                      url=item.url,
                      thumbnail=item.thumbnail,
                      extra=html,
@@ -419,7 +419,7 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title=item.title + " - [[COLOR orange]" + scrapedtitle + "[/COLOR]] ",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] " + item.title,
                  url=url.strip(),
                  fulltitle=item.fulltitle,
                  show=item.show,
@@ -499,13 +499,12 @@ def findvideos_movie(item):
 # ==================================================================================================================================================	
 	
 def play(item):
-    logger.info("[streamondemand-pureita animesenzalimiti] findvideos")
+    logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
 
     data = httptools.downloadpage(item.url).data
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-
         videoitem.title = item.title
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
