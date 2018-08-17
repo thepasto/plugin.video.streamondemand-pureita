@@ -227,7 +227,7 @@ def peliculas(item):
 def peliculas_imdb(item):
     logger.info("[streamondemand-pureita vedohd] peliculas_imdb")
     itemlist = []
-    minpage = 14
+    minpage = 10
 
     p = 1
     if '{}' in item.url:
@@ -237,8 +237,8 @@ def peliculas_imdb(item):
     # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
 	
-    patron = '<img src="([^"]+)" \/><\/a><\/div><\/div><div class="puesto">(.*?)<\/div>'
-    patron += '<div class="rating">(.*?)<\/div><div class="title"><a href="([^"]+)">([^<]+)<\/a>'
+    patron = '<img\s*src="([^"]+)" \/><\/a><\/div><\/div>\s*<div class="puesto">(.*?)<\/div>\s*'
+    patron += '<div class="rating">(.*?)<\/div>\s*<div class="title"><a href="([^"]+)">([^<]+)<\/a>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 

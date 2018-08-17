@@ -20,19 +20,18 @@ __channel__ = "thelordofstreaming"
 host = "http://www.thelordofstreaming.it"
 headers = [['Referer', host]]
 
-def isGeneric():
-    return True
+
 
 def mainlist(item):
     logger.info("[streamondemand-pureita TheLordOfStreaming] mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure][B]Film[COLOR orange][B] - Novita'[/B][/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      url="%s/category/movie/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure][B]Wrestling[COLOR orange][B] - Novita'[/B][/COLOR]",
+                     title="[COLOR azure]Wrestling[COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      url="%s/category/wrestling/" % host,
                      extra="movie",
@@ -43,19 +42,19 @@ def mainlist(item):
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure][B]Serie TV[COLOR orange][B] - Lista[/B][/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Lista[/COLOR]",
                      action="peliculas_tv",
                      url="%s/serie-tv/" % host,
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure][B]Serie TV[COLOR orange][B] - Archivio[/B][/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Archivio[/COLOR]",
                      action="peliculas_list",
                      url="%s/serie-tv/" % host,
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure][B]Serie TV[COLOR orange][B] - Ultimi Episodi[/B][/COLOR]",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi[/COLOR]",
                      action="peliculas_new",
                      url=host,
                      extra="serie",
@@ -114,7 +113,7 @@ def peliculas(item):
         scrapedthumbnail = scrapedthumbnail.replace("-–-", "-%E2%80%93-")
         scrapedthumbnail = scrapedthumbnail.replace("’", "%E2%80%99")
         scrapedthumbnail = scrapedthumbnail.replace("à", "%C3%A0")
-        scrapedtitle = scrapedtitle.replace("’", "").replace(" & ", " e ")
+        scrapedtitle = scrapedtitle.replace("’", "").replace("&", "e")
         scrapedplot = scrapedplot.replace("/", "").replace("<em>", "")
         scrapedplot = scrapedplot.replace("<h1>", "").replace("<a>", "")
         scrapedplot = scrapedplot.replace("<p>", "").replace("a>", "")
@@ -253,17 +252,19 @@ def peliculas_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<h1 class="entry-title"><a href="([^"]+)" rel="bookmark">([^&]+)([^<]+)</a></h1>\s*'
+    patron = '<h1 class="entry-title"><a href="([^"]+)" rel="bookmark">([^1]+)([^<]+)</a></h1>\s*'
     patron += '<div class=".*?">\s*<.*?<time class[^>]+>(.*?)</time>'
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
 
-        scrapeddata = scrapertools.unescape(match.group(4))
+        scrapedate = scrapertools.unescape(match.group(4))
         scrapedep = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
-        scrapedep = scrapedep.replace('SUBITA', 'SUB')
+        scrapedep = scrapedep.replace('SUBITA', 'SUB').replace("11;", "").replace("–", "-").strip()
+        scrapedtitle=scrapedtitle.replace("&#038;", "").replace("&#82", "").strip()
+
         scrapedplot = ""
         scrapedthumbnail = ""
         if "Girada" in scrapedtitle or "WWE" in scrapedtitle:
@@ -274,7 +275,7 @@ def peliculas_new(item):
                  contentType="tv",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle+"[COLOR aquamarine]"+ scrapedep + " - [COLOR yellow]" + scrapeddata + "[/COLOR]",
+                 title=scrapedtitle+" - [COLOR aquamarine]"+ scrapedep + " - [COLOR yellow]" + scrapedate + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -318,7 +319,7 @@ def peliculas_list(item):
     for i, (scrapedurl, scrapedtitle) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
-
+        scrapedtitle = scrapedtitle.replace("&#8211;", "-").strip()
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(
             Item(channel=__channel__,
@@ -366,7 +367,7 @@ def peliculas_tv(item):
     for i, (scrapedurl, scrapedtitle ) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
-        scrapedtitle = scrapedtitle.replace("&#8211;", "-")
+        scrapedtitle = scrapedtitle.replace("&#8211;", "-").strip()
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedthumbnail=""
         scrapedplot=""
@@ -375,7 +376,7 @@ def peliculas_tv(item):
                  extra=item.extra,
                  action="episodios",
                  contentType="tv",
-                 title=scrapedtitle,
+                 title=title,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -465,7 +466,8 @@ def findvideos(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join(['[COLOR orange][B]' + videoitem.title, '[COLOR azure] - ' + item.title + '[/B][/COLOR]'])
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title, ])
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
