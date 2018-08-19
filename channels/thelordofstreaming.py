@@ -7,6 +7,7 @@
 
 import re
 import urlparse
+import base64
 
 from core import config
 from core import httptools
@@ -402,25 +403,27 @@ def peliculas_tv(item):
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        patron = '((?:.*?<a href="[^"]+" class="external" rel="nofollow" target="_blank">[^<]+</a>)+)'
+        patron = '((?:.*?<a href="[^"]+"[^c]+class="external[^>]+>[^<]+</a>)+)'
         matches = re.compile(patron).findall(html)
 
         for data in matches:
             scrapedtitle = data.split('<a ')[0]
+
             scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
+
             if scrapedtitle != 'Film':
-                scrapedtitle = scrapedtitle.replace('&#215;', ' X ')
+                scrapedtitle = scrapedtitle.replace('&#215;', ' X ')     
                 itemlist.append(
                     Item(channel=__channel__,
-                         action="findvideos",
+                         action="findvideos" if not "cinemalibero" in data else "find_servers",
                          contentType="episode",
-                         title="[COLOR azure]%s[/COLOR]" % (scrapedtitle + " [" + lang_title + "]"),
-                         url=data,
+                         title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + lang_title + "[/COLOR])",
+                         url=data if not "cinemalibero" in data else item.url,
                          thumbnail=item.thumbnail,
                          extra=item.extra,
                          fulltitle=scrapedtitle + " (" + lang_title + ")" + ' &#8212;' + item.show,
                          plot="[COLOR orange][B]" + item.title + "[/B][/COLOR] " + item.plot,
-                         show=item.show))
+                         show=scrapedtitle))
 
     logger.info("[streamondemand-pureita TheLordOfStreaming] episodios")
     itemlist = []
@@ -474,4 +477,50 @@ def findvideos(item):
         videoitem.plot = item.plot
         videoitem.channel = __channel__
 
+    return itemlist
+
+# ==================================================================================================================================================
+	
+def find_servers(item):
+    logger.info("[streamondemand-pureita TheLordOfStreaming] findvideos_server")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
+    bloque = scrapertools.get_match(data, "%s(.*?)<br />" % item.show)
+
+    # Extrae las entradas (carpetas)
+    patron = '<a href="[^>]+goto\/([^"]+)" target="_blank" rel="nofollow" class="external">([^<]+)<\/a>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedtitle in matches:
+        url = scrapedurl.decode('base64')
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.fulltitle,
+                 url=url.strip(),
+                 fulltitle=item.fulltitle,
+                 show=item.show,
+                 plot=item.plot,
+                 thumbnail=item.thumbnail,
+                 folder=True))
+
+    return itemlist
+	
+# ==================================================================================================================================================
+	
+def play(item):
+    logger.info("[streamondemand-pureita TheLordOfStreaming] play")
+
+    data = httptools.downloadpage(item.url).data
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = item.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot=item.plot
+        videoitem.channel = __channel__
     return itemlist
