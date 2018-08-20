@@ -107,10 +107,11 @@ def lista_novita(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapetitle = re.sub(r"([0-9-(-)])", r"", scrapedtitle).replace(" Ep ", "")
         itemlist.append(infoSod(Item(channel=__channel__,
                                      action="episodios",
                                      title=scrapedtitle,
-                                     fulltitle=scrapedtitle,
+                                     fulltitle=scrapetitle,
                                      url=scrapedurl,
                                      thumbnail=scrapedthumbnail,
                                      fanart=item.fanart if item.fanart != "" else item.scrapedthumbnail,
@@ -172,20 +173,22 @@ def lista_completa(item):
 def episodios(item):
     logger.info("streamondemand-pureita.animehdita episodios")
     itemlist = []
-				 
+			 
     data = httptools.downloadpage(item.url, headers=headers).data
-    blocco = scrapertools.get_match(data, '<p><b>TRAMA</b>:<br />(.*?)</div></div>')
+    blocco = scrapertools.get_match(data, '<p><b>TRAMA</b>(.*?)</div></div>')
 
     patron = '<tr>(.*?)<\/a>\s*<\/td>\s*<\/tr>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
     for puntata in matches:
-        scrapedtitle=scrapertools.find_single_match(puntata, '<td class="td-numero">([^<]+)</td>')
+        scrapedtitle=scrapertools.find_single_match(puntata, '<td class="td-numero">([^<]+)')
         if not "Episodio" in scrapedtitle:
-           scrapedtitle=scrapertools.find_single_match(puntata, '<a target="_blank" href="[^"]+">([^<]+)</')
+           scrapedtitle=scrapertools.find_single_match(puntata, '<a target="_blank" href="[^"]+">([^<]+)')
         if "Streamango HD" in scrapedtitle:
            scrapedtitle=scrapertools.find_single_match(puntata, '<td class="td-link">(.*?): ')
+        #if scrapedtitle=="":
+           #scrapedtitle=scrapertools.find_single_match(puntata, '<td class="td-link"><a target="_blank" href="[^>]+">([^<]+)')
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios_all",
@@ -194,7 +197,7 @@ def episodios(item):
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
-                 plot=item.plot,
+                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]  " + item.plot,
                  folder=True))
 		 
     return itemlist
@@ -224,7 +227,7 @@ def episodios_all(item):
     logger.info("streamondemand-pureita animehdita episodios_all")
     itemlist = []
 
-    patron = '<a target="_blank" href="([^"]+)">([^<]+)<\/a>'
+    patron = 'href="([^"]+)">([^<]+)'
     matches = re.compile(patron, re.DOTALL).findall(item.url)
 	
 
@@ -232,7 +235,7 @@ def episodios_all(item):
         #logger.debug(scrapedurl)
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="play",
                  fulltitle=item.scrapedtitle,
                  show=item.scrapedtitle,
                  title="[COLOR blue]" + item.title + " [/COLOR][COLOR orange]" + scrapedserver + "[/COLOR]",
@@ -245,10 +248,10 @@ def episodios_all(item):
 	
 # ==============================================================================================================================================================================
 
-def findvideos(item):
+def play(item):
     itemlist=[]
 
-    data = item.url
+    data = httptools.downloadpage(item.url, headers=headers).data
     while 'vcrypt' in item.url:
         item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
         data = item.url
