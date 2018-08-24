@@ -23,7 +23,7 @@ headers     = [['Referer', host]]
 def mainlist(item):
     logger.info("[streamondemand-pureita altadefinizione_bid] mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Prime visioni[/COLOR]",
+                     title="[COLOR azure]Film[COLOR orange] - Prima visione[/COLOR]",
                      action="peliculas",
                      url="%s/prime-visioni/" % host,
                      extra="movie",
@@ -142,11 +142,15 @@ def peliculas(item):
         if "test yb " in scrapedtitle or "test by" in scrapedtitle:
 		   continue	
         if rating:
-          rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
         if "HD" in rating:
           rating=""
         if "HD" in scrapedtitle:
-          scrapedtitle = scrapedtitle.replace("HD", "[COLOR yellow]HD[/COLOR]")
+           quality = " ([COLOR yellow]HD[/COLOR])"
+        else:
+            quality=""
+
+        scrapedtitle = scrapedtitle.replace("[HD]", "")
 		
         scrapedplot = ""
         itemlist.append(infoSod(
@@ -155,7 +159,7 @@ def peliculas(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + rating,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + quality + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -345,9 +349,9 @@ def episodios(item):
                          url=data,
                          thumbnail=item.thumbnail,
                          extra=item.extra,
-                         plot=item.plot,
-                         fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
-                         show=item.show))
+                         plot="[COLOR orange]" + item.fulltitle + "[/COLOR] " + item.plot,
+                         fulltitle=item.fulltitle + " (" + lang_title + ")" + ' - ' + scrapedtitle,
+                         show=item.show + " (" + lang_title + ")" + ' - ' + scrapedtitle))
 
     logger.info("[streamondemand-pureita altadefinizione_bid] episodios")
     itemlist = []
@@ -398,9 +402,9 @@ def findvideos_tv(item):
             Item(
                 channel=__channel__,
                 action="play",
-                fulltitle=item.scrapedtitle,
-                show=item.scrapedtitle,
-                title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedserver + "[/COLOR]]",
+                fulltitle=item.fulltitle,
+                show=item.show,
+                title="[[COLOR orange]" + scrapedserver + "[/COLOR]] - [COLOR azure]" + item.title + "[/COLOR]",
                 url=scrapedurl,
                 thumbnail=item.thumbnail,
                 plot=item.plot,
@@ -428,8 +432,10 @@ def findvideos_movies(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - [COLOR azure]" + item.title + "[/COLOR]",
                  url=scrapedurl,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
                  folder=True))
@@ -444,7 +450,7 @@ def findvideos_movies(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - [COLOR azure]" + item.title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
