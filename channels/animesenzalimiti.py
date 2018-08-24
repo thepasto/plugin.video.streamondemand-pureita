@@ -23,27 +23,32 @@ def mainlist(item):
     logger.info("[streamondemand-pureita animesenzalimiti] mainlist")
     itemlist = [Item(channel=__channel__,
                      action="ultimiep",
-                     title="[COLOR azure]Anime[COLOR orange] - Ultime Inserite[/COLOR]",
+                     title="[COLOR azure]Anime - [COLOR orange]Ultime Inserite[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
                 Item(channel=__channel__,
                      action="cat_years",
-                     title="[COLOR azure]Anime[COLOR orange] - Aggiornamenti (Archivio)[/COLOR]",
+                     title="[COLOR azure]Anime - [COLOR orange]Aggiornamenti per Data[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_new_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime[COLOR orange] - In Corso[/COLOR]",
+                     title="[COLOR azure]Anime - [COLOR orange]In Corso[/COLOR]",
                      url="%s/category/serie-anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
                 Item(channel=__channel__,
+                     action="lista_anime",
+                     title="[COLOR azure]Anime - [COLOR orange]Complete[/COLOR]",
+                     url="%s/category/serie-anime-concluse/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation_P.png"),
+                Item(channel=__channel__,
                      action="categorie",
-                     title="[COLOR azure]Anime[COLOR orange] - Categorie[/COLOR]",
+                     title="[COLOR azure]Anime - [COLOR orange]Categorie[/COLOR]",
                      url="%s/category/serie-anime-in-corso/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_genre_P.png"),
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title="[COLOR azure]Anime[COLOR orange] - Anime Leggendarie[/COLOR]",
+                     title="[COLOR azure]Anime - [COLOR orange]Anime Leggendarie[/COLOR]",
                      url="%s/category/serie-anime-concluse/anime-leggendari/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
@@ -75,10 +80,10 @@ def categorie(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'Categorie</span></h4>\s*<ul>(.*?)</ul>')
-    patron = r'<li class="cat-item cat-item-\d+"><a href="([^"]+)" >([^<]+)</a>'
+    #blocco = scrapertools.get_match(data, r'category menu-item-10950"><(.*?)</ul>')
+    patron = r'<li id="menu-item-\d+" class[^>]+category menu-item-\d+"><a href="([^"]+)">([^<]+)<\/a>'
 
-    matches = re.compile(patron, re.DOTALL).findall(blocco)
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
         if 'anime da vedere assolutamente' in scrapedtitle.lower(): continue
@@ -100,15 +105,17 @@ def cat_years(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url).data
-    blocco = scrapertools.get_match(data, r'Archivi</span></h4>\s*<ul>(.*?)</ul>')
-    patron = r"<li><a href='(.*?)'>([^<]+)</a>"
+    blocco = scrapertools.get_match(data, r'<option value="">Seleziona mese</option>(.*?)</select>')
+    patron = r"<option value='(.*?)'>([^<]+)</option>"
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle in matches:
+        scrapedtitle=scrapedtitle.strip().capitalize()
+        scrapedtitle="[COLOR yellow]" + scrapedtitle + "[/COLOR]"
         itemlist.append(
                 Item(channel=__channel__,
                      action="lista_anime",
-                     title=scrapedtitle.capitalize(),
+                     title=scrapedtitle,
                      url=scrapedurl,
                      extra="tv",
                      thumbnail=item.thumbnail,
@@ -163,8 +170,8 @@ def ultimiep(item):
           if "ITA" in scrapedtitle:
            lang=" ([COLOR yellow]Ita[/COLOR])"
 
-        scrapedtitle = scrapedtitle.replace(" (Streaming &#038; Download)","").replace("/", "").replace(" (Streaming e Download)", "").strip()
-        scrapedtitle= scrapedtitle.replace("SUB ITA","").replace("ITA","")
+        scrapedtitle = scrapedtitle.replace("(Streaming &#038; Download)","").replace("/", "").replace("(Streaming e Download)", "").strip()
+        scrapedtitle= scrapedtitle.replace("SUB ITA","").replace("ITA","").replace("&#8217;", "' ").replace("MOVIES","(Film)")
 
         scrapetitle=scrapedtitle.replace("Stagione", "").replace("Episodio", "")
         scrapetitle = re.sub(r"([0-9])", r"", scrapetitle).strip()
@@ -212,20 +219,23 @@ def lista_anime(item):
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         if "SUB ITA" in scrapedtitle:
            lang=" ([COLOR yellow]Sub Ita[/COLOR])"
-        else:
-          if "ITA" in scrapedtitle:
+        if "ITA" in scrapedtitle:
            lang=" ([COLOR yellow]Ita[/COLOR])"
-		   
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.strip())
-        scrapedtitle = scrapedtitle.replace(" (Streaming & Download)","").replace(" (Streaming e Download)", "").replace("/", "")
-        scrapedtitle= scrapedtitle.replace(" SUB ITA","").replace(" ITA","")
+        else:
+           lang=""
 
+        scrapedtitle = scrapedtitle.replace("(Streaming &#038; Download)","").replace("/", "")
+        scrapedtitle= scrapedtitle.replace("SUB ITA","").replace(" ITA","").replace("&#8217;", "' ")
+        scrapedtitle = scrapedtitle.replace("MOVIES","(Film)")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.strip())
         scrapedplot=""
+		
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodi",
                  contentType="tv",
-                 fulltitle=scrapedtitle.strip(),
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title=scrapedtitle  + lang,
                  url=scrapedurl,
                  extra="tv",
@@ -262,12 +272,13 @@ def episodi(item):
              action="findvideos",
              contentType="tv",
              title="Episodio: 1",
-             fulltitle=item.title + "| [COLOR orange]1[/COLOR]",
+             fulltitle=item.fulltitle + "- Ep. 1",
              url=item.url,
              extra="tv",
              thumbnail=item.thumbnail,
-             plot=item.plot,
+             plot="[COLOR orange]" + item.fulltitle + "[/COLOR]" + item.plot,
              folder=True))
+
     if blocco != "":
         patron = r'<a href="([^"]+)"><span class="pagelink">(\d+)</span></a>'
         matches = re.compile(patron, re.DOTALL).findall(data)
@@ -277,7 +288,7 @@ def episodi(item):
                      action="findvideos",
                      contentType="tv",
                      title="Episodio: %s" % scrapednumber,
-                     fulltitle=item.title + "|" + "[COLOR orange]" + scrapednumber + "[/COLOR]",
+                     fulltitle=item.fulltitle + "- Ep." + scrapednumber,
                      url=scrapedurl,
                      extra="tv",
                      thumbnail=item.thumbnail,
