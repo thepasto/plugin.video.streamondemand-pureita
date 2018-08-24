@@ -113,8 +113,6 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<div class="moviefilm">\s*<a href="([^"]+)">.*?<img src="([^"]+)" alt="([^"]+)"[^>]+>'
-
-
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
@@ -128,6 +126,7 @@ def peliculas(item):
         scrapedtitle = scrapedtitle.replace("[sub-ita]", "").replace("[SUB-ITA]", "")
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot=""
+		
         if "-hd/" in scrapedurl:
           scrapedurl=scrapedurl+"3/"
         if not "-hd/" in scrapedurl and not "-r1/" in scrapedurl:
@@ -140,6 +139,7 @@ def peliculas(item):
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
+                 extra=item.extra,
                  plot=scrapedplot,
                  show=scrapedtitle), tipo="movie"))
 
@@ -154,9 +154,9 @@ def peliculas(item):
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))
 
     return itemlist
-
 	
 # ===================================================================================================================================================
+
 def findvideos(item):
     logger.info("[streamondemand-pureita altadefinizione_due] findvideos")
     itemlist = []
@@ -178,7 +178,7 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title="[[COLOR orange]" + scrapedtitle.capitalize() + "[/COLOR]] " + item.title,
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle.capitalize() + "[/COLOR]] " + item.title,
                  url=scrapedurl.strip(),
                  fulltitle=item.fulltitle,
                  show=item.show,
@@ -187,23 +187,6 @@ def findvideos(item):
                  folder=True))
 
     return itemlist
-
-# ===================================================================================================================================================
-
-def play(item):
-    logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
-
-    data = httptools.downloadpage(item.url).data
-    itemlist = servertools.find_video_items(data=data)
-
-    for videoitem in itemlist:
-        videoitem.title = item.title
-        videoitem.fulltitle = item.fulltitle
-        videoitem.show = item.show
-        videoitem.thumbnail = item.thumbnail
-        videoitem.plot=item.plot
-        videoitem.channel = __channel__
-    return itemlist	
 
 # ===================================================================================================================================================
 
@@ -227,15 +210,32 @@ def find_movie(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title,
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle.capitalize() + "[/COLOR]] - " + item.title,
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
-                 fulltitle=scrapedtitle,
+                 fulltitle=item.fulltitle,
                  plot=item.plot,
                  show="[COLOR azure]" + item.title + "[/COLOR] - " + scrapedtitle))
 				 
 				 
     return itemlist
+
+# ===================================================================================================================================================
+	
+def play(item):
+    logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
+
+    data = httptools.downloadpage(item.url).data
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = item.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot=item.plot
+        videoitem.channel = __channel__
+    return itemlist	
 	
 # ===================================================================================================================================================
 # ===================================================================================================================================================

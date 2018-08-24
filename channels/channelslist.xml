@@ -25,7 +25,7 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione_due.py</update_url>
     <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>04</version>
+    <version>05</version>
     <adult>false</adult>
     <date>23/08/2018</date>
     <changes>Update - Temporary Fix</changes>
@@ -200,7 +200,7 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione_bid.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>04</version>
+    <version>05</version>
     <adult>false</adult>
     <date>23/08/2018</date>
     <changes>Update and Fix</changes>
@@ -992,14 +992,15 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmpertutti.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>26</version>
+    <version>27</version>
     <adult>false</adult>
-    <date>26/07/2018</date>
+    <date>23/08/2018</date>
     <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
         <category>anime</category>
+        <category>Top Channel</category>
     </categories>
 </channel>
 

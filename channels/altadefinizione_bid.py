@@ -432,7 +432,7 @@ def findvideos_movies(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - [COLOR azure]" + item.title + "[/COLOR]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title + "[/COLOR]",
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
                  show=item.show,
