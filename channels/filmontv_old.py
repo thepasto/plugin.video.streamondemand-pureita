@@ -101,10 +101,10 @@ def tvoggi(item):
 
     # Estrazioni voci (Cartelle)
     patron = '<div class="col-xs-5 box-immagine">\s*<img src="([^"]+)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*'
-    patron += '[^>]+>\s*[^>]+>([^<]+)</div>\s*[^>]+>[^>]+>([^<]+)[^>]+>[^>]+>([^<]+)</div>' 
+    patron += '[^>]+>\s*[^>]+>([^<]+)</div>\s*[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)</div>' 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for i, (scrapedthumbnail, scrapedtitle, text, scrapedtv) in enumerate(matches):
+    for i, (scrapedthumbnail, scrapedtitle, scrapedtv) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
         scrapedurl = ""
@@ -117,7 +117,7 @@ def tvoggi(item):
             Item(channel=__channel__,
                  action="do_search",
                  extra=titolo,
-                 title=scrapedtitle + "   (Ore " + text + ")[COLOR yellow]  " + scrapedtv + "[/COLOR]",
+                 title=scrapedtitle + "[COLOR yellow]   " + scrapedtv + "[/COLOR]",
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -320,56 +320,3 @@ def do_search(item):
     itemlist = sorted(itemlist, key=lambda item: item.fulltitle)
 
     return itemlist
-
-'''
-def tvoggi(item):
-    logger.info("streamondemand.filmontv tvoggi")
-    itemlist = []
-    PERPAGE = 18
-	
-    p = 1
-    if '{}' in item.url:
-        item.url, p = item.url.split('{}')
-        p = int(p)
-	
-    # Pagina di Download
-    data = httptools.downloadpage(item.url).data
-
-    # Estrazioni voci (Cartelle)
-    patron = '<div class="col-xs-5 box-immagine">\s*<img src="([^"]+)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*'
-    patron += '[^>]+>\s*[^>]+>([^<]+)<\/div>\s*<div class[^>]+>([^<]+)<span>([^<]+)<\/span><br \/>([^<]+)<' 
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for i, (scrapedthumbnail, scrapedtitle, text, text2, scrapedtv) in enumerate(matches):
-        if (p - 1) * PERPAGE > i: continue
-        if i >= p * PERPAGE: break
-        scrapedurl = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        titolo = urllib.quote_plus(scrapedtitle)
-        #if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-
-        time=" ([COLOR orange]"+text+text2+"[/COLOR])"
-        scrapedtv=" [COLOR yellow]" + scrapedtv + "[/COLOR]"
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="do_search",
-                 extra="titolo",
-                 title=scrapedtitle  + time + scrapedtv,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 folder=True), tipo="movie"))
-
-    # Extrae el paginador
-    if len(matches) >= p * PERPAGE:
-        scrapedurl = item.url + '{}' + str(p + 1)
-        itemlist.append(
-            Item(channel=__channel__,
-                 extra=item.extra,
-                 action="tvoggi",
-                 title="[COLOR orange]Successivi >>[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
-                 folder=True))
-
-    return itemlist'''

@@ -121,9 +121,9 @@
     <id>clipwatching</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/clipwatching.py</update_url>
     <active>true</active>
-    <version>03</version>
-    <date>28/06/2018</date>
-    <changes>Update</changes>
+    <version>04</version>
+    <date>25/08/2018</date>
+    <changes>Update and Temporary Fix</changes>
 </server>
 
 <server>

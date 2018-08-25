@@ -184,26 +184,35 @@ def peliculas(item):
 
     # Extrae las entradas
     patron = '<div class="poster">\s*<img src="([^"]+)" \s*alt="([^"]+)">\s*'
-    patron += '<div[^>]+>[^>]+></span>\s*([^<]+)<\/div>\s*[^>]+>\s*[^>]+>.*?'
-    patron += '<a href="([^"]+)">[^>]+></div></a>.*?'
+    patron += '<div[^>]+>[^>]+></span>\s*([^<]+)<\/div>\s*[^>]+>\s*[^>]+>([^<]+)\s*'
+    patron += '[^>]+>[^>]+[^>]>\s*<a href="([^"]+)">[^>]+><\/div><\/a>.*?<\/a><\/h3><span>([^<]+)<\/span>.*?'
     patron += '<div class="texto">(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
 
-    for i, (scrapedthumbnail, scrapedtitle, rating, scrapedurl, scrapedplot ) in enumerate(matches):
+    for i, (scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl, year, scrapedplot ) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
         scrapedtitle = scrapedtitle.replace("+", "piu").replace("&#038;", "e")
+        if "Fichier" in scrapedtitle or "***" in scrapedtitle:
+          continue
+
+        quality=quality.replace(".", " ").strip()
+        quality = "  ([COLOR yellow]" + quality + "[/COLOR])"
+        rating = "  ([COLOR yellow]" + rating + "[/COLOR])"
+        years = "  ([COLOR yellow]" + year + "[/COLOR])"
+        year =" ("+year+")"
+
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="episodios" if "tvshows" in scrapedurl else "findvideos",
                  contentType="serie" if "tvshows" in scrapedurl else "movie",
-                 title=title + "  [[COLOR yellow]" + rating + "[/COLOR]]",
+                 title=title + years + rating + quality,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
-                 fulltitle=title,
+                 fulltitle=title + year,
                  show=title,
                  plot=scrapedplot,
                  folder=True), tipo="serie" if "tvshows" in scrapedurl else "movie"))
@@ -309,7 +318,7 @@ def peliculas_tv(item):
                  extra=item.extra,
                  action="episodios",
                  contentType="serie",
-                 title=title + "  [[COLOR yellow]" + rating + "[/COLOR]]",
+                 title=title + "  ([COLOR yellow]" + rating + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -453,11 +462,11 @@ def findvideos_tv(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedtitle, scrapedurl in matches:
         scrapedtitle = scrapedtitle.replace('*', '').replace('Streaming', '').strip()
-        title = '%s - [%s]' % (item.title, scrapedtitle)
+        title = '%s - [%s]' % (scrapedtitle, item.title)
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 title=title,
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] -" + item.title,
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  fulltitle=item.fulltitle,
@@ -489,7 +498,8 @@ def findvideos_tv(item):
         data += httptools.downloadpage(scrapedurl).data
 
     for videoitem in servertools.find_video_items(data=data):
-        videoitem.title = item.title + videoitem.title
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show
@@ -548,6 +558,25 @@ def play(item):
 
     return itemlist
 
+# ==================================================================================================================================================
+
+def findvideos(item):
+    itemlist = []
+    data = httptools.downloadpage(item.url).data
+
+    itemlist.extend(servertools.find_video_items(data=data))
+
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+
 # ==================================================================================================================================================	
 	
 def findvideos_x(item):
@@ -568,7 +597,7 @@ def findvideos_x(item):
             data += httptools.downloadpage(scrapedurl).data
 
     for videoitem in servertools.find_video_items(data=data):
-        videoitem.title = item.title + videoitem.title
+        videoitem.title = "".join(['[COLOR orange]' + videoitem.title + ' [COLOR azure]- ' + item.title+ '[/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show

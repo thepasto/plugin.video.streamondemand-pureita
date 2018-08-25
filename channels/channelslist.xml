@@ -972,10 +972,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmontv.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>20</version>
+    <version>21</version>
     <adult>false</adult>
-    <date>10/01/2017</date>
-    <changes>Fix Global Search Fix</changes>
+    <date>24/08/2018</date>
+    <changes>Update - Fix Global Search</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1773,9 +1773,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>04</version>
+    <version>05</version>
     <adult>false</adult>
-    <date>18/05/2018</date>
+    <date>25/08/2018</date>
     <changes>Update and Temporary Fix</changes>
     <categories>
         <category>movie</category>
