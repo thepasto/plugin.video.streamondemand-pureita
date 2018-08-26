@@ -9,6 +9,7 @@
 import re
 import urlparse
 
+from core import config
 from core import servertools
 from core import scrapertools
 from core import logger
@@ -17,30 +18,39 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "mondolunatico_hd"
-
 host = "http://mondolunatico.org"
-
-PERPAGE = 14
 
 def mainlist(item):
     logger.info("streamondemand-pureita.mondolunatico_hd mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film [COLOR orange]- Ultimi Inseriti[/COLOR]",
+                     title="[COLOR azure]Film [COLOR orange]- Top IMDb[/COLOR]",
                      action="peliculas",
-                     url="%s/hds/movies/" % host,
+                     url="%s/hds/top-imdb/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film [COLOR orange]- Categoria[/COLOR]",
-                     action="categorias",
-                     url="%s/hds/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+                     title="[COLOR azure]Film [COLOR orange]- Aggiornati[/COLOR]",
+                     action="peliculas",
+                     url="%s/hds/tag/openload/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film [COLOR orange]- Alta Definizione[/COLOR]",
+                     action="peliculas",
+                     url="%s/hds/tag/download-hd/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/blueray_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film [COLOR orange]- Lista[/COLOR]",
                      action="list",
                      url="%s/hds/lista-alfabetica/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film [COLOR orange]- Categoria[/COLOR]",
+                     action="categorias",
+                     url="%s/hds/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
@@ -56,15 +66,16 @@ def categorias(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url).data
-    bloque = scrapertools.get_match(data, "<ul class='sub-menu'>(.*?)<a href=[^>]+>Mondolunatico</a></li>")
+    bloque = scrapertools.get_match(data, "Film Al Cinema</a>(.*?)Richieste</a></li>")
 
     # Extrae las entradas 
     patron = '<li id=".*?" class=".*?"><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedtitle in matches:
-        if scrapedtitle.startswith("Action &#038; Adventure") or scrapedtitle.startswith("Richieste"): 
+        if scrapedtitle.startswith("Action &#038; Adventure"): 
             continue
+        scrapedtitle=scrapedtitle.replace("televisione film", "Film TV")
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
@@ -80,7 +91,8 @@ def categorias(item):
 def list(item):
     logger.info("streamondemand-pureita.mondolunatico_hd  list")
     itemlist = []
-
+    numpage = 14
+	
     p = 1
     if '{}' in item.url:
         item.url, p = item.url.split('{}')
@@ -97,8 +109,8 @@ def list(item):
 	
     scrapedplot = ""
     for i, (scrapedurl, scrapedtitle) in enumerate(matches):
-        if (p - 1) * PERPAGE > i: continue
-        if i >= p * PERPAGE: break
+        if (p - 1) * numpage > i: continue
+        if i >= p * numpage: break
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedthumbnail = ""
         itemlist.append(infoSod(
@@ -106,7 +118,7 @@ def list(item):
                  extra=item.extra,
                  action="findvideos",
                  contentType="movie",
-                 title=title,
+                 title="[COLOR azure]" + title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -116,7 +128,7 @@ def list(item):
 
 				 
     # Extract the paginador 
-    if len(matches) >= p * PERPAGE:
+    if len(matches) >= p * numpage:
         scrapedurl = item.url + '{}' + str(p + 1)
         itemlist.append(
             Item(channel=__channel__,
@@ -160,13 +172,15 @@ def pelis_movie_src(item):
 
     scrapedplot = ""
     for scrapedurl, scrapedthumbnail, scrapedtitle, in matches:
+        if "Fichier" in scrapedtitle:
+          continue
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="findvideos",
                  contentType="movie",
-                 title=title,
+                 title="[COLOR azure]" + title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -180,8 +194,8 @@ def pelis_movie_src(item):
 
 def peliculas(item):
     logger.info("streamondemand-pureita.mondolunatico_hd peliculas")
-
     itemlist = []
+    numpage = 14
 
     p = 1
     if '{}' in item.url:
@@ -197,8 +211,11 @@ def peliculas(item):
 
     scrapedplot = ""
     for i, (scrapedurl, scrapedtitle) in enumerate(matches):
-        if (p - 1) * PERPAGE > i: continue
-        if i >= p * PERPAGE: break
+        if (p - 1) * numpage > i: continue
+        if i >= p * numpage: break
+        scrapedtitle=scrapedtitle.replace("&#8217;", "'")
+        if "Fichier" in scrapedtitle:
+          continue
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedthumbnail = ""
         itemlist.append(infoSod(
@@ -206,7 +223,7 @@ def peliculas(item):
                  extra=item.extra,
                  action="findvideos",
                  contentType="movie",
-                 title=title,
+                 title="[COLOR azure]" + title + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=title,
@@ -216,17 +233,44 @@ def peliculas(item):
 
 				 
     # Extract the paginador 
-    if len(matches) >= p * PERPAGE:
+    if len(matches) >= p * numpage:
         scrapedurl = item.url + '{}' + str(p + 1)
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
+				 
+    else:
+         next_page = scrapertools.find_single_match(data, "</div>\s*<div id='pagination.*?>\d+</a></li><li><a rel='nofollow' class='page\s*larger' href='([^']+)'>\d+<\/a></li><li><a")
+         if next_page != "":
+             itemlist.append(
+                 Item(channel=__channel__,
+                      action="peliculas",
+                      title="[COLOR orange]Successivi >>[/COLOR]",
+                      url=next_page,
+                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))	
 
     return itemlist
 
+# ==================================================================================================================================================
 
+def findvideos(item):
+    itemlist = []
+	
+    data = httptools.downloadpage(item.url).data
+
+    itemlist.extend(servertools.find_video_items(data=data))
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist

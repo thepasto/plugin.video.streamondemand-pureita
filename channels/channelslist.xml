@@ -1749,7 +1749,23 @@
         <category>serie</category>
     </categories>
 </channel>    
-    
+ 
+<channel>
+    <id>mondolunatico_hd</id>
+    <name>Mondo Lunatico HD</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_hd.py</update_url>
+    <active>true</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>25/08/2018</date>
+    <changes>Partial Fix</changes>
+    <categories>
+        <category>movie</category>
+    </categories>
+</channel>
+ 
 <channel>
     <id>mondolunatico</id>
     <name>MondoLunatico</name>
@@ -1772,7 +1788,7 @@
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
     <active>true</active>
-    <include_in_global_search>false</include_in_global_search>
+    <include_in_global_search>true</include_in_global_search>
     <version>06</version>
     <adult>false</adult>
     <date>25/08/2018</date>
