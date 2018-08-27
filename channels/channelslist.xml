@@ -1234,7 +1234,7 @@
     <name>guarda_serie</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guarda_serie.py</update_url>
-    <active>false</active>
+    <active>true</active>
     <include_in_global_search>true</include_in_global_search>
     <version>04</version>
     <adult>false</adult>
@@ -1245,6 +1245,38 @@
     </categories>
 </channel>
 
+<channel>
+    <id>guardaserie_click</id>
+    <name>GuardaSerie_click</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardaserie_click.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>27/08/2018</date>
+    <changes>First Release (guardaserieonline)</changes>
+    <categories>
+        <category>serie</category>
+    </categories>
+</channel>
+
+<channel>
+    <id>guardaserie_stream</id>
+    <name>GuardaSerie_stream</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/guardaserie_stream.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>01</version>
+    <adult>false</adult>
+    <date>27/08/2018</date>
+    <changes>First Release</changes>
+    <categories>
+        <category>serie</category>
+        <category>movie</category>
+    </categories>
+</channel>
 
 <channel>
     <id>guardafilm</id>
