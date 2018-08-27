@@ -101,13 +101,13 @@ def peliculas_search(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, quality, rating, scrapedplot  in matches:
-        quality = " ([COLOR yellow]" + quality + "[/COLOR])"
-        rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        quality = " ([COLOR yellow]" + quality.strip() + "[/COLOR])"
+        rating = " ([COLOR yellow]" + rating.strip() + "[/COLOR])"
         scrapedtitle = scrapedtitle.replace("&#8217;", "'").replace("&#8211;", "-")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + quality + rating,
+                 title=scrapedtitle + quality. + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -195,9 +195,9 @@ def peliculas(item):
 
     for scrapedthumbnail, scrapedtitle, rating, quality, scrapedurl in matches:
         if rating:
-          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+          rating = " ([COLOR yellow]" + rating.strip() + "[/COLOR])"
         if quality:
-          quality = " ([COLOR yellow]" + quality + "[/COLOR])"
+          quality = " ([COLOR yellow]" + quality.strip() + "[/COLOR])"
         scrapedtitle = scrapedtitle.replace("&#8217;", "'").replace("&#8211;", "-")		
         scrapedplot=""	
         itemlist.append(infoSod(
@@ -246,8 +246,8 @@ def peliculas_imdb(item):
     for i, (scrapedthumbnail, position, rating, scrapedurl, scrapedtitle) in enumerate(matches):
         if (p - 1) * minpage > i: continue
         if i >= p * minpage: break
-        position = "[COLOR red]" + position + "[/COLOR] - "
-        rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        position = "[COLOR red]" + position.strip() + "[/COLOR] - "
+        rating = " ([COLOR yellow]" + rating.strip() + "[/COLOR])"
         scrapedtitle = scrapedtitle.replace("&#8217;", "'").replace("&#8211;", "-")
         scrapedplot = ""
         itemlist.append(infoSod(
