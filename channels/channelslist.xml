@@ -233,12 +233,12 @@
     <name>altadefinizione01_wiki</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01_wiki.py</update_url>
-    <active>true</active>
+    <active>false</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>1</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>11/04/2018</date>
-    <changes>Update</changes>
+    <date>29/08/2018</date>
+    <changes>Disabled</changes>
     <categories>
         <category>movie</category>
     </categories>
@@ -1216,12 +1216,12 @@
     <name>FilmZStreaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/filmzstreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>03</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>04</version>
     <adult>false</adult>
-    <date>23/07/2018</date>
-    <changes>Update - Temporary Fix</changes>
+    <date>29/08/2018</date>
+    <changes>Temporary Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -1694,12 +1694,12 @@
     <name>LinkStreaming</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/linkstreaming.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>05</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>06</version>
     <adult>false</adult>
-    <date>29/04/2018</date>
-    <changes>Update and Fix</changes>
+    <date>29/08/2018</date>
+    <changes>Temporary Disabled</changes>
     <categories>
         <category>movie</category>
         <category>serie</category>
@@ -2532,12 +2532,12 @@
     <name>VediSerie</name>
     <language>it</language>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/vediserie.py</update_url>
-    <active>true</active>
-    <include_in_global_search>true</include_in_global_search>
-    <version>15</version>
+    <active>false</active>
+    <include_in_global_search>false</include_in_global_search>
+    <version>16</version>
     <adult>false</adult>
-    <date>06/04/2018</date>
-    <changes>Enabled</changes>
+    <date>29/08/2018</date>
+    <changes>Temporary Disabled</changes>
     <categories>
         <category>serie</category>
         <category>Top Channels</category>
