@@ -812,7 +812,7 @@ def findvideos_anime(item):
 def play(item):
     itemlist=[]
 	
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = item.url
 	
     if "rapidcrypt" in item.url  or "flashx" in item.url:
        data = httptools.downloadpage(item.url).data
