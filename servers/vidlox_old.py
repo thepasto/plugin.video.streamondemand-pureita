@@ -20,7 +20,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' }
 
     html = scrapertools.cache_page(page_url, headers=headers)
-    match = re.search('sources:\s*\[(.*?)\]', html, re.DOTALL)
+    match = re.search('sources:\s*\[([^]]+)\]', html, re.DOTALL)
     if match:
         match = re.search('"(https://.*?[^"])"', match.group(1))
         if match:
@@ -29,19 +29,19 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     return video_urls
 
 
-	
+# Encuentra vídeos de este servidor en el texto pasado
 def find_videos(text):
     encontrados = set()
     devuelve = []
 
     # https://vidlox.tv/wfs2alc5tvhq
-    patronvideos = r'<iframe src="https[^\/]+\/\/[^\/]+\/(?:embed-|)([0-9A-Za-z]+).html" frameborder=0'
+    patronvideos = r'(?://|\.)vidlox\.tv/(?:embed-|)([0-9A-Za-z]+)'
     logger.info("[vidloxtv.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
     for match in matches:
         titulo = "[vidloxtv]"
-        url = "https://vidlox.me/%s" % match
+        url = "https://vidlox.tv/embed-%s" % match
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'vidlox'])
@@ -51,5 +51,3 @@ def find_videos(text):
             logger.info("  url duplicada=" + url)
 
     return devuelve
-	
-
