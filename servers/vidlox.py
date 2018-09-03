@@ -1,47 +1,54 @@
 # -*- coding: iso-8859-1 -*-
 # ------------------------------------------------------------
-# streamondemand - XBMC Plugin
-# Connettore per https://vidlox.tv/
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
-# By MrTruth
+# streamondemand-pureita - XBMC Plugin
+# Connettore Vidlox
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
+# Anfa - Alfa-PureITA
 # ------------------------------------------------------------
 
 import re
 import urllib
 
-from core import logger
+from core import httptools
 from core import scrapertools
+from core import logger
 
-# Prendo l'url del video dal sito
-def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("[vidloxtv.py] url=" + page_url)
+
+def test_video_exists(page_url):
+    logger.info("(page_url='%s')" % page_url)
+	
+    data = httptools.downloadpage(page_url).data
+    if "Deleted" in data:
+        return False, "[vidlox] Il video e stato rimosso"
+
+    return True, ""
+
+
+def get_video_url(page_url, user="", password="", video_password=""):
+    logger.info("(page_url='%s')" % page_url)
     video_urls = []
-
-    headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' }
-
-    html = scrapertools.cache_page(page_url, headers=headers)
-    match = re.search('sources:\s*\[(.*?)\]', html, re.DOTALL)
-    if match:
-        match = re.search('"(https://.*?[^"])"', match.group(1))
-        if match:
-            video_urls.append(["su vidlox.tv", match.group(1) + "|" + urllib.urlencode(headers)])
+    data = httptools.downloadpage(page_url).data
+    bloque = scrapertools.find_single_match(data, 'sources:.\[.*?]')
+    matches = scrapertools.find_multiple_matches(bloque, '(http.*?)"')
+    for videourl in matches:
+        extension = extension = scrapertools.get_filename_from_url(videourl)[-4:]
+        video_urls.append(["%s [vidlox]" %extension, videourl])
 
     return video_urls
-
 
 	
 def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    # https://vidlox.tv/wfs2alc5tvhq
-    patronvideos = r'<iframe src="https[^\/]+\/\/[^\/]+\/(?:embed-|)([0-9A-Za-z]+).html" frameborder=0'
+    # https://vidlox.me/embed-e5vjxdwajp9j.html
+    patronvideos = r"(?i)(https://vidlox.(?:tv|me)/embed-.*?.html)"
     logger.info("[vidloxtv.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
     for match in matches:
         titulo = "[vidloxtv]"
-        url = "https://vidlox.me/%s" % match
+        url = match
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'vidlox'])

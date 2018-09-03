@@ -758,8 +758,6 @@ def findvideos(item):
           scrapedurl=scrapertools.find_single_match(data, '<div  id="wpwm-tabs-%s">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="[^\/]+\/\/[^=]+=([^"]+)"[^>]+>' % option)
           scrapedurl=''.join(scrapedurl.split())
           scrapedurl=scrapedurl.decode("base64")
-        if "vidlox" in scrapedurl:
-         scrapedurl=scrapedurl.replace("embed-", "")
         if scrapedtitle=="-":
            continue
         if "Player" in scrapedtitle:
