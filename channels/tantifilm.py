@@ -116,7 +116,7 @@ def menu_movie(item):
 # ==================================================================================================================================================
 
 def menu_tvshow(item):
-    logger.info("[streamondemand-pureita tantifilm] mainlist")
+    logger.info("[streamondemand-pureita tantifilm] menu_tvshow")
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti per data[/COLOR]",
                      extra="series",
@@ -242,7 +242,7 @@ def peliculas(item):
 # ==================================================================================================================================================
 
 def peliculas_last(item):
-    logger.info("[streamondemand-pureita tantifilm] peliculas")
+    logger.info("[streamondemand-pureita tantifilm] peliculas_last")
     itemlist = []
 
     # Descarga la pagina 
@@ -292,7 +292,7 @@ def peliculas_last(item):
 # ==================================================================================================================================================
 
 def cat_date(item):
-    logger.info("[streamondemand-pureita tantifilm] categorias")
+    logger.info("[streamondemand-pureita tantifilm] cat_date")
     itemlist = []
 
     # Descarga la pagina
@@ -323,7 +323,7 @@ def cat_date(item):
 # ==================================================================================================================================================
 
 def peliculas_series(item):
-    logger.info("[streamondemand-pureita altadefinizione_hd] peliculas_imdb")
+    logger.info("[streamondemand-pureita tantifilm] peliculas_series")
     itemlist = []
     minpage = 28
 
@@ -336,14 +336,14 @@ def peliculas_series(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, '%s(.*?)</div>\s*</div>' % item.fulltitle)
 	
-    patron = '<p>([^<]+)<a href="([^"]+)" target="_blank" rel="noopener">[^<]+<\/a><\/p>'
+    patron = '<p>([^<]+)<a href="([^"]+)" target="_blank" rel="noopener">([^<]+)<\/a><\/p>'
     if item.extra=="date":
        matches = re.compile(patron, re.DOTALL).findall(bloque)
     else:
        matches = re.compile(patron, re.DOTALL).findall(data)
 
 
-    for i, (scrapedtitle, scrapedurl) in enumerate(matches):
+    for i, (scrapedtitle, scrapedurl, ep) in enumerate(matches):
         if (p - 1) * minpage > i: continue
         if i >= p * minpage: break
 
@@ -351,13 +351,14 @@ def peliculas_series(item):
         scrapedtitle=scrapedtitle.replace("streaming –", "").replace("’", "'")
         scrapedtitle=scrapedtitle.replace("-)", ")")
         scrapedititle=scrapedtitle.strip()
+        ep=" ([COLOR orange]" + ep + "[/COLOR])"
         scrapedplot = ""
         scrapedthumbnail = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="tv",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + ep,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -574,7 +575,7 @@ def episodios(item):
 # ==================================================================================================================================================
 
 def episodios_all(item):
-    logger.info("[streamondemand-pureita filmsenzalimiti_info] episodios")
+    logger.info("[streamondemand-pureita tantifilm] episodios_all")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -619,7 +620,7 @@ def episodios_all(item):
 # ==================================================================================================================================================
 
 def episodios_anime(item):
-    logger.info("[streamondemand-pureita videotecaproject] episodios")
+    logger.info("[streamondemand-pureita tantifilm] episodios_anime")
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
@@ -743,7 +744,7 @@ def findvideos_tv(item):
 # ==================================================================================================================================================
 
 def findvideos(item):
-    logger.info("[streamondemand-pureita guarda_serie] genere")
+    logger.info("[streamondemand-pureita tantifilm] findvideos")
     itemlist = []
 
     # Descarga la pagina
@@ -780,7 +781,7 @@ def findvideos(item):
 # ==================================================================================================================================================
 
 def findvideos_anime(item):
-    logger.info("[streamondemand-pureita tantifilm] episodios_anime")
+    logger.info("[streamondemand-pureita tantifilm] findvideos_anime")
     itemlist = []
 
     # Descarga la pagina 
