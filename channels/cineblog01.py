@@ -604,6 +604,8 @@ def peliculas_serie(item):
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if not host in scrapedthumbnail: 
             scrapedthumbnail=host+scrapedthumbnail
+        if scrapedtitle.startswith(("Richieste Serie TV")):
+            continue
         if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
             continue
 

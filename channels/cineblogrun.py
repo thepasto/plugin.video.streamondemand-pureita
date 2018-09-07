@@ -154,10 +154,10 @@ def peliculas_search(item):
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
         scrapedtitle = scrapedtitle.replace("&", "e")
         if "1080p" in info or "720p" in info:
-         quality = " [[COLOR yellow]HD[/COLOR]]"
+         quality = " ([COLOR yellow]HD[/COLOR])"
         else:
          if "360p" in info:
-          quality = " [[COLOR yellow]LQ[/COLOR]]"
+          quality = " ([COLOR yellow]LQ[/COLOR])"
          else:
           quality = ""         
         itemlist.append(infoSod(
@@ -201,21 +201,21 @@ def peliculas(item):
         if "." in year or "h" in year:
           year=""
         else:
-          year= " [[COLOR yellow]" + year + "[/COLOR]]"
+          year= " ([COLOR yellow]" + year + "[/COLOR])"
         if "1080" in quality or "720" in quality:
-          quality = " [[COLOR yellow]HD[/COLOR]]"
+          quality = " ([COLOR yellow]HD[/COLOR])"
         else:
           if "Unknown" in quality:
-           quality = " [[COLOR yellow]NA[/COLOR]]"
+           quality = " ([COLOR yellow]NA[/COLOR])"
           else:
-           quality = " [[COLOR yellow]LQ[/COLOR]]"
+           quality = " ([COLOR yellow]LQ[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + year  + quality,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + year  + quality,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -260,12 +260,12 @@ def peliculas_list(item):
         scrapedthumbnail = scrapertools.unescape(match.group(1))
         scrapedtitle = scrapedtitle.replace("&", "e").replace("’", "'")
         if "1080" in quality or "720" in quality:
-          quality = " [[COLOR yellow]HD[/COLOR]]"
+          quality = " ([COLOR yellow]HD[/COLOR])"
         else:
           if "Unknown" in quality:
-           quality = " [[COLOR yellow]NA[/COLOR]]"
+           quality = " ([COLOR yellow]NA[/COLOR])"
           else:
-           quality = " [[COLOR yellow]LQ[/COLOR]]"
+           quality = " ([COLOR yellow]LQ[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -320,14 +320,14 @@ def peliculas_tv(item):
         if "." in year or "h" in year:
           year=""
         else:
-          year= " [[COLOR yellow]" + year + "[/COLOR]]"
+          year= " ([COLOR yellow]" + year + "[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="serie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle + year,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + year,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -365,16 +365,17 @@ def episodios(item):
 
     for scrapedurl, scrapedep, scrapedtitle in matches:
         scrapedep = scrapedep.replace("/", "")
-        ep=" [COLOR orange]" + scrapedep + "[/COLOR] -"
+        ep=" [COLOR orange]" + scrapedep + "[/COLOR] - "
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
                  contentType="tv",
-                 title=ep + scrapedtitle,
+                 title=ep + "[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  fulltitle=item.fulltitle + " - " + scrapedep,
+                 show=ep + " - " + scrapedtitle,
                  url=scrapedurl,
                  extra="tv",
-                 plot=item.plot,
+                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR] " + item.plot,
                  thumbnail=item.thumbnail,
                  folder=True))
 
@@ -402,7 +403,7 @@ def findvideos(item):
                 Item(channel=__channel__,
                      action="play",
                      fulltitle=item.fulltitle,
-                     title=item.fulltitle + " [[COLOR orange]" + scrapedtitle  + " - " + quality + "[/COLOR]]",
+                     title="[COLOR azure][[COLOR orange]" + scrapedtitle  + " - " + quality + "[/COLOR]] - " + item.fulltitle + "[/COLOR]",
                      url=scrapedurl,
                      show=item.title,
                      plot=item.plot,
@@ -422,7 +423,7 @@ def findvideos(item):
                 Item(channel=__channel__,
                      action="play",
                      fulltitle=item.fulltitle,
-                     title=item.fulltitle + " [[COLOR orange]" + scrapedtitle  + "[/COLOR]]",
+                     title="[COLOR azure][[COLOR orange]" + scrapedtitle  + "[/COLOR]] - " + item.fulltitle + "[/COLOR]",
                      url=scrapedurl,
                      show=item.title,
                      plot=item.plot,
@@ -441,7 +442,7 @@ def play(item):
 
     for videoitem in itemlist:
         servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(["[COLOR azure]"+item.fulltitle, ' - [COLOR orange]'+servername.capitalize()+'[/COLOR]'])
+        videoitem.title = "".join(["[COLOR azure]"+item.fulltitle, ' - [[COLOR orange]'+servername.capitalize()+'[/COLOR]]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail

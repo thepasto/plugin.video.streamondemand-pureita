@@ -514,9 +514,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>59</version>
+    <version>60</version>
     <adult>false</adult>
-    <date>18/07/2018</date>
+    <date>06/09/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -554,10 +554,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cineblogrun.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>03</version>
+    <version>04</version>
     <adult>false</adult>
-    <date>14/06/2018</date>
-    <changes>Added to channelslist - Update and Fix</changes>
+    <date>06/09/2018</date>
+    <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
         <category>vos</category>
@@ -2218,9 +2218,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/solostreaming_co.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>03</version>
+    <version>04</version>
     <adult>false</adult>
-    <date>15/05/2018</date>
+    <date>06/09/2018</date>
     <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>

@@ -26,17 +26,17 @@ def mainlist(item):
     logger.info("pureita solostreaming_co mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film & Serie TV[COLOR orange] - Aggiornati[/COLOR]",
+                     title="[COLOR azure]Film & Serie TV - [COLOR orange]Aggiornati[/COLOR]",
                      action="peliculas_update",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film & Serie TV[COLOR orange] - Novita'[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange] - Novita'[/COLOR]",
                      action="peliculas",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_new.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Per Genere[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
                      action="genere",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
@@ -46,20 +46,20 @@ def mainlist(item):
                      #url="%s/featured/" % host,
                      #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),              
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Animazione[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Animazione[/COLOR]",
                      action="peliculas",
                      url="%s/category/animazione/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animated_movie_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Anime[/COLOR]",
-                     action="peliculas",
-                     url="%s/category/anime/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[/COLOR]",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Novita'[/COLOR]",
                      action="peliculas_serie",
                      url="%s/category/serietv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Anime - [COLOR orange]Novita'[/COLOR]",
+                     action="peliculas",
+                     url="%s/category/anime/" % host,
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/anime_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR orange]Cerca...[/COLOR]",
                      action="search",
@@ -67,7 +67,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================
+# ==================================================================================================================================================
 
 def genere(item):
     logger.info("pureita solostreaming_co genere")
@@ -94,7 +94,7 @@ def genere(item):
 
     return itemlist
 
-# ==============================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("pureita solostreaming_co peliculas")
@@ -137,7 +137,7 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_update(item):
     logger.info("pureita solostreaming_co peliculas_update")
@@ -181,7 +181,7 @@ def peliculas_update(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_serie(item):
     logger.info("pureita solostreaming_co peliculas")
@@ -221,7 +221,7 @@ def peliculas_serie(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def episodios(item):
     logger.info("pureita solostreaming_co episodios")
@@ -285,7 +285,8 @@ def episodios(item):
                  folder=True))
 
     return itemlist
-# ==============================================================================================================================================================================
+	
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[pureita solostreaming_co] " + item.url + " search " + texto)
@@ -302,9 +303,25 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-
+# ==================================================================================================================================================
 	
+def findvideos(item):
 
+    data = httptools.downloadpage(item.url, headers=headers).data
 
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title).capitalize()
+        videoitem.title = "".join(['[[COLOR orange]' + server + '[/COLOR]] - ', item.fulltitle])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+
+# ==================================================================================================================================================
 
 
