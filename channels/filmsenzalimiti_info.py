@@ -501,7 +501,7 @@ def findvideos_movie(item):
 def play(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
 
-    data = httptools.downloadpage(item.url).data
+    data = item.url
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
