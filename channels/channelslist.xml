@@ -1789,9 +1789,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_hd.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>25/08/2018</date>
+    <date>11/09/2018</date>
     <changes>Partial Fix</changes>
     <categories>
         <category>movie</category>
@@ -1821,10 +1821,10 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/mondolunatico_new.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>06</version>
+    <version>07</version>
     <adult>false</adult>
-    <date>25/08/2018</date>
-    <changes>Update and Temporary Fix</changes>
+    <date>11/09/2018</date>
+    <changes>Update and Partial Fix</changes>
     <categories>
         <category>movie</category>
     </categories>

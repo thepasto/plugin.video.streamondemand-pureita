@@ -145,10 +145,10 @@ def list(item):
 
 def search(item, texto):
     logger.info("[streamondemand-pureita.mondolunatico_hd] " + item.url + " search " + texto)
-    item.url = host + "/stream?s=" + texto
+    item.url = host + "/hds/?s=" + texto
     try:
         if item.extra == "movie":
-            return pelis_movie_src(item)
+            return peliculas(item)
     # Continua la ricerca in caso di errore 
     except:
         import sys

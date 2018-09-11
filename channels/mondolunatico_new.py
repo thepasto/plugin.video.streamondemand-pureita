@@ -19,7 +19,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "mondolunatico_new"
-host = "http://mondolunatico.org/stream/"
+host = "http://mondolunatico.org/"
 
 captcha_url = '%s/pass/CaptchaSecurityImages.php?width=100&height=40&characters=5' % host
 
@@ -29,37 +29,37 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Cinema[/COLOR]",
                      action="peliculas",
-                     url="%s/genre/al-cinema/" % host,
+                     url="%sstream/genre/al-cinema/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
 	            Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Novita'[/COLOR]",
                      action="peliculas",
-                     url="%s/movies/" % host,
+                     url="%sstream/movies/" % host,
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Anno[/COLOR]",
                      action="cat_years",
-                     url=host,
+                     url="%sstream/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_year_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film & Serie TV - [COLOR orange]Categorie[/COLOR]",
                      action="categorias",
-                     url=host,
+                     url="%sstream/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
                      action="peliculas_tv",
                      extra="serie",
-                     url="%s/tvshows/" % host,
+                     url="%sstream/tvshows/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV - [COLOR orange]Lista[/COLOR]",
-                     action="peliculas_list",
-                     extra="serie",
-                     url="%s/lista-serie-tv/" % host,
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
+                #Item(channel=__channel__,
+                     #title="[COLOR azure]Serie TV - [COLOR orange]Lista[/COLOR]",
+                     #action="peliculas_list",
+                     #extra="serie",
+                     #url="%sstream/lista-serie-tv/" % host,
+                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca ...[/COLOR]",
                      action="search",
@@ -134,9 +134,9 @@ def cat_years(item):
 
 def search(item, texto):
     logger.info("[streamondemand-pureita.mondolunatico_new] " + item.url + " search " + texto)
-    item.url = host + "/?s=" + texto
+    item.url = host + "stream/?s=" + texto
     try:
-        if item.extra == "movie":
+        #if item.extra == "movie":
             return pelis_src(item)
     # Continua la ricerca in caso di errore 
     except:
@@ -150,27 +150,72 @@ def search(item, texto):
 def pelis_src(item):
     logger.info("[streamondemand-pureita mondolunatico_new] pelis_src")
     itemlist = []
+    numpage = 14
 
+    p = 1
+    if '{}' in item.url:
+        item.url, p = item.url.split('{}')
+        p = int(p)
+		
     # Descarga la pagina 
     data = httptools.downloadpage(item.url).data
 
     # Estrae i contenuti 
     patron = '<div class="thumbnail animation-2">\s*<a href="([^"]+)">\s*<img src="([^"]+)" alt="(.*?)" />.*?'
+    patron += '<span class="rating">([^<]+)<\/span>.*?'
+    patron += '<span class="year">([^<]+)</span>.*?'
     patron += '<div class="contenido">\s*<p>([^"]+)</p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    for scrapedurl, scrapedthumbnail, scrapedtitle, scrapedplot in matches:
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle, rating, year, scrapedplot) in enumerate(matches):
+        if (p - 1) * numpage > i: continue
+        if i >= p * numpage: break
         title = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        rating=rating.replace("IMDb ", "")
+        rating=" ([COLOR yellow]" + rating + "[/COLOR])"
+        if year:
+           date = " (" + year + ")"
+           years=" ([COLOR yellow]" + year + "[/COLOR])"
+        if year in scrapedtitle:
+          years =""
+          date=""
+        if "tvshows" in scrapedurl:
+          type=" ([COLOR yellow]Serie TV[/COLOR])"
+        else:
+          type=""		
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="episodios" if "tvshows" in scrapedurl else "findvideos",
-                 title="[COLOR azure]" + title + "[/COLOR]",
+                 title="[COLOR azure]" + title + "[/COLOR]" + type + years + rating,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
-                 fulltitle=title,
+                 fulltitle=title + date,
                  show=title,
                  folder=True), tipo="tv" if "tvshows" in scrapedurl else "movie"))
+
+    # Extrae el paginador
+    if len(matches) >= p * numpage:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="pelis_src",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+				 
+    else:
+         next_page = scrapertools.find_single_match(data, '<a href="([^"]+)" ><span class="icon-chevron-right">')
+         if next_page != "":
+             itemlist.append(
+                 Item(channel=__channel__,
+                      action="pelis_src",
+                      title="[COLOR orange]Successivi >>[/COLOR]",
+                      url=next_page,
+                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png"))	
 
     return itemlist
 
@@ -192,7 +237,7 @@ def peliculas(item):
     # Extrae las entradas
     patron = '<div class="poster">\s*<img src="([^"]+)" \s*alt="([^"]+)">\s*'
     patron += '<div[^>]+>[^>]+></span>\s*([^<]+)<\/div>\s*[^>]+>\s*[^>]+>(.*?)<.*?'
-    patron += 'a href="([^"]+)">[^>]+><\/div><\/a>.*?<\/a><\/h3><span>([^<]+)<\/span>.*?'
+    patron += 'a href="([^"]+)">[^>]+><\/div><\/a>.*?<\/a>\s*<\/h3>\s*<span>([^<]+)<\/span>.*?'
     patron += '<div class="texto">(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -203,19 +248,23 @@ def peliculas(item):
         scrapedtitle = scrapedtitle.replace("+", "piu").replace("&#038;", "e")
         if "Fichier" in scrapedtitle or "***" in scrapedtitle:
           continue
-
+		  
+        if quality ==" ":
+           quality=""
         if quality:
           quality=quality.replace(".", " ").strip()
           quality = " ([COLOR yellow]" + quality + "[/COLOR])"
         else:
           quality=""
+		  
         if rating =="0":
            rating="" 
         if rating:
-          rating=rating.replace(",", " ").strip()
+          rating=rating.replace(",", ".").strip()
           rating = " ([COLOR yellow]" + rating + "[/COLOR])"
         else:
-          rating=""           		
+          rating=""  
+		  
         if year:
           years = " ([COLOR yellow]" + year + "[/COLOR])"
           date =" ("+year+")"  		  
@@ -277,7 +326,6 @@ def peliculas_list(item):
         p = int(p)
 
     # Descarga la pagina
-
     data = httptools.downloadpage(item.url).data
 
     # Estrae i contenuti 
@@ -336,14 +384,16 @@ def peliculas_tv(item):
     patron = '<div class="poster">\s*<img src="([^"]+)" \s*'
     patron += 'alt="([^"]+)">\s*<div[^>]+>[^>]+><\/span>\s*([^<]+)<\/div>\s*'
     patron += '[^>]+>\s*<\/div>\s*<a href="([^"]+)">.*?'
-    patron += '<\/h3><span>([^<]+)<\/span>.*?<div class="texto">(.*?)</div>'
+    patron += '<\/h3>\s*<span>([^<]+)<\/span>.*?<div class="texto">(.*?)<'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
 
     for i, (scrapedthumbnail, scrapedtitle, rating, scrapedurl, year, scrapedplot ) in enumerate(matches):
         if (p - 1) * numpage > i: continue
         if i >= p * numpage: break
+        scrapedtitle=scrapedtitle.replace("(Cliccate La Scheda Info per vedere i link)", "")
         scrapedtitle=scrapedtitle.replace("&#8217;", "'").replace("Flash", "The Flash").strip()
+
         title = scrapertools.decodeHtmlentities(scrapedtitle)
 
         if rating =="0":
@@ -398,19 +448,20 @@ def peliculas_tv(item):
 
     return itemlist
 	
-# ==================================================================================================================================================	
-
+# ==================================================================================================================================================
+	
 def episodios(item):
-    logger.info("[streamondemand-pureita mondolunatico_new] episodios")
+    logger.info("streamondemand.mondolunatico_new episodios")
+
     itemlist = []
 
-    # Descarga la pagina # https://www.keeplinks.co/p92/59510018b8fc7
+    # Descarga la pagina 
     data = httptools.downloadpage(item.url).data
 
     html = []
 
     for i in range(2):
-        patron = 'href="(https?://www\.keeplinks\.co/p92/([^"]+))'
+        patron = 'href="(https?://www\.keeplinks\.co/p92/([^"]+))"'
         matches = re.compile(patron, re.DOTALL).findall(data)
         for keeplinks, id in matches:
             _headers = [['Cookie', 'flag[' + id + ']=1; defaults=1; nopopatall=' + str(int(time.time()))],
@@ -448,78 +499,65 @@ def episodios(item):
             html.append(tmp)
 
         data = '\n'.join(html)
-				 
+
     encontrados = set()
-
-    patron = '<a href="([^"]+)"\s*target="_blank"\s*class="selecttext\s*live">([^<]+)</a>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-    for scrapedurl, scrapedtitle in matches:
-        scrapedtitle = scrapedtitle.split('/')[-1]
-        if not scrapedtitle or scrapedtitle in encontrados: continue
-        encontrados.add(scrapedtitle)
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("ITALIAN", "Ita").replace("ITALiAN", "Ita")
-        scrapedtitle = scrapedtitle.replace("iTA", "Ita").replace("ITA", "Ita")
-        scrapedtitle = scrapedtitle.replace("Subbed", "Sub").replace("SUBBED", "Sub")
-        scrapedtitle = scrapedtitle.replace(".mp4", "").replace(".avi", "").replace("E0", "x")
-        scrapedtitle = scrapedtitle.replace("S0", "0").replace("_", " ").replace("E0", "x")
-
-
-        itemlist.append(
-            Item(channel=__channel__,
-                 extra=item.extra,
-                 action="findvideos_tv",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]" + item.plot,
-                 fulltitle=item.fulltitle,
-                 show=item.show))
 
     patron = '<p><a href="([^"]+?)">([^<]+?)</a></p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
-        scrapedtitle = scrapedtitle.split('/')[-1]
+        if "mondolunatico.org/goto" in scrapedtitle:
+           scrapedtitle="Lista episodi in Fase di Ripristino >>"
+        else:
+           scrapedtitle = scrapedtitle.split('/')[-1]
         if not scrapedtitle or scrapedtitle in encontrados: continue
         encontrados.add(scrapedtitle)
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle = scrapedtitle.replace("ITALIAN", "Ita").replace("ITALiAN", "Ita")
-        scrapedtitle = scrapedtitle.replace("iTA", "Ita").replace("ITA", "Ita")
-        scrapedtitle = scrapedtitle.replace("Subbed", "Sub").replace("SUBBED", "Sub")
-        scrapedtitle = scrapedtitle.replace(".mp4", "").replace(".avi", "").replace("E0", "x")
-        scrapedtitle = scrapedtitle.replace("S0", "0").replace("_", " ").replace("E0", "x")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).title()
+        scrapedtitle=scrapedtitle.replace(".-.", " ").replace("Mkv", "").replace(".", " ").replace("Mp4", "").replace("Ac3", "").replace("Soft","")
+        scrapedtitle=scrapedtitle.replace("By Bloody", "").replace("Avi", "").replace("Xvid", "").replace("Dvdrip", "").replace("_"," ").replace("Spft","")
+        scrapedtitle=scrapedtitle.replace("Internal", "").replace("%2520", " ").replace("Html", "").replace("Dvdrip", "").strip()
+        if "=" in scrapedtitle:
+           continue
+
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="findvideos",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
-                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]" + item.plot,
                  fulltitle=item.fulltitle,
+                 plot=item.plot,
                  show=item.show))
-				 
-				 
-    data = httptools.downloadpage(item.url).data
-    patron = '<div class="imagen"><a href="([^"]+)"><img src="([^"]+)"></a></div><div class="numerando">([^<]+)</div>'
 
+    patron = '<a href="([^"]+)" target="_blank" class="selecttext live">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        title = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedplot=""
+    for scrapedurl, scrapedtitle in matches:
+        if "mondolunatico.org/goto" in scrapedtitle:
+           scrapedtitle="Lista Episodi in Fase di Ripristino >>"
+        else:
+           scrapedtitle = scrapedtitle.split('/')[-1]
+        if not scrapedtitle or scrapedtitle in encontrados: continue
+        encontrados.add(scrapedtitle)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).title()
+
+        scrapedtitle=scrapedtitle.replace(".-.", " ").replace("Mkv", "").replace(".", " ").replace("Mp4", "").replace("Ac3", "").replace("_"," ")
+        scrapedtitle=scrapedtitle.replace("By Bloody", "").replace("Avi", "").replace("Xvid", "").replace("Dvdrip-", "").replace("Soft-", "").replace("Spft-","")
+        scrapedtitle=scrapedtitle.replace("Internal", "").replace("%2520", " ").replace("Html", "").replace("Dvdrip", "").strip()
+        if "=" in scrapedtitle:
+           continue
+
         itemlist.append(
             Item(channel=__channel__,
                  extra=item.extra,
-                 action="findvideos_tv",
-                 title="[COLOR azure]" + title + "[/COLOR]",
+                 action="findvideos",
+                 title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot="[COLOR orange]" + item.fulltitle + "[/COLOR]" + item.plot,
+                 thumbnail=item.thumbnail,
                  fulltitle=item.fulltitle,
-                 show=item.show,
-                 folder=True))
-				 
-				 
+                 plot=item.plot,
+                 show=item.show))
+
+
     return itemlist
 
 # ==================================================================================================================================================
@@ -586,11 +624,21 @@ def findvideos_tv(item):
 # ==================================================================================================================================================
 
 def findvideos(item):
-    itemlist = []
+    logger.info("[streamondemand-pureita mondolunatico_new] findvideos")
 	
+    # Descarga la pagina 
     data = httptools.downloadpage(item.url).data
+	
+    patron = '<li id=[^=]+="dooplay_player_option[^=]+="([^"]+)" data-nume="([^"]+)"'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+	
+    for id, serv  in matches:
+        base = "%sstream/wp-admin/admin-ajax.php" % host
+        player = urllib.urlencode({'action': 'doo_player_ajax', 'post': id, 'nume': serv})
+        data += httptools.downloadpage(base, post=player).data
+        
+    itemlist = servertools.find_video_items(data=data)
 
-    itemlist.extend(servertools.find_video_items(data=data))
     for videoitem in itemlist:
         servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
         videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
@@ -651,6 +699,27 @@ def play(item):
     return itemlist
 
 # ==================================================================================================================================================
+# ==================================================================================================================================================
+# ==================================================================================================================================================
+	
+def findvideos_movie(item):
+    itemlist = []
+	
+    data = httptools.downloadpage(item.url).data
+
+    itemlist.extend(servertools.find_video_items(data=data))
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+
+# ==================================================================================================================================================	
 	
 def findvideos_x(item):
     logger.info("[streamondemand-pureita mondolunatico_new] findvideos_x")
