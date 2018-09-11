@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_video"
-host = "http://altadefinizione01.video"
+host = "https://altadefinizione01.app"
 headers = [['Referer', host]]
 
 
@@ -36,15 +36,20 @@ def mainlist(item):
              url=host + "/category/nuove-uscite/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
         Item(channel=__channel__,
-             title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
-             action="genere",
+             title="[COLOR azure]Film - [COLOR orange]Ultimi inseriti[/COLOR]",
+             action="peliculas_new",
              url=host,
-             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film - [COLOR orange]Nelle Sale[/COLOR]",
              action="peliculas_new",
              url=host + "/category/in-sala/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+        Item(channel=__channel__,
+             title="[COLOR azure]Film - [COLOR orange]Per Genere[/COLOR]",
+             action="genere",
+             url=host,
+             thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
         Item(channel=__channel__,
              title="[COLOR azure]Film - [COLOR orange]Sottotitolati[/COLOR]",
              action="peliculas_new",
@@ -56,7 +61,7 @@ def mainlist(item):
              url=host + "/category/film/animazione/",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/animation2_P.png"),
         Item(channel=__channel__,
-             title="[COLOR orange]Cerca...[/COLOR]",
+             title="[COLOR yellow]Cerca...[/COLOR]",
              action="search",
              extra="movie",
              thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
@@ -71,10 +76,10 @@ def genere(item):
 
     data = scrapertools.anti_cloudflare(item.url, headers)
 
-    patron = '<a href="[^"]+">Film</a>(.*?)</div>'
+    patron = '<a href[^>]+>Film</a>(.*?)</div>'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<li class=".*?"><a href="([^"]+).*?">([^<]+)</a>'
+    patron = '<li class[^>]+><a href="([^"]+)[^>]+>([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -82,7 +87,7 @@ def genere(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_new",
-                 title=scrapedtitle,
+                 title="[COLOR azure]" +scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png",
                  folder=True))
@@ -100,11 +105,11 @@ def peliculas_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<h1>Genere:.*?</h1>(.*?)<aside id="sidebar" class="col-mt-2">')
+    bloque = scrapertools.get_match(data, '<section class="showpeliculas col-mt-8">\s*<h\d+>[^<]+</h\d+>(.*?)<aside')
 
     patron = '<a href="([^"]+)" title="[^>]+">\s*<div class="poster">\s*<span class="rating">\s*'
     patron += '<i class="glyphicon glyphicon-star"></i><span class="rating-number">([^"]+)</span>\s*</span>\s*<div class="poster-image-container">\s*'
-    patron += '<img src="([^"]+)" title="([^<]+)" /> </div>'
+    patron += '<img src="([^"]+)" title="([^<]+)" />\s*</div>'
 
 
     matches = re.compile(patron, re.DOTALL).findall(bloque)
@@ -118,7 +123,7 @@ def peliculas_new(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + "  [[COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR]]",
+                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -164,7 +169,7 @@ def peliculas_search(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     patron = '<div class="list-score">(.*?)</div>\s*<div class="col-xs-2">\s*<div class="row">\s*'
-    patron += '<a href="([^"]+)" title="[^>]+">\s*<img src="([^"]+)" title="([^<]+)" /> </a>'
+    patron += '<a href="([^"]+)" title="[^>]+">\s*<img src="([^"]+)" title="([^<]+)" />\s*</a>'
 
 
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -178,7 +183,7 @@ def peliculas_search(item):
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
-                 title=scrapedtitle + "  [[COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR]]",
+                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]TMDb: " + scrapedpuntuacion + "[/COLOR])",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  fulltitle=scrapedtitle,
@@ -238,7 +243,8 @@ def findvideos(item):
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
-            videoitem.title = item.fulltitle + "[COLOR orange]" + videoitem.title + "[/COLOR]"
+            servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+            videoitem.title = "[[COLOR orange]" + servername.capitalize() + "[/COLOR]] - " + item.title
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
