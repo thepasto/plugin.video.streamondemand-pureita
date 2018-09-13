@@ -16,8 +16,8 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardaserie_stream"
-host        = "https://guardaserie.stream/"
-host_ep     = "https://player.guardaserie.stream/media/"
+host        = "https://guardaserie.co/"
+host_ep     = "https://player.guardaserie.co/media/"
 headers     = [['Referer', host]]
 
 
@@ -197,7 +197,7 @@ def movie_list(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     bloque = scrapertools.find_single_match(data, '<h1>[^<]+</h1>(.*?)</div>\s*<script')
-    patron='<a href="([^"]+)[^>]+>([^<]+)<\/a>'
+    patron="<a href='([^']+)[^>]+>([^<]+)<\/a>"
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
