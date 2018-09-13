@@ -8,6 +8,7 @@
 import re
 import urlparse
 
+from core import config 
 from core import httptools
 from core import logger 
 from core import servertools
@@ -16,15 +17,11 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardogratis"
-
-host = "http://guardogratis.com/"
+host = "http://guardogratis.it/"
 
 headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
            ['Accept-Encoding', 'gzip, deflate'],
            ['Referer', host]]
-
-def isGeneric():
-    return True
 
 
 def mainlist(item):
@@ -66,7 +63,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("streamondemand-pureita guardogratis.py search")
@@ -80,7 +77,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def genere(item):
     logger.info("streamondemand-pureita guardogratis.py pergenere")
@@ -106,7 +103,7 @@ def genere(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def film(item):
     logger.info("streamondemand-pureita guardogratis.py film")
@@ -122,16 +119,20 @@ def film(item):
     for scrapedurl, scrapedimg, scrapedtitle, rating, scrapedplot in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         if rating:
-          rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+
+        scrapedtitle=scrapedtitle.replace("[", "(").replace("]", ")")
         scrapedplot = scrapedplot.replace("<p>", "")
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios" if "series" in scrapedurl else "findvideos",
+                 contentType="tv" if "series" in scrapedurl else "movie",
                  title=scrapedtitle + rating,
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedimg,
                  plot=scrapedplot,
+                 show=scrapedtitle,
                  extra=item.extra,
                  folder=True), tipo="tv" if "series" in scrapedurl else "movie"))
 
@@ -151,7 +152,7 @@ def film(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 """
 def film_top(item):
     logger.info("streamondemand-pureita guardogratis.py film")
@@ -195,7 +196,7 @@ def film_top(item):
 
     return itemlist
 """
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def film_new(item):
     logger.info("streamondemand-pureita guardogratis.py film")
@@ -212,7 +213,8 @@ def film_new(item):
     for scrapedurl, scrapedimg, scrapedtitle, rating, scrapedplot in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         if rating:
-          rating = " [[COLOR yellow]" + rating + "[/COLOR]]"
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+        scrapedtitle=scrapedtitle.replace("[", "(").replace("]", ")")
         scrapedplot = scrapedplot.replace("<p>", "")
 
         itemlist.append(infoSod(
@@ -242,7 +244,7 @@ def film_new(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def episodios(item):
     logger.info("streamondemand.channels.guardogratis episodios")
@@ -250,17 +252,17 @@ def episodios(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    blocco = scrapertools.get_match(data, '</i><span>Comments</span>(.*?)</ul></div></div> </div></div>')
+    blocco = scrapertools.get_match(data, '</i>\s*<span>Comments</span>(.*?)</div>\s*</div>\s*</div>\s*</div>')
 
-    patron = '<a\s*href="([^<]+)">(.*?)</a> '
+    patron = '<a href="([^"]+)">\s*(.*?)<\/a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
 
     for scrapedurl, scrapedtitle in matches:			
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
@@ -269,7 +271,22 @@ def episodios(item):
 
     return itemlist
 	
+# ==================================================================================================================================================
+	
+def findvideos(item):
+    itemlist = []
+	
+    data = httptools.downloadpage(item.url).data
 
+    itemlist.extend(servertools.find_video_items(data=data))
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
 
-
+    return itemlist
 
