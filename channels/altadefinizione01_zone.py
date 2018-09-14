@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "altadefinizione01_zone"
-host = "http://www.altadefinizione01.zone/"
+host = "https://www.altadefinizione01.fm/"
 headers = [['Referer', host]]
 
 
@@ -55,7 +55,7 @@ def mainlist(item):
                      url="%s/catalog/a/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/a-z_P.png"),
                Item(channel=__channel__,
-                     title="[COLOR orange]Cerca Film...[/COLOR]",
+                     title="[COLOR yellow]Cerca Film...[/COLOR]",
                      action="search",
                      extra="movie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
@@ -349,7 +349,6 @@ def peliculas(item):
         sub = scrapertools.unescape(match.group(5))
         quality = scrapertools.unescape(match.group(4))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(3))
-        #rating = scrapertools.unescape(match.group(3))
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = scrapertools.unescape(match.group(1))
         if year:
@@ -411,7 +410,8 @@ def findvideos(item):
           scrapedurl = "http:" + scrapedurl
         data += httptools.downloadpage(scrapedurl).data
     for videoitem in servertools.find_video_items(data=data):
-        videoitem.title = item.title + videoitem.title
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.show = item.show

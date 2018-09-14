@@ -26,22 +26,22 @@ def mainlist(item):
     logger.info("[StreamOnDemand-PureITA GuardaFilm] mainlist")
     itemlist = [Item(channel=__channel__,
                      action="peliculas_update",
-                     title="Film [COLOR orange] - Novita[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Novita[/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      action="genere_top",
-                     title="Film [COLOR orange] - Categorie TOP[/COLOR]",
+                     title="[COLOR azure]Film  - [COLOR orange]Categorie ([COLOR azure]Top[/COLOR])",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="genere",
-                     title="Film [COLOR orange] - Categorie Archivio[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Categorie ([COLOR azure]Archivio[/COLOR])",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genres_P.png"),
                 Item(channel=__channel__,
                      action="peliculas_animation",
-                     title="Film [COLOR orange] - Animazione [/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Animazione [/COLOR]",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
@@ -122,7 +122,7 @@ def genere_top(item):
 def peliculas_update(item):
     logger.info("[StreamOnDemand-PureITA GuardaFilm] peliculas_update")
     itemlist = []
-    PERPAGE = 14
+    PERPAGE = 24
 	
     p = 1
     if '{}' in item.url:
@@ -184,7 +184,8 @@ def peliculas_top(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl,  scrapedtitle, scrapedthumbnail in matches:
-        scrapedurl = host + scrapedurl
+        if not host in scrapedurl:
+          scrapedurl = host + scrapedurl
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos",
@@ -300,7 +301,26 @@ def peliculas_genre(item):
     return itemlist
 	
 # ===================================================================================================================================================
+
+def findvideos(item):
+    itemlist = []
 	
+    data = httptools.downloadpage(item.url).data
+
+    itemlist.extend(servertools.find_video_items(data=data))
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
+
+# ===================================================================================================================================================
+
 """
 def findvideos(item):
     logger.info("[StreamOnDemand-PureITA GuardaFilm] findvideos")

@@ -22,28 +22,22 @@ headers = [['Referer', host]]
 
 def mainlist(item):
     logger.info("streamondemand-pureita.videotecaproject mainlist")
-    itemlist = [#Item(channel=__channel__,
-                     #title="[COLOR azure]Film[COLOR orange] - Menu' >>>[/COLOR]",
-                     #action="menu_movie",
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
-                     #action="peliculas",
-                     #url="%s/film/ultimi-200-film-inseriti/" % host,
-                     #extra="movie",
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
+    itemlist = [Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Menu' >>>[/COLOR]",
+                     action="menu_movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movies_P.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Film[COLOR orange] - Ultimi Aggiornati[/COLOR]",
+                     action="peliculas",
+                     url="%s/film/ultimi-200-film-inseriti/" % host,
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/movie_new_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Menu' >>>[/COLOR]",
                      action="menu_serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi[/COLOR]",
-                     action="peliculas_date",
-                     url="%s/serie-tv/" % host,
-                     extra="allep",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi ([COLOR azure]Per Data[/COLOR])",
                      action="peliculas_new",
                      url="%s/serie-tv/" % host,
                      extra="serie",
@@ -55,22 +49,10 @@ def mainlist(item):
                      extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - In corso[/COLOR]",
-                     action="peliculas_srcserie",
-                     url="%s/tags/Serie In Corso/" % host,
-                     extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Concluse[/COLOR]",
-                     action="peliculas_srcserie",
-                     url="%s/tags/Serie Terminate/" % host,
-                     extra="serie",
-                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
-                #Item(channel=__channel__,
-                     #title="[COLOR yellow][I]Cerca Film...[/I][/COLOR]",
-                     #action="search",
-                     #extra="movie",
-                     #thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
+                     title="[COLOR yellow][I]Cerca Film...[/I][/COLOR]",
+                     action="search",
+                     extra="movie",
+                     thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow][I]Cerca Serie TV...[/I][/COLOR]",
                      action="search",
@@ -341,7 +323,7 @@ def peliculas_srcmovie(item):
 def menu_serie(item):
     logger.info("streamondemand-pureita.videotecaproject menu_serie")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi ([COLOR azure]Per Data[/COLOR])",
+                     title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi Per Data[/COLOR]",
                      action="peliculas_new",
                      url="%s/serie-tv/" % host,
                      extra="serie",
@@ -731,11 +713,7 @@ def peliculas_date(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-	
-    if item.extra=="allep":
-        bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
-    else:   
-        bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
+    bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
 				 				 
     patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
     patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
