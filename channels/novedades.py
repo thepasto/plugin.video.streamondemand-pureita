@@ -88,7 +88,7 @@ def peliculas_movie(item):
     for item in itemlist:
 
         if item.extra != "next_page" and not item.title.startswith(">>"):
-            item.title = item.title + " [" + item.channel + "]"
+            item.title = item.title + " ([COLOR orange]" + item.channel.capitalize() + "[/COLOR])"
             sorted_itemlist.append(item)
 
     sorted_itemlist = sorted(sorted_itemlist, key=lambda Item: Item.title)
@@ -118,7 +118,7 @@ def peliculas_infantiles(item):
     for item in itemlist:
 
         if item.extra != "next_page" and not item.title.startswith(">>"):
-            item.title = item.title + " [" + item.channel + "]"
+            item.title = item.title + " ([COLOR orange]" + item.channel.capitalize() + "[/COLOR])"
             sorted_itemlist.append(item)
 
     sorted_itemlist = sorted(sorted_itemlist, key=lambda Item: Item.title)
@@ -145,6 +145,10 @@ def series(item):
     item.url = "http://serietvsubita.net/"
     itemlist.extend(serietvsubita.peliculas_tv(item))
 	
+    import videotecaproject
+    item.url = "https://www.videotecaproject.eu/serie-tv/"
+    itemlist.extend(videotecaproject.pelis_new(item))
+	
     import thelordofstreaming
     item.url = "http://www.thelordofstreaming.it/"
     itemlist.extend(thelordofstreaming.peliculas_new(item))
@@ -154,7 +158,7 @@ def series(item):
     for item in itemlist:
 
         if item.extra != "next_page" and not item.title.startswith(">>"):
-            item.title = item.title + " [" + item.channel + "]"
+            item.title = item.title + " ([COLOR orange]" + item.channel.capitalize() + "[/COLOR])"
             sorted_itemlist.append(item)
 
     sorted_itemlist = sorted(sorted_itemlist, key=lambda Item: Item.title)
@@ -180,7 +184,7 @@ def anime(item):
     for item in itemlist:
 
         if item.extra != "next_page" and not item.title.endswith(">>"):
-            item.title = item.title + " [" + item.channel + "]"
+            item.title = item.title + " ([COLOR orange]" + item.channel.capitalize() + "[/COLOR])"
             sorted_itemlist.append(item)
 
     sorted_itemlist = sorted(sorted_itemlist, key=lambda Item: Item.title)
@@ -202,7 +206,7 @@ def documentales(item):
     for item in itemlist:
 
         if item.extra != "next_page" and not item.title.startswith(">>"):
-            item.title = item.title + " [" + item.channel + "]"
+            item.title = item.title + " ([COLOR orange]" + item.channel.capitalize() + "[/COLOR])"
             sorted_itemlist.append(item)
 
     sorted_itemlist = sorted(sorted_itemlist, key=lambda Item: Item.title)

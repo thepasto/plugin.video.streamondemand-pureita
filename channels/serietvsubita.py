@@ -8,10 +8,11 @@
 import re
 import urlparse
 
-from core import config
 from core import httptools
+from core import config
 from core import logger
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
@@ -88,6 +89,8 @@ def peliculas_tv(item):
     for scrapedurl, scrapedtitle in matches:
         if "FACEBOOK" in scrapedtitle or "RAPIDGATOR" in scrapedtitle:
          continue
+        if scrapedtitle=="WELCOME!":
+          continue
         scrapedthumbnail = ""
         scrapedplot = ""
         itemlist.append(infoSod(
@@ -263,3 +266,19 @@ def episodes(item):
 
 # ==============================================================================================================================================
 
+def findvideos(item):
+    itemlist = []
+	
+    data = httptools.downloadpage(item.url).data
+
+    itemlist.extend(servertools.find_video_items(data=data))
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist

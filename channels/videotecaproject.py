@@ -38,9 +38,9 @@ def mainlist(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi[/COLOR]",
-                     action="peliculas_date",
+                     action="pelis_new",
                      url="%s/serie-tv/" % host,
-                     extra="allep",
+                     extra="serie",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_series_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[COLOR orange] - Ultimi Episodi ([COLOR azure]Per Data[/COLOR])",
@@ -731,11 +731,8 @@ def peliculas_date(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-	
-    if item.extra=="allep":
-        bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
-    else:   
-        bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
+	 
+    bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
 				 				 
     patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
     patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
@@ -765,6 +762,61 @@ def peliculas_date(item):
 	
 # ==================================================================================================================================================
 
+def pelis_new(item):
+    logger.info("streamondemand-pureita majintoon lista_animation")
+    itemlist = []
+    minpage = 14
+	
+    p = 1
+    if '{}' in item.url:
+       item.url, p = item.url.split('{}')
+       p = int(p)
+
+    data = httptools.downloadpage(item.url, headers=headers).data
+    bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
+
+    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
+    patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
+        if (p - 1) * minpage > i: continue
+        if i >= p * minpage: break
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "").strip()    
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="tvshow",
+                 title=scrapedtitle,
+                 fulltitle=stitle,
+                 url=scrapedurl,
+                 show=stitle,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo="tv"))
+				 
+    # Extrae el paginador
+    if len(matches) >= p * minpage:
+        scrapedurl = item.url + '{}' + str(p + 1)
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="pelis_new",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
+                 folder=True))
+
+    return itemlist
+
+# ==================================================================================================================================================
+	
 def episodios(item):
     logger.info("[streamondemand-pureita videotecaproject] episodios")
     itemlist = []
