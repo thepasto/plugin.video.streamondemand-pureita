@@ -21,7 +21,7 @@ __creationdate__ = "20120605"
 
 DEBUG = config.get_setting("debug")
 
-host = "https://filmsenzalimiti.black/"
+host = "https://filmsenzalimiti.bid/"
 headers = [['Referer', host]]
 
 def isGeneric():
@@ -32,24 +32,24 @@ def mainlist(item):
     logger.info("[streamondemand-pureita filmsenzalimiti] mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Al Cinema[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Al Cinema[/COLOR]",
                      action="novedades",
                      extra="film",
                      url="%s//prime-visioni/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Novita[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Novita[/COLOR]",
                      action="novedades",
                      extra="film",
                      url="%s/genere/film/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/all_movies_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - Categorie[/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]Categorie[/COLOR]",
                      action="categorias",
                      url=host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/genre_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film[COLOR orange] - [HD][/COLOR]",
+                     title="[COLOR azure]Film - [COLOR orange]HD[/COLOR]",
                      action="novedades",
                      extra="film",
                      url="%s/?s=HD" % host,
@@ -60,13 +60,13 @@ def mainlist(item):
                      title="[COLOR yellow]Cerca Film...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Novita'[/COLOR]",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Novita'[/COLOR]",
                      extra="serie",
                      action="novedades_tv",
                      url="%s/genere/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Serie TV[COLOR orange] - Aggiornate[/COLOR]",
+                     title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
                      extra="serie",
                      action="peliculas_update",
                      url="%s/aggiornamenti-serie-tv/" % host,
@@ -406,9 +406,9 @@ def findvideos(item):
             Item(
                 channel=__channel__,
                 action="play",
-                fulltitle=item.title,
-                show=item.title,
-                title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedserver + "[/COLOR]]",
+                fulltitle=item.fulltitle,
+                show=item.show,
+                title="[COLOR azure][[COLOR orange]" + scrapedserver + "[/COLOR]] - " + item.title + "[/COLOR]",
                 url=scrapedurl,
                 thumbnail=item.thumbnail,
                 plot=item.plot,
@@ -436,7 +436,7 @@ def findvideos_movies(item):
             Item(channel=__channel__,
                  action="play",
                  fulltitle=item.fulltitle,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title  + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  show=item.show,
@@ -454,7 +454,7 @@ def findvideos_movies(item):
             Item(channel=__channel__,
                  action="play",
                  fulltitle=item.fulltitle,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title  + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  show=item.show,

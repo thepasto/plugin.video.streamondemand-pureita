@@ -17,7 +17,7 @@ from core.tmdb import infoSod
 from servers import servertools
 
 __channel__ = "filmsenzalimiti_blue"
-host = "http://filmsenzalimiti.blue/"
+host = "https://filmsenzalimiti.gratis"
 
 headers = [['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
            ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
@@ -25,8 +25,6 @@ headers = [['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Geck
            ['Referer', host],
            ['Cache-Control', 'max-age=0']]
 
-def isGeneric():
-    return True
 
 def mainlist(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] mainlist")
@@ -68,7 +66,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def search(item, texto):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] " + item.url + " search " + texto)
@@ -85,7 +83,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 	
 def categorie(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] categorie")
@@ -107,7 +105,7 @@ def categorie(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] peliculas")
@@ -124,7 +122,7 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 	
     for scrapedurl, scrapedtitle, rating, scrapedthumbnail  in matches:	
-
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         if rating=="":
           rating="N/A"
         itemlist.append(infoSod(
@@ -147,7 +145,7 @@ def peliculas(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas_list(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] peliculas_list")
@@ -172,7 +170,7 @@ def peliculas_list(item):
     for i, (scrapedurl, scrapedtitle ) in enumerate(matches):
         if (p - 1) * PERPAGE > i: continue
         if i >= p * PERPAGE: break
-        title = scrapertools.decodeHtmlentities(scrapedtitle)
+        title = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
@@ -201,7 +199,8 @@ def peliculas_list(item):
                  folder=True))
 
     return itemlist
-# ==============================================================================================================================================================================
+	
+# ==================================================================================================================================================
 
 def peliculas_search(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] peliculas_search")
@@ -242,7 +241,7 @@ def peliculas_search(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def findvideos(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] findvideos")
@@ -283,16 +282,17 @@ def findvideos(item):
                     urls.append(url_decode(media_url))
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
+
         for videoitem in itemlist:
-            videoitem.title = item.title + "[COLOR orange][B]" + videoitem.title + "[/B][/COLOR]"
+            servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+            videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
             videoitem.fulltitle = item.fulltitle
-            videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
+            videoitem.thumbnail = item.thumbnail
             videoitem.plot = item.plot
             videoitem.channel = __channel__
 
         return itemlist
-
 
 def url_decode(url_enc):
     lenght = len(url_enc)

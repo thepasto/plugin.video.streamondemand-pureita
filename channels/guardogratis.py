@@ -281,7 +281,7 @@ def findvideos(item):
     itemlist.extend(servertools.find_video_items(data=data))
     for videoitem in itemlist:
         servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(['[[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
