@@ -27,7 +27,7 @@ headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Ge
 def mainlist(item):
     logger.info("streamondemand-pureita guardogratis.py mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="Film[COLOR orange]   - Novita[/COLOR]",
+                     title="Film[COLOR orange]   - Novita'[/COLOR]",
                      action="film",
                      url="%s/movies/" % host,
                      extra="movie",
