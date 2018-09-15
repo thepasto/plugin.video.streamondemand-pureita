@@ -30,7 +30,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://www.comingsoon.it"
+host = "https://www.comingsoon.it"
 
 TIMEOUT_TOTAL = 60
 
