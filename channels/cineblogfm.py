@@ -22,7 +22,7 @@ __type__ = "generic"
 __title__ = "CineBlog01.FM"
 __language__ = "IT"
 
-sito="https://www.cineblog01.blue/"
+sito="https://www.cineblog01.cloud/"
 
 DEBUG = config.get_setting("debug")
 

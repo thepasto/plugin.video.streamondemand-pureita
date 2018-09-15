@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "solostreaming_co"
-host = "https://www.solostreaming.co/"
+host = "https://www.solostreaming.net/"
 headers = [['Referer', host]]
 
 

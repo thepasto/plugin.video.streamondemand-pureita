@@ -18,7 +18,7 @@ from core.tmdb import infoSod
 
 __channel__ = "filmgratis"
 
-host = "https://filmgratis.uno"
+host = "https://www.filmgratis.one"
 
 # ----------------------------------------------------------------------------------------------------------------
 def mainlist(item):

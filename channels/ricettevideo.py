@@ -26,7 +26,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.ricettevideo mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Videoricette[/COLOR]", action="peliculas", url="http://ricettevideo.net/", thumbnail="http://www.brinkmanscountrycorner.com/images/Recipies.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Videoricette[/COLOR]", action="peliculas", url="http://ricettevideo.net/", thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/receipt2_P.png"))
     
     return itemlist
 
