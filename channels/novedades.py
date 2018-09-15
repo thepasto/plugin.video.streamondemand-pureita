@@ -60,15 +60,15 @@ def peliculas_movie(item):
     itemlist = []
 
     from channels import cineblog01
-    item.url = "https://www.cb01.zone/"
+    item.url = "https://www.cb01.news/"
     itemlist.extend(cineblog01.peliculas(item))
 
     from channels import casacinema
-    item.url = "https://www.casacinema.video/genere/film"
+    item.url = "https://www.casacinema.club/genere/film"
     itemlist.extend(casacinema.peliculas(item))	
 	
     from channels import italiafilm
-    item.url = "http://www.italia-film.online/novita-streaming-1/"
+    item.url = "https://www.italia-film.io/novita-streaming-1/"
     itemlist.extend(italiafilm.peliculas(item))
 
     #from channels import piratestreaming
@@ -102,15 +102,15 @@ def peliculas_infantiles(item):
     itemlist = []
 
     import filmsenzalimiti_blue
-    item.url = "https://filmsenzalimiti.blue/category/film/animazione"
+    item.url = "https://filmsenzalimiti.gratis/category/film/animazione"
     itemlist.extend(filmsenzalimiti_blue.peliculas(item))
 	
     import cinemalibero
-    item.url = "https://www.cinemalibero.club/category/film-in-streaming/animazione/"
+    item.url = "https://www.cinemalibero.me/category/film-in-streaming/animazione/"
     itemlist.extend(cinemalibero.peliculas(item))
 	
     import serietvu
-    item.url = "http://www.serietvu.online/category/animazione-e-bambini/"
+    item.url = "https://www.serietvu.club/category/animazione-e-bambini/"
     itemlist.extend(serietvu.lista_serie(item))
 
     sorted_itemlist = []
@@ -150,7 +150,7 @@ def series(item):
     itemlist.extend(videotecaproject.pelis_new(item))
 	
     import thelordofstreaming
-    item.url = "http://www.thelordofstreaming.it/"
+    item.url = "http://www.thelordofstreaming.com/"
     itemlist.extend(thelordofstreaming.peliculas_new(item))
 
     sorted_itemlist = []
@@ -176,7 +176,7 @@ def anime(item):
     itemlist.extend(animesenzalimiti.ultimiep(item))
 
     import animeforce
-    item.url = "https://www.animeforce.org/"
+    item.url = "https://ww1.animeforce.org/"
     itemlist.extend(animeforce.ultimiep(item))
 
     sorted_itemlist = []

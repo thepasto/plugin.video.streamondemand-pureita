@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "casacinema"
-host = 'https://www.casacinema.video'
+host = 'https://www.casacinema.club'
 
 headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
            ['Accept-Encoding', 'gzip, deflate'],

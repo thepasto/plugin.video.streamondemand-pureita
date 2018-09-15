@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "ilgeniodellostreaming"
-host = "http://ilgeniodellostreaming.org"
+host = "https://ilgeniodellostreaming.in"
 headers = [['Referer', host]]
 
 # ==================================================================================================================================================
