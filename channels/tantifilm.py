@@ -751,14 +751,14 @@ def findvideos(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<div  id="wpwm-tabs-(\d+)">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="(.*?)"[^>]+>'
+    patron = '<div\s*id="wpwm-tabs-(\d+)">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="(.*?)"[^>]+>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for option, scrapedurl in matches:
-        scrapedtitle=scrapertools.find_single_match(data, '<li id="wpwm-tabmob[^>]+><a href="#wpwm-tabs-%s">([^<]+)</a></li>' % option)
+        scrapedtitle=scrapertools.find_single_match(data, '<li\s*id="wpwm-tabmob[^>]+><a href="#wpwm-tabs-%s">([^<]+)</a></li>' % option)
         if "protectlink" in data:
-          scrapedurl=scrapertools.find_single_match(data, '<div  id="wpwm-tabs-%s">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="[^\/]+\/\/[^=]+=([^"]+)"[^>]+>' % option)
+          scrapedurl=scrapertools.find_single_match(data, '<div\s*id="wpwm-tabs-%s">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="[^\/]+\/\/[^=]+=([^"]+)"[^>]+>' % option)
           scrapedurl=''.join(scrapedurl.split())
           scrapedurl=scrapedurl.decode("base64")
         if scrapedtitle=="-":

@@ -322,7 +322,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]GuardaSerie_click[/COLOR]"         , channel="guardaserie_click"           , language="IT"    , category="S"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]GuardaSerie_stream[/COLOR]"         , channel="guardaserie_stream"           , language="IT"    , category="F,S"    , type="generic"))
     itemlist.append( Item( title="[COLOR azure]GuardareFilm[/COLOR]"         , channel="guardarefilm"           , language="IT"    , category="F,S,A"    , type="generic"))
-    #itemlist.append( Item( title="[COLOR azure]Guardaserie.online[/COLOR]"     , channel="guardaserieonline"       , language="IT"    , category="S,B"        , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]GuardaFilm[/COLOR]"     , channel="guardafilm"       , language="IT"    , category="F,B"        , type="generic"))
     #itemlist.append( Item( title="[COLOR red]TEST ESTERO[/COLOR] [COLOR azure]Guardaserie.net[/COLOR]"     , channel="guardaserietest"       , language="IT"    , category="S"        , type="generic"))
     itemlist.append( Item( title="[COLOR azure]GuardoGratis[/COLOR]"         , channel="guardogratis"           , language="IT"    , category="F,S,A"    , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]GriffinITA Streaming[/COLOR]"      , channel="griffinita"           , language="IT"    , category="S"   , type="generic"))
