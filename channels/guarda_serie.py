@@ -16,7 +16,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from lib import unshortenit
+
 
 __channel__ = "guarda_serie"
 host = "https://guardaserie.site/"
@@ -294,39 +294,38 @@ def episodios(item):
     return itemlist
 
 # ==================================================================================================================================================
-# da modificare codice errato
-def findvideos_tv(item):
-    logger.info("[Icarus].[guardareseriecc] [findvideos]")
+
+def findvideos(item):
+    logger.info("[streamondemand-pureita guarda_serie] findvideos")
+    encontrados = set()
     itemlist = []
-    listurl = set()
 
-    patron = r'<select.*?style="width:100px;" class="dynamic_select">(.*?)</select>'
+    # Descarga la pagina 
     data = httptools.downloadpage(item.url, headers=headers).data
-    elenco = scrapertools.find_single_match(data, patron, 0)
+    patron = r'</ul>\s*<select  style(.*?)</nav>\s*</div>'
+    bloque = scrapertools.find_single_match(data, patron)
 
-    patron = '<a class="" href="(.*?)">(.*?)</a>'
-    elenco_link = scrapertools.find_multiple_matches(elenco, patron)
+    # Extrae las entradas (carpetas)
+    patron = '<a class="" href="([^"]+)">\s*([^<]+)</a>'
+    server_link = scrapertools.find_multiple_matches(bloque, patron)
+    for scrapedurl, scrapedtitle in server_link:
+        data = httptools.downloadpage(scrapedurl, headers=headers).data		
+        if 'protectlink.stream' in data:
+            scrapedcode = scrapertools.find_multiple_matches(data, r'<iframe src=".*?//.*?=([^"]+)"')
 
-    for scrapedurl, scrapedtitle in elenco_link:
-        data = httptools.downloadpage(scrapedurl, headers=headers).data
-        if 'protectlink' in data:
-            urls = scrapertools.find_multiple_matches(data, r'<iframe src="[^=]+=(.*?)"')
-            for url in urls:
-                url = url.decode('base64')
-                # tiro via l'ultimo carattere perchè non c'entra
-                url = unshortenit.unwrap_30x_only(url[:-1])
-                listurl.add(url)
+            for url in scrapedcode:
+              url = url.decode('base64')
+              encontrados.add(url)
 
-    if listurl:
-        itemlist = servertools.find_video_items(data=str(listurl))
+    if encontrados:
+        itemlist = servertools.find_video_items(data=str(encontrados))
         for videoitem in itemlist:
-            videoitem.title = item.title + '[COLOR orange][B]' + videoitem.title + '[/B][/COLOR]'
             videoitem.fulltitle = item.fulltitle
-            videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
+            videoitem.title = item.title + '[COLOR orange]' + videoitem.title + '[/COLOR]'
+            videoitem.thumbnail = item.thumbnail
             videoitem.plot = item.plot
-            videoitem.channel = item.channel
-            videoitem.contentType = item.contentType
+            videoitem.channel = __channel__
 
     return itemlist
 
@@ -388,7 +387,7 @@ def play(item):
 # ==================================================================================================================================================
 # ==================================================================================================================================================
 
-def findvideos1(item):
+def findvideos(item):
     logger.info("[streamondemand-pureita guarda_serie] findvideos")
     encontrados = set()
     itemlist = []
