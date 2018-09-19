@@ -387,38 +387,5 @@ def play(item):
 # ==================================================================================================================================================
 # ==================================================================================================================================================
 
-def findvideos(item):
-    logger.info("[streamondemand-pureita guarda_serie] findvideos")
-    encontrados = set()
-    itemlist = []
-
-    # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
-    patron = r'</ul>\s*<select  style(.*?)</nav>\s*</div>'
-    bloque = scrapertools.find_single_match(data, patron)
-
-    # Extrae las entradas (carpetas)
-    patron = '<a class="" href="([^"]+)">\s*([^<]+)</a>'
-    server_link = scrapertools.find_multiple_matches(bloque, patron)
-    for scrapedurl, scrapedtitle in server_link:
-        data = httptools.downloadpage(scrapedurl, headers=headers).data		
-        if 'protectlink.stream' in data:
-            scrapedcode = scrapertools.find_multiple_matches(data, r'<iframe src=".*?//.*?=([^"]+)"')
-
-            for url in scrapedcode:
-              url = url.decode('base64')
-              encontrados.add(url)
-
-    if encontrados:
-        itemlist = servertools.find_video_items(data=str(encontrados))
-        for videoitem in itemlist:
-            videoitem.fulltitle = item.fulltitle
-            videoitem.show = item.show
-            videoitem.title = item.title + '[COLOR orange]' + videoitem.title + '[/COLOR]'
-            videoitem.thumbnail = item.thumbnail
-            videoitem.plot = item.plot
-            videoitem.channel = __channel__
-
-    return itemlist
 
 
