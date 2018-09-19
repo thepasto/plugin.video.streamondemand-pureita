@@ -358,9 +358,17 @@ def findvideos_server(item):
 # ==================================================================================================================================================	
 
 def play(item):
-    logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
+    itemlist=[]
 
-    data = httptools.downloadpage(item.url).data
+    data = item.url
+
+    if "rapidcrypt" in item.url:
+       data = httptools.downloadpage(item.url).data
+	  
+    if  'nodmca' in item.url:
+        item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
+        data = item.url
+
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
@@ -368,8 +376,9 @@ def play(item):
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
-        videoitem.plot=item.plot
+        videoitem.plot = item.plot
         videoitem.channel = __channel__
+
     return itemlist
 	
 # ==================================================================================================================================================
