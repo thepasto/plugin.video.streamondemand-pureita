@@ -813,6 +813,7 @@ def pelis_new(item):
                  thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
+    itemlist.sort(key=lambda x: x.title)
     return itemlist
 
 # ==================================================================================================================================================
@@ -835,7 +836,8 @@ def episodios(item):
 
         if scrapedtitle=="":
            scrapedtitle=scrapertools.find_single_match(puntata, '<span[^>]+>([^<]+)')
-
+        if "Wstream" in scrapedtitle:
+          continue
 	
         #if '<span style="font-weight: 700;">' in puntata:
           #scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)<')
@@ -849,7 +851,8 @@ def episodios(item):
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
         #if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
           #continue
-		  
+        if "Wstream" in scrapedtitle:
+          continue		  
         if "Trama:" in scrapedtitle:
           continue
         if scrapedtitle.startswith(item.show):
@@ -873,7 +876,7 @@ def episodios(item):
 
     for puntata in matches:
         scrapedtitle=scrapertools.find_single_match(puntata, '<a\s*href="http.*?:\/\/.*?\/[^.]+[^\d+]+([^\.]+)[^>]+>')
-        scrapedtitle=scrapedtitle.replace("E", "x")
+        #scrapedtitle=scrapedtitle.replace("E", "x")
         if not "x" in scrapedtitle:
           scrapedtitle=scrapertools.find_single_match(puntata, '<strong>([^<]+)<\/strong>')
 
@@ -884,6 +887,8 @@ def episodios(item):
 
         if "/" in scrapedtitle:
           scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)</a>')
+        if "Wstream" in scrapedtitle:
+          scrapedtitle=scrapertools.find_single_match(puntata, 'target="_blank">([^<]+)\s*<span')
         if "Stagione" in scrapedtitle:
            scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]"
         #if not "x" in scrapedtitle and not "Stagione" in scrapedtitle and not "Openload" in scrapedtitle and not "Parte" in scrapedtitle:
@@ -939,6 +944,8 @@ def findvideos(item):
 
     for scrapedurl,scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("https://", "").replace("http://", "")
+        if "vcrypt" in scrapedtitle:
+          continue
         scrapedtitle = scrapedtitle.title()
         itemlist.append(
             Item(channel=__channel__,
@@ -1038,7 +1045,7 @@ def play(item):
     itemlist=[]
 
     data = item.url
-    while 'vcrypt' in item.url:
+    if 'vcrypt' in item.url:
         item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
         data = item.url
 		
