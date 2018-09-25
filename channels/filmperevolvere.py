@@ -2,7 +2,7 @@
 # ------------------------------------------------------------
 # streamondemand-PureITA / XBMC Plugin
 # Canale filmperevolvere
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# http://www.mimediacenter.info/foro/viewtopic.php?f=36&t=7808
 # ------------------------------------------------------------
 import re
 import urlparse
@@ -37,10 +37,6 @@ headers = [
 ]
 
 
-def isGeneric():
-    return True
-
-
 def mainlist(item):
     logger.info("streamondemand-pureita.filmperevolvere mainlist")
     itemlist = [Item(channel=__channel__,
@@ -61,6 +57,8 @@ def mainlist(item):
 
     return itemlist
 
+# ==================================================================================================================================================
+	
 def search(item, texto):
     logger.info("[filmperevolvere.py] " + item.url + " search " + texto)
     item.url = host + "/?s=" + texto
@@ -75,7 +73,7 @@ def search(item, texto):
 
     return []
 
-# ------------------------------------------------------------------------------------------------------------------------------------
+# ==================================================================================================================================================
 
 def categorie(item):
     itemlist = []
@@ -95,7 +93,7 @@ def categorie(item):
 
         if scrapedtitle.startswith(("HOME")):
             continue
-        if scrapedtitle.startswith(("SERIE TV")):
+        if scrapedtitle.startswith(("Serie TV")):
             continue
         if scrapedtitle.startswith(("GENERI")):
             continue
@@ -111,7 +109,7 @@ def categorie(item):
 
     return itemlist
 
-# ------------------------------------------------------------------------------------------------------------------------------------	
+# =================================================================================================================================================	
 
 def peliculas(item):
     logger.info("streamondemand-pureita.filmperevolvere peliculas")
@@ -154,21 +152,15 @@ def peliculas(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 
-# ------------------------------------------------------------------------------------------------------------------------------------	
+# =================================================================================================================================================	
 	
 def peliculas_film(item):
     logger.info("streamondemand-pureita.filmperevolvere peliculas_film")
@@ -211,21 +203,15 @@ def peliculas_film(item):
         scrapedurl = urlparse.urljoin(item.url, matches[0])
         itemlist.append(
             Item(channel=__channel__,
-                 action="HomePage",
-                 title="[COLOR yellow]Torna Home[/COLOR]",
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/vari/return_home2_P.png",
-                 folder=True)),
-        itemlist.append(
-            Item(channel=__channel__,
                  action="peliculas_film",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="[COLOR orange]Successivi >>[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/successivo_P.png",
+                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
                  folder=True))
 
     return itemlist
 	
-# ------------------------------------------------------------------------------------------------------------------------------------
+# ==================================================================================================================================================
 
 def findvideos(item):
     logger.info("streamondemand-pureita.filmperevolvere findvideos")
@@ -239,7 +225,8 @@ def findvideos(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR green][B]', videoitem.title, '[/B][/COLOR]'])
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
@@ -247,13 +234,7 @@ def findvideos(item):
 
     return itemlist
 
-# ------------------------------------------------------------------------------------------------------------------------------------
-
-def HomePage(item):
-    import xbmc
-    xbmc.executebuiltin("ReplaceWindow(10024,plugin://plugin.video.streamondemand-pureita-master)")
-
-# ------------------------------------------------------------------------------------------------------------------------------------
+# ==================================================================================================================================================
 
 def get_test_cookie(url):
     data = scrapertools.cache_page(url, headers=headers)
