@@ -732,14 +732,39 @@ def peliculas_date(item):
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
 	 
-    bloque = scrapertools.get_match(data, '%s(.*?)</td>' % item.fulltitle)
+    bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
 				 				 
-    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
-    patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
+    patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
+    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)<span'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedthumbnail, scrapedurl, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "").strip()
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
+    patron += 'src="([^"]+)" [^b]+><br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
@@ -775,15 +800,43 @@ def pelis_new(item):
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
 
-    patron = '<a href="([^"]+)".*?img alt="".*?src="([^"]+)" [^>]+>.*?span.*?>'
-    patron += '.*?>([^<]+)</.*?>(?:</strong>|)(?:</span>|)'
+    patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
+    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)<span'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for i, (scrapedthumbnail, scrapedurl, scrapedtitle) in enumerate(matches):
+        if (p - 1) * minpage > i: continue
+        if i >= p * minpage: break
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "").strip()    
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="tvshow",
+                 title=scrapedtitle,
+                 fulltitle=stitle,
+                 url=scrapedurl,
+                 show=stitle,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo="tv"))
+
+    patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
+    patron += 'src="([^"]+)" [^b]+><br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
         if (p - 1) * minpage > i: continue
         if i >= p * minpage: break
         scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
