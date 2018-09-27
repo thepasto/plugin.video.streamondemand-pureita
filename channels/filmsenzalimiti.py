@@ -322,7 +322,7 @@ def peliculas_update(item):
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
-        patron = '((?:.*?<a href="[^"]+" target="_blank" rel[^>]+>[^<]+<\/a>)+)'
+        patron = '((?:.*?<a href="[^"]+"[^>]+target[^>]+>[^<]+<\/a>)+)'
         matches = re.compile(patron).findall(html)
         for data in matches:
             # Extrae las entradas

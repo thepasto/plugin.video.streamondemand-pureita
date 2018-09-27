@@ -141,6 +141,10 @@ def series(item):
     #item.url = "http://www.italiaserie.co/"
     #itemlist.extend(italiaserie.peliculas(item))
 	
+    import filmsenzalimiti
+    item.url = "https://filmsenzalimiti.bid/aggiornamenti-serie-tv/"
+    itemlist.extend(filmsenzalimiti.peliculas_update(item))
+	
     import serietvsubita
     item.url = "http://serietvsubita.net/"
     itemlist.extend(serietvsubita.peliculas_tv(item))
@@ -149,9 +153,9 @@ def series(item):
     item.url = "https://www.videotecaproject.eu/serie-tv/"
     itemlist.extend(videotecaproject.pelis_new(item))
 	
-    import thelordofstreaming
-    item.url = "http://www.thelordofstreaming.com/"
-    itemlist.extend(thelordofstreaming.peliculas_new(item))
+    #import thelordofstreaming
+    #item.url = "http://www.thelordofstreaming.com/"
+    #itemlist.extend(thelordofstreaming.peliculas_new(item))
 
     sorted_itemlist = []
 

@@ -958,7 +958,7 @@ def episodios(item):
                  action="findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=item.fulltitle + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
                  plot="[COLOR orange]" + item.fulltitle + "[/COLOR]  " + item.plot,
@@ -997,15 +997,15 @@ def findvideos(item):
 
     for scrapedurl,scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("https://", "").replace("http://", "")
-        if "vcrypt" in scrapedtitle:
-          continue
+        #if "vcrypt" in scrapedtitle:
+          #continue
         scrapedtitle = scrapedtitle.title()
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
                  fulltitle=scrapedtitle,
                  show=item.title,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title,
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -1022,7 +1022,7 @@ def findvideos(item):
                  action="play",
                  fulltitle=scrapedtitle,
                  show=item.title,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] " + item.title,
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
