@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmsenzalimiti"
-host = "https://filmsenzalimiti.bid/"
+host = "https://filmsenzalimiti.watch"
 headers = [['Referer', host]]
 
 
@@ -27,7 +27,7 @@ def mainlist(item):
                      title="[COLOR azure]Film - [COLOR orange]Al Cinema[/COLOR]",
                      action="novedades",
                      extra="peliculas",
-                     url="%s//prime-visioni/" % host,
+                     url="%s/prime-visioni/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Novita[/COLOR]",
