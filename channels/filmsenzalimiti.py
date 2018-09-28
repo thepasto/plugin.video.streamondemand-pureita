@@ -16,16 +16,8 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmsenzalimiti"
-__language__ = "IT"
-__creationdate__ = "20120605"
-
-DEBUG = config.get_setting("debug")
-
 host = "https://filmsenzalimiti.bid/"
 headers = [['Referer', host]]
-
-def isGeneric():
-    return True
 
 
 def mainlist(item):
@@ -34,13 +26,13 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Al Cinema[/COLOR]",
                      action="novedades",
-                     extra="film",
+                     extra="peliculas",
                      url="%s//prime-visioni/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/popcorn_cinema_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]Novita[/COLOR]",
                      action="novedades",
-                     extra="film",
+                     extra="peliculas",
                      url="%s/genere/film/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/all_movies_P.png"),
                 Item(channel=__channel__,
@@ -51,34 +43,34 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film - [COLOR orange]HD[/COLOR]",
                      action="novedades",
-                     extra="film",
+                     extra="peliculas",
                      url="%s/?s=HD" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/hd_movies_P.png"),
                 Item(channel=__channel__,
                      action="search",
-                     extra="film",
+                     extra="peliculas",
                      title="[COLOR yellow]Cerca Film...[/COLOR]",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Novita'[/COLOR]",
-                     extra="serie",
+                     extra="series",
                      action="novedades_tv",
                      url="%s/genere/serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornate[/COLOR]",
-                     extra="serie",
+                     extra="series",
                      action="peliculas_update",
                      url="%s/aggiornamenti-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/tv_serie_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
-                     extra="serie",
+                     extra="series",
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
     return itemlist
 
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
 
 def categorias(item):
     logger.info("[streamondemand-pureita filmsenzalimiti] categorias")
@@ -100,8 +92,6 @@ def categorias(item):
          continue
         scrapedthumbnail = ""
         scrapedplot = ""
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="novedades",
@@ -112,15 +102,15 @@ def categorias(item):
                  plot=scrapedplot))
 
     return itemlist
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita filmsenzalimiti] " + item.url + " search " + texto)
     item.url = host + "/?s=" + texto
     try:
-        if item.extra == "film":
-            return novedades(item)
-        if item.extra == "serie":
+        if item.extra == "peliculas":
+            return peliculas_src(item)
+        if item.extra == "series":
             return novedades_tv(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -129,7 +119,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
 
 def novedades(item):
     logger.info("[streamondemand-pureita filmsenzalimiti] novedades")
@@ -144,15 +134,18 @@ def novedades(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, rating in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
         if "test yb " in scrapedtitle or "test by" in scrapedtitle:
 		   continue	
         if "[HD]" in scrapedtitle:
           quality = " ([COLOR yellow]HD[/COLOR])"
         else:
-          quality =""		   
-        rating = " ([COLOR yellow]" + rating + "[/COLOR])"
-        if "HD" in rating or "N/A" in rating or "N/D" in rating:
-          rating=""
+          quality =""
+        if rating:		  
+          rating = " ([COLOR yellow]" + rating + "[/COLOR])"
+          if "HD" in rating or "N/A" in rating or "N/D" in rating:
+           rating=""
 
         scrapedtitle= scrapedtitle.replace(" [HD]", "")
         scrapedtitle= scrapedtitle.replace(" & ", " e ").replace(":", " - ")
@@ -188,7 +181,48 @@ def novedades(item):
 
     return itemlist	
 
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
+	
+def peliculas_src(item):
+    logger.info("[streamondemand-pureita filmsenzalimiti] novedades")
+    itemlist = []
+
+    # Descarga la pagina 
+    data = httptools.downloadpage(item.url, headers=headers).data
+
+    # Extrae las entradas (carpetas)
+    patron = '<a href="([^"]+)" data-thumbnail="(.*?)"><div>\s*' \
+	         '<div class="title">([^>]+)</div>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        if "-serie" in scrapedurl or "-serie" in scrapedthumbnail:
+           continue
+        if "test yb " in scrapedtitle or "test by" in scrapedtitle:
+		   continue	
+        if "[HD]" in scrapedtitle:
+          quality = " ([COLOR yellow]HD[/COLOR])"
+        else:
+          quality =""
+        scrapedtitle= scrapedtitle.replace(" [HD]", "")
+        scrapedtitle= scrapedtitle.replace(":", " - ").replace("’", "'")
+        scrapedplot = ""		
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="findvideos_movies",
+                 contentType="movie",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR] " + quality,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 extra=item.extra,
+                 folder=True), tipo='movie'))
+
+    return itemlist	
+# ==================================================================================================================================================
 
 def novedades_tv(item):
     logger.info("[streamondemand-pureita filmsenzalimiti] novedades")
@@ -199,39 +233,34 @@ def novedades_tv(item):
 
     # Extrae las entradas (carpetas)
     patron = '<li><a href="([^"]+)" data-thumbnail="([^"]+)"><div>\s*'
-    patron += '<div class="title">([^<]+)</div>\s*'
-    patron += '<div class="episode" title="Voto IMDb">([^<]+)</div>'
+    patron += '<div class="title">([^<]+)</div>'
 
     matches = re.compile(patron, re.DOTALL).finditer(data)
 
     for match in matches:
-        imdb = scrapertools.unescape(match.group(4))
-        scrapedtitle = scrapertools.unescape(match.group(3))
-        scrapedthumbnail = scrapertools.unescape(match.group(2))
         scrapedurl = urlparse.urljoin(item.url, match.group(1))
-
+        scrapedthumbnail = scrapertools.unescape(match.group(2))
+        scrapedtitle = scrapertools.unescape(match.group(3))
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        if "-film" in scrapedurl or "-film" in scrapedthumbnail:
+          continue		
         if "[HD]" in scrapedtitle:
           quality = " ([COLOR yellow]HD[/COLOR])"
         else:
           quality = ""
 
-        if "HD" in imdb or "N/A" in imdb or "N/D" in imdb:
-          imdb = ""
-        else:
-          imdb = " ([COLOR yellow]" + imdb + "[/COLOR])"
-
-        scrapedplot = ""
         scrapedtitle = scrapedtitle.replace(" [HD]", "").replace(" & ", " e ")
         scrapedtitle = scrapedtitle.replace(" – ", " - ").replace("’", "'")
         scrapedtitle = scrapedtitle.strip()
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        scrapedplot = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="tv",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]"  + quality + imdb,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]"  + quality,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -252,8 +281,8 @@ def novedades_tv(item):
                  folder=True))
 
     return itemlist
-
-# ==========================================================================================================================================================
+	
+# ==================================================================================================================================================
 
 def peliculas_update(item):
     logger.info("[streamondemand-pureita filmsenzalimiti]  peliculas_update")
@@ -318,7 +347,7 @@ def peliculas_update(item):
 
     return itemlist
 	
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -353,6 +382,9 @@ def episodios(item):
     starts = []
     patron = r"STAGIONE.*?ITA|stagione.*?"
     matches = re.compile(patron, re.IGNORECASE).finditer(data)
+    if "Continua con il video" in data:
+          return findvideos_movies(item)
+
     for match in matches:
         season_title = match.group()
         if season_title != '':
@@ -391,7 +423,7 @@ def episodios(item):
 
     return itemlist
 
-# ==========================================================================================================================================================
+# ==================================================================================================================================================
 
 def findvideos(item):
     logger.info("[streamondemand-pureita filmsenzalimiti] findvideos_tv")
@@ -425,7 +457,9 @@ def findvideos_movies(item):
     # The categories are the options for the combo
     patron = '<iframe class="embed-responsive-item" SRC="(([^.]+)[^"]+)"[^>]+></iframe>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-
+	
+    if "Stagione" in data or "stagione" in data or "STAGIONE" in data:
+       return episodios(item)
     for scrapedurl, scrapedtitle in matches:
         scrapedurl = urlparse.urljoin(item.url, scrapedurl)
         scrapedthumbnail = ""
@@ -445,7 +479,9 @@ def findvideos_movies(item):
 	
     patron = '<li><a href="([^"]+)" target="__blank" rel="nofollow">([^<]+)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-
+	
+    if "Stagione" in data or "stagione" in data or "STAGIONE" in data:
+       return episodios(item)
     for scrapedurl, scrapedtitle in matches:
         scrapedurl = urlparse.urljoin(item.url, scrapedurl)
         scrapedthumbnail = ""
