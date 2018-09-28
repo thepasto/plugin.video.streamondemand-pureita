@@ -18,7 +18,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmsenzalimiti_info"
-host = "https://www.filmsenzalimiti.life"
+host = "https://www.filmsenzalimiti.cc"
 headers = [['Referer', host]]
 
 
@@ -81,7 +81,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita filmsenzalimiti_info]  " + item.url + " search " + texto)
@@ -98,7 +98,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==================================================================================================================================================		
+# ===============================================================================================================================	
 
 def genere(item):
     logger.info("[streamondemand-pureita guarda_serie] genere")
@@ -123,7 +123,7 @@ def genere(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def peliculas(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] peliculas")
@@ -166,7 +166,7 @@ def peliculas(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def peliculas_tv(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] peliculas")
@@ -211,7 +211,7 @@ def peliculas_tv(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def peliculas_movie(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] peliculas_movie")
@@ -263,7 +263,7 @@ def peliculas_movie(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def episodios(item):
 
@@ -356,7 +356,7 @@ def episodios(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def episodios_all(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] episodios")
@@ -401,7 +401,7 @@ def episodios_all(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 	
 def findvideos(item):
     logger.info("[streamondemand-pureita guarda_serie] genere")
@@ -429,7 +429,7 @@ def findvideos(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# ===============================================================================================================================
 
 def findvideos_tv(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] findvideos_tv")
@@ -449,7 +449,7 @@ def findvideos_tv(item):
 		
     return itemlist
 
-# ==================================================================================================================================================	
+# ===============================================================================================================================	
 	
 def findvideos_movie(item):
     logger.info("[streamondemand-pureita filmsenzalimiti_info] findvideos_movie")
@@ -496,20 +496,29 @@ def findvideos_movie(item):
     return itemlist
 
 	
-# ==================================================================================================================================================	
+# ===============================================================================================================================	
 	
 def play(item):
-    logger.info("[streamondemand-pureita filmsenzalimiti_info] play")
-
+    itemlist=[]
+	
     data = item.url
+	
+    if "rapidcrypt" in item.url  or "flashx" in item.url:
+       data = httptools.downloadpage(item.url).data
+	   
+	  
+    while 'nodmca' in item.url or 'vcrypt' in item.url:
+        item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
+        data = item.url
+		
+    #logger.debug(data)
     itemlist = servertools.find_video_items(data=data)
-
     for videoitem in itemlist:
         videoitem.title = item.title
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
-        videoitem.plot=item.plot
+        videoitem.plot = item.plot
         videoitem.channel = __channel__
     return itemlist
 	
