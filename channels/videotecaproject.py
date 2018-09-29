@@ -759,8 +759,8 @@ def peliculas_date(item):
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
 				 
-    patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
-    patron += 'src="([^"]+)" [^b]+><br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    patron = '<a href="([^"]+)"[^>]+>.*?<img alt="".*?'
+    patron += 'src="([^"]+)" [^b]+>.*?<br>\s*<br>\s*.*?<strong>(?:<a href[^>]+>|)([^<]+)<\/'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
@@ -829,8 +829,8 @@ def pelis_new(item):
                  plot=scrapedplot,
                  folder=True), tipo="tv"))
 
-    patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
-    patron += 'src="([^"]+)" [^b]+><br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    patron = '<a href="([^"]+)"[^>]+>.*?<img alt="".*?'
+    patron += 'src="([^"]+)" [^b]+>.*?<br>\s*<br>\s*.*?<strong>(?:<a href[^>]+>|)([^<]+)<\/'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
