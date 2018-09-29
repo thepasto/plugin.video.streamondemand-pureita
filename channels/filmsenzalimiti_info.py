@@ -367,7 +367,8 @@ def episodios_all(item):
     url = scrapertools.find_single_match(data, patron)
 
     data = httptools.downloadpage(url).data.replace('\n', '')
-
+    if not "<iframe src=" in data:
+       return episodios(item)
 
     section_stagione = scrapertools.find_single_match(data, '<i class="fa fa-home fa-fw"></i> Stagioni</a>(.*?)<select name="sea_select" class="dynamic_select">')
     patron = '<a href="([^"]+)" ><i class="fa fa-tachometer fa-fw"></i>\s*(\d+)</a></li>'
