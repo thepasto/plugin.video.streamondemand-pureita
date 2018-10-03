@@ -304,7 +304,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Filmissimi[/COLOR]"          , channel="filmissimi"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Filmperevolvere[/COLOR]"       , channel="filmperevolvere"           , language="IT"    , category="F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]FilmStream[/COLOR]"          , channel="filmstream"           , language="IT"    , category="F"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]FilmStream_biz[/COLOR]"          , channel="filmstream_biz"           , language="IT"    , category="F"   , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]FilmStream_biz[/COLOR]"          , channel="filmstream_biz"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStreamingHD[/COLOR]"       , channel="filmstreaminghd"           , language="IT"    , category="B,F,S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStreamingGratis[/COLOR]"       , channel="filmstreaminggratis"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStreamingIta[/COLOR]"       , channel="filmstreamingita"           , language="IT"    , category="F"   , type="generic"))

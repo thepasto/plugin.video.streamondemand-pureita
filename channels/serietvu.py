@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "serietvu"
-host = "https://www.serietvu.club/"
+host = "https://www.serietvu.club"
 
 headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'],
            ['Accept-Encoding', 'gzip, deflate'],

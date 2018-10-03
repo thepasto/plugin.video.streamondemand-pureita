@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "fastsubita"
-host = "http://fastsubita.gq/"
+host = "http://fastsubita.com"
 headers = [['Referer', host]]
 
 

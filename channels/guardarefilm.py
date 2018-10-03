@@ -17,7 +17,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "guardarefilm"
-host = "https://www.guardarefilm.video"
+host = "https://www.guardarefilm.pink"
 headers = [['Referer', host]]
 
 def mainlist(item):
