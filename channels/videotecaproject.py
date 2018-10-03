@@ -16,7 +16,7 @@ from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "videotecaproject"
-host = "https://www.videotecaproject.eu"
+host = "https://www.videotecaproject.net"
 headers = [['Referer', host]]
 
 
@@ -79,9 +79,9 @@ def mainlist(item):
 
     return itemlist
 	
-# ==================================================================================================================================================
-# TILL 320
-# ==================================================================================================================================================	
+# =============================================================================================================================================
+# TILL 346
+# =============================================================================================================================================
 	
 def menu_movie(item):
     logger.info("streamondemand-pureita.videotecaproject menu_movie")
@@ -130,7 +130,7 @@ def menu_movie(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def categorias(item):
     logger.info("[streamondemand-pureita videotecaproject] serie_az")
@@ -168,7 +168,7 @@ def categorias(item):
 
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_list(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_list")
@@ -222,7 +222,7 @@ def peliculas_list(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def peliculas(item):
     logger.info("streamondemand-pureita majintoon lista_animation")
@@ -283,7 +283,7 @@ def peliculas(item):
 
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def peliculas_srcmovie(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_srcmovie")
@@ -299,13 +299,21 @@ def peliculas_srcmovie(item):
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("<strong>", "").replace("</strong>", "")
         scrapedtitle = scrapedtitle.replace(" ITA", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         #scrapedtitle = re.sub(r"([0-9])", r" \1", scrapedtitle)
 
         if "serie" in scrapedurl or "ita" in scrapedurl:
          continue
+
+
+        if "-A-B-" in scrapedtitle or "-E-F" in scrapedtitle or "-I-J" in scrapedtitle:
+          continue
+        if "-M-N" in scrapedtitle or "-Q-R" in scrapedtitle or "-W-X" in scrapedtitle:
+          continue
+        if not "ITA" in scrapedtitle or not  "serie" in scrapedurl:
+         continue
         scrapedplot = ""
         scrapedthumbnail = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvideos_film" if not "film" in scrapedurl else "peliculas_list",
@@ -334,9 +342,9 @@ def peliculas_srcmovie(item):
     return itemlist
 
 	
-# ==================================================================================================================================================
-# TILL 838
-# ==================================================================================================================================================
+# =============================================================================================================================================
+# TILL 1036
+# =============================================================================================================================================
 
 def menu_serie(item):
     logger.info("streamondemand-pureita.videotecaproject menu_serie")
@@ -388,7 +396,7 @@ def menu_serie(item):
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/search_P.png")]
 
     return itemlist
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def categorias_serie(item):
     logger.info("[streamondemand-pureita videotecaproject] serie_az")
@@ -427,7 +435,7 @@ def categorias_serie(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_srcseries(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_srcserie")
@@ -442,15 +450,24 @@ def peliculas_srcseries(item):
 
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapedtitle.replace("<strong>", "").replace("</strong>", "")
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        #scrapedtitle = re.sub(r"([0-9])", r" \1", scrapedtitle)
 
-        if not "ITA" in scrapedtitle and not  "serie" in scrapedurl:
+        if "serie" in scrapedurl or "ita" in scrapedurl:
          continue
 
+
+        if "-A-B-" in scrapedtitle or "-E-F" in scrapedtitle or "-I-J" in scrapedtitle:
+          continue
+        if "-M-N" in scrapedtitle or "-Q-R" in scrapedtitle or "-W-X" in scrapedtitle:
+          continue
+        if not "ITA" in scrapedtitle or not  "serie" in scrapedurl:
+         continue
         scrapedplot = ""
         scrapedthumbnail = ""
         scrapetitle = scrapedtitle.replace(" ITA", "")
         scrapetitle = scrapetitle.replace(" ENG SUB", "")
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -477,7 +494,7 @@ def peliculas_srcseries(item):
    
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_serie(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_serie")
@@ -532,7 +549,7 @@ def peliculas_serie(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_srcserie(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_srcserie")
@@ -550,7 +567,10 @@ def peliculas_srcserie(item):
         scrapetitle = scrapedtitle.replace(" ITA", "")
         if not "ITA" in scrapedtitle and not "serie" in scrapedurl:
          continue
-
+        if "a-b" in scrapedurl or "-e-f" in scrapedurl or "-i-j" in scrapedurl:
+          continue
+        if "-m-n" in scrapedurl or "-q-r" in scrapedurl or "-w-x" in scrapedurl:
+          continue
         scrapedplot = ""
         scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -582,7 +602,7 @@ def peliculas_srcserie(item):
    
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_tv(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_tv")
@@ -632,7 +652,7 @@ def peliculas_tv(item):
    
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_new(item):
     logger.info("[streamondemand-pureita videoproject] peliculas_new")
@@ -651,7 +671,8 @@ def peliculas_new(item):
           continue
         if scrapedtitle=="":
           continue		  
-        scrapetitle=scrapedtitle.replace("°", "")		  
+        scrapetitle=scrapedtitle
+        scrapedtitle=scrapedtitle.replace("°", "")			
         scrapedtitle=re.sub(r'(\d+)', lambda m : m.group(1).zfill(2), scrapedtitle)
 
         #scrapedtitle = scrapedtitle.title()
@@ -674,7 +695,8 @@ def peliculas_new(item):
           continue
         if scrapedtitle=="":
           continue
-        scrapetitle=scrapedtitle.replace("°", "")	
+        scrapetitle=scrapedtitle
+        scrapedtitle=scrapedtitle.replace("°", "")		
         scrapedtitle=re.sub(r'(\d+)', lambda m : m.group(1).zfill(2), scrapedtitle)
 		  
         #scrapedtitle = scrapedtitle.title()
@@ -692,7 +714,7 @@ def peliculas_new(item):
     itemlist.reverse()
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def serie_az(item):
     logger.info("[streamondemand-pureita videotecaproject] serie_az")
@@ -723,7 +745,7 @@ def serie_az(item):
 
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_date(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas_date")
@@ -770,6 +792,8 @@ def peliculas_date(item):
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
         #scrapedtitle = scrapedtitle.title()
+        if "videotecaproject" in scrapedtitle:
+          continue
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
@@ -786,20 +810,40 @@ def peliculas_date(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
+				 
+    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?'
+    patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|).*?'
+    patron += '<\/a><\/p>\s*<p\s*style[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
 
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace(" ITA", "").replace("Stagione", "").strip() 
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
     return itemlist	
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def pelis_new(item):
     logger.info("streamondemand-pureita majintoon lista_animation")
     itemlist = []
-    minpage = 14
-	
-    p = 1
-    if '{}' in item.url:
-       item.url, p = item.url.split('{}')
-       p = int(p)
 
     data = httptools.downloadpage(item.url, headers=headers).data
     bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
@@ -808,9 +852,8 @@ def pelis_new(item):
     patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)<span'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for i, (scrapedthumbnail, scrapedurl, scrapedtitle) in enumerate(matches):
-        if (p - 1) * minpage > i: continue
-        if i >= p * minpage: break
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
+
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
         #scrapedtitle = scrapedtitle.title()
@@ -837,9 +880,8 @@ def pelis_new(item):
     patron += '<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for i, (scrapedurl, scrapedthumbnail, scrapedtitle) in enumerate(matches):
-        if (p - 1) * minpage > i: continue
-        if i >= p * minpage: break
+    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
@@ -862,22 +904,38 @@ def pelis_new(item):
                  plot=scrapedplot,
                  folder=True), tipo="tv"))
 				 
-    # Extrae el paginador
-    if len(matches) >= p * minpage:
-        scrapedurl = item.url + '{}' + str(p + 1)
-        itemlist.append(
+    patron = '<img alt=""[^>]+src="([^"]+)"[^>]+>.*?<\/a><\/p>\s*<p style[^>]+>.*?'
+    patron += '<a href="([^"]+)"[^>]+>(?:<span[^>]+><span[^>]+><strong>|)([^<]+)<'
+
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
+
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace(" ITA", "").replace("Stagione", "").strip() 		
+        itemlist.append(infoSod(
             Item(channel=__channel__,
-                 extra=item.extra,
-                 action="pelis_new",
-                 title="[COLOR orange]Successivi >>[/COLOR]",
+                 action="episodios",
+                 contentType="tvshow",
+                 title=scrapedtitle,
+                 fulltitle=stitle,
                  url=scrapedurl,
-                 thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/next_1.png",
-                 folder=True))
+                 show=stitle,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo="tv"))		 
+
 
     itemlist.sort(key=lambda x: x.title)
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def episodios(item):
     logger.info("[streamondemand-pureita videotecaproject] episodios")
@@ -974,9 +1032,9 @@ def episodios(item):
 			 
     return itemlist
 	
-# ==================================================================================================================================================
-# TILL 983
-# ==================================================================================================================================================
+# =============================================================================================================================================
+# TILL 1182
+# =============================================================================================================================================
 	
 def search(item, texto):
     logger.info("[streamondemand-pureita videotecaproject] " + item.url + " search " + texto)
@@ -985,7 +1043,7 @@ def search(item, texto):
     try:
         if item.extra == "movie":
             return peliculas_srcmovie(item)
-        if item.extra == "serie":
+        else:
             return peliculas_srcserie(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -994,7 +1052,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def findvideos(item):
     logger.info("[streamondemand-pureita videotecaproject] findvideos")
@@ -1038,7 +1096,7 @@ def findvideos(item):
 				 
     return itemlist
 
-# ==================================================================================================================================================	
+# =============================================================================================================================================	
 
 def findvideos_film(item):
     logger.info("[streamondemand-pureita videotecaproject] categorias")
@@ -1100,7 +1158,7 @@ def findvideos_film(item):
 				 			 
     return itemlist
 	
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def play(item):
     itemlist=[]
@@ -1121,9 +1179,9 @@ def play(item):
 
     return itemlist
 
-# ==================================================================================================================================================
-# ==================================================================================================================================================
-# ==================================================================================================================================================
+# =============================================================================================================================================
+# =============================================================================================================================================
+# =============================================================================================================================================
 
 
 def categorias_old(item):
@@ -1154,7 +1212,7 @@ def categorias_old(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def listmovie(item):
     logger.info("[streamondemand-pureita videotecaproject] categorias_list")
@@ -1209,7 +1267,7 @@ def listmovie(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 
 def peliculas_old(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas")
@@ -1253,7 +1311,7 @@ def peliculas_old(item):
 
     return itemlist
 
-# ==================================================================================================================================================
+# =============================================================================================================================================
 	
 def peliculas_listmovie(item):
     logger.info("[streamondemand-pureita videotecaproject] peliculas")
@@ -1293,6 +1351,6 @@ def peliculas_listmovie(item):
     return itemlist
 
 
-# ==================================================================================================================================================
-# ==================================================================================================================================================
-# ==================================================================================================================================================
+# =============================================================================================================================================
+# =============================================================================================================================================
+# =============================================================================================================================================

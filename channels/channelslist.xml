@@ -78,9 +78,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01_zone.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>08</version>
+    <version>09</version>
     <adult>false</adult>
-    <date>13/09/2018</date>
+    <date>02/10/2018</date>
     <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
@@ -2572,9 +2572,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/videotecaproject.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>22</version>
+    <version>23</version>
     <adult>false</adult>
-    <date>29/09/2018</date>
+    <date>02/10/2018</date>
     <changes>Update and Temporary Fix</changes>
     <categories>
         <category>movie</category>
