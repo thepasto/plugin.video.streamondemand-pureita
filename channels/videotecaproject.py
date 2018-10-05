@@ -338,9 +338,11 @@ def pelis_new(item):
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()		
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"		
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -369,9 +371,11 @@ def pelis_new(item):
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()		
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -397,9 +401,11 @@ def pelis_new(item):
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()		
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -594,14 +600,16 @@ def peliculas_date(item):
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
         stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip() 
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="serie",
                  fulltitle=stitle,
                  show=stitle,
-                 title=stitle,
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -626,14 +634,16 @@ def peliculas_date(item):
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
         stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip() 
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="serie",
                  fulltitle=stitle,
                  show=stitle,
-                 title=stitle,
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -654,14 +664,16 @@ def peliculas_date(item):
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
         stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip() 
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
                  contentType="serie",
                  fulltitle=stitle,
                  show=stitle,
-                 title=stitle,
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
