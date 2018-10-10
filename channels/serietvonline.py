@@ -128,7 +128,7 @@ def lista_serie(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     blocco = scrapertools.find_single_match(data, 'id="lcp_instance_0">(.*?)</ul>')
-    patron='<a href="([^"]+)" title="([^<]+)">[^<]+</a>'
+    patron='<a\s*href="([^"]+)" title="([^<]+)">[^<]+</a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
     scrapertools.printMatches(matches)
 
@@ -167,10 +167,10 @@ def lista_novita(item):
 
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    blocco = scrapertools.find_single_match(data, '<div id="box_movies">(.*?)</span></div></div>')
-    patron = '<img src="([^"]+)" alt[^>]+>\s*<a href="([^"]+)">'
-    patron += '<span class="player"></span></a>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*<h2>(.*?)</h2>'
-    matches = re.compile(patron, re.DOTALL).findall(blocco)
+    #blocco = scrapertools.find_single_match(data, '<div id="box_movies">(.*?)</span></div></div>')
+    patron = '<img\s*src="([^"]+)"\s*alt[^>]+>\s*<a\s*href="([^"]+)">'
+    patron += '<span\s*class="player"></span></a>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*<h2>(.*?)</h2>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedthumbnail, scrapedurl,scrapedtitle in matches:
@@ -185,7 +185,7 @@ def lista_novita(item):
                  show=scrapedtitle,
                  folder=True),tipo='tv'))
 								 
-    patron = "<a rel='nofollow' class=previouspostslink href='(.*?)'><span class='icon-chevron-right2'>"
+    patron = '<a\s*href="([^"]+)" >Siguiente <span\s*class="icon-caret-right"></span>'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(

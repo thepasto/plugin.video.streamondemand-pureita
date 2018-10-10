@@ -1517,8 +1517,8 @@
     <id>wstream</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/wstream.py</update_url>
     <active>true</active>
-    <version>09</version>
-    <date>11/09/2018</date>
+    <version>10</version>
+    <date>10/10/2018</date>
     <changes>Temporary Fix</changes>
 </server>
     
