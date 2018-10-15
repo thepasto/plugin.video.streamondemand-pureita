@@ -59,7 +59,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def categorias(item):
     itemlist = []
@@ -76,6 +76,8 @@ def categorias(item):
         if scrapedtitle.startswith("Action &#038; Adventure"): 
             continue
         scrapedtitle=scrapedtitle.replace("televisione film", "Film TV")
+        if not "http" in scrapedurl:
+           scrapedurl=host+scrapedurl
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
@@ -86,7 +88,7 @@ def categorias(item):
 
     return itemlist
 
-# ====================================================================================================================================================================
+# ==================================================================================================================================================
 
 def list(item):
     logger.info("streamondemand-pureita.mondolunatico_hd  list")
@@ -112,6 +114,8 @@ def list(item):
         if (p - 1) * numpage > i: continue
         if i >= p * numpage: break
         title = scrapertools.decodeHtmlentities(scrapedtitle)
+        if not "http" in scrapedurl:
+           scrapedurl=host+scrapedurl
         scrapedthumbnail = ""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -141,7 +145,7 @@ def list(item):
 
     return itemlist
 
-# ====================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("[streamondemand-pureita.mondolunatico_hd] " + item.url + " search " + texto)
@@ -156,7 +160,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ====================================================================================================================================================================
+# ==================================================================================================================================================
 		
 def pelis_movie_src(item):
     logger.info("streamondemand-pureita.mondolunatico_hd peliculas")
@@ -174,6 +178,8 @@ def pelis_movie_src(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle, in matches:
         if "Fichier" in scrapedtitle:
           continue
+        if not "http" in scrapedurl:
+           scrapedurl=host+scrapedurl
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -190,7 +196,7 @@ def pelis_movie_src(item):
 
     return itemlist
 
-# ====================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("streamondemand-pureita.mondolunatico_hd peliculas")
@@ -216,6 +222,8 @@ def peliculas(item):
         scrapedtitle=scrapedtitle.replace("&#8217;", "'")
         if "Fichier" in scrapedtitle:
           continue
+        if not "http" in scrapedurl:
+           scrapedurl=host+scrapedurl
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedthumbnail = ""
         itemlist.append(infoSod(
