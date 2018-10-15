@@ -788,8 +788,8 @@ def episodios_serie_new(item):
                          thumbnail=item.thumbnail,
                          extra=item.extra,
                          plot=item.plot,
-                         fulltitle=scrapedtitle + " (" + lang_title + ")" + ' - ' + item.show,
-                         show=item.show))
+                         fulltitle=item.show + ' - ' + scrapedtitle + " (" + lang_title + ")",
+                         show=item.show + ' - ' + scrapedtitle + " (" + lang_title + ")"))
 
     logger.info("[streamondemand-pureita cineblog01] episodios_serie_new")
 
@@ -960,7 +960,7 @@ def findvid_serie(item):
         for match in matches:
             scrapedurl = match.group(1)
             scrapedtitle = match.group(2)
-            title = item.title + " [COLOR orange][" + vtype + scrapedtitle + "][/COLOR]"
+            title = "[COLOR azure][[COLOR orange]" + vtype + scrapedtitle + "[/COLOR]] " + item.title + "[/COLOR]"
             itemlist.append(
                 Item(channel=__channel__,
                      action="play",
