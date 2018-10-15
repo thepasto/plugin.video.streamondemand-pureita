@@ -204,7 +204,7 @@ def episodios(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    blocco = scrapertools.get_match(data, '<table>(.*?)</table>')
+    blocco = scrapertools.get_match(data, '</table></p>(.*?)</table></p>')
     if not "href" in blocco:
 	  return episodios_all(item)
 
@@ -239,7 +239,7 @@ def episodios_all(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    patron = r'<iframe src=\'([^"]+)\' FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=100% HEIGHT=680 allowfullscreen></iframe>'
+    patron = r'<iframe\s*src=\'([^"]+)\' FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=100% HEIGHT=680 allowfullscreen></iframe>'
     url = scrapertools.find_single_match(data, patron)
 
     data = httptools.downloadpage(url).data.replace('\n', '')
@@ -284,7 +284,7 @@ def findvideos(item):
     logger.info("[streamondemand-pureita serietvonline] findvideos")
     itemlist = []
 
-    patron = "<a href='(.*?)'[^>]+>[^>]+>(.*?)<\/a>"
+    patron = "<a\s*href='([^']+)[^>]+>[^>]+>([^<]+)<\/a>"
     matches = re.compile(patron, re.DOTALL).findall(item.url)
 
     for scrapedurl,scrapedserver in matches:
@@ -298,6 +298,7 @@ def findvideos(item):
                  thumbnail=item.thumbnail,
                  plot=item.plot,
                  folder=True))
+				 
 
     return itemlist
 
