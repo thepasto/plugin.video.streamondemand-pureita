@@ -47,7 +47,7 @@ def download_and_play(url,file_name,download_path):
         dialog.update(0)
 
         while not cancelled and download_thread.is_alive():
-            dialog.update( download_thread.get_progress() , "Chiudi questa finestra per avviare la riproduzione", "Velocita: "+str(int(download_thread.get_speed()/1024))+" KB/s "+str(download_thread.get_actual_size())+"MB de "+str(download_thread.get_total_size())+"MB" , "Tiempo restante: "+str( downloadtools.sec_to_hms(download_thread.get_remaining_time())) )
+            dialog.update( download_thread.get_progress() , "Chiudi questa finestra per avviare la riproduzione", "Velocita: "+str(int(download_thread.get_speed()/1024))+" KB/s "+str(download_thread.get_actual_size())+"MB de "+str(download_thread.get_total_size())+"MB" , "Tempo restante: "+str( downloadtools.sec_to_hms(download_thread.get_remaining_time())) )
             xbmc.sleep(1000)
 
             if dialog.iscanceled():
