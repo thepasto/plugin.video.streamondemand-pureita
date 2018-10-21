@@ -26,26 +26,31 @@ def test_video_exists(page_url):
     return True, ""
 
 
+
+
+
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("url=" + page_url)
     pfxfx = ""
     data = httptools.downloadpage(page_url, cookies=False).data
-    data = data.replace("\n","")
-    cgi_counter = scrapertools.find_single_match(data, """(?is)src=.(https://www.flashx.cc/counter.cgi.*?[^(?:'|")]+)""")
-    cgi_counter = cgi_counter.replace("%0A","").replace("%22","")
-    playnow = scrapertools.find_single_match(data, 'https://www.flashx.co/dl[^"]+')
+    data = data.replace("\n", "")
+    cgi_counter = scrapertools.find_single_match(data,
+                                                 """(?is)src=.(https://www.flashx.../counter.cgi.*?[^(?:'|")]+)""")
+    cgi_counter = cgi_counter.replace("%0A", "").replace("%22", "")
+    playnow = scrapertools.find_single_match(data, 'https://www.flashx.../dl[^"]+')
     # Para obtener el f y el fxfx
-    js_fxfx = "https://www." + scrapertools.find_single_match(data.replace("//","/"), """(?is)(flashx.cc/js\w+/c\w+.*?[^(?:'|")]+)""")
+    js_fxfx = "https://www." + scrapertools.find_single_match(data.replace("//", "/"),
+                                                              """(?is)(flashx.../js\w+/c\w+.*?[^(?:'|")]+)""")
     data_fxfx = httptools.downloadpage(js_fxfx).data
-    mfxfx = scrapertools.find_single_match(data_fxfx, 'get.*?({.*?})').replace("'","").replace(" ","")
+    mfxfx = scrapertools.find_single_match(data_fxfx, 'get.*?({.*?})').replace("'", "").replace(" ", "")
     matches = scrapertools.find_multiple_matches(mfxfx, '(\w+):(\w+)')
     for f, v in matches:
         pfxfx += f + "=" + v + "&"
-    logger.info("mfxfxfx1= %s" %js_fxfx)
-    logger.info("mfxfxfx2= %s" %pfxfx)
+    logger.info("mfxfxfx1= %s" % js_fxfx)
+    logger.info("mfxfxfx2= %s" % pfxfx)
     if pfxfx == "":
-        pfxfx = "ss=yes&f=fail&fxfx=6"
-    coding_url = 'https://www.flashx.co/flashx.php?%s' %pfxfx
+        pfxfx = "f=fail&fxfx=6"
+    coding_url = 'https://www.flashx.co/flashx.php?%s' % pfxfx
     # {f: 'y', fxfx: '6'}
     bloque = scrapertools.find_single_match(data, '(?s)Form method="POST" action(.*?)span')
     flashx_id = scrapertools.find_single_match(bloque, 'name="id" value="([^"]+)"')
@@ -76,7 +81,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         # LICENSE GPL3, de alfa-addon: https://github.com/alfa-addon/ ES OBLIGATORIO AÑADIR ESTAS LÍNEAS
         except:
             pass
-    
+
     matches = scrapertools.find_multiple_matches(data, "(eval\(function\(p,a,c,k.*?)\s+</script>")
     video_urls = []
     for match in matches:
@@ -116,13 +121,27 @@ def find_videos(data):
 
     # http://flashx.tv/z3nnqbspjyne
     # http://www.flashx.tv/embed-li5ydvxhg514.html
-    patronvideos = 'flashx.(?:tv|pw|to|ws|sx|bz)/(?:embed.php\\?c=|embed-|playvid-|)([A-z0-9]+)'
+    patronvideos = 'flashx.(?:tv|pw|ws|sx|to)/(?:embed.php\\?c=|embed-|playvid-|)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:
         titulo = "[flashx]"
         url = "https://www.flashx.tv/%s.html" % match
+        if url not in encontrados:
+            logger.info("  url=" + url)
+            devuelve.append([titulo, url, 'flashx'])
+            encontrados.add(url)
+        else:
+            logger.info("  url duplicada=" + url)
+			
+    patronvideos = 'flashx.co/([A-z0-9]+)\\.jsp'
+    logger.info("#" + patronvideos + "#")
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    for match in matches:
+        titulo = "[flashx]"
+        url = "https://www.flashx.co/\\%s.jsp" % match
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'flashx'])

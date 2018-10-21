@@ -17,52 +17,34 @@ from core import config
 from core import logger
 from core import scrapertools
 
-headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0']]
+headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0']]
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("[wstream.py] get_video_url(page_url='%s')" % page_url)
+    logger.info("[wstream.py] url=" + page_url)
     video_urls = []
-    #vid_urls = []
-    
-    data = httptools.downloadpage(page_url, headers=headers).data
 
-    xbmc.sleep(4 * 1000)
+    data = scrapertools.cache_page(page_url, headers=headers)
+    vid = scrapertools.find_multiple_matches(data,'download_video.*?>.*?<.*?<td>([^\,,\s]+)')
 
-    patronsources='sources\:\s*\[["\']\s*(https?:\/\/[^>]+?wstream.*?)\s*["\']\]'
-    video_url = scrapertools.find_single_match(data, patronsources)
-    if not video_url:
-        data_pack = scrapertools.find_single_match(data, "<\/div>\s*[^>]+>(eval.function.p,a,c,k,e,.*?)\s*<\/script>")
+    headers.append(['Referer', page_url])
+    post_data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+    if post_data != "":
+       from lib import jsunpack
+       data = jsunpack.unpack(post_data)
 
-        if data_pack != "":
-            data_pack = jsunpack.unpack(data_pack)
-        video_url = scrapertools.find_single_match(data_pack, patronsources)
+    media_url = scrapertools.find_multiple_matches(data, '(http.*?\.mp4)')
+    _headers = urllib.urlencode(dict(headers))
+    i=0
 
-    if video_url:
-        video_url = re.sub('"','',video_url)
-        video_url = re.split(",",video_url)
-
-    #vid_res=re.compile('download_video.*?>(.*?)<.*?<td>([^\,,\s]+)').findall(data)
-    #if vid_res[0][0]=='Original' and len(vid_res)==(len(video_url)+1):  del vid_res[0]
-    
-    #i=0
-    #for v in video_url:
-        #if vid_res[i][0]: vres = vid_res[i][0] + " (" + vid_res[i][1] +")"
-        #else: vres = ''
-        #vid_urls.append([v,vres])
-        #i=i+1
-
-    #if vid_urls:
-        #for v in vid_urls:
-            #video_urls.append([v[1] + " mp4 [wstream]", v[0] + '|' + urllib.urlencode(dict(headers))])
-			
-    for v in video_url:
-        video_urls.append([" mp4 [wstream]", v + '|' + urllib.urlencode(dict(headers))])
+    for media_url in media_url:
+        video_urls.append([vid[i] + " mp4 [wstream] ", media_url + '|' + _headers])
+        i=i+1
 
     for video_url in video_urls:
         logger.info("[wstream.py] %s - %s" % (video_url[0], video_url[1]))
 
-    return video_urls
+    return video_urls	
 
 		
 	
