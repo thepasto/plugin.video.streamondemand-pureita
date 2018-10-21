@@ -327,7 +327,7 @@ def pelis_new(item):
     bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
 
     patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
-    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)<span'
+    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)(?:</a>|)(?:<span|)'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
@@ -586,9 +586,9 @@ def peliculas_date(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 	 
     bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
-				 				 
+	 				 
     patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
-    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)<span'
+    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)(?:</a>|)(?:<span|)'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedthumbnail, scrapedurl, scrapedtitle  in matches:
@@ -726,8 +726,8 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
@@ -767,13 +767,14 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
                  plot="[COLOR orange]" + item.fulltitle + "[/COLOR]  " + item.plot,
                  folder=True))
+				
 			 
     return itemlist
 	
@@ -796,8 +797,8 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 fulltitle=scrapedtitle,
-                 show=item.title,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title,
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
@@ -813,8 +814,8 @@ def findvideos(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
-                 fulltitle=scrapedtitle,
-                 show=item.title,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] " + item.title,
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
@@ -836,13 +837,15 @@ def play(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join(['[COLOR orange][B]' + videoitem.title + ' [COLOR azure][B]- ' + item.show + '[/B][/COLOR]'])
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.show])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
 
     return itemlist
+
 
 # =============================================================================================================================================
 # =============================================================================================================================================
