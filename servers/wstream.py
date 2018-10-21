@@ -28,7 +28,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     vid = scrapertools.find_multiple_matches(data,'download_video.*?>.*?<.*?<td>([^\,,\s]+)')
 
     headers.append(['Referer', page_url])
-    post_data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+    post_data = scrapertools.find_single_match(data, "</div>\s*<script type='text/javascript'>(eval.function.p,a,c,k,e,.*?)\s*</script>")
     if post_data != "":
        from lib import jsunpack
        data = jsunpack.unpack(post_data)
