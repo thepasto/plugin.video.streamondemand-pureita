@@ -349,7 +349,7 @@ def channels_list():
     #itemlist.append( Item(title="[COLOR azure]LeserieTV[/COLOR]"    , channel="leserietv"       , language="IT"    , category="B,S"     , type="generic" ))
     #itemlist.append( Item(title="[COLOR azure]LinkStreaming[/COLOR]"    , channel="linkstreaming"       , language="IT"    , category="B,F,S"     , type="generic" ))	
     itemlist.append( Item( title="[COLOR azure]Majintoon[/COLOR]"      , channel="majintoon"           , language="IT"    , category="A,S"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Megavideo One[/COLOR]"        , channel="megavideo_one"       , language="IT"    , category="F"       , type="generic"	))
+    #itemlist.append( Item( title="[COLOR azure]Megavideo One[/COLOR]"        , channel="megavideo_one"       , language="IT"    , category="F"       , type="generic"	))
     #itemlist.append( Item( title="[COLOR azure]Misterstreaming[/COLOR]"        , channel="misterstreaming"       , language="IT"    , category="F,S"       , type="generic"	))
     itemlist.append( Item(title="[COLOR azure]MondoLunaticoHD[/COLOR]"    , channel="mondolunatico_hd"       , language="IT"    , category="F"     , type="generic" ))
     itemlist.append( Item(title="[COLOR azure]MondoLunatico[/COLOR]"    , channel="mondolunatico"       , language="IT"    , category="F"     , type="generic" ))
