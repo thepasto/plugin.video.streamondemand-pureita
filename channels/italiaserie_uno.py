@@ -108,6 +108,7 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         scrapedplot=""
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -146,14 +147,30 @@ def episodes(item):
             Item(channel=__channel__,
                  action="findvideos",
                  title=scrapedtitle,
-                 fulltitle=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  url=scrapedurl,
-                 plot=item.plot,
+                 plot="[COLOR orange]" + item.title + "[/COLOR]" + item.plot,
                  thumbnail=item.thumbnail,
                  folder=True))
     
     return itemlist
 
+# ==================================================================================================================================================
 
+def findvideos(item):
+    logger.info()
+    data = httptools.downloadpage(item.url).data
+    
+    itemlist = servertools.find_video_items(data=data)
 
+    for videoitem in itemlist:
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+    return itemlist
 
