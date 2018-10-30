@@ -1373,8 +1373,8 @@
     <id>vidlox</id>
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/servers/vidlox.py</update_url>
     <active>true</active>
-    <version>04</version>
-    <date>02/09/2018</date>
+    <version>05</version>
+    <date>29/10/2018</date>
     <changes>Temporary Fix</changes>
 </server>
 

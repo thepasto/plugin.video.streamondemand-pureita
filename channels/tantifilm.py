@@ -756,21 +756,24 @@ def findvideos(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for option, scrapedurl in matches:
-        scrapedtitle=scrapertools.find_single_match(data, '<li\s*id="wpwm-tabmob[^>]+><a href="#wpwm-tabs-%s">([^<]+)</a></li>' % option)
-        if "protectlink" in data:
+
+        if "protectlink" in scrapedurl:
           scrapedurl=scrapertools.find_single_match(data, '<div\s*id="wpwm-tabs-%s">\s*<ul class="wpwm-movie-links">\s*[^>]+>\s*[^>]+>\s*<iframe src="[^\/]+\/\/[^=]+=([^"]+)"[^>]+>' % option)
           scrapedurl=''.join(scrapedurl.split())
           scrapedurl=scrapedurl.decode("base64")
+
+        scrapedtitle=scrapertools.find_single_match(data, '<li\s*id="wpwm-tabmob[^>]+><a href="#wpwm-tabs-%s">([^<]+)</a></li>' % option)
         if scrapedtitle=="-":
            continue
         if "Player" in scrapedtitle:
            return episodios(item)
+
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[COLOR azure][[COLOR orange]" + scrapedtitle.strip() + "[/COLOR]] - " + item.title,
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title,
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
