@@ -289,7 +289,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Corsaro Nero[/COLOR]"        , channel="corsaronero"       , language="IT"    , category="T"       , type="generic"	))
     itemlist.append( Item( title="[COLOR azure]Cucinarefacile[/COLOR]"        , channel="cucinarefacile"       , language="IT"    , category="D"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Darkstream[/COLOR]"        , channel="darkstream"       , language="IT"    , category="F"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]documentari_dsda[/COLOR]"  , channel="Documentari_DSDA"           , language="IT"    , category="D"   , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Documentari_DSDA[/COLOR]"  , channel="documentari_dsda"           , language="IT"    , category="D"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]DocumentariStreamingDB[/COLOR]"  , channel="documentaristreamingdb"           , language="IT"    , category="D"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]DreamSub[/COLOR]"      , channel="dreamsub"           , language="IT"    , category="S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Effetto Lunatico[/COLOR]"       , channel="effettolunatico"           , language="IT"    , category="F"    , type="generic"))
