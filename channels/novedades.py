@@ -201,9 +201,9 @@ def documentales(item):
 
     itemlist = []
 
-    import documentaristreamingdb
-    item.url = "http://www.documentari-streaming-db.com/?searchtype=movie&post_type=movie&sl=lasts&s="
-    itemlist.extend(documentaristreamingdb.peliculas(item))
+    import documentari_dsda
+    item.url = "https://documentari-streaming-da.com/?searchtype=movie&post_type=movie&sl=lasts&s="
+    itemlist.extend(documentari_dsda.peliculas_tv(item))
 
     sorted_itemlist = []
 
