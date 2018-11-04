@@ -6,17 +6,17 @@
 # ------------------------------------------------------------
 
 import re
+import urlparse
 
+from core import config, httptools
 from core import logger
-from core import httptools
-from core import config
-from core import servertools
 from core import scrapertools
+from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
 
 __channel__ = "filmstreamingita"
-host = "http://filmstreamingita.xyz"
+host = "http://filmstreamingita.live"
 headers = [['Referer', host]]
 
 
@@ -45,7 +45,7 @@ def mainlist(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def search(item, texto):
     logger.info("streamondemand-pureita.filmstreamingita search")
@@ -59,7 +59,7 @@ def search(item, texto):
             logger.error("%s" % line)
         return []
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def categorie(item):
     logger.info("streamondemand-pureita.filmstreamingita categorie")
@@ -82,7 +82,7 @@ def categorie(item):
 
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
 def peliculas(item):
     logger.info("streamondemand-pureita.filmstreamingita peliculas")
@@ -143,17 +143,17 @@ def peliculas(item):
                  folder=True))
     return itemlist
 
-# ==============================================================================================================================================================================
+# ==================================================================================================================================================
 
-def findvideos(item):
+def findvideos1(item):
     logger.info("streamondemand-pureita.filmstreamingita findvideos")
     data = httptools.downloadpage(item.url, headers=headers).data 
     
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        server = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-        videoitem.title = "".join(['[COLOR orange][B]' + server + ' [/COLOR][/B]-' + item.show])
+        server = re.sub(r'[-\[\]\s]+', '', videoitem.title).capitalize()
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + server + '[/COLOR]] -' + item.show])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
@@ -161,6 +161,62 @@ def findvideos(item):
         videoitem.channel = __channel__
     return itemlist
 
+# ==================================================================================================================================================
+
+def findvideos(item):
+    logger.info("streamondemand-pureita.filmstreamingita peliculas")
+    itemlist = []
+
+    data = httptools.downloadpage(item.url, headers=headers).data 
+    blocco = scrapertools.get_match(data, r'Streaming<\/strong><\/p>\s*<p>(.*?)\s*<\/br>')
+    patron = r'<a href="([^"]+)" target="_blank" class="external" rel="nofollow">([^<]+)<\/a>'
+
+    matches = re.compile(patron, re.DOTALL).findall(blocco)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapedtitle.replace("’", "'")
+        scrapedthumbnail = ""
+        scrapedplot = ""
+
+        scrapedplot = ""
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 contentType="movie",
+                 title="[[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title,
+                 fulltitle=item.fulltitle,
+                 url=scrapedurl,
+                 extra="movie",
+                 plot=item.plot,
+                 show=item.show,
+                 thumbnail=item.thumbnail,
+                 folder=True))
+
+    return itemlist
+
+# ==================================================================================================================================================
+	
+def play(item):
+    itemlist=[]
+
+    data = item.url
+    while 'vcrypt' in item.url:
+        item.url = httptools.downloadpage(item.url, only_headers=True, follow_redirects=False).headers.get("location")
+        data = item.url
+
+    logger.debug(data)
+
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = item.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
+
+    return itemlist
+	
 # ==============================================================================================================================================================================
 
     
