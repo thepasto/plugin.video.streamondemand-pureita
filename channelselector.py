@@ -246,10 +246,10 @@ def channels_list():
     if config.get_setting("personalchannel5")=="true":
         itemlist.append( Item( title=config.get_setting("personalchannelname5") , channel="personal5" , language="" , category="" , type="generic"  ))
     #itemlist.append( Item( title="[COLOR red]SkyStreaming[/COLOR]"        , channel="iptv"       , language="IT"    , category="B,F"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]AltaDefinizione_Video[/COLOR]" , channel="altadefinizione01_video" , language="IT" , category="B,F" , type="generic"))
+    #itemlist.append( Item( title="[COLOR azure]AltaDefinizione_Video[/COLOR]" , channel="altadefinizione01_video" , language="IT" , category="B,F" , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]AltaDefinizione01_zone[/COLOR]"      , channel="altadefinizione01_zone"           , language="IT"    , category="F,B"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01_biz[/COLOR]"      , channel="altadefinizione01_biz"           , language="IT"    , category="F,S,VOS"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione_HD[/COLOR]"      , channel="altadefinizione_hd"           , language="IT"    , category="F"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]AltaDefinizione01_zone[/COLOR]"      , channel="altadefinizione01_zone"           , language="IT"    , category="F,B"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]AltaDefinizione_due[/COLOR]"      , channel="altadefinizione_due"           , language="IT"    , category="B,F"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]AltadefinizioneHD/COLOR]" , channel="altadefinizionehd" , language="IT" , category="F" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Altadefinizione.club[/COLOR]" , channel="altadefinizioneclub" , language="IT" , category="F,S" , type="generic"))
