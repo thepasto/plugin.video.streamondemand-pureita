@@ -123,12 +123,16 @@ def peliculas(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" class="locandina"\s*[^h]+([^)]+).">\s*<div class="voto">(.*?)<\/div>\s*<div class="titolo">([^<]+)<\/div>'
+    patron = '<a href="([^"]+)" title="[^"]+" alt="[^"]+" class="locandina"\s*'
+    patron += 'style[^h]+([^\)]+)[^>]+>(?:<div class="voto">([^<]+)|)[^=]+="titolo">([^<]+)<'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, voto, scrapedtitle in matches:
         scrapedplot = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle=scrapedtitle.replace("[", "(").replace("]", ")")
+        if voto:
+           voto=" ([COLOR yellow]" + voto + "[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
@@ -136,7 +140,7 @@ def peliculas(item):
                  contentType="movie",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + voto + "[/COLOR])",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + voto,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -169,19 +173,21 @@ def peliculas_tv(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" class="locandina"\s*[^h]+([^)]+).">\s*<div class="voto">(.*?)<\/div>\s*<div class="titolo">([^<]+)<\/div>'
+    patron = '<a href="([^"]+)" title="[^"]+" alt="[^"]+" class="locandina" style[^h]+([^\)]+)[^>]+>[^>]+>([^<]+)<\/div><div class[^>]+>([^<]+)'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, voto, scrapedtitle in matches:
         scrapedplot = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        if voto:
+           voto=" ([COLOR yellow]" + voto + "[/COLOR])"
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  extra=item.extra,
                  action="episodios",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + " ([COLOR yellow]" + voto + "[/COLOR])",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]" + voto,
                  url=scrapedurl.strip(),
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -220,7 +226,7 @@ def peliculas_update(item):
     data = httptools.downloadpage(item.url, headers=headers).data
 
     # Extrae las entradas (carpetas)
-    patron = '<a href="([^"]+)" class="locandina"\s*[^h]+([^)]+)."><div class="titolo">([^<]+)<\/div><div class="genere">([^<]+)<\/div>'
+    patron = '<a href="([^"]+)" title="[^"]+" alt="[^"]+" class="locandina" style[^h]+([^\)]+)[^>]+>[^>]+>([^<]+)<\/div><div class[^>]+>([^<]+)'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
 
@@ -282,7 +288,7 @@ def episodios(item):
         if "Stagione" in scrapedtitle:
           scrapedtitle = "[COLOR yellow]" + scrapedtitle + "[/COLOR]" 			 
         scrapedtitle = scrapedtitle.replace("p>", "").replace("/span>", "")
-        scrapedtitle = scrapedtitle.replace("-", "").replace("–", "")
+        scrapedtitle = scrapedtitle.replace("-", "").replace("–", "").replace("/a>", "").replace("br />", "")
         scrapedtitle = scrapedtitle.replace("/strong>", "").replace("</strong></span>", "")
 
         if "Stagione Completa" in scrapedtitle or "STAGIONE COMPLETA" in scrapedtitle:
@@ -299,8 +305,8 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios_all" if not "lipwatching" in blocco else "play",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
@@ -356,8 +362,8 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios_all" if not "lipwatching" in blocco or ")" in scrapedtitle else "play",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle + " - " + scrapedtitle,
+                 show=item.show + " - " + scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=puntata,
                  thumbnail=item.thumbnail,
@@ -380,7 +386,7 @@ def episodios_all(item):
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedserver + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedserver + "[/COLOR]] - " + item.title + "[/COLOR]",
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -412,7 +418,7 @@ def findvideos_movie(item):
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title + "[/COLOR]",
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -431,7 +437,7 @@ def findvideos_movie(item):
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[COLOR azure]" + item.title + " [[COLOR orange]" + scrapedtitle + "[/COLOR]]",
+                 title="[COLOR azure][[COLOR orange]" + scrapedtitle + "[/COLOR]] - " + item.title + "[/COLOR]",
                  url=scrapedurl.strip(),
                  thumbnail=item.thumbnail,
                  plot=item.plot,
@@ -458,7 +464,8 @@ def play(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = item.title
+        servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+        videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.fulltitle])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail

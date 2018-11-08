@@ -89,7 +89,7 @@ def categorie(item):
     logger.info("[StreamOnDemand-PureITA filmsenzalimiti_blue] categorie")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
     blocco = scrapertools.get_match(data, r'<li class="cat-item cat-item-1"><a href="[^"]+">Film</a>(.*?)</ul>')
     patron = r'<li class=".*?"><a href="([^"]+)">([^<]+)</a>'
     matches = re.compile(patron, re.DOTALL).findall(blocco)
@@ -113,7 +113,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = '<div class="col-mt-5 postsh">\s*<div class="poster-media-card">\s*'
     patron += '<a href="([^"]+)" title="([^"]+)">\s*<div class="poster">\s*<span class="rating">\s*'
@@ -208,7 +208,7 @@ def peliculas_search(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = '<div class="list-score">(.*?)</div>\s*<div class=".*?">\s*'
     patron += '<div class="row">\s*<a href="([^"]+)" title="([^"]+)">\s*'
@@ -249,13 +249,13 @@ def findvideos(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
+    data = scrapertools.anti_cloudflare(item.url).replace('\n', '')
 
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)" allowfullscreen frameborder="0">'
     url = scrapertools.find_single_match(data, patron).replace("?italiafilm", "")
 
     if 'hdpass' in url:
-        data = scrapertools.cache_page(url, headers=headers)
+        data = scrapertools.cache_page(url)
 
         start = data.find('<div class="row mobileRes">')
         end = data.find('<div id="playerFront">', start)

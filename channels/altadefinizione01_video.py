@@ -15,6 +15,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
+from core import cloudflare
 
 __channel__ = "altadefinizione01_video"
 host = "https://altadefinizione01.app"
@@ -74,7 +75,7 @@ def genere(item):
     logger.info("[pureita altadefinizione01_video] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = scrapertools.anti_cloudflare(item.url)
 
     patron = '<a href[^>]+>Film</a>(.*?)</div>'
     data = scrapertools.find_single_match(data, patron)
@@ -102,7 +103,7 @@ def peliculas_new(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 	
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<section class="showpeliculas col-mt-8">\s*<h\d+>[^<]+</h\d+>(.*?)<aside')
@@ -166,7 +167,7 @@ def peliculas_search(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = '<div class="list-score">(.*?)</div>\s*<div class="col-xs-2">\s*<div class="row">\s*'
     patron += '<a href="([^"]+)" title="[^>]+">\s*<img src="([^"]+)" title="([^<]+)" />\s*</a>'
@@ -209,13 +210,13 @@ def findvideos(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
+    data = scrapertools.anti_cloudflare(item.url).replace('\n', '')
     patron = r'</ul><br>\s*<p><iframe width=".*?" height=".*?" src="([^"]+)" allowfullscreen frameborder=".*?"></iframe></p>'
     url = scrapertools.find_single_match(data, patron).replace("?alta", "")
     url = url.replace("&download=1", "")
 
     if 'hdpass' in url:
-        data = scrapertools.cache_page(url, headers=headers)
+        data = scrapertools.cache_page(url)
 
         start = data.find('<div class="row mobileRes">')
         end = data.find('<div id="playerFront">', start)
@@ -230,13 +231,13 @@ def findvideos(item):
         urls = []
         for res_url, res_video in scrapertools.find_multiple_matches(res, '<option.*?value="([^"]+?)">([^<]+?)</option>'):
 
-            data = scrapertools.cache_page(urlparse.urljoin(url, res_url), headers=headers).replace('\n', '')
+            data = scrapertools.cache_page(urlparse.urljoin(url, res_url)).replace('\n', '')
 
             mir = scrapertools.find_single_match(data, patron_mir)
 
             for mir_url in scrapertools.find_multiple_matches(mir, '<option.*?value="([^"]+?)">[^<]+?</value>'):
 
-                data = scrapertools.cache_page(urlparse.urljoin(url, mir_url), headers=headers).replace('\n', '')
+                data = scrapertools.cache_page(urlparse.urljoin(url, mir_url)).replace('\n', '')
 
                 for media_label, media_url in re.compile(patron_media).findall(data):
                     urls.append(url_decode(media_url))
@@ -244,7 +245,7 @@ def findvideos(item):
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
             servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
-            videoitem.title = "[[COLOR orange]" + servername.capitalize() + "[/COLOR]] - " + item.title
+            videoitem.title = "[COLOR azure][[COLOR orange]" + servername.capitalize() + "[/COLOR]] - " + item.title
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show

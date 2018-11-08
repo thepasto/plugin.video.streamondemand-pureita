@@ -83,7 +83,7 @@ def genere(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
     patron = '<li class="cat-item cat-item-\d+"><a href="([^"]+)" >([^<]+)</a> <span>([^<]+)</span>'
@@ -108,7 +108,7 @@ def genere_year(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
     patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
@@ -133,7 +133,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 	
     patron = '<a href="([^"]+)">\s*<div class="image">\s*<img src="([^"]+)" alt="([^"]+)" width[^>]+>\s*<span class="player">'
     patron += '</span>\s*<span class="imdb"><b>[^>]+></b></b>([^<]+)</span>\s*[^>]+>\s*[^>]+>\s*[^>]+>\s*'
@@ -175,7 +175,7 @@ def peliculas_new(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 	
     patron = '<a href="([^"]+)"><img src="([^"]+)" alt="([^<]+)" width[^>]+></a>\s*'
     patron += '<span class="imdb"><b class="icon-star"></b>([^<]+)</span>\s*</div>\s*'
@@ -206,7 +206,7 @@ def peliculas_new(item):
 		
 def findvideos(item):
     logger.info("streamondemand-pureita [filmstreaming01  findvideos]")
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     itemlist = servertools.find_video_items(data=data)
 

@@ -129,7 +129,7 @@ def menugeneros(item):
     logger.info("[streamondemand-pureita cineblog01] menugeneros")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select>')
@@ -162,7 +162,7 @@ def menuhd(item):
     logger.info("[streamondemand-pureita cineblog01] menuhd")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select1"(.*?)</select>')
@@ -196,7 +196,7 @@ def menuanyos(item):
     logger.info("[streamondemand-pureita cineblog01] menuanyos")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select3"(.*?)</select>')
@@ -229,7 +229,7 @@ def menuhost(item):
     logger.info("[streamondemand-pureita cineblog01] menuanyos")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, 'Film per Host</option>(.*?)</select>')
@@ -266,7 +266,7 @@ def peliculas(item):
         item.url = sito
 
     # Descarga la página
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'
@@ -283,7 +283,7 @@ def peliculas(item):
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         scrapedtitle=scrapedtitle.replace("&#8211;", "-").replace("&#215;", "x").replace("[Sub-ITA]", "(Sub Ita)")
         scrapedtitle=scrapedtitle.replace("/", " - ").replace("&#8217;", "'").replace("&#8230;", "...").replace("ò", "o")
-        itemlist.append(
+        itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="findvid_film",
                  contentType="movie",
@@ -294,7 +294,8 @@ def peliculas(item):
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  extra=item.extra,
-                 viewmode="movie_with_plot"))
+                 viewmode="movie_with_plot",
+                 folder=True), tipo='movie'))
 
     # Next page mark
     try:
@@ -336,7 +337,7 @@ def peliculas_lastupdate(item):
 
     # Descarga la pagina
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Estrae i contenuti 
     patron = '<a href="([^"]+)">([^<]+)</a><br>-'
@@ -458,7 +459,7 @@ def serie_categorias(item):
     logger.info("[streamondemand-pureita cineblog01] serie_categorias")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, 'Serie-Tv per Genere</option>(.*?)</select>')
@@ -490,7 +491,7 @@ def series_az(item):
     logger.info("[streamondemand-pureita cineblog01] serie_categorias")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, 'Serie-Tv per Lettera</option>(.*?)</select>')
@@ -524,7 +525,7 @@ def serie_anyos(item):
     logger.info("[streamondemand-pureita cineblog01] serie_categorias")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, 'Serie-Tv per Anno</option>(.*?)</select>')
@@ -556,7 +557,7 @@ def serie_host(item):
     logger.info("[streamondemand-pureita cineblog01] serie_categorias")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, 'SerieTv per Host</option>(.*?)</select>')
@@ -590,10 +591,11 @@ def peliculas_serie(item):
 
 
     # Descarga la página
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patronvideos = '<div class="span4">\s*<a href="([^"]+)"><img src="([^"]+)".*?<div class="span8">.*?<h1>([^<]+)</h1></a>(.*?)<br><a'
+    patronvideos = '<div class="span4">\s*<a href="([^"]+)"><img src="([^"]+)".*?' \
+                   '<div class="span8">.*?<h1>([^<]+)</h1></a>(.*?)<br><a'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
 
     for match in matches:
@@ -602,14 +604,14 @@ def peliculas_serie(item):
         scrapedthumbnail = match.group(2) 
         scrapedplot = scrapertools.unescape(match.group(4))
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
-        if not host in scrapedthumbnail: 
+        if not "http" in scrapedthumbnail: 
             scrapedthumbnail=host+scrapedthumbnail
         if scrapedtitle.startswith(("Richieste Serie TV")):
             continue
         if scrapedtitle.startswith(("Aggiornamento Quotidiano Serie TV")):
             continue
 
-        itemlist.append(
+        itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="season_serietv",
                  fulltitle=scrapedtitle,
@@ -619,11 +621,11 @@ def peliculas_serie(item):
                  thumbnail=scrapedthumbnail,
                  extra=item.extra,
                  plot=scrapedplot,
-                 folder=True))
+                 folder=True), tipo='tv'))
 
     # Put the next page mark
     try:
-        next_page = scrapertools.get_match(data, "<link rel='next' href='([^']+)'")
+        next_page = scrapertools.get_match(data, 'class="active[^>]+><a href[^>]+>\d+<\/a><\/li>\s*<li><a href="([^"]+)"')
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas_serie",
@@ -650,7 +652,7 @@ def peliculas_update(item):
 
     # Descarga la pagina
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     # Estrae i contenuti 
     patron = '<p><em>.*?<a href="([^"]+)" target="_blank">([^|]+)\s*([^"]+)<\/a><\/em>'
@@ -712,7 +714,7 @@ def season_serietv(item):
     itemlist = []
 
     # Descarga la página
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
     data = scrapertools.decodeHtmlentities(data)
     data = scrapertools.get_match(data, '<td bgcolor="#ECEAE1">(.*?)</table>')
 
@@ -842,7 +844,7 @@ def findvid_film(item):
     itemlist = []
 
     # Descarga la página
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
     data = scrapertools.decodeHtmlentities(data)
 
     # Extract the quality format

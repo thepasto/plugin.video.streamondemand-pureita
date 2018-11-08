@@ -83,7 +83,7 @@ def categorias(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
     bloque = scrapertools.get_match(data, '<h2>Genere</h2>(.*?)</ul>')
 
     # Extrae las entradas (carpetas)
@@ -128,7 +128,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
     patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*([^<]+).*?'
@@ -189,7 +189,7 @@ def peliculas_tmdb(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
     patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*([^<]+).*?'
@@ -251,7 +251,7 @@ def peliculas_new(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
     patron = '<img src="([^"]+)">\s*<div class="mepo">\s*[^>]+>([^<]+)</span></div>\s*'
@@ -304,7 +304,7 @@ def peliculas_update(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
     bloque = scrapertools.get_match(data, '<h2>Ultime Uscite</h2>(.*?)<h2>Films</h2>')	
 	
     patron = '<img src="([^"]+)" alt="([^<]+)"><div class="rating"><span class="icon-star2">'
@@ -347,7 +347,7 @@ def peliculas_tv(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
     patron = '<img src="([^"]+)" alt="([^<]+)">\s*<div class="mepo"><span class="quality">\s*([^<]+).*?'
@@ -407,7 +407,7 @@ def peliculas_new_tv(item):
     itemlist = []
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     # Extrae las entradas (carpetas)
     patron = '<img src="([^"]+)" alt="[^>]+">.*?<div class="rating"><span class="icon-star2">'
@@ -466,7 +466,7 @@ def peliculas_search(item):
     itemlist = []
 
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
     #bloque = scrapertools.get_match(data, '<h1>Risultati.*?</h1>(.*?)<div class="sidebar scrolling">')	
 	
     patron = '<a href="([^"]+)">\s*<img src="([^"]+)"\s*alt="([^<]+)"\s*\/>'
@@ -497,7 +497,7 @@ def episodios(item):
     logger.info("streamondemand-pureita streaminghd episodios")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     patron = 'src="([^"]+)"></a></div><div class="numerando">([^<]+)'
     patron += '</div><div class="episodiotitle">\s*<a\s*href="([^"]+)">([^<]+)</a>'
