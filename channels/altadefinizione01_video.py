@@ -15,7 +15,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 from core.tmdb import infoSod
-from core import cloudflare
+
 
 __channel__ = "altadefinizione01_video"
 host = "https://altadefinizione01.app"
