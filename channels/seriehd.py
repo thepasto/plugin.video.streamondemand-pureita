@@ -75,7 +75,7 @@ def sottomenu(item):
     logger.info("[seriehd.py] sottomenu")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = '<a href="([^"]+)">([^<]+)</a>'
 
@@ -102,7 +102,7 @@ def fichas(item):
     logger.info("[seriehd.py] fichas")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = '<h2>(.*?)</h2>\s*'
     patron += '<img src="([^"]+)" alt="[^"]*" />\s*'
@@ -113,6 +113,7 @@ def fichas(item):
     for scrapedtitle, scrapedthumbnail, scrapedurl in matches:
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        scrapedplot=""
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -120,6 +121,7 @@ def fichas(item):
                  fulltitle=scrapedtitle,
                  url=scrapedurl,
                  show=scrapedtitle,
+                 plot=scrapedplot,
                  thumbnail=scrapedthumbnail), tipo='tv'))
 
     patron = "<span class='current'>\d+</span><a rel='nofollow' class='page larger' href='([^']+)'>\d+</a>"
@@ -140,7 +142,7 @@ def episodios(item):
     logger.info("[seriehd.py] episodios")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = scrapertools.cache_page(item.url)
 
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)" allowfullscreen frameborder="0">'
     url = scrapertools.find_single_match(data, patron).replace("?seriehd", "")
@@ -172,9 +174,9 @@ def episodios(item):
                      contentType="episode",
                      title=title + " - " + item.show,
                      url=episode_url,
-                     fulltitle=title,
-                     show=item.show,
-                     plot=item.plot,
+                     fulltitle=item.fulltitle + " - " + title,
+                     show=item.show + " - " + title,
+                     plot="[COLOR orange]" + item.fulltitle + "[/COLOR] " + item.plot,
                      thumbnail=item.thumbnail))
 
 
@@ -188,7 +190,7 @@ def findvideos(item):
     itemlist = []
 
     # Descarga la página
-    data = httptools.downloadpage(item.url, headers=headers).data.replace('\n', '')
+    data = httptools.downloadpage(item.url).data.replace('\n', '')
 
     patron = r'<iframe id="iframeVid" width=".+?" height=".+?" src="([^"]+)" allowfullscreen'
     url = scrapertools.find_single_match(data, patron)
@@ -224,7 +226,8 @@ def findvideos(item):
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
-            videoitem.title = item.title + "[COLOR orange]" + videoitem.title + "[/COLOR]"
+            servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+            videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.fulltitle])
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
