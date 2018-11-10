@@ -51,8 +51,31 @@ def force_creation_advancedsettings(item):
     # ======================================
     # Impostazioni
     # ======================================
-    ram = ['512 Mega', '1 Gb', '2 Gb']
-    opt = ['20971520','157286400', '157286400']
+	
+	#Following the official wiki pages http://kodi.wiki/view/Advancedsettings.xml#Network_settings
+	#	and http://kodi.wiki/view/HOW-TO%3AModify_the_video_cache
+	
+	# <network>
+	  # <curlclienttimeout>10</curlclienttimeout>  <!-- Timeout in seconds for libcurl (http/ftp) connections -->
+	  # <curllowspeedtime>20</curllowspeedtime>  <!-- Time in seconds for libcurl to consider a connection lowspeed -->
+	  # <curlretries>2</curlretries>             <!-- Amount of retries for certain failed libcurl operations (e.g. timeout) -->
+	  # <httpproxyusername></httpproxyusername>  <!-- username for Basic Proxy Authentication -->
+	  # <httpproxypassword></httpproxypassword>  <!-- password for Basic Proxy Authentication -->
+	# </network>
+	# <cache>
+	  # <memorysize>0</memorysize>  <!-- number of bytes used for buffering streams in memory 
+	   # When set to 0 the cache will be written to disk instead of RAM -->
+	  # <buffermode>0</buffermode>  <!-- Choose what to buffer:
+		# 0) Buffer all internet filesystems (like "2" but additionally also ftp, webdav, etc.) (default)
+		# 1) Buffer all filesystems (including local)
+		# 2) Only buffer true internet filesystems (streams) (http, etc.)
+		# 3) No buffer -->
+	  # <readfactor>4.0</readfactor> <!-- this factor determines the max readrate in terms of readfactor * avg bitrate of a video file. 
+	# This can help on bad connections to keep the cache filled. It will also greatly speed up buffering. Default value 4.0. -->
+	# </cache>
+	
+    ram = ['512 Mb', '1 Gb', '2 Gb']
+    opt = ['20971520','139460608', '157286400']
     advancedsettings = xbmc.translatePath("special://userdata/advancedsettings.xml")
     default = '20971520'
     valore = default
@@ -65,33 +88,40 @@ def force_creation_advancedsettings(item):
         if risp ==1: valore = opt[1]
         if risp ==2: valore = opt[2]
         if risp ==-1: valore = default
-        file = '''<advancedsettings>
-                    <network>
-                        <buffermode>1</buffermode>
-                        <cachemembuffersize>''' + valore + '''</cachemembuffersize>
-                        <readbufferfactor>10</readbufferfactor>
-                        <autodetectpingtime>30</autodetectpingtime>
-                        <curlclienttimeout>60</curlclienttimeout>
-                        <curllowspeedtime>60</curllowspeedtime>
-                        <curlretries>2</curlretries>
-                        <disableipv6>true</disableipv6>
-                    </network>
-                    <gui>
-                        <algorithmdirtyregions>0</algorithmdirtyregions>
-                        <nofliptimeout>0</nofliptimeout>
-                    </gui>
-                        <playlistasfolders1>false</playlistasfolders1>
-                    <audio>
-                        <defaultplayer>dvdplayer</defaultplayer>
-                    </audio>
-                        <imageres>540</imageres>
-                        <fanartres>720</fanartres>
-                        <splash>false</splash>
-                        <handlemounting>0</handlemounting>
-                    <samba>
-                        <clienttimeout>30</clienttimeout>
-                    </samba>
-                </advancedsettings>'''
+        file = (
+				'<advancedsettings>'"\n"
+				'	<cache>'"\n"
+				'		<buffermode>1</buffermode>'"\n"
+				'		<memorysize>' + valore + '</memorysize>'"\n"
+				'		<readfactor>10</readfactor>'"\n"
+				'	</cache>'"\n"
+				'	<network>'"\n"
+				'		<autodetectpingtime>30</autodetectpingtime>'"\n"
+				'		<curlclienttimeout>60</curlclienttimeout>'"\n"
+				'		<curllowspeedtime>60</curllowspeedtime>'"\n"
+				'		<curlretries>2</curlretries>'"\n"
+				'		<disableipv6>true</disableipv6>	'"\n"
+				'	</network>'"\n"
+				'	<gui>'"\n"
+				'		<algorithmdirtyregions>0</algorithmdirtyregions>'"\n"
+				'		<nofliptimeout>0</nofliptimeout>'"\n"
+				'	</gui>'"\n"
+				'		<playlistasfolders1>false</playlistasfolders1>'"\n"
+				'	<audio>'"\n"
+				'		<defaultplayer>dvdplayer</defaultplayer>'"\n"
+				'	</audio>'"\n"
+				'		<imageres>540</imageres>'"\n"
+				'		<fanartres>720</fanartres>'"\n"
+				'		<splash>false</splash>'"\n"
+				'		<handlemounting>0</handlemounting>'"\n"
+				'	<samba>'"\n"
+				'		<clienttimeout>30</clienttimeout>'"\n"
+				'	</samba>'"\n"
+				'</advancedsettings>'"\n"
+		)
+				
+
+		  
         logger.info(file)
         salva = open(advancedsettings, "w")
         salva.write(file)
