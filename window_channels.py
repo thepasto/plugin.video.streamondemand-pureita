@@ -42,7 +42,7 @@ class ChannelWindow(xbmcgui.WindowXML):
     def __init__(self, xml_name, fallback_path, *args, **kwargs):
         plugintools.log("ChannelWindow.__init__ xml_name=" + xml_name + " fallback_path=" + fallback_path)
 
-        if xbmcgui.__version__ < "2.25":
+        if xbmcgui.__version__ < "2.26":
             if self.getResolution() > 0:
                 self.setCoordinateResolution(0)
 
