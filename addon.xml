@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.streamondemand-pureita-master"
     name="Stream On Demand PureITA"
-    version="5.4.8"
+    version="5.4.9"
     provider-name="PureITA Team">
  <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -19,7 +19,7 @@
       <screenshot>resources/images/themes/ss/3.jpg</screenshot>
       <screenshot>resources/images/themes/ss/4.jpg</screenshot>
     </assets>
-      <news>[B]Novita in questa versione:[/B]   interfaccia grafica Aggiornata,  Aggiornamento Canali,  Aggiornamento Server,  Fix Vari</news>
+      <news>[B]Novita in questa versione:[/B]   Compatibility with kodi 18, Fix and Update "Help", interfaccia grafica Aggiornata,  Aggiornamento Canali,  Aggiornamento Server,  Fix Vari,  Special (Thx thepasto) - (Thx Ghost) </news>
     <description lang="it">Browse web pages using Kodi</description>
     <summary lang="en">Browse web pages using Kodi</summary>
     <description lang="en">Browse web pages using Kodi</description>

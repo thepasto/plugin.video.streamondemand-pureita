@@ -1,3 +1,10 @@
+5.4.9
+-Compatibility with kodi 18 (Thx thepasto)
+-Fix and Update "Help" (Thx Ghost)
+-Aggiornamenti Canali 
+-Aggiornamenti server
+-Fix vari
+
 5.4.8
 -Configurazioni Aggiornate
 -Aggiornamento canali
