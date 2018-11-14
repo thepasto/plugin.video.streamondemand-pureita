@@ -10,6 +10,7 @@ import re
 import urlparse
 
 from core import httptools
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
@@ -23,7 +24,7 @@ __type__ = "generic"
 __title__ = "AltaDefinizioneclick"
 __language__ = "IT"
 
-host = "https://altadefinizione.fm"
+host = "https://altadefinizione.fm/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
@@ -109,7 +110,7 @@ def genere(item):
     logger.info("[streamondemand-pureita altadefinizione_pink ] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = scrapertools.anti_cloudflare(item.url)
 
     patron = '<ul class="listSubCat" id="Film">(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
@@ -135,7 +136,7 @@ def anno(item):
     logger.info("[streamondemand-pureita altadefinizione_pink ] genere")
     itemlist = []
 
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = scrapertools.anti_cloudflare(item.url)
 
     patron = '<ul class="listSubCat" id="Anno">(.*?)</div>'
     data = scrapertools.find_single_match(data, patron)
@@ -161,7 +162,7 @@ def qualita(item):
     logger.info("[streamondemand-pureita altadefinizione_pink ] genere")
     itemlist = []
 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 
     patron = '<ul class="listSubCat" id="Qualita">(.*?)</div>'
     data = scrapertools.find_single_match(data, patron)
@@ -189,7 +190,7 @@ def fichas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.anti_cloudflare(item.url, headers)
+    data = scrapertools.anti_cloudflare(item.url)
     # fix - calidad
     data = re.sub(
         r'<div class="wrapperImage"[^<]+<a',
@@ -234,9 +235,7 @@ def fichas(item):
         scraped_puntuacion = " ([COLOR yellow]" + scrapedpuntuacion + "[/COLOR])"
         title_f += scraped_calidad +  scraped_puntuacion
 
-        # ------------------------------------------------
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        # ------------------------------------------------
 
         itemlist.append(infoSod(
             Item(channel=__channel__,
@@ -273,7 +272,7 @@ def peliculas_list(item):
         p = int(p)
 		
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 	
     patron = '<li><strong><a href="([^"]+)">([^<]+)<\/a><\/strong><\/li>'
 
@@ -326,7 +325,7 @@ def peliculas_az(item):
         p = int(p)
 		
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
 	
     patron = '<li><strong><a href="([^"]+)">([^<]+)<\/a><\/strong><\/li>'
 
@@ -373,13 +372,13 @@ def findvideos(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.anti_cloudflare(item.url, headers).replace('\n', '')
+    data = httptools.downloadpage(item.url).data.replace('\n', '')
     patron = r'<iframe width=".+?" height=".+?" src="([^"]+)"></iframe>'
     url = scrapertools.find_single_match(data, patron).replace("?alta", "")
     url = url.replace("&download=1", "")
 
     if 'hdpass' in url:
-        data = scrapertools.cache_page(url, headers=headers)
+        data = httptools.downloadpage(url).data
 
         start = data.find('<div class="row mobileRes">')
         end = data.find('<div id="playerFront">', start)
@@ -394,13 +393,13 @@ def findvideos(item):
         urls = []
         for res_url, res_video in scrapertools.find_multiple_matches(res, '<option.*?value="([^"]+?)">([^<]+?)</option>'):
 
-            data = scrapertools.cache_page(urlparse.urljoin(url, res_url), headers=headers).replace('\n', '')
+            data = httptools.downloadpage(urlparse.urljoin(url, res_url)).data.replace('\n', '')
 
             mir = scrapertools.find_single_match(data, patron_mir)
 
             for mir_url in scrapertools.find_multiple_matches(mir, '<option.*?value="([^"]+?)">[^<]+?</value>'):
 
-                data = scrapertools.cache_page(urlparse.urljoin(url, mir_url), headers=headers).replace('\n', '')
+                data = httptools.downloadpage(urlparse.urljoin(url, mir_url)).data.replace('\n', '')
 
                 for media_label, media_url in re.compile(patron_media).findall(data):
                     urls.append(url_decode(media_url))
