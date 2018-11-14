@@ -26,12 +26,11 @@ __language__ = "IT"
 
 host = "https://altadefinizione.fm/"
 
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
-    ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', host],
-    ['Cache-Control', 'max-age=0']
+headers = [['User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0'],
+           ['Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'],
+           ['Accept-Encoding', 'gzip, deflate'],
+           ['Referer', host],
+           ['Cache-Control', 'max-age=0']
 ]
 
 
@@ -115,7 +114,7 @@ def genere(item):
     patron = '<ul class="listSubCat" id="Film">(.*?)</ul>'
     data = scrapertools.find_single_match(data, patron)
 
-    patron = '<li><a href="(.*?)">(.*?)</a></li>'
+    patron = '<li><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -162,7 +161,7 @@ def qualita(item):
     logger.info("[streamondemand-pureita altadefinizione_pink ] genere")
     itemlist = []
 
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.anti_cloudflare(item.url)
 
     patron = '<ul class="listSubCat" id="Qualita">(.*?)</div>'
     data = scrapertools.find_single_match(data, patron)
@@ -272,7 +271,7 @@ def peliculas_list(item):
         p = int(p)
 		
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.anti_cloudflare(item.url)
 	
     patron = '<li><strong><a href="([^"]+)">([^<]+)<\/a><\/strong><\/li>'
 
@@ -325,7 +324,7 @@ def peliculas_az(item):
         p = int(p)
 		
     # Descarga la pagina 
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.anti_cloudflare(item.url)
 	
     patron = '<li><strong><a href="([^"]+)">([^<]+)<\/a><\/strong><\/li>'
 
@@ -406,7 +405,8 @@ def findvideos(item):
 
         itemlist = servertools.find_video_items(data='\n'.join(urls))
         for videoitem in itemlist:
-            videoitem.title = item.title + "[COLOR orange]" + videoitem.title + "[/COLOR]"
+            servername = re.sub(r'[-\[\]\s]+', '', videoitem.title)
+            videoitem.title = "".join(['[COLOR azure][[COLOR orange]' + servername.capitalize() + '[/COLOR]] - ', item.title])
             videoitem.fulltitle = item.fulltitle
             videoitem.thumbnail = item.thumbnail
             videoitem.show = item.show
