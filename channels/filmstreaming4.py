@@ -223,7 +223,7 @@ def episodios(item):
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
             Item(channel=__channel__,
-                 action="findviodeos",
+                 action="findvideos",
                  title=scrapedtitle,
                  contentType="tv",
                  fulltitle=item.fulltitle + " - " + scrapedtitle,
@@ -325,7 +325,7 @@ def findvideos(item):
                  action="play",
                  fulltitle=item.fulltitle,
                  show=item.show,
-                 title="[[COLOR orange]" +scrapedtitle + "[/COLOR]] - " + item.fulltitle, 
+                 title="[[COLOR orange]" +scrapedtitle.capitalize() + "[/COLOR]] - " + item.fulltitle, 
                  url=scrapedurl,
                  thumbnail=item.thumbnail,
                  plot=item.plot,
