@@ -18,7 +18,7 @@ from core.tmdb import infoSod
 
 
 __channel__ = "tantifilm"
-host = "https://www.tantifilm.gratis"
+host = "https://www.tantifilm.video"
 
 headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
            ['Accept-Encoding', 'gzip, deflate'],
@@ -55,7 +55,7 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV - [COLOR orange]Ultimi Episodi[/COLOR]",
                      extra="series",
                      action="peliculas_series",
-                     url="%s/aggiornamenti-giornalieri-serie-tv-2/" % host,
+                     url="%s/aggiornamenti-giornalieri-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow][I]Cerca ...[/I][/COLOR]",
@@ -121,13 +121,13 @@ def menu_tvshow(item):
                      title="[COLOR azure]Serie TV - [COLOR orange]Aggiornamenti per data[/COLOR]",
                      extra="series",
                      action="cat_date",
-                     url="%s/aggiornamenti-giornalieri-serie-tv-2/" % host,
+                     url="%s/aggiornamenti-giornalieri-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Ultime Episodi[/COLOR]",
                      extra="anime",
                      action="peliculas_series",
-                     url="%s/aggiornamenti-giornalieri-serie-tv-2/" % host,
+                     url="%s/aggiornamenti-giornalieri-serie-tv/" % host,
                      thumbnail="https://raw.githubusercontent.com/orione7/Pelis_images/master/channels_icon_pureita/new_tvshows_P.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Serie TV - [COLOR orange]Novita'[/COLOR]",
@@ -354,6 +354,8 @@ def peliculas_series(item):
         ep=" ([COLOR orange]" + ep + "[/COLOR])"
         scrapedplot = ""
         scrapedthumbnail = ""
+        #if "streaming-5/" in scrapedurl:
+           #continue
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
@@ -579,7 +581,7 @@ def episodios_all(item):
     itemlist = []
 
     data = httptools.downloadpage(item.url, headers=headers).data
-    patron = r'<iframe src="([^"]+)" scrolling="no" frameborder="0" width="626" height="550" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>'
+    patron = r'<iframe src="([^"]+)" scrolling="no" frameborder="\d+" width="\d+" height="\d+" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"><\/iframe>'
     url = scrapertools.find_single_match(data, patron)
 
     data = httptools.downloadpage(url).data.replace('\n', '')
