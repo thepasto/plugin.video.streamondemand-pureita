@@ -60,15 +60,15 @@ def peliculas_movie(item):
     itemlist = []
 
     from channels import cineblog01
-    item.url = "https://www.cb01.news/"
+    item.url = "https://www.cb01.icu/"
     itemlist.extend(cineblog01.peliculas(item))
 
     from channels import casacinema
-    item.url = "https://www.casacinema.club/genere/film"
+    item.url = "https://www.casacinema.news/genere/film"
     itemlist.extend(casacinema.peliculas(item))	
 	
     from channels import italiafilm
-    item.url = "https://www.italia-film.io/novita-streaming-1/"
+    item.url = "https://www.italia-film.pro/novita-streaming-1/"
     itemlist.extend(italiafilm.peliculas(item))
 
     #from channels import piratestreaming
@@ -102,11 +102,11 @@ def peliculas_infantiles(item):
     itemlist = []
 
     import filmsenzalimiti_blue
-    item.url = "https://filmsenzalimiti.gratis/category/film/animazione"
+    item.url = "https://filmsenzalimiti.film/category/film/animazione"
     itemlist.extend(filmsenzalimiti_blue.peliculas(item))
 	
     import cinemalibero
-    item.url = "https://www.cinemalibero.me/category/film-in-streaming/animazione/"
+    item.url = "https://www.cinemalibero.red/category/film-in-streaming/animazione/"
     itemlist.extend(cinemalibero.peliculas(item))
 	
     import serietvu
@@ -141,16 +141,16 @@ def series(item):
     #item.url = "http://www.italiaserie.co/"
     #itemlist.extend(italiaserie.peliculas(item))
 	
-    import filmsenzalimiti
-    item.url = "https://filmsenzalimiti.bid/aggiornamenti-serie-tv/"
-    itemlist.extend(filmsenzalimiti.peliculas_update(item))
+    import filmpertutti
+    item.url = "https://www.filmpertutti.uno/aggiornamenti-serie-tv/"
+    itemlist.extend(filmpertutti.peliculas_update(item))
 	
     import serietvsubita
     item.url = "http://serietvsubita.net/"
     itemlist.extend(serietvsubita.peliculas_tv(item))
 	
     import videotecaproject
-    item.url = "https://www.videotecaproject.eu/serie-tv/"
+    item.url = "https://www.videotecaproject.net/serie-tv/"
     itemlist.extend(videotecaproject.pelis_new(item))
 	
     #import thelordofstreaming
