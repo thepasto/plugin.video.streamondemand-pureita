@@ -19,7 +19,7 @@ from core.tmdb import infoSod
 from servers import adfly
 
 __channel__ = "animeforce"
-host = "https://www.animeforce.org"
+host = "https://ww1.animeforce.org"
 headers = [['Referer', host]]
 
 

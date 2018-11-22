@@ -78,9 +78,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione01_zone.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>10</version>
+    <version>11</version>
     <adult>false</adult>
-    <date>13/11/2018</date>
+    <date>22/11/2018</date>
     <changes>Update and Fix</changes>
     <categories>
         <category>movie</category>
@@ -148,9 +148,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/altadefinizione_pink.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>06</version>
+    <version>07</version>
     <adult>false</adult>
-    <date>14/11/2018</date>
+    <date>22/11/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -284,9 +284,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/animeforce.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>11</version>
+    <version>13</version>
     <adult>false</adult>
-    <date>23/10/2018</date>
+    <date>22/11/2018</date>
     <changes>Temporary Fix</changes>
     <categories>
         <category>anime</category>
@@ -508,15 +508,15 @@
 </channel>
 
 <channel>
-    <id>cn01_video</id>
-    <name>cn01_video</name>
+    <id>cb01_video</id>
+    <name>cb01_video</name>
     <language>it</language>
-    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cn01_video.py</update_url>
+    <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cb01_video.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>01</version>
+    <version>02</version>
     <adult>false</adult>
-    <date>07/11/2018</date>
+    <date>22/11/2018</date>
     <changes>First Release</changes>
     <categories>
         <category>movie</category>
@@ -531,9 +531,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cineblog01.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>63</version>
+    <version>64</version>
     <adult>false</adult>
-    <date>07/11/2018</date>
+    <date>22/11/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
@@ -620,9 +620,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/cb01anime.py</update_url>
     <active>true</active>
     <include_in_global_search>false</include_in_global_search>
-    <version>13</version>
+    <version>14</version>
     <adult>false</adult>
-    <date>28/06/2018</date>
+    <date>22/11/2018</date>
     <changes>Update</changes>
     <categories>
         <category>anime</category>
@@ -839,9 +839,9 @@
     <update_url>https://raw.githubusercontent.com/orione7/plugin.video.streamondemand-pureita/master/channels/eurostreaming_video.py</update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>04</version>
+    <version>05</version>
     <adult>false</adult>
-    <date>14/09/2018</date>
+    <date>22/11/2018</date>
     <changes>Update</changes>
     <categories>
         <category>movie</category>
