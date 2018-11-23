@@ -761,7 +761,7 @@ def play(item):
 	
     data = item.url
 	
-    if "rapidcrypt" in item.url  or "flashx" in item.url:
+    if "rapidcrypt" in item.url:
        data = httptools.downloadpage(item.url).data
 	   
 	  
