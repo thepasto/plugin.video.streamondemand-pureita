@@ -320,104 +320,114 @@ def peliculas_new(item):
 # =============================================================================================================================================
 
 def pelis_new(item):
-    logger.info("streamondemand-pureita majintoon lista_animation")
+    logger.info("[streamondemand-pureita videotecaproject] pelis_new")
     itemlist = []
 
+    # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-    bloque = scrapertools.get_match(data, 'Homepage</a>(.*?)</tbody>')
-
-    patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
-    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)(?:</a>|)(?:<span|)'
+	 
+    bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
+	 				 
+    patron = '<br>\s*<span style[^>]+><span style[^>]+><strong>\s*<a href="([^"]+)" target="_blank">.*?'
+    patron += '<img alt=""\s*[^=]+="([^"]+)[^>]+>\s*\s*<br>\s*<br>\s*([^<]+)<\/a><\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
-
-        scrapedplot = ""
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
-        #scrapedtitle = scrapedtitle.title()
-        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
-        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
-        if "100" in scrapedtitle:
-          stitle=stitle+" 100"		
-        itemlist.append(infoSod(
-            Item(channel=__channel__,
-                 action="episodios",
-                 contentType="tvshow",
-                 title=scrapedtitle,
-                 fulltitle=stitle,
-                 url=scrapedurl,
-                 show=stitle,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 folder=True), tipo="tv"))
-
-    #patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
-    #patron += 'src="([^"]+)" [^b]+><br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
-    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
-    patron += '<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
-
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
-
         #scrapedtitle = scrapedtitle.title()
+        if "videotecaproject" in scrapedtitle:
+          continue
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
-        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
         stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
         if "100" in scrapedtitle:
           stitle=stitle+" 100"			
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
-                 contentType="tvshow",
-                 title=scrapedtitle,
+                 contentType="serie",
                  fulltitle=stitle,
-                 url=scrapedurl,
                  show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
-                 folder=True), tipo="tv"))
+                 folder=True), tipo='tv'))
 				 
-    patron = '<img alt=""[^>]+src="([^"]+)"[^>]+>.*?<\/a><\/p>\s*<p style[^>]+>.*?'
-    patron += '<a href="([^"]+)"[^>]+>(?:<span[^>]+><span[^>]+><strong>|)([^<]+)<'
-
+    #patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
+    #patron += 'src="([^"]+)" [^>]+>.*?<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    patron = '<br>\s*(?:<span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?'
+    patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
+    patron += '.*?<br>\s*<br>.*?<strong>(?:<span style[^>]+><span style[^>]+>|)(.*?)<\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
-
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        if "videotecaproject" in scrapedtitle:
+          continue
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    patron = '<p style[^>]+>(?:<strong>span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<strong>|)(?:<span style[^>]+>|)(?:<span style[^>]+>|)<img alt="".*?'
+    patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|).*?'
+    patron += '<\/a><\/p>\s*<p\s*style[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
         stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
         if "100" in scrapedtitle:
-          stitle=stitle+" 100"			
+          stitle=stitle+" 100"	
         itemlist.append(infoSod(
             Item(channel=__channel__,
                  action="episodios",
-                 contentType="tvshow",
-                 title=scrapedtitle,
+                 contentType="serie",
                  fulltitle=stitle,
-                 url=scrapedurl,
                  show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
-                 folder=True), tipo="tv"))		 
-
+                 folder=True), tipo='tv'))
+    return itemlist	
 
     itemlist.sort(key=lambda x: x.title)
     return itemlist
@@ -587,19 +597,24 @@ def peliculas_date(item):
 	 
     bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
 	 				 
-    patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
-    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)(?:</a>|)(?:<span|)'
+    patron = '<br>\s*<span style[^>]+><span style[^>]+><strong>\s*<a href="([^"]+)" target="_blank">.*?'
+    patron += '<img alt=""\s*[^=]+="([^"]+)[^>]+>\s*\s*<br>\s*<br>\s*([^<]+)<\/a><\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
-    for scrapedthumbnail, scrapedurl, scrapedtitle  in matches:
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
         scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
         #scrapedtitle = scrapedtitle.title()
+        if "videotecaproject" in scrapedtitle:
+          continue
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
         stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
         if "100" in scrapedtitle:
           stitle=stitle+" 100"			
@@ -617,8 +632,8 @@ def peliculas_date(item):
 				 
     #patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
     #patron += 'src="([^"]+)" [^>]+>.*?<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
-    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
-    patron += '.*?<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    patron = '<br>\s*(?:<span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
+    patron += '.*?<br>\s*<br>.*?<strong>(?:<span style[^>]+><span style[^>]+>|)(.*?)<\/strong>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
@@ -633,7 +648,8 @@ def peliculas_date(item):
 
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
         stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
         if "100" in scrapedtitle:
           stitle=stitle+" 100"			
@@ -649,7 +665,7 @@ def peliculas_date(item):
                  plot=scrapedplot,
                  folder=True), tipo='tv'))
 				 
-    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?'
+    patron = '<p style[^>]+>(?:<strong>span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<strong>|)(?:<span style[^>]+>|)(?:<span style[^>]+>|)<img alt="".*?'
     patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|).*?'
     patron += '<\/a><\/p>\s*<p\s*style[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
@@ -663,7 +679,8 @@ def peliculas_date(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         stitle=''.join(i for i in scrapedtitle if not i.isdigit())
         stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
-        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "").replace("Forced Sub", "")
+        stitle = stitle.replace("+", "").replace("-ENG", "").replace("ENG", "").replace("SUB", "").replace("</span>", "")
         stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
         if "100" in scrapedtitle:
           stitle=stitle+" 100"	
@@ -1338,6 +1355,109 @@ def findvideos_film(item):
                  folder=True))
 				 			 
     return itemlist
+	
+# =============================================================================================================================================
+def peliculas_date(item):
+    logger.info("[streamondemand-pureita videotecaproject] peliculas_date")
+    itemlist = []
+
+    # Descarga la pagina
+    data = httptools.downloadpage(item.url, headers=headers).data
+	 
+    bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
+	 				 
+    patron = 'src="([^"]+)"[^>]+>[^>]+>[^>]+>\s*[^>]+>[^>]+>[^>]+>.*?'
+    patron += '<strong><a href="([^"]+)"[^>]+>([^<]+)(?:</a>|)(?:<span|)'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedthumbnail, scrapedurl, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    #patron = '<a href="([^"]+)"[^>]+><img alt="".*?'
+    #patron += 'src="([^"]+)" [^>]+>.*?<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
+    patron += '.*?<br>\s*<br>\s*.*?<strong>(.*?)<\/strong>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        if "videotecaproject" in scrapedtitle:
+          continue
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace(" da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e  ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"			
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+				 
+    patron = '<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?'
+    patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|).*?'
+    patron += '<\/a><\/p>\s*<p\s*style[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+    for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
+        scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        #scrapedtitle = scrapedtitle.title()
+        scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        stitle=''.join(i for i in scrapedtitle if not i.isdigit())
+        stitle = stitle.replace(" x e", "").replace("x ITA", "").replace("da x a", "").replace("()", "")
+        stitle = stitle.replace("Episodio", "").replace("Stagioni", "").replace("da  a", "").replace(" e ITA", "")
+        stitle = stitle.replace("ITA", "").replace("Stagione", "").replace(" x", "").strip()
+        if "100" in scrapedtitle:
+          stitle=stitle+" 100"	
+        itemlist.append(infoSod(
+            Item(channel=__channel__,
+                 action="episodios",
+                 contentType="serie",
+                 fulltitle=stitle,
+                 show=stitle,
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True), tipo='tv'))
+    return itemlist	
 	
 # =============================================================================================================================================
 '''
