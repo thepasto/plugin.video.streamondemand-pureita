@@ -325,12 +325,10 @@ def pelis_new(item):
 
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
-	 
-    bloque = scrapertools.get_match(data, '%s(.*?)</(?:br|)(?:td|)>' % item.fulltitle)
 	 				 
     patron = '<br>\s*<span style[^>]+><span style[^>]+><strong>\s*<a href="([^"]+)" target="_blank">.*?'
     patron += '<img alt=""\s*[^=]+="([^"]+)[^>]+>\s*\s*<br>\s*<br>\s*([^<]+)<\/a><\/strong>'
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
@@ -366,7 +364,7 @@ def pelis_new(item):
     patron = '<br>\s*(?:<span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<span[^>]+>.*?|)<img alt="".*?'
     patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|)'
     patron += '.*?<br>\s*<br>.*?<strong>(?:<span style[^>]+><span style[^>]+>|)(.*?)<\/strong>'
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
@@ -400,7 +398,7 @@ def pelis_new(item):
     patron = '<p style[^>]+>(?:<strong>span style[^>]+><span style[^>]+>|)\s*<a href="([^"]+)[^>]+>(?:<strong>|)(?:<span style[^>]+>|)(?:<span style[^>]+>|)<img alt="".*?'
     patron += 'src="([^"]+)[^>]+>(?:<span[^>]+>[^>]+>|).*?'
     patron += '<\/a><\/p>\s*<p\s*style[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>([^<]+)'
-    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
