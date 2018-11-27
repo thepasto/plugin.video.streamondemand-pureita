@@ -261,7 +261,7 @@ def peliculas_update(item):
     # Descarga la pagina
     data = httptools.downloadpage(item.url, headers=headers).data
 
-    patron = '<div class="son_eklenen_head"></div>(.*?)<div id="right_bar">'
+    patron = '<div class="son_eklenen">.*?<div class="son_eklenen_head"></div>(.*?)<div class="son_eklenen">'
     data = scrapertools.find_single_match(data, patron)
 
     # Extrae las entradas (carpetas)
