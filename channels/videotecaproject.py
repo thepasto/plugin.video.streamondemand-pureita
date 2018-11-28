@@ -333,7 +333,7 @@ def pelis_new(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         if "videotecaproject" in scrapedtitle:
           continue
@@ -369,7 +369,7 @@ def pelis_new(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         if "videotecaproject" in scrapedtitle:
           continue
@@ -403,7 +403,7 @@ def pelis_new(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -602,7 +602,7 @@ def peliculas_date(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         if "videotecaproject" in scrapedtitle:
           continue
@@ -637,7 +637,7 @@ def peliculas_date(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         if "videotecaproject" in scrapedtitle:
           continue
@@ -671,7 +671,7 @@ def peliculas_date(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle  in matches:
         scrapedplot = ""
         scrapedtitle = scrapedtitle.replace('<span style="display: none;">&nbsp;</span>', "")
-        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".")
+        scrapedtitle = scrapedtitle.replace("’", "'").replace(" &amp; ", " ").replace(".S.", ".").replace("</span>", "")
         #scrapedtitle = scrapedtitle.title()
         scrapedthumbnail = httptools.get_url_headers(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
