@@ -47,11 +47,14 @@ def update_channels():
             progress.update(percentage, ' Update channel: ' + channel_id)
             # ----------------------------
 
-    for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
-        os.remove(os.path.join(local_folder, channel_id + ".py"))
+    try:
+        for channel_id in set(local_dict.keys()) - set(remote_dict.keys()):
+            os.remove(os.path.join(local_folder, channel_id + ".py"))
 
-    with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
-        f.write(xml)
+        with open(os.path.join(local_folder, "channelslist.xml"), 'wb') as f:
+            f.write(xml)
+    except:
+        pass
 
     # ----------------------------
     progress.close()
@@ -69,4 +72,3 @@ def read_channels_list(xml):
 
 ### Run
 Thread(target=update_channels).start()
-
